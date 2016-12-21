@@ -1,7 +1,27 @@
 {% extends 'base.html.twig' %}
 
 {% block body %}
-    <p>Kommt noch...</p>
+    {% for screen in screens %}
+        <div class="screen-editor">
+            <form action="{{ path('modify-screen') }}">
+                <input type="hidden" name="hidGuid" value="{{  screen.getGuid() }}">
+                <div class="input-label">Name:</div>
+                <div class="input"><input type="text" name="txtName" value="{{  screen.getName() }}"></div>
+                <div class="input-label">Standort:</div>
+                <div class="input"><input type="text" name="txtLocation" value="{{  screen.getLocation() }}"></div>
+                <div class="input-label">Administrativer Ansprechpartner:</div>
+                <div class="input"><input type="text" name="txtAdmin" value="{{  screen.getAdminC() }}"></div>
+                <div class="input-label">Notizen:</div>
+                <div class="input"><textarea name="txtNotes">{{  screen.getAdminC() }}</textarea></div>
+                <div class="input-label">Angemeldet:</div>
+                <div class="input">{{ screen.getFirstConnect().format('d.m.Y H:i:s') }}</div>
+                <div class="input-label">Letzte Verbindung:</div>
+                <div class="input">{{ screen.getLastConnect().format('d.m.Y H:i:s') }}</div>
+                <div class="input-buttons"><input type="submit" value="Speichern"></div>
+            </form>
+        </div>
+    {% endfor %}
+
 {% endblock %}
 
 {% block stylesheets %}

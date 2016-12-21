@@ -19,9 +19,46 @@ class ScreenController extends Controller
      */
     public function indexAction(Request $request)
     {
+        $rep = $this->getDoctrine()->getRepository('AppBundle:Screen');
+        $screens = $rep->findAll();
+
+
         // replace this example code with whatever you need
         return $this->render('adm/screens.html.twig', [
-            'base_dir' => realpath($this->getParameter('kernel.root_dir').'/..').DIRECTORY_SEPARATOR,
+            'screens' => $screens,
         ]);
     }
+
+    /**
+     * @Route("/adm/modify_screen", name="modify-screen")
+     */
+    public function modifyAction(Request $request)
+    {
+        $guid = $request->get('hidGuid');
+        $name = $request->get('txtName');
+        $loc = $request->get('txtLocation');
+        $notes = $request->get('txtNotes');
+        $admin = $request->get('txtAdmin');
+        $ajax = boolval(($request->get('ajax', '0') == '1') ? true : false);
+
+        $em = $this->getDoctrine()->getManager();
+        $screen = $em->find('\AppBundle\Entity\Screen', $guid);
+        $screen->setName($name);
+        $screen->setNotes($notes);
+        $screen->setLocation($loc);
+        $screen->setAdminC($admin);
+
+        $em->persist($screen);
+        $em->flush();
+
+        // plain old form request
+        if (!$ajax) {
+            return $this->redirectToRoute('admin-screens');
+        }
+
+        // is AJAX request
+        return $this->json(array('status' => 'ok'));
+    }
+
+
 }
