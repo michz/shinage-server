@@ -1,0 +1,50 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    {% for screen in screens %}
+        Screen: {{ screen.getName() }}
+    {% endfor %}
+
+    <div id='calendar'></div>
+
+{% endblock %}
+
+{% block stylesheets %}
+    <link rel="stylesheet" href="{{ asset('js/fullcalendar-3.1.0/fullcalendar.min.css') }}" media="all"></link>
+    <link rel="stylesheet" href="{{ asset('js/fullcalendar-3.1.0/fullcalendar.print.min.css') }}" media="print"></link>
+
+    <style>
+        #calendar {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+    </style>
+{% endblock %}
+
+{% block scripts %}
+    <script src="{{ asset('js/jquery-3.1.1.min.js') }}"></script>
+    <script src="{{ asset('js/fullcalendar-3.1.0/lib/moment.min.js') }}"></script>
+
+    <script src="{{ asset('js/fullcalendar-3.1.0/fullcalendar.min.js') }}"></script>
+    <script src="{{ asset('js/fullcalendar-3.1.0/locale-all.js') }}"></script>
+
+    <script>
+    $(document).ready(function() {
+
+        $('#calendar').fullCalendar({
+            header: {
+                left: 'prev,next today',
+                center: 'title',
+                right: 'month,basicWeek,basicDay'
+            },
+            locale: 'de',
+            defaultDate: '2016-12-12',
+            navLinks: true, // can click day/week names to navigate views
+            editable: true,
+            eventLimit: true, // allow "more" link when too many events
+            events: []
+        });
+
+    });
+    </script>
+{% endblock %}
