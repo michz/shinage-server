@@ -2,22 +2,22 @@
 /**
  * Created by PhpStorm.
  * User: michi
- * Date: 21.12.16
- * Time: 13:46
+ * Date: 28.12.16
+ * Time: 19:37
  */
+
 
 namespace AppBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * AppBundle\Entity\ScheduledPresentation
+ * AppBundle\Entity\Organization
  *
  * @ORM\Entity
- * @ORM\Table(name="schedule")
+ * @ORM\Table(name="organizations")
  */
-class ScheduledPresentation {
-
+class Organization {
     /**
      * @ORM\Id @ORM\Column(type="integer")
      * @ORM\GeneratedValue
@@ -30,12 +30,10 @@ class ScheduledPresentation {
     private $name;
 
     /**
-     * @ORM\Column(type="datetime")
+     * @ORM\ManyToMany(targetEntity="User", mappedBy="organizations")
      */
-    private $from;
+    private $users;
 
-    /**
-     * @ORM\Column(type="datetime")
-     */
-    private $until;
+
+
 }
