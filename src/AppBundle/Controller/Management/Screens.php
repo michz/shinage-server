@@ -27,6 +27,7 @@ class Screens extends Controller
         // replace this example code with whatever you need
         return $this->render('manage/screens.html.twig', [
             'screens' => $screens,
+            'screens_count' => count($screens),
         ]);
     }
 

@@ -26,8 +26,21 @@ class Scheduler extends Controller
         $rep = $this->getDoctrine()->getRepository('AppBundle:Screen');
         $screens = $rep->findAll();
 
+        // TODO filter screens that the user is allowed to edit
+
+        $count = count($screens);
+
+        // no screens found
+        if ($count < 1) {
+            return $this->render('manage/msg_no_screens.html.twig', [
+            ]);
+
+        }
+
+        // one or more screens found, now show scheduler
         return $this->render('manage/schedule.html.twig', [
             'screens' => $screens,
+            'screens_count' => $count,
         ]);
     }
 }
