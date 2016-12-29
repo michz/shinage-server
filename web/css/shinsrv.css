@@ -37,6 +37,16 @@ code { background: #F5F5F5; max-width: 100px; padding: 2px 6px; word-wrap: break
 .flash-error { border-color: #ee0000; background-color:#ffeeee;
     color:#aa0000; }
 
+
+/* screen box */
+.screen-editor { display:inline-block; margin:5px; padding:3px;
+    width:200px; border:1px solid #aaa; }
+.screen-editor .input-label { margin:0; padding:0;
+    font-size:0.9em; font-weight:bold; line-height: 0.9em; }
+.screen-editor .input { margin:0 0 5px 0; padding:0; }
+.screen-editor input, .screen-editor textarea
+    { margin:0; padding:0; width:96%; }
+
 /* login form */
 .auth-form-body { border: 1px solid #fff; padding:20px; max-width:280px; }
 

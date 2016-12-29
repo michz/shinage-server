@@ -38,4 +38,86 @@ class ScheduledPresentation {
      * @ORM\Column(type="datetime")
      */
     private $until;
+
+    /**
+     * Get id
+     *
+     * @return integer
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    /**
+     * Set name
+     *
+     * @param string $name
+     *
+     * @return ScheduledPresentation
+     */
+    public function setName($name)
+    {
+        $this->name = $name;
+
+        return $this;
+    }
+
+    /**
+     * Get name
+     *
+     * @return string
+     */
+    public function getName()
+    {
+        return $this->name;
+    }
+
+    /**
+     * Set from
+     *
+     * @param \DateTime $from
+     *
+     * @return ScheduledPresentation
+     */
+    public function setFrom($from)
+    {
+        $this->from = $from;
+
+        return $this;
+    }
+
+    /**
+     * Get from
+     *
+     * @return \DateTime
+     */
+    public function getFrom()
+    {
+        return $this->from;
+    }
+
+    /**
+     * Set until
+     *
+     * @param \DateTime $until
+     *
+     * @return ScheduledPresentation
+     */
+    public function setUntil($until)
+    {
+        $this->until = $until;
+
+        return $this;
+    }
+
+    /**
+     * Get until
+     *
+     * @return \DateTime
+     */
+    public function getUntil()
+    {
+        return $this->until;
+    }
 }

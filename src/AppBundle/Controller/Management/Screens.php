@@ -8,6 +8,9 @@
 
 namespace AppBundle\Controller\Management;
 
+use AppBundle\AppBundle;
+use AppBundle\Entity\Screen;
+use AppBundle\Service\ScreenAssociation;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
@@ -19,10 +22,15 @@ class Screens extends Controller
      */
     public function indexAction(Request $request)
     {
-        $rep = $this->getDoctrine()->getRepository('AppBundle:Screen');
-        $screens = $rep->findAll();
+        #$rep = $this->getDoctrine()->getRepository('AppBundle:Screen');
+        #$screens = $rep->findAll();
 
-        // TODO filter, which screens may be managed by current user
+        // user that is logged in
+        $user = $this->get('security.token_storage')->getToken()->getUser();
+
+        // screens that are associated to the user or to its organizations
+        $assoc = $this->get('app.screenassociation'); /** @var ScreenAssociation $assoc */
+        $screens = $assoc->getScreensForUser($user);
 
         // replace this example code with whatever you need
         return $this->render('manage/screens.html.twig', [

@@ -14,6 +14,7 @@ use Symfony\Component\HttpFoundation\Request;
 use AppBundle\Exceptions\NoScreenGivenException;
 use AppBundle\Entity\Screen;
 
+use AppBundle\Service\ScreenAssociation;
 
 class Scheduler extends Controller
 {
@@ -23,18 +24,18 @@ class Scheduler extends Controller
     */
     public function schedulerAction(Request $request)
     {
-        $rep = $this->getDoctrine()->getRepository('AppBundle:Screen');
-        $screens = $rep->findAll();
+        // user that is logged in
+        $user = $this->get('security.token_storage')->getToken()->getUser();
 
-        // TODO filter screens that the user is allowed to edit
+        // screens that are associated to the user or to its organizations
+        $assoc = $this->get('app.screenassociation'); /** @var ScreenAssociation $assoc */
+        $screens = $assoc->getScreensForUser($user);
 
         $count = count($screens);
 
         // no screens found
         if ($count < 1) {
-            return $this->render('manage/msg_no_screens.html.twig', [
-            ]);
-
+            return $this->render('manage/msg_no_screens.html.twig', []);
         }
 
         // one or more screens found, now show scheduler

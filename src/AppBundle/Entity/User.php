@@ -39,4 +39,38 @@ class User extends BaseUser {
         // your own logic
     }
 
+
+    /**
+     * Add organization
+     *
+     * @param \AppBundle\Entity\Organization $organization
+     *
+     * @return User
+     */
+    public function addOrganization(\AppBundle\Entity\Organization $organization)
+    {
+        $this->organizations[] = $organization;
+
+        return $this;
+    }
+
+    /**
+     * Remove organization
+     *
+     * @param \AppBundle\Entity\Organization $organization
+     */
+    public function removeOrganization(\AppBundle\Entity\Organization $organization)
+    {
+        $this->organizations->removeElement($organization);
+    }
+
+    /**
+     * Get organizations
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getOrganizations()
+    {
+        return $this->organizations;
+    }
 }

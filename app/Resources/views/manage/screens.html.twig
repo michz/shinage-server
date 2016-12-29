@@ -1,6 +1,8 @@
 {% extends 'base.html.twig' %}
 
 {% block body %}
+    <h2>Geräte</h2>
+
     {% for screen in screens %}
         {% include 'forms/edit-screen.html.twig' %}
     {% endfor %}
