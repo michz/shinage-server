@@ -31,4 +31,18 @@ a:hover { text-decoration: none; }
 code { background: #F5F5F5; max-width: 100px; padding: 2px 6px; word-wrap: break-word; }
 
 
+/* flash messages */
+.flash { margin:7px 3px; padding:9px; font-size:1.1em;
+    border-width:1px; border-radius:4px; border-style: solid; }
+.flash-error { border-color: #ee0000; background-color:#ffeeee;
+    color:#aa0000; }
 
+/* login form */
+.auth-form-body { border: 1px solid #fff; padding:20px; max-width:280px; }
+
+.auth-form-body label { display:block; margin-top:10px; }
+.auth-form-body input { display:block; width:95%; font-size:1.3em;
+    padding:6px; color:#444; }
+
+.auth-form-body input.btn-block { margin:16px 0; padding:5px 0;
+    width:100%; color:#111; }

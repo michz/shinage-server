@@ -1,0 +1,49 @@
+{% trans_default_domain 'FOSUserBundle' %}
+
+<h2>Einloggen</h2>
+
+{% if error %}
+    <div class="flash flash-error">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
+{% endif %}
+
+
+<form accept-charset="UTF-8" action="{{ path("fos_user_security_check") }}" method="post">
+    {% if csrf_token %}
+        <input type="hidden" name="_csrf_token" value="{{ csrf_token }}" />
+    {% endif %}
+
+
+    <div id="flash-container">
+    </div>
+
+
+    <div class="auth-form-body">
+        <label for="login_field">
+            {{ 'security.login.username'|trans }}
+        </label>
+        <input autocapitalize="off" autocorrect="off" autofocus="autofocus" class="form-control input-block" id="login_field" name="_username" tabindex="1" type="text">
+
+        <label for="password">
+            {{ 'security.login.password'|trans }} <!--<a href="/password_reset" class="label-link">Forgot password?</a>-->
+        </label>
+        <input class="form-control form-control input-block" id="password" name="_password" tabindex="2" type="password">
+
+        <input class="btn btn-primary btn-block" data-disable-with="{{ 'security.login.submitted'|trans }}" id="_submit" name="_submit" tabindex="3" type="submit" value="{{ 'security.login.submit'|trans }}">
+    </div>
+</form>
+
+<!--
+<form action="" method="post">
+
+    <label for="username"></label>
+    <input type="text" id="username" name="_username" value="{{ last_username }}" required="required" />
+
+    <label for="password"></label>
+    <input type="password" id="password" name="_password" required="required" />
+
+    <input type="checkbox" id="remember_me" name="_remember_me" value="on" />
+    <label for="remember_me">{{ 'security.login.remember_me'|trans }}</label>
+
+    <input type="submit" id="_submit" name="_submit" value="" />
+</form>
+-->

@@ -3,6 +3,10 @@
 use Symfony\Component\HttpKernel\Kernel;
 use Symfony\Component\Config\Loader\LoaderInterface;
 
+use Symfony\Component\Debug\Debug;
+
+#Debug::enable();
+
 class AppKernel extends Kernel
 {
     public function registerBundles()
