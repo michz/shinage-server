@@ -3,11 +3,25 @@
     <head>
         <meta charset="UTF-8" />
         <title>{% block title %}Welcome!{% endblock %}</title>
+        <link rel="stylesheet" type="text/css" href="{{ asset('css/reset.css') }}" />
+        <link rel="stylesheet" type="text/css" href="{{ asset('css/shinsrv.css') }}" />
+
         {% block stylesheets %}{% endblock %}
+
         <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}" />
     </head>
     <body>
-        {% block body %}{% endblock %}
+        <div id="wrapper">
+            <div id="header">Shinage-Logo</div>
+            <div id="navi">
+                {% include 'navi/manage.html.twig' %}
+
+                {% include 'navi/login.html.twig' %}
+            </div>
+
+            {% block body %}{% endblock %}
+        </div>
+
         {% block scripts %}{% endblock %}
     </body>
 </html>
