@@ -1,50 +1,57 @@
 {% extends 'base.html.twig' %}
 
-{% block body %}
-    {% for screen in screens %}
-        Screen: {{ screen.getName() }}
-    {% endfor %}
+{# Title suffix of page #}
+{% block title %} :: Zeitplan{% endblock %}
 
-    <div id='calendar'></div>
+{% block body %}
+
+    <div id="container">
+        <div id="sched-screen-list">
+            {% for screen in screens %}
+                <div class="item visible" data-guid="{{ screen.getGuid() }}">
+                    <span title="Anzeigen/Ausblenden" class="selector" data-guid="{{ screen.getGuid() }}"></span>
+                    <p title="Name: {{ screen.getName() }}" class="screen-name">{{ screen.getName() }}</p>
+                    <p title="Ort: {{ screen.getLocation() }}" class="screen-loction">{{ screen.getLocation() }}</p>
+                </div>
+            {% endfor %}
+        </div>
+
+        <div id='calendar'></div>
+    </div>
 
 {% endblock %}
 
+{# Styles for placement in <head> tag #}
 {% block stylesheets %}
     <link rel="stylesheet" href="{{ asset('js/fullcalendar-3.1.0/fullcalendar.min.css') }}" media="all"></link>
     <link rel="stylesheet" href="{{ asset('js/fullcalendar-3.1.0/fullcalendar.print.min.css') }}" media="print"></link>
 
     <style>
         #calendar {
+            /*
             max-width: 900px;
             margin: 0 auto;
+             */
+            width:100%;
         }
     </style>
 {% endblock %}
 
+{# Scripts for placement at the end of <body> tag #}
 {% block scripts %}
-    <script src="{{ asset('js/jquery-3.1.1.min.js') }}"></script>
-    <script src="{{ asset('js/fullcalendar-3.1.0/lib/moment.min.js') }}"></script>
-
-    <script src="{{ asset('js/fullcalendar-3.1.0/fullcalendar.min.js') }}"></script>
-    <script src="{{ asset('js/fullcalendar-3.1.0/locale-all.js') }}"></script>
-
     <script>
-    $(document).ready(function() {
-
-        $('#calendar').fullCalendar({
-            header: {
-                left: 'prev,next today',
-                center: 'title',
-                right: 'month,basicWeek,basicDay'
-            },
-            locale: 'de',
-            defaultDate: '2016-12-12',
-            navLinks: true, // can click day/week names to navigate views
-            editable: true,
-            eventLimit: true, // allow "more" link when too many events
-            events: []
-        });
-
-    });
+        var uri_get_schedule = '{{ path('management-get-schedule') }}';
+        var uri_add_scheduled = '{{ path('management-add-scheduled') }}';
+        var uri_change_scheduled = '{{ path('management-change-scheduled') }}';
+        var uri_delete_scheduled = '{{ path('management-delete-scheduled') }}';
     </script>
+    {% javascripts
+    '@jquery' '@moment' '@fullcalendar' '@notify'
+    '@AppBundle/Resources/public/js/scheduler.js'
+    %}
+    <script src="{{ asset_url }}"></script>
+    {% endjavascripts %}
+
+
+
 {% endblock %}

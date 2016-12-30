@@ -47,6 +47,36 @@ code { background: #F5F5F5; max-width: 100px; padding: 2px 6px; word-wrap: break
 .screen-editor input, .screen-editor textarea
     { margin:0; padding:0; width:96%; }
 
+
+/* scheduler */
+#sched-screen-list {}
+#sched-screen-list .item { display:inline-block; width:160px;
+    margin:5px; padding:2px 0; border: 1px solid #92AAB0; overflow:hidden;
+    font-size:12px; line-height:14px; background-color: #EDEEFE;
+    color: #556666; }
+
+
+#sched-screen-list p { margin:0; padding:0; white-space: nowrap; }
+#sched-screen-list p.screen-name { font-weight: bold; }
+
+#sched-screen-list .selected { border: 3px solid #2a6496; margin:3px; }
+
+
+#sched-screen-list .selector { float:left; margin:6px 4px; width:16px; height:16px; content: "O";
+    background-color:#666; }
+#sched-screen-list .visible .selector { background-color:#EEE; }
+/*
+#sched-screen-list .visible { background-color:#93B9FF; color: #001111; border-color: #2a6496; }
+ */
+
+#calendar .fc-event .event-delete { visibility: hidden; position:absolute; right:6px; top:0; }
+#calendar .fc-event:hover .event-delete { visibility: visible; }
+
+#calendar a { color:#000; text-decoration:none; }
+#calendar a:hover { text-decoration:underline; }
+
+
+
 /* login form */
 .auth-form-body { border: 1px solid #fff; padding:20px; max-width:280px; }
 

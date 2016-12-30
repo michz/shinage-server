@@ -26,6 +26,8 @@ class Dashboard extends Controller
         $rep = $this->getDoctrine()->getRepository('AppBundle:Screen');
         $screens = $rep->findAll();
 
+        // TODO nur die des Benutzers anzeigen
+
         return $this->render('manage/dashboard.html.twig', [
             'screens' => $screens,
         ]);

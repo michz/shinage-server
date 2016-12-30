@@ -32,6 +32,16 @@ class ScreenAssociation
             $r[] = $a->getScreen();
         }
 
+        // get organizations for user
+        $orgas = $user->getOrganizations();
+
+        foreach ($orgas as $o) {
+            $assoc = $rep->findBy(array('orga_id' => $o->getId()));
+            foreach ($assoc as $a) {
+                $r[] = $a->getScreen();
+            }
+        }
+
         return $r;
     }
 }

@@ -34,6 +34,8 @@ class ScreenController extends Controller
      */
     public function modifyAction(Request $request)
     {
+        // TODO: Check if screen may be edited by current user
+
         $guid = $request->get('hidGuid');
         $name = $request->get('txtName');
         $loc = $request->get('txtLocation');
@@ -53,7 +55,7 @@ class ScreenController extends Controller
 
         // plain old form request
         if (!$ajax) {
-            return $this->redirectToRoute('admin-screens');
+            return $this->redirectToRoute($request->get('hidUri'));
         }
 
         // is AJAX request

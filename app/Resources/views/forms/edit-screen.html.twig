@@ -1,6 +1,8 @@
 <div class="screen-editor">
     <form action="{{ path('modify-screen') }}">
         <input type="hidden" name="hidGuid" value="{{  screen.getGuid() }}">
+        <input type="hidden" name="hidUri" value="{{ app.request.attributes.get('_route') }}">
+
         <div class="input-label">Name:</div>
         <div class="input"><input type="text" name="txtName" value="{{  screen.getName() }}"></div>
         <div class="input-label">Standort:</div>

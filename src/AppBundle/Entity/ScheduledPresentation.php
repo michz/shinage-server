@@ -25,6 +25,12 @@ class ScheduledPresentation {
     private $id;
 
     /**
+     * @ORM\ManyToOne(targetEntity="Screen")
+     * @ORM\JoinColumn(name="screen_id", referencedColumnName="guid", nullable=true)
+     */
+    private $screen;
+
+    /**
      * @ORM\Column(type="string", length=255)
      */
     private $name;
@@ -32,12 +38,12 @@ class ScheduledPresentation {
     /**
      * @ORM\Column(type="datetime")
      */
-    private $from;
+    private $scheduled_start;
 
     /**
      * @ORM\Column(type="datetime")
      */
-    private $until;
+    private $scheduled_end;
 
     /**
      * Get id
@@ -74,50 +80,74 @@ class ScheduledPresentation {
     }
 
     /**
-     * Set from
+     * Set screen
      *
-     * @param \DateTime $from
+     * @param \AppBundle\Entity\Screen $screen
      *
      * @return ScheduledPresentation
      */
-    public function setFrom($from)
+    public function setScreen(\AppBundle\Entity\Screen $screen = null)
     {
-        $this->from = $from;
+        $this->screen = $screen;
 
         return $this;
     }
 
     /**
-     * Get from
+     * Get screen
      *
-     * @return \DateTime
+     * @return \AppBundle\Entity\Screen
      */
-    public function getFrom()
+    public function getScreen()
     {
-        return $this->from;
+        return $this->screen;
     }
 
     /**
-     * Set until
+     * Set scheduledStart
      *
-     * @param \DateTime $until
+     * @param \DateTime $scheduledStart
      *
      * @return ScheduledPresentation
      */
-    public function setUntil($until)
+    public function setScheduledStart($scheduledStart)
     {
-        $this->until = $until;
+        $this->scheduled_start = $scheduledStart;
 
         return $this;
     }
 
     /**
-     * Get until
+     * Get scheduledStart
      *
      * @return \DateTime
      */
-    public function getUntil()
+    public function getScheduledStart()
     {
-        return $this->until;
+        return $this->scheduled_start;
+    }
+
+    /**
+     * Set scheduledEnd
+     *
+     * @param \DateTime $scheduledEnd
+     *
+     * @return ScheduledPresentation
+     */
+    public function setScheduledEnd($scheduledEnd)
+    {
+        $this->scheduled_end = $scheduledEnd;
+
+        return $this;
+    }
+
+    /**
+     * Get scheduledEnd
+     *
+     * @return \DateTime
+     */
+    public function getScheduledEnd()
+    {
+        return $this->scheduled_end;
     }
 }
