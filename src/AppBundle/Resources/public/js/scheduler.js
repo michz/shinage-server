@@ -157,7 +157,8 @@ $(document).ready(function() {
             right: 'month,agendaWeek,agendaDay'
         },
         locale: 'de',
-        defaultDate: '2016-12-12',
+        //defaultDate: '2016-12-12',
+        defaultView: 'agendaWeek',
         navLinks: true,     // can click day/week names to navigate views
         editable: true,
         eventLimit: true,   // allow "more" link when too many events
