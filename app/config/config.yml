@@ -100,8 +100,3 @@ swiftmailer:
     spool:     { type: memory }
 
 
-services:
-    app.screenassociation:
-        class: AppBundle\Service\ScreenAssociation
-        arguments:
-            em: "@doctrine.orm.entity_manager"
