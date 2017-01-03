@@ -1,0 +1,35 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <div id="container">
+        <h2>Dateien</h2>
+
+        <div id="elfinder"></div>
+    </div>
+
+{% endblock %}
+
+{% block scripts %}
+    {% javascripts
+    '@jquery' '@moment' '@notify'
+    %}
+    <script src="{{ asset_url }}"></script>
+    {% endjavascripts %}
+
+    <script src="{{ asset('js/jquery-ui/jquery-ui.min.js') }}"></script>
+    <script src="{{ asset('js/elFinder/js/elfinder.min.js') }}"></script>
+    <script src="{{ asset('js/elFinder/js/i18n/elfinder.de.js') }}"></script>
+
+    <script>
+        var options = {
+            url  : '{{ path('management-files-connector') }}',
+            lang : '{{ app.request.locale }}'
+        }
+        $('#elfinder').elfinder(options);
+    </script>
+{% endblock %}
+
+{% block stylesheets %}
+    <link rel="stylesheet" type="text/css" href="{{ asset('js/jquery-ui/jquery-ui.min.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ asset('js/elFinder/css/elfinder.min.css') }}">
+{% endblock %}
