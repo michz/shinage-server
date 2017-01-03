@@ -3,6 +3,8 @@
 {% block body %}
     <h2>Geräte</h2>
 
+    {# TODO: save multiple/all at once (perhaps "dirty" flag and iteration?)#}
+
     {% for screen in screens %}
         {% include 'forms/edit-screen.html.twig' %}
     {% endfor %}

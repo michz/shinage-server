@@ -44,4 +44,20 @@ class HeartbeatController extends Controller
             'current_presentation' => 'null',
         ]);
     }
+
+
+    /**
+     * @Route("/screen-remote/upload-screenshot", name="screen-remote-heartbeat")
+     */
+    public function uploadScreenshotAction(Request $request)
+    {
+        // TODO read out image from content and save
+
+        $sGuid = $request->query->get('screen_guid', null);
+        if (!$sGuid) {
+            throw new NoScreenGivenException();
+        }
+
+        return $this->json(['status' => 'ok']);
+    }
 }
