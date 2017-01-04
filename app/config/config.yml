@@ -8,6 +8,7 @@ imports:
 parameters:
     locale: de
     path_pool: "%kernel.root_dir%/../data/pool/"
+    path_screenshots: "%kernel.root_dir%/../data/screenshots/"
 
 framework:
     #esi:             ~

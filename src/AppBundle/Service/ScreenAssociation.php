@@ -11,6 +11,8 @@ namespace AppBundle\Service;
 use AppBundle\Entity\User;
 use Doctrine\ORM\EntityManager;
 
+use AppBundle\Entity\Screen;
+
 
 class ScreenAssociation
 {
@@ -43,5 +45,13 @@ class ScreenAssociation
         }
 
         return $r;
+    }
+
+    public function isScreenAssociated(Screen $screen)
+    {
+        $rep = $this->em->getRepository('AppBundle:ScreenAssociation');
+        $assoc = $rep->findBy(array('screen' => $screen->getGuid()));
+
+        return (count($assoc) > 0);
     }
 }

@@ -10,9 +10,13 @@ namespace AppBundle\Controller\ScreenRemote;
 
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\Config\Definition\Exception\Exception;
 use Symfony\Component\HttpFoundation\Request;
 use AppBundle\Exceptions\NoScreenGivenException;
 use AppBundle\Entity\Screen;
+
+use AppBundle\Service\ScreenAssociation;
+
 
 class HeartbeatController extends Controller
 {
@@ -21,7 +25,7 @@ class HeartbeatController extends Controller
      */
     public function heartbeatAction(Request $request)
     {
-        $sGuid = $request->query->get('screen_guid', null);
+        $sGuid = $request->request->get('screen', null);
         if (!$sGuid) {
             throw new NoScreenGivenException();
         }
@@ -39,23 +43,39 @@ class HeartbeatController extends Controller
         $em->persist($screen);
         $em->flush();
 
+        // check if screen is associated
+        $assoc = $this->get('app.screenassociation');
+        /** @var ScreenAssociation $assoc */
+        $is_assoc = $assoc->isScreenAssociated($screen);
 
-        return $this->render('screen-remote/heartbeat.html.twig', [
-            'current_presentation' => 'null',
+
+        return $this->json([
+            'status'        => 'ok',
+            'screen_status' => ($is_assoc) ? 'registered' : 'not_registered',
+            'presentation'  => 'null',
         ]);
     }
 
 
     /**
-     * @Route("/screen-remote/upload-screenshot", name="screen-remote-heartbeat")
+     * @Route("/screen-remote/upload-screenshot", name="screen-remote-screenshot")
      */
     public function uploadScreenshotAction(Request $request)
     {
-        // TODO read out image from content and save
-
-        $sGuid = $request->query->get('screen_guid', null);
+        // Which screen?
+        $sGuid = $request->request->get('screen', null);
         if (!$sGuid) {
             throw new NoScreenGivenException();
+        }
+
+        // get path from configuration
+        $basepath = $this->container->getParameter('path_screenshots');
+
+        // move file
+        foreach($request->files as $uploadedFile) {
+            $name = $sGuid . '.png';
+            $uploadedFile->move($basepath, $name);
+            break;
         }
 
         return $this->json(['status' => 'ok']);
