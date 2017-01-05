@@ -22,6 +22,24 @@
             {% block body %}{% endblock %}
         </div>
 
+        <div id="ajax-loading">
+            <img src="{{ asset('img/spin.gif') }}">
+        </div>
+
+        {% javascripts
+        '@jquery' '@shinage' '@notify'
+        %}
+        <script src="{{ asset_url }}"></script>
+        {% endjavascripts %}
+
+
         {% block scripts %}{% endblock %}
+
+
+        <script>
+            $(function() {
+                ajaxLoadHide();
+            });
+        </script>
     </body>
 </html>

@@ -12,3 +12,8 @@ services:
         class: AppBundle\Service\ScreenAssociation
         arguments:
             em: "@doctrine.orm.entity_manager"
+
+    app.filepool:
+        class: AppBundle\Service\FilePool
+        arguments:
+            basepath: %path_pool%

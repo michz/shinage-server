@@ -74,6 +74,9 @@ assetic:
         jquery:
             inputs:
                 - '@AppBundle/Resources/public/js/lib/jquery-3.1.1.min.js'
+        shinage:
+            inputs:
+                - '@AppBundle/Resources/public/js/shinage.js'
         fullcalendar:
             inputs:
                 - '@AppBundle/Resources/public/js/lib/fullcalendar.min.js'

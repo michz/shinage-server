@@ -17,7 +17,7 @@ use AppBundle\Entity\Screen;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 use Symfony\Component\HttpFoundation\Response;
 
-#use \elFinder;
+use AppBundle\Service\FilePool;
 
 
 class FileManager extends Controller
@@ -43,11 +43,11 @@ class FileManager extends Controller
      */
     public function downloadAction(Request $request, $file)
     {
-        // TODO check if user is allowed to access file
+        // TODO check if user is allowed to access file (correct basename)
 
         // TODO set (mime) headers
 
-        $path = $this->container->getParameter('path_pool') . $file;
+        $path = realpath($this->container->getParameter('path_pool')) . '/' . $file;
 
         $response = new Response();
         $response->setContent(file_get_contents($path));
@@ -65,24 +65,37 @@ class FileManager extends Controller
 
         $response = new StreamedResponse();
         $response->setCallback(function () {
-            $path = $this->container->getParameter('path_pool');
+            $pool = $this->get('app.filepool'); /** @var FilePool $pool */
+
+            #$path = $this->container->getParameter('path_pool');
             $user = $this->get('security.token_storage')->getToken()->getUser();
+
+            // get root directories
+            $paths = $pool->getUserPaths($user);
+            $roots = array();
+
+            foreach ($paths as $name => $path) {
+                $basename = basename($path);
+
+                $roots[] = array(
+                    'driver'        => 'LocalFileSystem',
+                    'alias'         => $name,
+                    'path'          => $path,
+                    'URL'           => $this->generateUrl('management-files-download',
+                                                array('file' => $basename)),
+                    'uploadDeny'    => array('all'),                // All Mimetypes not allowed to upload
+                    'uploadAllow'   => array('image', 'text/plain'),// Mimetype `image` and `text/plain` allowed to upload
+                    'uploadOrder'   => array('deny', 'allow'),      // allowed Mimetype `image` and `text/plain` only
+                    'accessControl' => 'access'                     // disable and hide dot starting files (OPTIONAL)
+                );
+            }
+
 
             // Documentation for connector options:
             // https://github.com/Studio-42/elFinder/wiki/Connector-configuration-options
             $opts = array(
                 // 'debug' => true,
-                'roots' => array(
-                    array(
-                        'driver'        => 'LocalFileSystem',           // driver for accessing file system (REQUIRED)
-                        'path'          => $path,                 // path to files (REQUIRED)
-                        'URL'           => $this->generateUrl('management-files-download', array('file' => '')), // URL to files (REQUIRED)
-                        'uploadDeny'    => array('all'),                // All Mimetypes not allowed to upload
-                        'uploadAllow'   => array('image', 'text/plain'),// Mimetype `image` and `text/plain` allowed to upload
-                        'uploadOrder'   => array('deny', 'allow'),      // allowed Mimetype `image` and `text/plain` only
-                        'accessControl' => 'access'                     // disable and hide dot starting files (OPTIONAL)
-                    )
-                )
+                'roots' => $roots
             );
 
             // run elFinder

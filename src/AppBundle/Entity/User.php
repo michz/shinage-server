@@ -39,6 +39,42 @@ class User extends BaseUser {
         // your own logic
     }
 
+    public function getAllowedPoolPaths()
+    {
+        $r = array();
+        $r[] = 'user-' . $this->id;
+
+        $orgas = $this->getOrganizations();
+        foreach ($orgas as $orga) { /** @var Organization $orga */
+            $r[] = 'orga-' . $orga->getId();
+        }
+
+        return $r;
+    }
+
+    public function isPoolFileAllowed($path)
+    {
+        $file = ltrim($path, "/\r\n\t ");
+        $base = substr($file, 0, strpos($file, '/'));
+        return (in_array($base, $this->getAllowedPoolPaths()));
+    }
+
+    public function isPresentationAllowed(Presentation $presentation)
+    {
+        if ($presentation->getOwnerUser() == $this) return true;
+
+        $orgas = $this->getOrganizations();
+        foreach ($orgas as $orga) { /** @var Organization $orga */
+            if ($presentation->getOwnerOrga() == $orga) return true;
+        }
+
+        return false;
+    }
+
+    public function isSlideAllowed(Slide $slide)
+    {
+        return $this->isPresentationAllowed($slide->getPresentation());
+    }
 
     /**
      * Add organization

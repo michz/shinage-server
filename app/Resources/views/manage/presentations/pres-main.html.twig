@@ -1,0 +1,249 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <div id="container">
+        <h2>{{ 'Presentations'|trans }}</h2>
+
+        <p>TODO: Präsentationen zwischen Benutzer und Organisationen verschieben</p>
+        <p>TODO: Präsentationen löschen</p>
+
+        <div id="chose-presentation">
+            <p>Präsentation zum Bearbeiten auswählen:</p>
+            <ul>
+                {% for key,who in presentations %}
+                    <li>{{ key }}
+                        <ul>
+                            {% for p in who %}
+                                <li><a class="load-pres" data-presentation-id="{{ p.getId() }}">{{ p.getTitle() }}</a></li>
+                            {% endfor %}
+                        </ul>
+                    </li>
+                {% endfor %}
+                <li><a class="new-pres">neue Präsentation anlegen</a></li>
+            </ul>
+        </div>
+    </div>
+
+    <div id="presentation-builder-container">
+        <div id="pool-tree">
+            {{ file_tree|raw }}
+        </div>
+
+        <div class="presentation-builder">
+            <p>Bitte Präsentation auswählen.</p>
+        </div>
+    </div>
+
+{% endblock %}
+
+{% block scripts %}
+
+    <script src="{{ asset('js/jquery-ui/jquery-ui.min.js') }}"></script>
+    <script src="{{ asset('js/jstree/jstree.min.js') }}"></script>
+
+    <script>
+        var current_presentation = null;
+
+        var readPresentation = function(json) {
+            $(".presentation-builder").empty();
+
+            for (var i = 0; i < json.slides.length; ++i) {
+                var slide = json.slides[i];
+                if (slide.slide_type == 'image') {
+                    var div = $(
+                        '<div class="elem elem-image">' +
+                        '    <img class="preview" src="{{ path('management-presentations-get-thumbnail', {'file':''}) }}/' +
+                                slide.file_path + '">'+
+                        '    <span class="name">Bildname</span>' +
+                        '    <span class="duration"><input type="text" value="' +
+                            slide.duration + '">Sek.</span>' +
+                        '<img class="button-delete" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAABmJLR0QA/wD/AP+gvaeTAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAB3RJTUUH4QECDRkgLhOZPwAAAJZJREFUOMutU0kOxDAIMz11PoOUR+T/x/5gvjA9jedQ6FBET9RSJBKb4CyAJBwk4fO8nvmscfJNclQJFg/T4AIjN/4xC2cz8NvJh8oZ6g4szjicBGsVVhsVRnYxk+B7E1+PmC5JbxLimsYcOQMR32wF8EGNF4DdtSKCBU0sqbpadRZaGqcp54FLbD1j+yO1v3K7mbrt/ANBpmKW31STdQAAAABJRU5ErkJggg==">' +
+                        '</div>'
+                    );
+                    div.data('data', slide);
+                    $(".presentation-builder").append(div);
+                }
+            }
+
+            // and now register events for current loaded presentation
+            $(".duration input").on('change', function() {
+                var duration = $(this).val();
+                var slide = $(this).parent().parent().data('data');
+
+                ajaxLoadShow();
+                $.ajax({
+                    url: "{{ path('management-presentations-change-slide') }}",
+                    method: 'POST',
+                    data: {
+                        'id':       slide.id,
+                        'duration': duration
+                    }
+                }).fail(function() {
+                    console.log("fail");
+                    alert("TODO: Fehler");
+                }).done(function(data) {
+                }).always(function() {
+                    ajaxLoadHide();
+                });
+            });
+
+            $(".button-delete").on('click', function() {
+                var slide_div = $(this).parent();
+                var slide = slide_div.data('data');
+
+                var answer = confirm("Soll die gewähle Folie wirklich entfernt werden?");
+                if (!answer) return;
+
+                ajaxLoadShow();
+                $.ajax({
+                    url: "{{ path('management-presentations-delete-slide') }}",
+                    method: 'POST',
+                    data: {
+                        'id':       slide.id
+                    }
+                }).fail(function() {
+                    console.log("fail");
+                    alert("TODO: Fehler");
+                }).done(function(data) {
+                    slide_div.remove();
+                }).always(function() {
+                    ajaxLoadHide();
+                });
+            });
+        };
+
+        var registerDraggables = function() {
+            $( ".jstree-leaf" ).draggable({
+                containment: ".presentation-builder-container",
+                scroll: false,
+                revert: "invalid",
+                stack: ".draggable",
+                connectToSortable: ".presentation-builder",
+                helper: function(o, ui) {
+                    var div = $(
+                        '<div class="elem elem-image">' +
+                        '    <img src="{{ path('management-presentations-get-thumbnail', {'file':''}) }}/' +
+                            $(this).data('poolpath') + '">'+
+                        '    <span class="name">Bildname</span>' +
+                        '</div>'
+                    );
+                    var slide = {
+                        "id": 0,
+                        "slide_type": "",
+                        "duration": 5,
+                        "notes": "",
+                        "file_path":  $(this).data('poolpath'),
+                        "sort_order": 0,
+                        "presentation": current_presentation
+                    };
+                    div.data('data', slide);
+                    return div;
+                } /*'clone'*/
+            });
+        };
+
+
+        $(document).ready(function() {
+            // init file tree
+            $('#pool-tree')
+                .bind('ready.jstree', function(e, data) {
+                    registerDraggables();
+                })
+                .bind('open_node.jstree', function(e, data) {
+                    registerDraggables();
+                })
+                .jstree({});
+
+
+            // init droppable (slide) area
+            $( ".presentation-builder" ).droppable({
+                accept: ".jstree-leaf" /*,
+                drop: function(event, ui) {}*/
+            });
+
+
+            // load presentation
+            $('.load-pres').on('click', function() {
+                ajaxLoadShow();
+                current_presentation = $(this).data('presentation-id');
+                $.ajax({
+                    url: "{{ path('management-presentations-get') }}",
+                    method: 'POST',
+                    data: {
+                        'id': current_presentation
+                    }
+                }).fail(function() {
+                    console.log("fail");
+                    alert("TODO: Fehler");
+                }).done(function(data) {
+                    readPresentation(data);
+                }).always(function() {
+                    ajaxLoadHide();
+                });
+            });
+
+            // create new presentation
+            $('.new-pres').on('click', function() {
+                // TODO schöner
+                var title = prompt("Bitte geben Sie den Titel der Präsentation ein.", "Präsentation");
+                if (!title) return;
+
+                ajaxLoadShow();
+                $.ajax({
+                    url: "{{ path('management-presentations-create') }}",
+                    method: 'POST',
+                    data: {
+                        'title': title
+                    }
+                }).fail(function() {
+                    console.log("fail");
+                    alert("TODO: Fehler");
+                }).done(function(data) {
+                    location.reload();
+                }).always(function() {
+                    ajaxLoadHide();
+                });
+
+                alert("TODO!");
+            });
+
+            // init sortable (slide) area
+            $( ".presentation-builder" ).sortable({
+                update: function( event, ui ) {
+                    var new_order = [];
+
+                    $(this).children().each(function(id, o) {
+                        var slide = $(o).data('data');
+                        slide.sort_order = id;
+                        new_order.push(slide);
+                    });
+
+
+                    ajaxLoadShow();
+                    $.ajax({
+                        url: "{{ path('management-presentations-set-order') }}",
+                        method: 'POST',
+                        data: {
+                            'slides': new_order
+                        }
+                    }).fail(function() {
+                        console.log("fail");
+                        alert("TODO: Fehler");
+                    }).done(function(data) {
+                        //readPresentation(data);
+                        //console.log(data);
+                    }).always(function() {
+                        ajaxLoadHide();
+                    });
+                }
+            });
+            $(".presentation-builder").disableSelection();
+
+        });
+    </script>
+{% endblock %}
+
+
+{% block stylesheets %}
+    <link rel="stylesheet" href="{{ asset('js/jstree/themes/default/style.min.css') }}" />
+{% endblock %}

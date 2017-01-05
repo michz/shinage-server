@@ -10,11 +10,6 @@
 {% endblock %}
 
 {% block scripts %}
-    {% javascripts
-    '@jquery' '@moment' '@notify'
-    %}
-    <script src="{{ asset_url }}"></script>
-    {% endjavascripts %}
 
     <script src="{{ asset('js/jquery-ui/jquery-ui.min.js') }}"></script>
     <script src="{{ asset('js/elFinder/js/elfinder.min.js') }}"></script>
