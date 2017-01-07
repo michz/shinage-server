@@ -14,7 +14,14 @@ It's based on [Symfony 3](http://symfony.com/).
 Installation
 ------------
 * Clone this repository.
+* Run `composer install`. ([Composer](https://getcomposer.org/download/) must be installed.)
+
+
+Development
+-----------
+* Clone this repository.
 * Run `composer update`. ([Composer](https://getcomposer.org/download/) must be installed.)
+
 
 
 Contributing
