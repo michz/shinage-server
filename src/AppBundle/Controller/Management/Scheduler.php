@@ -74,8 +74,6 @@ class Scheduler extends Controller
                 throw new AccessDeniedException();
             }
 
-            // TODO Erkenne und behandle Schnitte/Überlappungen mit vorhandenen Items
-
             $sf = $start->format('Y-m-d H:i:s');
             $su = $end->format('Y-m-d H:i:s');
 

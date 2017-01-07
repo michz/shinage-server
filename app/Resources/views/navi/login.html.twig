@@ -2,6 +2,9 @@
 
 {% if is_granted("IS_AUTHENTICATED_REMEMBERED") %}
     {# {{ 'layout.logged_in_as'|trans({'%username%': app.user.username}, 'FOSUserBundle') }} | #}
+    <a class="navi-button" id="navi-account" href="{{ path('account') }}">
+        {{ "Account"|trans }}
+    </a>
     <a class="navi-button" id="navi-login" href="{{ path('fos_user_security_logout') }}">
         {{ 'layout.logout'|trans({}, 'FOSUserBundle') }} ({{ app.user.username }})
     </a>

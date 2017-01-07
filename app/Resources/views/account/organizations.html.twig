@@ -1,0 +1,78 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+        <div id="container">
+
+            <div id="next">
+                <h2>Organisationen</h2>
+                <p>TODO: Erklären, wozu Organisationen gut sind</p>
+            </div>
+
+            <div>
+
+                <div class="form account-form">
+                    <h3>Neue Organisation erstellen</h3>
+                    {{ form_start(form_create) }}
+                    {{ form_widget(form_create) }}
+                    {{ form_end(form_create) }}
+                </div>
+
+
+                {% for orga in organizations %}
+                <div class="form account-form">
+                    <h3>{{ orga.getName() }}</h3>
+                    <p><a class="leave" data-name="{{ orga.getName() }}" href="{{ path('account-orga-leave', {'id': orga.getId()}) }}">Diese Organisation verlassen.</a></p>
+                    <p style="margin-top:15px; font-weight:bold; ">Mitglieder:</p>
+                    {% for user in orga.getUsers() %}
+                        <p>
+                            <a href="{{ path('account-orga-remove', { 'user_id':user.getId(), 'orga_id':orga.getId() }) }}">
+                                <img class="remove-user" data-user="{{ user.getEmail() }}" data-orga="{{ orga.getName() }}" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAABmJLR0QA/wD/AP+gvaeTAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAB3RJTUUH4QEHCR87wvuvuwAAAIRJREFUOMutU0EOwCAIa3byNSY+wv8f/YHPWHeYLtjhZcyEKNTGAgKSmIskpq9xxfXOdDqA4hHGXgD0hWjABoDDqvNSNXh7cPMyxbJRkB38VmKk0bE0zMOKqqhy4dyc1xSlSHlDsLH86pQEdpIJICn5QHT9mUKoiN/bGP5I4a8cHqboOF/dHiTQQ9S7CAAAAABJRU5ErkJggg==">
+                            </a> {{ user.getEmail() }}</p>
+                    {% endfor %}
+                    <p style="margin-top:15px; font-weight:bold; ">Mitglied hinzufügen:</p>
+                    <form action="{{ path('account-orga-add-user') }}" method="post">
+                        <input type="hidden" name="organization" value="{{ orga.getId() }}">
+                        <p>
+                            <span class="label">{{ 'Email'|trans }}</span>
+                            <span class="input"><input type="text" name="email"></span>
+                        </p>
+                        <p>
+                            <input type="submit" value="{{ 'AddUser'|trans }}">
+                        </p>
+                    </form>
+                </div>
+                {% endfor %}
+
+            </div>
+        </div>
+
+
+{% endblock %}
+
+{% block stylesheets %}
+{% endblock %}
+
+{% block scripts %}
+    <script>
+        $(document).ready(function() {
+            $('.leave').on('click', function(e) {
+                var c = confirm("Soll die Organisation \"" + $(this).data('name') + "\" wirklich verlassen werden?");
+                if (!c) {
+                    e.preventDefault();
+                    return false;
+                }
+                return true;
+            });
+            $('.remove-user').on('click', function(e) {
+                var c = confirm("Soll der Benutzer \"" + $(this).data('user') +
+                    "\" wirklich aus der Organisation \"" +
+                    $(this).data('orga') + "\" entfernt werden?");
+                if (!c) {
+                    e.preventDefault();
+                    return false;
+                }
+                return true;
+            });
+        });
+    </script>
+{% endblock %}

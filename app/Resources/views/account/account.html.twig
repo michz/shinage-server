@@ -1,0 +1,23 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+        <div id="container">
+
+            <div id="next">
+                <h2>Willkommen!</h2>
+            </div>
+
+            <div>
+                <a href="{{ path("account-edit") }}">Benutzerdaten bearbeiten, Passwört ändern</a>
+                <a href="{{ path("account-organizations") }}">Organisationen/Mitgliedschaften bearbeiten</a>
+            </div>
+        </div>
+
+
+{% endblock %}
+
+{% block stylesheets %}
+{% endblock %}
+
+{% block scripts %}
+{% endblock %}

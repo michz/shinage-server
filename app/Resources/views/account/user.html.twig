@@ -1,0 +1,41 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+        <div id="container">
+
+            <div id="next">
+                <h2>Willkommen!</h2>
+            </div>
+
+            <div class="form account-form">
+                {{ form_start(form) }}
+                {{ form_widget(form) }}
+                {{ form_end(form) }}
+            </div>
+
+            <div class="form account-form">
+                <h3>{{ 'ChangePassword'|trans }}</h3>
+                <form action="{{ path("account-password") }}" method="post">
+                    <p>
+                        <span class="label">{{ 'Password'|trans }}</span>
+                        <span class="input"><input type="password" name="pw"></span>
+                    </p>
+                    <p>
+                        <span class="label">{{ 'PasswordAgain'|trans }}</span>
+                        <span class="input"><input type="password" name="pw-again"></span>
+                    </p>
+                    <p>
+                        <input type="submit" value="{{ 'Save'|trans }}">
+                    </p>
+                </form>
+            </div>
+        </div>
+
+
+{% endblock %}
+
+{% block stylesheets %}
+{% endblock %}
+
+{% block scripts %}
+{% endblock %}

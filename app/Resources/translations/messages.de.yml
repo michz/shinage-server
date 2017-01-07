@@ -1,3 +1,4 @@
+Account: Konto
 Dashboard: Übersicht
 Files: Dateien
 Screen: Anzeige
@@ -10,3 +11,11 @@ StartTime: Beginn
 EndTime: Ende
 Organization: Organisation
 Connect: Verbinden
+
+AddUser: Benutzer hinzufügen
+Email: E-Mail
+Password: Passwort
+PasswordAgain: Passwort wiederholen
+Save: Speichern
+ChangePassword: Passwort ändern
+Name: Name

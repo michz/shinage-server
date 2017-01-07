@@ -10,10 +10,12 @@ namespace AppBundle\Controller\Management;
 
 use AppBundle\AppBundle;
 use AppBundle\Entity\Screen;
+use AppBundle\Entity\User;
 use AppBundle\Service\ScreenAssociation;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 class Screens extends Controller
 {
@@ -51,9 +53,14 @@ class Screens extends Controller
         $ajax = boolval(($request->get('ajax', '0') == '1') ? true : false);
 
         $em = $this->getDoctrine()->getManager();
-        $screen = $em->find('\AppBundle\Entity\Screen', $guid);
+        $screen = $em->find('\AppBundle\Entity\Screen', $guid); /** @var Screen $screen */
 
-        // TODO check if user is allowed to edit screen
+        // Check if screen may be edited by current user
+        $user = $this->get('security.token_storage')->getToken()->getUser(); /** @var User $user */
+        $assoc = $this->get('app.screenassociation'); /** @var ScreenAssociation $assoc */
+        if (!$assoc->isUserAllowed($screen, $user)) {
+            throw new AccessDeniedException();
+        }
 
         $screen->setName($name);
         $screen->setNotes($notes);
