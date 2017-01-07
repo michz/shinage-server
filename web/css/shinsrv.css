@@ -34,8 +34,9 @@ code { background: #F5F5F5; max-width: 100px; padding: 2px 6px; word-wrap: break
 /* flash messages */
 .flash { margin:7px 3px; padding:9px; font-size:1.1em;
     border-width:1px; border-radius:4px; border-style: solid; }
-.flash-error { border-color: #ee0000; background-color:#ffeeee;
-    color:#aa0000; }
+.flash-error { border-color: #de0000; background-color:#ffeeee; color:#aa0000; }
+.flash-notice { border-color: #0000d0; background-color:#eeeeff; color:#00009a; }
+.flash-success { border-color: #00b000; background-color:#eeffee; color:#008800; }
 
 /* other generic stuff */
 .dialog { display: none; }
@@ -81,7 +82,15 @@ code { background: #F5F5F5; max-width: 100px; padding: 2px 6px; word-wrap: break
 
 .elem img.button-delete { position:absolute; top:2px; right:2px; cursor: pointer; }
 
-    /* screen box */
+
+/* screens */
+#connect-screen { border:1px solid #2a6496; margin:5px; padding:5px; }
+#connect-screen p { margin:3px 0; padding:0; }
+#connect-screen .label { display:inline-block; width:180px; }
+#connect-screen .input input, #connect-screen .input select  { width:150px; }
+
+
+/* screen box */
 .screen-editor { display:inline-block; margin:5px; padding:3px;
     width:200px; border:1px solid #aaa; }
 .screen-editor .input-label { margin:0; padding:0;
@@ -146,6 +155,6 @@ code { background: #F5F5F5; max-width: 100px; padding: 2px 6px; word-wrap: break
 
 
 /* AJAX */
-#ajax-loading { position:absolute; top:-500px; left:-500px; right:-500px; bottom:-500px;
+#ajax-loading { position:absolute; top:-1500px; left:-1500px; right:-500px; bottom:-500px;
     background:rgba(0,0,0,0.8); z-index:99999; }
 #ajax-loading img { position:absolute; top:49%; left:49%; }

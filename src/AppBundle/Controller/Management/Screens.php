@@ -33,6 +33,7 @@ class Screens extends Controller
         return $this->render('manage/screens.html.twig', [
             'screens' => $screens,
             'screens_count' => count($screens),
+            'organizations' => $user->getOrganizations(),
         ]);
     }
 
@@ -68,5 +69,48 @@ class Screens extends Controller
         return $this->json(array('status' => 'ok'));
     }
 
+
+    /**
+     * @Route("/manage/connect_screen", name="management-connect-screen")
+     */
+    public function connectAction(Request $request)
+    {
+        $user = $this->get('security.token_storage')->getToken()->getUser();
+        $em = $this->getDoctrine()->getManager();
+        $rep = $em->getRepository('AppBundle:Screen');
+
+        $code   = $request->get('connect_code');
+        $who    = $request->get('who');
+
+        $screens = $rep->findBy(array('connect_code' => $code));
+        if (count($screens) == 0) {
+            $this->addFlash('error', 'Die Anzeige konnte leider nicht hinzugefügt werden.');
+            return $this->redirectToRoute('management-screens');
+        }
+
+        $screen = $screens[0]; /** @var Screen $screen */
+
+        $screen->setConnectCode('');
+        $em->persist($screen);
+
+        $assoc = new \AppBundle\Entity\ScreenAssociation();
+        $assoc->setScreen($screen);
+        $assoc->setRole(\AppBundle\ScreenRoleType::ROLE_ADMIN);
+
+        if ($who == 'me') {
+            $assoc->setUserId($user);
+        }
+        else {
+            $orga = $em->find('\AppBundle\Entity\Organization', $who);
+            $assoc->setOrgaId($orga);
+        }
+
+        $em->persist($assoc);
+        $em->flush();
+
+
+        $this->addFlash('success', 'Die Anzeige wurde erfolgreich hinzugefügt.');
+        return $this->redirectToRoute('management-screens');
+    }
 
 }

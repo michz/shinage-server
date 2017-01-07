@@ -9,6 +9,28 @@
         {% include 'forms/edit-screen.html.twig' %}
     {% endfor %}
 
+    <div id="connect-screen">
+        <form action="{{ path('management-connect-screen') }}" method="post">
+            <h3>Neue Anzeige mit dem Konto verbinden</h3>
+            <p>
+                <span class="label">Verbindungskennung: </span>
+                <span class="input"><input type="text" name="connect_code" maxlength="8" value=""></span>
+            </p>
+            <p>
+                <span class="label">Verbinden mit: </span>
+                <span class="input">
+                    <select name="who">
+                        <option value="me">meinem Konto</option>
+                        {% for orga in organizations %}
+                            <option value="{{ orga.getId() }}">{{ "Organization"|trans }}: {{ orga.getName() }}</option>
+                        {% endfor %}
+                    </select>
+                </span>
+            </p>
+            <p><input type="submit" value="{{ "Connect"|trans }}"></p>
+        </form>
+    </div>
+
 {% endblock %}
 
 

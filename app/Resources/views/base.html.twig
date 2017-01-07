@@ -19,6 +19,24 @@
                 {% include 'navi/login.html.twig' %}
             </div>
 
+            {# flash messages #}
+            {% for flash_message in app.session.flashBag.get('error') %}
+                <div class="flash flash-error">
+                    {{ flash_message }}
+                </div>
+            {% endfor %}
+            {% for flash_message in app.session.flashBag.get('success') %}
+                <div class="flash flash-success">
+                    {{ flash_message }}
+                </div>
+            {% endfor %}
+            {% for flash_message in app.session.flashBag.get('notice') %}
+                <div class="flash flash-notice">
+                    {{ flash_message }}
+                </div>
+            {% endfor %}
+
+            {# main content #}
             {% block body %}{% endblock %}
         </div>
 

@@ -56,6 +56,11 @@ class Screen
     private $last_connect;
 
     /**
+     * @ORM\Column(type="string", length=8)
+     */
+    private $connect_code = '';
+
+    /**
      * Set guid
      *
      * @param string $guid
@@ -221,5 +226,29 @@ class Screen
     public function getLastConnect()
     {
         return $this->last_connect;
+    }
+
+    /**
+     * Set connectCode
+     *
+     * @param string $connectCode
+     *
+     * @return Screen
+     */
+    public function setConnectCode($connectCode)
+    {
+        $this->connect_code = $connectCode;
+
+        return $this;
+    }
+
+    /**
+     * Get connectCode
+     *
+     * @return string
+     */
+    public function getConnectCode()
+    {
+        return $this->connect_code;
     }
 }
