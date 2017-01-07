@@ -5,9 +5,11 @@
 
     {# TODO: save multiple/all at once (perhaps "dirty" flag and iteration?)#}
 
-    {% for screen in screens %}
-        {% include 'forms/edit-screen.html.twig' %}
-    {% endfor %}
+    <div id="screens-wrapper">
+        {% for screen in screens %}
+            {% include 'forms/edit-screen.html.twig' %}
+        {% endfor %}
+    </div>
 
     <div id="connect-screen">
         <form action="{{ path('management-connect-screen') }}" method="post">

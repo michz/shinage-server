@@ -8,12 +8,17 @@
 
 namespace AppBundle\Controller\Management;
 
+use AppBundle\Entity\User;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\HttpFoundation\File\Exception\FileNotFoundException;
+use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\HttpFoundation\Request;
 use AppBundle\Exceptions\NoScreenGivenException;
 use AppBundle\Entity\Screen;
 use AppBundle\Service\ScreenAssociation;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 
 class Dashboard extends Controller
@@ -35,4 +40,40 @@ class Dashboard extends Controller
             'screens' => $screens,
         ]);
     }
+
+    /**
+     * @Route("/manage/dashboard/preview/{screen_guid}", name="management-dashboard-preview")
+     */
+    public function previewAction(Request $request, $screen_guid)
+    {
+        /** @var User $user */
+        $user = $this->get('security.token_storage')->getToken()->getUser();
+        $em = $this->getDoctrine()->getManager();
+
+        //$screen_guid = $request->get('screen');
+        $screen = $em->find('AppBundle\Entity\Screen', $screen_guid); /** @var Screen $screen */
+        if (!$screen) {
+            throw new NoScreenGivenException();
+        }
+
+        $assoc = $this->get('app.screenassociation'); /** @var ScreenAssociation $assoc */
+        if (!$assoc->isUserAllowed($screen, $user)) {
+            throw new AccessDeniedException();
+        }
+
+        // get screenshot path
+        $basepath = $this->container->getParameter('path_screenshots');
+        $file_path = $basepath . '/' . $screen->getGuid() . '.png';
+        if (!is_file($file_path)) {
+            $file_path = $this->container->getParameter('kernel.root_dir') . '/Resources/img/no-preview.png';
+        }
+
+        $file = new File($file_path);
+        $response = new Response();
+        $response->headers->set('Content-Type', $file->getMimeType());
+        $response->setContent(file_get_contents($file));
+        return $response;
+
+    }
+
 }

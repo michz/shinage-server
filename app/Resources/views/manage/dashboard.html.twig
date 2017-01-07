@@ -3,9 +3,14 @@
 {% block body %}
     <div id="container">
         <h2>Dashboard</h2>
-        {% for screen in screens %}
-            <p>TODO: Screen</p>
-        {% endfor %}
+        <div class="dash-screen-wrapper">
+            {% for screen in screens %}
+                <div class="dash-screen">
+                    <img class="preview" src="{{ path('management-dashboard-preview', {'screen_guid': screen.getGuid()}) }}">
+                    <span class="name">{{ screen.getName() }}</span>
+                </div>
+            {% endfor %}
+        </div>
     </div>
 
     <!-- TODO: Screens readonly anzeigen, evtl mit Screenshot falls vorhanden, Status -->

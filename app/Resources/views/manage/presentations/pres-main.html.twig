@@ -115,6 +115,39 @@
                 }
             }
 
+            // init sortable
+            // init sortable (slide) area
+            $( ".presentation-builder" ).sortable({
+                update: function( event, ui ) {
+                    if (!current_presentation) return false;
+
+                    var new_order = [];
+
+                    $(this).children().each(function(id, o) {
+                        var slide = $(o).data('data');
+                        slide.sort_order = id;
+                        new_order.push(slide);
+                    });
+
+
+                    ajaxLoadShow();
+                    $.ajax({
+                        url: "{{ path('management-presentations-set-order') }}",
+                        method: 'POST',
+                        data: {
+                            'slides': new_order
+                        }
+                    }).fail(function() {
+                        $.notify("Präsentation konnte leider nicht gespeichert werden.", "error");
+                    }).done(function(data) {
+                        $.notify("Präsentation gespeichert.", "success");
+                    }).always(function() {
+                        loadPresentation(current_presentation, true);
+                    });
+                }
+            });
+            $(".presentation-builder").disableSelection();
+
             // and now register events for current loaded presentation
             $(".duration input").on('change', function() {
                 var duration = $(this).val();
@@ -188,7 +221,10 @@
                     };
                     div.data('data', slide);
                     return div;
-                } /*'clone'*/
+                } /*'clone'*/,
+                stop: function(event, ui) {
+                    console.log("stop");
+                }
             });
         };
 
@@ -203,13 +239,6 @@
                     registerDraggables();
                 })
                 .jstree({});
-
-
-            // init droppable (slide) area
-            $( ".presentation-builder" ).droppable({
-                accept: ".jstree-leaf" /*,
-                drop: function(event, ui) {}*/
-            });
 
 
             // load presentation
@@ -246,35 +275,6 @@
                 });
             });
 
-            // init sortable (slide) area
-            $( ".presentation-builder" ).sortable({
-                update: function( event, ui ) {
-                    var new_order = [];
-
-                    $(this).children().each(function(id, o) {
-                        var slide = $(o).data('data');
-                        slide.sort_order = id;
-                        new_order.push(slide);
-                    });
-
-
-                    ajaxLoadShow();
-                    $.ajax({
-                        url: "{{ path('management-presentations-set-order') }}",
-                        method: 'POST',
-                        data: {
-                            'slides': new_order
-                        }
-                    }).fail(function() {
-                        $.notify("Präsentation konnte leider nicht gespeichert werden.", "error");
-                    }).done(function(data) {
-                        $.notify("Präsentation gespeichert.", "success");
-                    }).always(function() {
-                        loadPresentation(current_presentation, true);
-                    });
-                }
-            });
-            $(".presentation-builder").disableSelection();
         });
     </script>
 {% endblock %}

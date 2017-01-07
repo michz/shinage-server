@@ -52,6 +52,9 @@ class Screens extends Controller
 
         $em = $this->getDoctrine()->getManager();
         $screen = $em->find('\AppBundle\Entity\Screen', $guid);
+
+        // TODO check if user is allowed to edit screen
+
         $screen->setName($name);
         $screen->setNotes($notes);
         $screen->setLocation($loc);
