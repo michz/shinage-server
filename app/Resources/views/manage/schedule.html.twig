@@ -19,12 +19,61 @@
         <div id='calendar'></div>
     </div>
 
+
+    <div class="dialog">
+        <select name="screen" id="screen-prototype">
+            {% for screen in screens %}
+                <option value="{{ screen.getGuid() }}">{{ screen.getName() }}</option>
+            {% endfor %}
+        </select>
+    </div>
+
+    <div class="dialog">
+        <select name="screen" id="screen-prototype">
+            {% for screen in screens %}
+                <option value="{{ screen.getGuid() }}">{{ screen.getName() }}</option>
+            {% endfor %}
+        </select>
+        <select name="presentation" id="presentation-prototype">
+            {% for instance in presentations %}
+                {% for presentation in instance %}
+                    <option value="{{ presentation.getId() }}">{{ presentation.getTitle() }}</option>
+                {% endfor %}
+            {% endfor %}
+        </select>
+    </div>
+
+    <div id="diag-place" class="dialog">
+        <form action="{{ path('management-add-scheduled') }}" method="post">
+        <p>
+            <span class="label">{{ 'Presentation'|trans }}:</span>
+            <span id="inp-pres" class="input">TODO</span>
+        </p>
+        <p>
+            <span class="label">{{ 'Screen'|trans }}:</span>
+            <span id="inp-screen" class="input">TODO</span>
+        </p>
+        <p>
+            <span class="label">{{ 'StartTime'|trans }}:</span>
+            <span class="input"><input id="date-start" name="start" class="date-pick" type="text"></span>
+        </p>
+        <p>
+            <span class="label">{{ 'EndTime'|trans }}:</span>
+            <span class="input"><input id="date-end" name="end" class="date-pick" type="text"></span>
+        </p>
+        </form>
+    </div>
+
 {% endblock %}
 
 {# Styles for placement in <head> tag #}
 {% block stylesheets %}
-    <link rel="stylesheet" href="{{ asset('js/fullcalendar-3.1.0/fullcalendar.min.css') }}" media="all"></link>
-    <link rel="stylesheet" href="{{ asset('js/fullcalendar-3.1.0/fullcalendar.print.min.css') }}" media="print"></link>
+    <link rel="stylesheet" href="{{ asset('js/fullcalendar-3.1.0/fullcalendar.min.css') }}" media="all">
+    <link rel="stylesheet" href="{{ asset('js/fullcalendar-3.1.0/fullcalendar.print.min.css') }}" media="print">
+
+    <link rel="stylesheet" href="{{ asset('css/jquery.datetimepicker.css') }}">
+
+    <link rel="stylesheet" type="text/css" href="{{ asset('js/jquery-ui/jquery-ui.min.css') }}">
 
     <style>
         #calendar {
@@ -50,6 +99,70 @@
     '@AppBundle/Resources/public/js/scheduler.js'
     %}
     <script src="{{ asset_url }}"></script>
+    <script src="{{ asset('js/jquery-ui/jquery-ui.min.js') }}"></script>
+
+    <script src="{{ asset('js/jquery.datetimepicker.full.min.js') }}"></script>
+
+    <script>
+        var showCreateDialog = function(start, stop, success) {
+            $('#diag-place').find('#date-start').val(start.format('DD-MM-YYYY HH:mm'));
+            $('#diag-place').find('#date-end').val(stop.format('DD-MM-YYYY HH:mm'));
+            $('#diag-place').dialog('option', 'successCallback', success);
+            $('#diag-place').dialog('open');
+        };
+        $(document).ready(function(){
+            $('#diag-place').dialog({
+                resizable: false,
+                height: "auto",
+                width: 400,
+                modal: true,
+                autoOpen: false,
+                buttons: {
+                    "Speichern": function() {
+                        var succ = $(this).dialog('option', 'successCallback');
+                        var form = $(this).children('form');
+
+                        ajaxLoadShow();
+                        $.ajax({
+                            type: "POST",
+                            url: form.attr('action'),
+                            data: form.serialize()
+                        })
+                            .fail(function(){
+                                $.notify("Beim Eintragen ist leider ein Fehler aufgetreten.", "error");
+                            })
+                            .done(function(){
+                                $.notify("Die Präsentation wurde eingetragen.", "success");
+                                var cb = $('#diag-place').dialog('option', 'successCallback');
+                                cb();
+                            })
+                            .always(function(){
+                                ajaxLoadHide();
+                            });
+
+                        $(this).dialog("close");
+                    },
+                    Cancel: function() {
+                        $(this).dialog("close");
+                    }
+                },
+                open: function() {
+                    var diag = $(this);
+                    diag.find('#inp-screen').empty();
+                    diag.find('#inp-screen').append($('#screen-prototype').clone());
+                    diag.find('#inp-pres').empty();
+                    diag.find('#inp-pres').append($('#presentation-prototype').clone());
+
+                    diag.find('#inp-screen').children('select').val($(getSelectedScreen()).data('guid'));
+
+                    $.datetimepicker.setLocale('de');
+                    $(this).find(".date-pick").datetimepicker({
+                        format: 'd.m.Y H:i'
+                    });
+                }
+            });
+        });
+    </script>
     {% endjavascripts %}
 
 

@@ -9,6 +9,7 @@
 namespace AppBundle\Controller\Management;
 
 use AppBundle\Entity\Presentation;
+use Doctrine\ORM\EntityManager;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Config\Definition\Exception\Exception;
@@ -69,6 +70,46 @@ class PresentationBuilder extends Controller
         if (!$user->isPresentationAllowed($pres)) {
             throw new AccessDeniedException();
         }
+
+        return $this->json($pres);
+    }
+
+    /**
+     * @Route("/manage/presentations/delete", name="management-presentations-delete")
+     */
+    public function managePresentationsDeleteAction(Request $request)
+    {
+        $user = $this->get('security.token_storage')->getToken()->getUser();
+
+        $id = $request->get('id');
+
+        /** @var EntityManager $em */
+        $em = $this->getDoctrine()->getManager();
+        /** @var \AppBundle\Entity\Presentation $pres */
+        $pres = $em->find('\AppBundle\Entity\Presentation', $id);
+
+        // check if user is allowed to see presentation
+        if (!$user->isPresentationAllowed($pres)) {
+            throw new AccessDeniedException();
+        }
+
+        // delete slides
+        $slides = $pres->getSlides();
+        foreach ($slides as $s) {
+            $em->remove($s);
+        }
+
+        // delete scheduled items
+        $rep = $em->getRepository('AppBundle:ScheduledPresentation');
+        $scheduled = $rep->findBy(array('presentation' => $pres));
+        foreach ($scheduled as $s) {
+            $em->remove($s);
+        }
+
+
+        // TODO nur flag "deleted" setzen, damit wiederherstellbar
+        $em->remove($pres);
+        $em->flush();
 
         return $this->json($pres);
     }
@@ -220,24 +261,7 @@ class PresentationBuilder extends Controller
 
     public function getPresentationsForUser(User $user) {
         $em = $this->getDoctrine()->getManager();
-        $rep = $em->getRepository('AppBundle:Presentation');
-        $pres = array();
-
-        $pres_user = $rep->findBy(array('owner_user' => $user));
-
-        foreach ($pres_user as $p) {
-            $pres['me'][] = $p;
-        }
-
-        $orgas = $user->getOrganizations();
-        foreach ($orgas as $orga) { /** @var Organization $orga */
-            $pres_orga = $rep->findBy(array('owner_orga' => $orga));
-            foreach ($pres_orga as $p) {
-                $pres[$orga->getName()][] = $p;
-            }
-        }
-
-        return $pres;
+        return $user->getPresentations($em);
     }
 
 

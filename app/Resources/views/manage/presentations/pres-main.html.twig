@@ -4,8 +4,10 @@
     <div id="container">
         <h2>{{ 'Presentations'|trans }}</h2>
 
-        <p>TODO: Präsentationen zwischen Benutzer und Organisationen verschieben</p>
-        <p>TODO: Präsentationen löschen</p>
+        <!--
+        TODO: Präsentationen zwischen Benutzer und Organisationen verschieben
+        TODO: Präsentationen-Auswahlliste schöner
+        -->
 
         <div id="chose-presentation">
             <p>Präsentation zum Bearbeiten auswählen:</p>
@@ -14,7 +16,10 @@
                     <li>{{ key }}
                         <ul>
                             {% for p in who %}
-                                <li><a class="load-pres" data-presentation-id="{{ p.getId() }}">{{ p.getTitle() }}</a></li>
+                                <li id="pres-chose-{{ p.getId() }}">
+                                    <a class="load-pres" data-presentation-id="{{ p.getId() }}">{{ p.getTitle() }}</a>
+                                    <img class="delete-pres" data-presentation-id="{{ p.getId() }}" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAABmJLR0QA/wD/AP+gvaeTAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAB3RJTUUH4QEHCR87wvuvuwAAAIRJREFUOMutU0EOwCAIa3byNSY+wv8f/YHPWHeYLtjhZcyEKNTGAgKSmIskpq9xxfXOdDqA4hHGXgD0hWjABoDDqvNSNXh7cPMyxbJRkB38VmKk0bE0zMOKqqhy4dyc1xSlSHlDsLH86pQEdpIJICn5QHT9mUKoiN/bGP5I4a8cHqboOF/dHiTQQ9S7CAAAAABJRU5ErkJggg==">
+                                </li>
                             {% endfor %}
                         </ul>
                     </li>
@@ -44,8 +49,53 @@
     <script>
         var current_presentation = null;
 
+        var loadPresentation = function(id, background) {
+            ajaxLoadShow();
+            current_presentation = id;
+            $.ajax({
+                url: "{{ path('management-presentations-get') }}",
+                method: 'POST',
+                data: {
+                    'id': current_presentation
+                }
+            }).fail(function() {
+                $.notify("Präsentation konnte leider nicht geladen werden.", "error");
+            }).done(function(data) {
+                readPresentation(data);
+                if (background != true) {
+                    $.notify("Präsentation \"" + data.title + "\" geladen.", "success");
+                }
+            }).always(function() {
+                ajaxLoadHide();
+            });
+        };
+
+        var deletePresentation = function(id) {
+            ajaxLoadShow();
+            var li = $("#pres-chose-" + id);
+            $.ajax({
+                url: "{{ path('management-presentations-delete') }}",
+                method: 'POST',
+                data: {
+                    'id': id
+                }
+            }).fail(function() {
+                $.notify("Präsentation konnte leider nicht gelöscht werden.", "error");
+            }).done(function(data) {
+                if (current_presentation == id) {
+                    current_presentation = 0;
+                    $(".presentation-builder").empty();
+                }
+                li.remove();
+                $.notify("Präsentation gelöscht.", "success");
+            }).always(function() {
+                ajaxLoadHide();
+            });
+        };
+
         var readPresentation = function(json) {
             $(".presentation-builder").empty();
+            current_presentation = json.id;
 
             for (var i = 0; i < json.slides.length; ++i) {
                 var slide = json.slides[i];
@@ -79,9 +129,9 @@
                         'duration': duration
                     }
                 }).fail(function() {
-                    console.log("fail");
-                    alert("TODO: Fehler");
+                    $.notify("Dauer konnte nicht gespeichert werden.", "error");
                 }).done(function(data) {
+                    $.notify("Dauer aktualisiert.", "success");
                 }).always(function() {
                     ajaxLoadHide();
                 });
@@ -102,10 +152,10 @@
                         'id':       slide.id
                     }
                 }).fail(function() {
-                    console.log("fail");
-                    alert("TODO: Fehler");
+                    $.notify("Folie konnte nicht gelöscht werden.", "error");
                 }).done(function(data) {
                     slide_div.remove();
+                    $.notify("Folie gelöscht.", "success");
                 }).always(function() {
                     ajaxLoadHide();
                 });
@@ -122,7 +172,7 @@
                 helper: function(o, ui) {
                     var div = $(
                         '<div class="elem elem-image">' +
-                        '    <img src="{{ path('management-presentations-get-thumbnail', {'file':''}) }}/' +
+                        '    <img class="preview" src="{{ path('management-presentations-get-thumbnail', {'file':''}) }}/' +
                             $(this).data('poolpath') + '">'+
                         '    <span class="name">Bildname</span>' +
                         '</div>'
@@ -164,22 +214,14 @@
 
             // load presentation
             $('.load-pres').on('click', function() {
-                ajaxLoadShow();
-                current_presentation = $(this).data('presentation-id');
-                $.ajax({
-                    url: "{{ path('management-presentations-get') }}",
-                    method: 'POST',
-                    data: {
-                        'id': current_presentation
-                    }
-                }).fail(function() {
-                    console.log("fail");
-                    alert("TODO: Fehler");
-                }).done(function(data) {
-                    readPresentation(data);
-                }).always(function() {
-                    ajaxLoadHide();
-                });
+                loadPresentation($(this).data('presentation-id'));
+            });
+
+            // delete presentation
+            $('.delete-pres').on('click', function() {
+                var r = confirm("Möchten Sie die gewählte Präsentation wirklich löschen?");
+                if (!r) return;
+                deletePresentation($(this).data('presentation-id'));
             });
 
             // create new presentation
@@ -196,15 +238,12 @@
                         'title': title
                     }
                 }).fail(function() {
-                    console.log("fail");
-                    alert("TODO: Fehler");
+                    $.notify("Neue Präsentation konnte leider nicht erstellt werden.", "error");
                 }).done(function(data) {
                     location.reload();
                 }).always(function() {
                     ajaxLoadHide();
                 });
-
-                alert("TODO!");
             });
 
             // init sortable (slide) area
@@ -227,18 +266,15 @@
                             'slides': new_order
                         }
                     }).fail(function() {
-                        console.log("fail");
-                        alert("TODO: Fehler");
+                        $.notify("Präsentation konnte leider nicht gespeichert werden.", "error");
                     }).done(function(data) {
-                        //readPresentation(data);
-                        //console.log(data);
+                        $.notify("Präsentation gespeichert.", "success");
                     }).always(function() {
-                        ajaxLoadHide();
+                        loadPresentation(current_presentation, true);
                     });
                 }
             });
             $(".presentation-builder").disableSelection();
-
         });
     </script>
 {% endblock %}

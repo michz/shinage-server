@@ -8,6 +8,7 @@
 
 namespace AppBundle\Service;
 
+use AppBundle\Entity\Organization;
 use AppBundle\Entity\User;
 use Doctrine\ORM\EntityManager;
 
@@ -45,6 +46,22 @@ class ScreenAssociation
         }
 
         return $r;
+    }
+
+    public function isUserAllowed(Screen $screen, User $user) {
+        $rep = $this->em->getRepository('AppBundle:ScreenAssociation');
+        $assoc = $rep->findBy(array('screen' => $screen->getGuid()));
+        $orgas = $user->getOrganizations();
+
+        foreach ($assoc as $a) { /** @var \AppBundle\Entity\ScreenAssociation $a */
+            if ($a->getUserId() == $user) return true;
+
+            foreach ($orgas as $o) { /** @var Organization $o */
+                if ($a->getOrgaId() == $o) return true;
+            }
+        }
+
+        return false;
     }
 
     public function isScreenAssociated(Screen $screen)

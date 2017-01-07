@@ -26,14 +26,15 @@ class ScheduledPresentation {
 
     /**
      * @ORM\ManyToOne(targetEntity="Screen")
-     * @ORM\JoinColumn(name="screen_id", referencedColumnName="guid", nullable=true)
+     * @ORM\JoinColumn(name="screen_id", referencedColumnName="guid", nullable=false)
      */
     private $screen;
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * @ORM\ManyToOne(targetEntity="Presentation")
+     * @ORM\JoinColumn(name="presentation_id", referencedColumnName="id", nullable=false)
      */
-    private $name;
+    private $presentation;
 
     /**
      * @ORM\Column(type="datetime")
@@ -53,30 +54,6 @@ class ScheduledPresentation {
     public function getId()
     {
         return $this->id;
-    }
-
-    /**
-     * Set name
-     *
-     * @param string $name
-     *
-     * @return ScheduledPresentation
-     */
-    public function setName($name)
-    {
-        $this->name = $name;
-
-        return $this;
-    }
-
-    /**
-     * Get name
-     *
-     * @return string
-     */
-    public function getName()
-    {
-        return $this->name;
     }
 
     /**
@@ -149,5 +126,29 @@ class ScheduledPresentation {
     public function getScheduledEnd()
     {
         return $this->scheduled_end;
+    }
+
+    /**
+     * Set presentation
+     *
+     * @param \AppBundle\Entity\Presentation $presentation
+     *
+     * @return ScheduledPresentation
+     */
+    public function setPresentation(\AppBundle\Entity\Presentation $presentation = null)
+    {
+        $this->presentation = $presentation;
+
+        return $this;
+    }
+
+    /**
+     * Get presentation
+     *
+     * @return \AppBundle\Entity\Presentation
+     */
+    public function getPresentation()
+    {
+        return $this->presentation;
     }
 }

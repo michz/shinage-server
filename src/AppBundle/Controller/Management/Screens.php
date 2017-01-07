@@ -22,9 +22,6 @@ class Screens extends Controller
      */
     public function indexAction(Request $request)
     {
-        #$rep = $this->getDoctrine()->getRepository('AppBundle:Screen');
-        #$screens = $rep->findAll();
-
         // user that is logged in
         $user = $this->get('security.token_storage')->getToken()->getUser();
 

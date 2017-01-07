@@ -9,6 +9,7 @@
 
 namespace AppBundle\Entity;
 
+use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Mapping as ORM;
 use FOS\UserBundle\Model\User as BaseUser;
 
@@ -83,6 +84,30 @@ class User extends BaseUser {
      *
      * @return User
      */
+
+
+    public function getPresentations(EntityManager $em) {
+        $user = $this;
+        $rep = $em->getRepository('AppBundle:Presentation');
+        $pres = array();
+
+        $pres_user = $rep->findBy(array('owner_user' => $user));
+
+        foreach ($pres_user as $p) {
+            $pres['me'][] = $p;
+        }
+
+        $orgas = $user->getOrganizations();
+        foreach ($orgas as $orga) { /** @var Organization $orga */
+            $pres_orga = $rep->findBy(array('owner_orga' => $orga));
+            foreach ($pres_orga as $p) {
+                $pres[$orga->getName()][] = $p;
+            }
+        }
+
+        return $pres;
+    }
+
     public function addOrganization(\AppBundle\Entity\Organization $organization)
     {
         $this->organizations[] = $organization;

@@ -13,6 +13,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use AppBundle\Exceptions\NoScreenGivenException;
 use AppBundle\Entity\Screen;
+use AppBundle\Service\ScreenAssociation;
 
 
 class Dashboard extends Controller
@@ -23,10 +24,12 @@ class Dashboard extends Controller
     */
     public function dashboardAction(Request $request)
     {
-        $rep = $this->getDoctrine()->getRepository('AppBundle:Screen');
-        $screens = $rep->findAll();
+        // user that is logged in
+        $user = $this->get('security.token_storage')->getToken()->getUser();
 
-        // TODO nur die des Benutzers anzeigen
+        // screens that are associated to the user or to its organizations
+        $assoc = $this->get('app.screenassociation'); /** @var ScreenAssociation $assoc */
+        $screens = $assoc->getScreensForUser($user);
 
         return $this->render('manage/dashboard.html.twig', [
             'screens' => $screens,

@@ -32,6 +32,9 @@
         <script src="{{ asset_url }}"></script>
         {% endjavascripts %}
 
+        <script>
+            $.notify.defaults({ autoHideDelay: 2000, showDuration: 250 });
+        </script>
 
         {% block scripts %}{% endblock %}
 

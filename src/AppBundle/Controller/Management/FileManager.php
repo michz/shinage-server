@@ -10,14 +10,17 @@ namespace AppBundle\Controller\Management;
 
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\HttpFoundation\Request;
 use AppBundle\Exceptions\NoScreenGivenException;
 use AppBundle\Entity\Screen;
+use AppBundle\Entity\User;
 
 use Symfony\Component\HttpFoundation\StreamedResponse;
 use Symfony\Component\HttpFoundation\Response;
 
 use AppBundle\Service\FilePool;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 
 class FileManager extends Controller
@@ -28,13 +31,7 @@ class FileManager extends Controller
     */
     public function filesAction(Request $request)
     {
-        //$rep = $this->getDoctrine()->getRepository('AppBundle:Screen');
-        //$screens = $rep->findAll();
-
-        // TODO nur die des Benutzers anzeigen
-
         return $this->render('file-manager/index.html.twig', [
-            //'screens' => $screens,
         ]);
     }
 
@@ -43,13 +40,19 @@ class FileManager extends Controller
      */
     public function downloadAction(Request $request, $file)
     {
-        // TODO check if user is allowed to access file (correct basename)
+        $user = $this->get('security.token_storage')->getToken()->getUser();
+        /** @var User $user */
 
-        // TODO set (mime) headers
+        // check if user is allowed to see presentation
+        if (!$user->isPoolFileAllowed($file)) {
+            throw new AccessDeniedException();
+        }
 
         $path = realpath($this->container->getParameter('path_pool')) . '/' . $file;
 
+        $file = new File($this->container->getParameter('path_pool') . '/' . $file);
         $response = new Response();
+        $response->headers->set('Content-Type', $file->getMimeType());
         $response->setContent(file_get_contents($path));
         return $response;
     }
@@ -59,10 +62,6 @@ class FileManager extends Controller
      */
     public function connectorAction(Request $request)
     {
-
-        // TODO: get root folders for user (root of user, roots of organizations)
-        // TODO: set options of elfinder-connector (espec. security related)
-
         $response = new StreamedResponse();
         $response->setCallback(function () {
             $pool = $this->get('app.filepool'); /** @var FilePool $pool */
@@ -83,10 +82,10 @@ class FileManager extends Controller
                     'path'          => $path,
                     'URL'           => $this->generateUrl('management-files-download',
                                                 array('file' => $basename)),
-                    'uploadDeny'    => array('all'),                // All Mimetypes not allowed to upload
-                    'uploadAllow'   => array('image', 'text/plain'),// Mimetype `image` and `text/plain` allowed to upload
-                    'uploadOrder'   => array('deny', 'allow'),      // allowed Mimetype `image` and `text/plain` only
-                    'accessControl' => 'access'                     // disable and hide dot starting files (OPTIONAL)
+                    'uploadDeny'    => array('all'),            // all mime not allowed to upload
+                    'uploadAllow'   => array('image'),          // mime `image` allowed
+                    'uploadOrder'   => array('deny', 'allow'),  // allowed specified mime only
+                    'accessControl' => 'access'                 // disable and hide dot starting files
                 );
             }
 

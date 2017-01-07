@@ -17,6 +17,7 @@ use AppBundle\Exceptions\NoScreenGivenException;
 use AppBundle\Entity\Screen;
 
 use AppBundle\Service\ScreenAssociation;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\Validator\Constraints\DateTime;
 
 class Scheduler extends Controller
@@ -29,6 +30,7 @@ class Scheduler extends Controller
     {
         // user that is logged in
         $user = $this->get('security.token_storage')->getToken()->getUser();
+        $em = $this->getDoctrine()->getManager();
 
         // screens that are associated to the user or to its organizations
         $assoc = $this->get('app.screenassociation');
@@ -46,6 +48,7 @@ class Scheduler extends Controller
         return $this->render('manage/schedule.html.twig', [
             'screens' => $screens,
             'screens_count' => $count,
+            'presentations' => $user->getPresentations($em),
         ]);
     }
 
@@ -54,19 +57,25 @@ class Scheduler extends Controller
      */
     public function getScheduleAction(Request $request)
     {
-        // TODO Prüfen, ob Nutzer Schedule sehen/bearbeiten darf
-
         $guid = $request->get('screen');
         $em = $this->getDoctrine()->getManager();
         $screen = $em->find('\AppBundle\Entity\Screen', $guid);
 
+        // parse start and end time
         $start = new \DateTime($request->get('start'), new \DateTimeZone('UTC'));
         $end = new \DateTime($request->get('end'), new \DateTimeZone('UTC'));
 
         $r = array();
         if ($screen) {
-            $rep = $em->getRepository('AppBundle:ScheduledPresentation');
-            #$qb = $em->createQueryBuilder('ScheduledPresentation');
+            // Check if user is allowed to see/edit screen
+            $user = $this->get('security.token_storage')->getToken()->getUser();
+            $assoc = $this->get('app.screenassociation'); /** @var ScreenAssociation $assoc */
+            if (!$assoc->isUserAllowed($screen, $user)) {
+                throw new AccessDeniedException();
+            }
+
+            // TODO Erkenne und behandle Schnitte/Überlappungen mit vorhandenen Items
+
             $sf = $start->format('Y-m-d H:i:s');
             $su = $end->format('Y-m-d H:i:s');
 
@@ -90,10 +99,10 @@ class Scheduler extends Controller
                 /** @var ScheduledPresentation $s */
                 $o          = new \stdClass();
                 $o->id      = $s->getId();
-                $o->title   = $s->getName();
                 $o->start   = $s->getScheduledStart()->format('Y-m-d H:i:s');
                 $o->end     = $s->getScheduledEnd()->format('Y-m-d H:i:s');
                 $o->screen  = $s->getScreen()->getGuid();
+                $o->presentation = $s->getPresentation();
                 $r[]        = $o;
             }
 
@@ -109,23 +118,28 @@ class Scheduler extends Controller
      */
     public function addScheduledAction(Request $request)
     {
-        // TODO Prüfen, ob Nutzer Schedule bearbeiten darf
-
         $guid   = $request->get('screen');
         $em     = $this->getDoctrine()->getManager();
         $screen = $em->find('\AppBundle\Entity\Screen', $guid);
 
+        // Check if user is allowed to see/edit screen
+        $user = $this->get('security.token_storage')->getToken()->getUser();
+        $assoc = $this->get('app.screenassociation'); /** @var ScreenAssociation $assoc */
+        if (!$assoc->isUserAllowed($screen, $user)) {
+            throw new AccessDeniedException();
+        }
+
         $start  = new \DateTime($request->get('start'), new \DateTimeZone('UTC'));
         $end    = new \DateTime($request->get('end'), new \DateTimeZone('UTC'));
 
-        $pres   = $request->get('presentation');
+        $pres_id = $request->get('presentation');
+        $pres   = $em->find('\AppBundle\Entity\Presentation', $pres_id);
 
         $s = new ScheduledPresentation();
         $s->setScheduledStart($start);
         $s->setScheduledEnd($end);
-        $s->setName($pres);
         $s->setScreen($screen);
-        // TODO: Fremdschlüssel zu Präsentation
+        $s->setPresentation($pres);
 
         $em->persist($s);
         $em->flush();
@@ -138,8 +152,6 @@ class Scheduler extends Controller
      */
     public function changeScheduledAction(Request $request)
     {
-        // TODO Prüfen, ob Nutzer Schedule bearbeiten darf
-
         $em = $this->getDoctrine()->getManager();  /** @var EntityManager  $em */
 
         $id = $request->get('id');
@@ -151,9 +163,15 @@ class Scheduler extends Controller
         $screen = $em->find('\AppBundle\Entity\Screen', $guid);
         $s      = $em->find('\AppBundle\Entity\ScheduledPresentation', $id); /** @var ScheduledPresentation $s */
 
+        // Check if user is allowed to see/edit screen
+        $user = $this->get('security.token_storage')->getToken()->getUser();
+        $assoc = $this->get('app.screenassociation'); /** @var ScreenAssociation $assoc */
+        if (!$assoc->isUserAllowed($screen, $user)) {
+            throw new AccessDeniedException();
+        }
+
         $s->setScheduledStart($start);
         $s->setScheduledEnd($end);
-        $s->setName($name);
         $s->setScreen($screen);
 
         $em->persist($s);
@@ -167,11 +185,20 @@ class Scheduler extends Controller
      */
     public function deleteScheduledAction(Request $request)
     {
-        // TODO Prüfen, ob Nutzer Schedule bearbeiten darf
-
         $id = $request->get('id');
         $em = $this->getDoctrine()->getManager();  /** @var EntityManager  $em */
+
+        /** @var ScheduledPresentation $s */
         $s = $em->find('\AppBundle\Entity\ScheduledPresentation', $id);
+        $screen = $s->getScreen();
+
+        // Check if user is allowed to see/edit screen
+        $user = $this->get('security.token_storage')->getToken()->getUser();
+        $assoc = $this->get('app.screenassociation'); /** @var ScreenAssociation $assoc */
+        if (!$assoc->isUserAllowed($screen, $user)) {
+            throw new AccessDeniedException();
+        }
+
         $em->remove($s);
         $em->flush();
 

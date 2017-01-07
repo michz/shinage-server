@@ -37,9 +37,17 @@ code { background: #F5F5F5; max-width: 100px; padding: 2px 6px; word-wrap: break
 .flash-error { border-color: #ee0000; background-color:#ffeeee;
     color:#aa0000; }
 
+/* other generic stuff */
+.dialog { display: none; }
+.dialog p { line-height: 14px;  font-size:16px; margin:4px 0; padding:0;  }
+.dialog .label { display: inline-block; width:140px; }
+.dialog .input input, .dialog .input select { width:210px; }
 
 /* presentations */
 .new-pres, .load-pres { cursor: pointer; }
+
+#chose-presentation li { position: relative; padding-left:20px; }
+#chose-presentation li img { position: absolute; left:1px; top:3px; cursor: pointer; }
 
 #pool-tree { float:left; width:200px; border: 1px solid #2a6496; overflow-x:scroll; min-height:300px; }
 #pool-tree ul li { list-style: circle; white-space: nowrap; font-size:14px; }
@@ -104,6 +112,7 @@ code { background: #F5F5F5; max-width: 100px; padding: 2px 6px; word-wrap: break
 #sched-screen-list .visible { background-color:#93B9FF; color: #001111; border-color: #2a6496; }
  */
 
+#calendar .fc-event .fc-event-title { font-weight:bold; font-size:13px; }
 #calendar .fc-event .event-delete { visibility: hidden; position:absolute; right:6px; top:0; }
 #calendar .fc-event:hover .event-delete { visibility: visible; }
 
@@ -138,5 +147,5 @@ code { background: #F5F5F5; max-width: 100px; padding: 2px 6px; word-wrap: break
 
 /* AJAX */
 #ajax-loading { position:absolute; top:-500px; left:-500px; right:-500px; bottom:-500px;
-    background:rgba(0,0,0,0.8); }
+    background:rgba(0,0,0,0.8); z-index:99999; }
 #ajax-loading img { position:absolute; top:49%; left:49%; }

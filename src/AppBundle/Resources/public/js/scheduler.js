@@ -42,6 +42,13 @@ var global_evt_src = 1;
 
 var placePresentationBySelection = function(start, end) {
     var screen = getSelectedScreen();
+
+    showCreateDialog(start, end,
+        function() {
+            $('#calendar').fullCalendar('refetchEvents');
+        });
+    return;
+
     var title = prompt('TODO: Show possible presentations.');
     var eventData;
 
@@ -63,6 +70,7 @@ var placePresentationBySelection = function(start, end) {
 };
 
 var saveChanged = function (event, revertFunc) {
+    ajaxLoadShow();
     $.ajax({
         url: uri_change_scheduled,
         method: 'POST',
@@ -79,6 +87,8 @@ var saveChanged = function (event, revertFunc) {
     }).done(function() {
         $('#calendar').fullCalendar('refetchEventSources', event.source);
         $.notify("Änderung gespeichert.", "success");
+    }).always(function () {
+        ajaxLoadHide();
     });
 }
 
@@ -91,11 +101,12 @@ var movePresentation = function( event, delta, revertFunc, jsEvent, ui, view ) {
 }
 
 var deletePresentation = function(event) {
-    var r = confirm("Soll die Präsentation  \"" + event.title + "\" (" +
+    var r = confirm("Soll die Präsentation  \"" + event.presentation.title + "\" (" +
         event.start.format('DD.MM.YYYY HH:mm') + ") wirklich entfernt werden?");
 
     if (r != true) return;
 
+    ajaxLoadShow();
     $.ajax({
         url: uri_delete_scheduled,
         method: 'POST',
@@ -105,6 +116,8 @@ var deletePresentation = function(event) {
     }).done(function() {
         $('#calendar').fullCalendar('refetchEventSources', event.source);
         $.notify("Präsentation entfernt.", "success");
+    }).always(function () {
+        ajaxLoadHide();
     });
 };
 
@@ -170,6 +183,7 @@ $(document).ready(function() {
         select: placePresentationBySelection,
         eventResize: resizePresentation,
         eventRender: function(event, element) {
+            element.append('<div class="fc-event-title">' + event.presentation.title + '</div>');
             element.find('.fc-content').append("<div class='event-delete'><img src='data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAABmJLR0QA/wD/AP+gvaeTAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAB3RJTUUH4QECDRkgLhOZPwAAAJZJREFUOMutU0kOxDAIMz11PoOUR+T/x/5gvjA9jedQ6FBET9RSJBKb4CyAJBwk4fO8nvmscfJNclQJFg/T4AIjN/4xC2cz8NvJh8oZ6g4szjicBGsVVhsVRnYxk+B7E1+PmC5JbxLimsYcOQMR32wF8EGNF4DdtSKCBU0sqbpadRZaGqcp54FLbD1j+yO1v3K7mbrt/ANBpmKW31STdQAAAABJRU5ErkJggg=='></div>");
             element.find('.fc-content .event-delete').on('click', function(e) {
                 deletePresentation(event);
@@ -213,7 +227,6 @@ $(document).ready(function() {
         $(this).data('event-src', global_evt_src);
         addEventSource(this, global_evt_src);
         global_evt_src++;
-        console.log($(this).data('event-src'));
     });
 
 });

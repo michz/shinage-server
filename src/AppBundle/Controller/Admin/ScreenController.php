@@ -11,6 +11,8 @@ namespace AppBundle\Controller\Admin;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
+use AppBundle\Service\ScreenAssociation;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 class ScreenController extends Controller
 {
@@ -34,9 +36,6 @@ class ScreenController extends Controller
      */
     public function modifyAction(Request $request)
     {
-        // TODO: Check if screen may be edited by current user
-
-
         $guid = $request->get('hidGuid');
         $name = $request->get('txtName');
         $loc = $request->get('txtLocation');
@@ -46,6 +45,14 @@ class ScreenController extends Controller
 
         $em = $this->getDoctrine()->getManager();
         $screen = $em->find('\AppBundle\Entity\Screen', $guid);
+
+        // Check if screen may be edited by current user
+        $user = $this->get('security.token_storage')->getToken()->getUser();
+        $assoc = $this->get('app.screenassociation'); /** @var ScreenAssociation $assoc */
+        if (!$assoc->isUserAllowed($screen, $user)) {
+            throw new AccessDeniedException();
+        }
+
         $screen->setName($name);
         $screen->setNotes($notes);
         $screen->setLocation($loc);
@@ -59,11 +66,7 @@ class ScreenController extends Controller
             return $this->redirectToRoute($request->get('hidUri'));
         }
 
-        // TODO: Check if screen may be edited by current user TTTTTEEEESSSTTT
-
         // is AJAX request
         return $this->json(array('status' => 'ok'));
     }
-
-
 }
