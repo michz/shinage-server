@@ -123,6 +123,19 @@ code { background: #F5F5F5; max-width: 100px; padding: 2px 6px; word-wrap: break
     width:100%; color:#111; }
 
 
+/* TODO */
+#todolist li { position:relative; border:1px solid #000; height:32px;
+    font-size:13px; padding:0; margin:1px 0; overflow:hidden; white-space: nowrap; }
+
+#todolist li.todo-todo { background-color: #fffc99; }
+
+#todolist li span.todo-li-text { position:absolute; top:0; left:2px; color:#333;
+    font-weight:bold;  }
+#todolist li span.todo-li-file { position:absolute; bottom:0; left:2px; color:#333; }
+#todolist li span.todo-li-line { position:absolute; bottom:0; right:2px; color:#333;  }
+
+
+
 /* AJAX */
 #ajax-loading { position:absolute; top:-500px; left:-500px; right:-500px; bottom:-500px;
     background:rgba(0,0,0,0.8); }

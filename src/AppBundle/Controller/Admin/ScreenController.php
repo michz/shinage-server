@@ -36,6 +36,7 @@ class ScreenController extends Controller
     {
         // TODO: Check if screen may be edited by current user
 
+
         $guid = $request->get('hidGuid');
         $name = $request->get('txtName');
         $loc = $request->get('txtLocation');
@@ -57,6 +58,8 @@ class ScreenController extends Controller
         if (!$ajax) {
             return $this->redirectToRoute($request->get('hidUri'));
         }
+
+        // TODO: Check if screen may be edited by current user TTTTTEEEESSSTTT
 
         // is AJAX request
         return $this->json(array('status' => 'ok'));

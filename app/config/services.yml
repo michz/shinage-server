@@ -17,3 +17,9 @@ services:
         class: AppBundle\Service\FilePool
         arguments:
             basepath: %path_pool%
+
+    app.todolist:
+        class: AppBundle\Service\TodoList
+        arguments:
+            basepath: %kernel.root_dir%
+            cache: "@cache.app"
