@@ -183,6 +183,11 @@ $(document).ready(function() {
         select: placePresentationBySelection,
         eventResize: resizePresentation,
         eventRender: function(event, element) {
+            if (event.className[0] == 'fc-helper') {
+                var col = screen_colors[$(getSelectedScreen()).data('color-set')];
+                $(element).css('background-color', col.dark);
+                $(element).css('color', col.light);
+            }
             if (!event.presentation) return;
 
             element.append('<div class="fc-event-title">' + event.presentation.title + '</div>');
