@@ -18,8 +18,65 @@
     <script>
         var options = {
             url  : '{{ path('management-files-connector') }}',
-            lang : '{{ app.request.locale }}'
-        }
+            lang : '{{ app.request.locale }}',
+            uiOptions : {
+                // toolbar configuration
+                toolbar : [
+                    ['back', 'forward'],
+                    // ['reload'],
+                    // ['home', 'up'],
+                    ['mkdir', 'mkfile', 'upload'],
+                    ['open', 'download', 'getfile'],
+                    ['info'],
+                    ['quicklook'],
+                    ['copy', 'cut', 'paste'],
+                    ['rm'],
+                    ['duplicate', 'rename', 'edit', 'resize'],
+                    ['extract', 'archive'],
+                    /*['search'],*/
+                    ['view']
+                ],
+
+                // directories tree options
+                tree : {
+                    // expand current root on init
+                    openRootOnLoad : true,
+                    // auto load current dir parents
+                    syncTree : true
+                },
+
+                // navbar options
+                navbar : {
+                    minWidth : 150,
+                    maxWidth : 500
+                },
+
+                // current working directory options
+                cwd : {
+                    // display parent directory in listing as ".."
+                    oldSchool : false
+                }
+            },
+            handlers : {
+                dblclick : function(event, elfinderInstance) {
+                    event.preventDefault();
+                    elfinderInstance.exec('getfile')
+                        .done(function() { elfinderInstance.exec('quicklook'); })
+                        .fail(function() { elfinderInstance.exec('open'); });
+                }
+            },
+
+            getFileCallback : function(files, fm) {
+                return false;
+            },
+
+            commandsOptions : {
+                quicklook : {
+                    width : 640,  // Set default width/height voor quicklook
+                    height : 480
+                }
+            }
+        };
         $('#elfinder').elfinder(options);
     </script>
 {% endblock %}

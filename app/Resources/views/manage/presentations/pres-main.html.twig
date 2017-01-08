@@ -13,7 +13,7 @@
             <p>Präsentation zum Bearbeiten auswählen:</p>
             <ul>
                 {% for key,who in presentations %}
-                    <li>{{ key }}
+                    <li>{{ key|trans }}:
                         <ul>
                             {% for p in who %}
                                 <li id="pres-chose-{{ p.getId() }}">
@@ -24,7 +24,7 @@
                         </ul>
                     </li>
                 {% endfor %}
-                <li><a class="new-pres">neue Präsentation anlegen</a></li>
+                <li><a class="new-pres">{{ 'CreateNewPresentation'|trans }}</a></li>
             </ul>
         </div>
     </div>

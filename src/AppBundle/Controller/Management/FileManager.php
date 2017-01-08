@@ -57,11 +57,26 @@ class FileManager extends Controller
         return $response;
     }
 
+
+    /**
+     * @Route("/manage/files-el-thumbnail/{file}", name="management-files-el-thumbnail", requirements={"file": ".*"})
+     */
+    public function thumbnailAction(Request $request, $file)
+    {
+        $path = realpath($this->container->getParameter('path_pool')) . '/.el-thumbnails/' . $file;
+        $file = new File($path);
+        $response = new Response();
+        $response->headers->set('Content-Type', $file->getMimeType());
+        $response->setContent(file_get_contents($path));
+        return $response;
+    }
+
     /**
      * @Route("/manage/files-connector", name="management-files-connector")
      */
     public function connectorAction(Request $request)
     {
+
         $response = new StreamedResponse();
         $response->setCallback(function () {
             $pool = $this->get('app.filepool'); /** @var FilePool $pool */
@@ -75,6 +90,7 @@ class FileManager extends Controller
 
             foreach ($paths as $name => $path) {
                 $basename = basename($path);
+                $tmb_path = realpath($this->container->getParameter('path_pool')) . '/.el-thumbnails/';
 
                 $roots[] = array(
                     'driver'        => 'LocalFileSystem',
@@ -82,6 +98,9 @@ class FileManager extends Controller
                     'path'          => $path,
                     'URL'           => $this->generateUrl('management-files-download',
                                                 array('file' => $basename)),
+                    'tmbPath'       => $tmb_path,
+                    'tmbURL'        => $this->generateUrl('management-files-el-thumbnail',
+                                                array('file' => '')),
                     'uploadDeny'    => array('all'),            // all mime not allowed to upload
                     'uploadAllow'   => array('image'),          // mime `image` allowed
                     'uploadOrder'   => array('deny', 'allow'),  // allowed specified mime only

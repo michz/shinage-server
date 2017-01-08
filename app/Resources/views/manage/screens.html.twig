@@ -7,7 +7,14 @@
 
     <div id="screens-wrapper">
         {% for screen in screens %}
-            {% include 'forms/edit-screen.html.twig' %}
+            <div class="screen-editor">
+                <div class="screen-form">
+                    {% include 'forms/edit-screen.html.twig' %}
+                </div>
+                <div class="screens-preview">
+                    <img class="preview" src="{{ path('management-dashboard-preview', {'screen_guid': screen.getGuid()}) }}">
+                </div>
+            </div>
         {% endfor %}
     </div>
 
