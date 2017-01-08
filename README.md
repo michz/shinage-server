@@ -43,10 +43,15 @@ Installation
    replace `composer` by something like `php /path/to/composer.phar` )
 * Please check (and install) the [Prerequisites](#Prerequisites).
 * Clone this repository.
+* Change to the freshly cloned directory. (Something like `cd shinage-server` )
 * Run `composer install`
 * Run `php bin/console doctrine:schema:update --force`
 * To create a first user run: \
   `php bin/console fos:user:create --super-admin`
+* Perhaps you have to adjust the file system permissions. On Linux/Unix/BSD/... do: \
+  `mkdir ./data; chmod -R 0777 ./var ./data` \
+  (If you know what you do you can avoid giving 777-permissions by only granting 
+   read-write permission to the user the web server is running as.)
 * If you want to host your own service,
   you *really* should know what to do from here.
   (i.e. installing and configuring a web server)
@@ -57,7 +62,6 @@ Installation
 Development
 -----------
 * Follow the [Installation steps above](#Installation).
-* Change to the freshly cloned directory. (Something like `cd shinage-server` )
 * Executing `php bin/console server:start`  will run the built-in
   webserver on loopback device (`127.0.0.1` or `::1`) on port `8000`.
 * You can even run the webserver on a specific device/address and port: \
