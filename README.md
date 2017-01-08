@@ -11,16 +11,52 @@ functionality for *Shinage* digital signage solutions.
 It's based on [Symfony 3](http://symfony.com/).
 
 
+Hosted
+------
+If you don't want to care about stuff like servers and security
+ we can provide the fully functionally hosted solution for you.
+ No knowledge about servers or programming needed.
+ Please contact us!
+
+
+Prerequisites
+-------------
+* A machine with a running PHP installation (5.6, 7.0 or newer)
+  with mysql support, libgd and terminal access.
+* Local or global [Composer](https://getcomposer.org/download/)-Installation
+  on this machine.
+* MySQL-Server (local or remote).
+* At least one database on this MySQL-Server.
+* At least one user with full access to this database.
+
+
 Installation
 ------------
+* This guide assumes that `composer` is installed globally.
+  (If yours is installed somewhere locally, 
+   replace `composer` by something like `php /path/to/composer.phar` )
+* Please check (and install) the [Prerequisites](#Prerequisites).
 * Clone this repository.
-* Run `composer install`. ([Composer](https://getcomposer.org/download/) must be installed.)
+* Run `composer install`
+* Run `php bin/console doctrine:schema:update --force`
+* To create a first user run: \
+  `php bin/console fos:user:create --super-admin`
+* If you want to host your own service,
+  you *really* should know what to do from here.
+  (i.e. installing and configuring a web server)
+* If you *do not know* what to do but still want to use *shinage*,
+  please think about using a [hosted](#Hosted) solution.
 
 
 Development
 -----------
-* Clone this repository.
-* Run `composer update`. ([Composer](https://getcomposer.org/download/) must be installed.)
+* Follow the [Installation steps above](#Installation).
+* Change to the freshly cloned directory. (Something like `cd shinage-server` )
+* Executing `php bin/console server:start`  will run the built-in
+  webserver on loopback device (`127.0.0.1` or `::1`) on port `8000`.
+* You can even run the webserver on a specific device/address and port: \
+  `php bin/console server:start 192.168.0.1:8080`. \
+  For details see Symfony's [How to Use PHP's built-in Web Server](http://symfony.com/doc/current/setup/built_in_web_server.html).
 
 
 
