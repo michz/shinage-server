@@ -12,6 +12,7 @@ use AppBundle\Entity\ScheduledPresentation;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Config\Definition\Exception\Exception;
+use Symfony\Component\HttpFoundation\File\Exception\AccessDeniedException;
 use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\HttpFoundation\Request;
 use AppBundle\Exceptions\NoScreenGivenException;
@@ -107,7 +108,11 @@ class HeartbeatController extends Controller
     {
         // TODO check somehow security
 
-        $path = realpath($this->container->getParameter('path_pool')) . '/' . $file;
+        $pool_base = realpath($this->container->getParameter('path_pool'));
+        $path = realpath($pool_base . '/' . $file);
+        if (substr($path, 0, strlen($pool_base)) != $pool_base) {
+            throw new AccessDeniedException();
+        }
 
         $file = new File($path);
         $response = new Response();
