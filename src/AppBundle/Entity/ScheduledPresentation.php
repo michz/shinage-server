@@ -25,13 +25,13 @@ class ScheduledPresentation {
     private $id;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Screen")
+     * @ORM\ManyToOne(targetEntity="Screen", fetch="EAGER")
      * @ORM\JoinColumn(name="screen_id", referencedColumnName="guid", nullable=false)
      */
     private $screen;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Presentation")
+     * @ORM\ManyToOne(targetEntity="Presentation", fetch="EAGER")
      * @ORM\JoinColumn(name="presentation_id", referencedColumnName="id", nullable=false)
      */
     private $presentation;

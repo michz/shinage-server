@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8" />
+    <title>Shinage Presentation</title>
+    <link rel="stylesheet" type="text/css" href="{{ asset('css/reset.css') }}" />
+
+    <link rel="stylesheet" type="text/css" href="{{ asset('css/shinclient.css') }}" />
+
+    {% block stylesheets %}{% endblock %}
+
+    {#<link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}" />#}
+</head>
+<body>
+
+{#
+    {% for slide in presentation.getSlides() %}
+        {{ dump(slide) }}
+    {% endfor %}
+#}
+
+    {# main content #}
+    {#
+    {% block body %}{% endblock %}
+    #}
+
+
+
+<div id="ajax-loading">
+    <img src="{{ asset('img/spin.gif') }}">
+</div>
+
+
+
+    <script>
+        var img_base = "{{ path('screen-remote-client-file', {'file': ''}) }}";
+        var slides = {{ slides_json|raw }};
+    </script>
+
+{% javascripts
+'@jquery' '@shinage_client'
+%}
+<script src="{{ asset_url }}"></script>
+{% endjavascripts %}
+
+{% block scripts %}{% endblock %}
+
+
+
+<script>
+    $(function() {
+        ajaxLoadHide();
+    });
+</script>
+
+</body>
+</html>

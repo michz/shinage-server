@@ -78,6 +78,9 @@ assetic:
         shinage:
             inputs:
                 - '@AppBundle/Resources/public/js/shinage.js'
+        shinage_client:
+            inputs:
+                - '@AppBundle/Resources/public/js/shinage-client.js'
         fullcalendar:
             inputs:
                 - '@AppBundle/Resources/public/js/lib/fullcalendar.min.js'
