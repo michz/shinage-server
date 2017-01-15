@@ -23,12 +23,12 @@ Prerequisites
 -------------
 * A machine with a running PHP installation (5.6, 7.0 or newer)
   with mysql support, libgd and terminal access.
-* MySQL-Server (local or remote). \
-  (On Debian you can get a very basic system configuration by running: \
+* MySQL-Server (local or remote).  
+  (On Debian you can get a very basic system configuration by running:  
   `apt-get install mysql-server mysql-client php5-cli php5-gd php5-mysql`)
-* At least one database on this MySQL-Server. \
+* At least one database on this MySQL-Server.  
   (Run `mysql -uroot -p` and then type `CREATE DATABASE your_database_name;` )
-* At least one user with full access to this database. \
+* At least one user with full access to this database.  
   (Run `CREATE USER 'your_user_name'@'localhost' IDENTIFIED BY 'your_password';` and `GRANT ALL PRIVILEGES ON your_db_name . * TO 'your_user_name'@'localhost';`)
 * Local or global [Composer](https://getcomposer.org/download/)-Installation
   on this machine.
@@ -46,10 +46,10 @@ Installation
 * Change to the freshly cloned directory. (Something like `cd shinage-server` )
 * Run `composer install`
 * Run `php bin/console doctrine:schema:update --force`
-* To create a first user run: \
+* To create a first user run:  
   `php bin/console fos:user:create --super-admin`
-* Perhaps you have to adjust the file system permissions. On Linux/Unix/BSD/... do: \
-  `mkdir ./data; chmod -R 0777 ./var ./data` \
+* Perhaps you have to adjust the file system permissions. On Linux/Unix/BSD/... do:  
+  `mkdir ./data; chmod -R 0777 ./var ./data`  
   (If you know what you do you can avoid giving 777-permissions by only granting 
    read-write permission to the user the web server is running as.)
 * If you want to host your own service,
@@ -64,8 +64,8 @@ Development
 * Follow the [Installation steps above](#Installation).
 * Executing `php bin/console server:start`  will run the built-in
   webserver on loopback device (`127.0.0.1` or `::1`) on port `8000`.
-* You can even run the webserver on a specific device/address and port: \
-  `php bin/console server:start 192.168.0.1:8080`. \
+* You can even run the webserver on a specific device/address and port:  
+  `php bin/console server:start 192.168.0.1:8080`.  
   For details see Symfony's [How to Use PHP's built-in Web Server](http://symfony.com/doc/current/setup/built_in_web_server.html).
 
 
