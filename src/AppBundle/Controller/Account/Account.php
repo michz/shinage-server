@@ -126,6 +126,7 @@ class Account extends Controller
                     $user->addOrganization($orga_new);
                     $em->persist($user);
                     $em->flush();
+                    $em->refresh($orga_new); // needed to notify $user that he is in a new organization
                     $this->addFlash('success', 'Die neue Organisation wurde gespeichert.');
                 } catch (UniqueConstraintViolationException $ex) {
                     $this->addFlash('error', 'Der gewählte Name wird bereits für eine Organisation verwendet. Bitte wähle einen anderen, eindeutigen Namen.');
