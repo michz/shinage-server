@@ -1,4 +1,5 @@
 
+{% set route = app.request.attributes.get('_route') %}
 
 <nav class="navbar navbar-default">
     <div class="container-fluid">
@@ -19,6 +20,9 @@
                 {# <li class="active"><a href="#">Link <span class="sr-only">(current)</span></a></li>  #}
 
                 {% include 'navi/manage.html.twig' %}
+                {% if is_granted("ROLE_ADMIN") %}
+                    {% include 'navi/admin.html.twig' %}
+                {% endif %}
 
             </ul>
             {#

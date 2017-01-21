@@ -10,14 +10,17 @@ html,body { margin:0; padding:0; }
 body { background: #F5F5F5; font: 16px/1.5 sans-serif; }
 
 #wrapper { background: #FFF; margin: 1em auto; max-width: 800px; width: 95%; }
-#container { padding: 1em; }
+#container { background:red; } /* TODO REMOVE */
 
 
-.navi-button { display:inline-block; padding:0 10px; }
-#navi-login { float:right; }
+/* navigation */
+.navbar-default .navbar-nav>.admin>a, .navbar-default .navbar-nav>.admin>a:hover,
+.navbar-default .navbar-nav>.admin.open>a, .navbar-default .navbar-nav>.admin.open>a:hover {
+    color: #555;
+    background-color: #ffd4cb;
+}
 
-a.navi-button { color: #000; text-decoration: none; }
-a.navi-button:hover { background-color: #ddd; text-decoration: underline; }
+
 
 h1, h2 { line-height: 1.2; margin: 0 0 .5em; font-weight:bold; }
 h1 { font-size: 36px; }
@@ -93,6 +96,7 @@ code { background: #F5F5F5; max-width: 100px; padding: 2px 6px; word-wrap: break
 
 /* screens */
 #screens-wrapper { text-align: center; }
+/*
 #connect-screen { border:1px solid #2a6496; margin:5px; padding:5px; }
 #connect-screen p, .form p { margin:3px 0; padding:0; }
 #connect-screen .label, .form .label, .form label { display:inline-block; width:180px; }
@@ -100,6 +104,7 @@ code { background: #F5F5F5; max-width: 100px; padding: 2px 6px; word-wrap: break
 #connect-screen .input input, #connect-screen .input select,
 .form .input input, .form .input select
   { width:150px; }
+*/
 
 .account-form { border:1px solid #92AAB0; margin:10px 0; padding:5px; }
 
@@ -149,14 +154,46 @@ code { background: #F5F5F5; max-width: 100px; padding: 2px 6px; word-wrap: break
 
 
 /* login form */
-.auth-form-body { border: 1px solid #fff; padding:20px; max-width:280px; }
+.form-signin {
+    max-width: 330px;
+    padding: 15px;
+    margin: 0 auto;
+}
+.form-signin {
+    max-width: 330px;
+    padding: 15px;
+    margin: 0 auto;
+}
+.form-signin .form-signin-heading,
+.form-signin .checkbox {
+    margin-bottom: 10px;
+}
+.form-signin .checkbox {
+    font-weight: normal;
+}
+.form-signin .form-control {
+    position: relative;
+    height: auto;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+    padding: 10px;
+    font-size: 16px;
+}
+.form-signin .form-control:focus {
+    z-index: 2;
+}
+.form-signin input[type="email"] {
+    margin-bottom: -1px;
+    border-bottom-right-radius: 0;
+    border-bottom-left-radius: 0;
+}
+.form-signin input[type="password"] {
+    margin-bottom: 10px;
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
+}
 
-.auth-form-body label { display:block; margin-top:10px; }
-.auth-form-body input { display:block; width:95%; font-size:1.3em;
-    padding:6px; color:#444; }
-
-.auth-form-body input.btn-block { margin:16px 0; padding:5px 0;
-    width:100%; color:#111; }
 
 
 /* TO-DO-markers */

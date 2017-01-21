@@ -1,28 +1,13 @@
 {% extends 'base.html.twig' %}
 
 {% block body %}
-        <div id="container">
+        <div class="container">
 
             <div id="status">
                 <p>
                 </p>
             </div>
 
-            <div id="next">
-                <h2>Willkommen!</h2>
-            </div>
-
-            <div id="todolist">
-                <ul>
-                    {% for t in todos %}
-                        <li class="todo-{{ t.getType() }}">
-                            <span class="todo-li-text">{{ t.getText() }}</span>
-                            <span class="todo-li-file">{{ t.getFile() }}</span>
-                            <span class="todo-li-line">{{ 'Line'|trans }}: {{ t.getLine() }}</span>
-                        </li>
-                    {% endfor %}
-                </ul>
-            </div>
             <!--
             TODO: Benutzer registrieren
             TODO: Zwei-Faktor-Authentifizierung (z.B. via http://www.christianscheb.de/archives/302 )

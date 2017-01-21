@@ -1,43 +1,53 @@
 {% extends 'base.html.twig' %}
 
 {% block body %}
-    <h2>Geräte</h2>
+    <div class="container">
+        <div class="page-header">
+            <h1>{{ 'Screens'|trans }}</h1>
+        </div>
 
-    {# TODO: save multiple/all at once (perhaps "dirty" flag and iteration?)#}
+        {# TODO: save multiple/all at once (perhaps "dirty" flag and iteration?) #}
 
-    <div id="screens-wrapper">
-        {% for screen in screens %}
-            <div class="screen-editor">
-                <div class="screen-form">
-                    {% include 'forms/edit-screen.html.twig' %}
+        <div id="screens-wrapper">
+            {% for screen in screens %}
+                <div class="screen-editor">
+                    <div class="screen-form">
+                        {% include 'forms/edit-screen.html.twig' %}
+                    </div>
+                    <div class="screens-preview">
+                        <img class="preview" src="{{ path('management-dashboard-preview', {'screen_guid': screen.getGuid()}) }}">
+                    </div>
                 </div>
-                <div class="screens-preview">
-                    <img class="preview" src="{{ path('management-dashboard-preview', {'screen_guid': screen.getGuid()}) }}">
-                </div>
+            {% endfor %}
+        </div>
+
+        {# TODO: save multiple/all at once (perhaps "dirty" flag and iteration?)#}
+        {# TODO Übersetzen #}
+
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h3 class="panel-title">
+                    Anzeige verbinden
+                </h3>
             </div>
-        {% endfor %}
-    </div>
 
-    <div id="connect-screen">
-        <form action="{{ path('management-connect-screen') }}" method="post">
-            <h3>Neue Anzeige mit dem Konto verbinden</h3>
-            <p>
-                <span class="label">Verbindungskennung: </span>
-                <span class="input"><input type="text" name="connect_code" maxlength="8" value=""></span>
-            </p>
-            <p>
-                <span class="label">Verbinden mit: </span>
-                <span class="input">
-                    <select name="who">
+            <div class="panel-body">
+                <form action="{{ path('management-connect-screen') }}" method="post" class="form-inline">
+                    <label class="" for="inlineFormInput">Verbindungskennung:</label>
+                    <input type="text" class="form-control mb-0 mr-sm-4 mb-sm-2" id="inlineFormInput" placeholder="12345678" name="connect_code" maxlength="8">
+
+                    <label class="mr-sm-4" for="who">Verbinden mit: </label>
+                    <select class="custom-select mb-2 mr-sm-2 mb-sm-0" id="who" name="who">
                         <option value="me">meinem Konto</option>
                         {% for orga in organizations %}
                             <option value="{{ orga.getId() }}">{{ "Organization"|trans }}: {{ orga.getName() }}</option>
                         {% endfor %}
                     </select>
-                </span>
-            </p>
-            <p><input type="submit" value="{{ "Connect"|trans }}"></p>
-        </form>
+
+                    <button type="submit" class="btn btn-primary">{{ "Connect"|trans }}</button>
+                </form>
+            </div>
+        </div>
     </div>
 
 {% endblock %}
