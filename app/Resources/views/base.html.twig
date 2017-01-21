@@ -26,10 +26,13 @@
     <body>
         {% include('navi/navigation.html.twig') %}
 
+        {% if app.session.flashBag.has('*') %}
+            gibt welche
+        {% endif %}
 
         {# flash messages #}
         {% for flash_message in app.session.flashBag.get('error') %}
-            <div class="flash flash-error">
+            <div class="alert alert-danger">
                 {{ flash_message }}
             </div>
         {% endfor %}
