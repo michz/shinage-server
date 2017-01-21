@@ -1,0 +1,11 @@
+<li class="dropdown admin">
+    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Admin <span class="caret"></span></a>
+    <ul class="dropdown-menu">
+        <li><a href="{{ path('admin-dashboard') }}">{{ "Dashboard"|trans }}</a></li>
+        <li role="separator" class="divider"></li>
+        <li><a href="{{ path('admin-users') }}">{{ "Users"|trans }}</a></li>
+        <li><a href="{{ path('admin-organizations') }}">{{ "Organizations"|trans }}</a></li>
+        <li role="separator" class="divider"></li>
+        <li><a href="{{ path('admin-screens') }}">{{ "Screens"|trans }}</a></li>
+    </ul>
+</li>

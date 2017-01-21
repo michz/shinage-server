@@ -1,5 +1,16 @@
 {% extends "@FOSUser/layout.html.twig" %}
 
+
 {% block fos_user_content %}
-    {{ include('@FOSUser/Security/login_content.html.twig') }}
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <h3 class="panel-title">
+            Einloggen
+        </h3>
+    </div>
+
+    <div class="panel-body">
+        {{ include('@FOSUser/Security/login_content.html.twig') }}
+    </div>
+</div>
 {% endblock fos_user_content %}

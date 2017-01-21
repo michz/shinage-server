@@ -3,42 +3,54 @@
     <head>
         <meta charset="UTF-8" />
         <title>Shinage{% block title %}{% endblock %}</title>
+
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
         <link rel="stylesheet" type="text/css" href="{{ asset('css/reset.css') }}" />
         <link rel="stylesheet" type="text/css" href="{{ asset('css/shinsrv.css') }}" />
+
+        <link href="{{ asset('css/bootstrap.min.css') }}" rel="stylesheet">
+
+        <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+        <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+        <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+        <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+        <![endif]-->
 
         {% block stylesheets %}{% endblock %}
 
         <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}" />
     </head>
     <body>
-        <div id="wrapper">
-            <div id="header">Shinage-Logo</div>
-            <div id="navi">
-                {% include 'navi/manage.html.twig' %}
+        {% include('navi/navigation.html.twig') %}
 
-                {% include 'navi/login.html.twig' %}
+        {% if app.session.flashBag.has('*') %}
+            gibt welche
+        {% endif %}
+
+        {# flash messages #}
+        {% for flash_message in app.session.flashBag.get('error') %}
+            <div class="alert alert-danger">
+                {{ flash_message }}
             </div>
+        {% endfor %}
+        {% for flash_message in app.session.flashBag.get('success') %}
+            <div class="flash flash-success">
+                {{ flash_message }}
+            </div>
+        {% endfor %}
+        {% for flash_message in app.session.flashBag.get('notice') %}
+            <div class="flash flash-notice">
+                {{ flash_message }}
+            </div>
+        {% endfor %}
 
-            {# flash messages #}
-            {% for flash_message in app.session.flashBag.get('error') %}
-                <div class="flash flash-error">
-                    {{ flash_message }}
-                </div>
-            {% endfor %}
-            {% for flash_message in app.session.flashBag.get('success') %}
-                <div class="flash flash-success">
-                    {{ flash_message }}
-                </div>
-            {% endfor %}
-            {% for flash_message in app.session.flashBag.get('notice') %}
-                <div class="flash flash-notice">
-                    {{ flash_message }}
-                </div>
-            {% endfor %}
+        {# main content #}
+        {% block body %}{% endblock %}
 
-            {# main content #}
-            {% block body %}{% endblock %}
-        </div>
+
 
         <div id="ajax-loading">
             <img src="{{ asset('img/spin.gif') }}">
@@ -49,6 +61,8 @@
         %}
         <script src="{{ asset_url }}"></script>
         {% endjavascripts %}
+
+        <script src="{{ asset('js/bootstrap.min.js') }}"></script>
 
         <script>
             $.notify.defaults({ autoHideDelay: 2000, showDuration: 250 });
