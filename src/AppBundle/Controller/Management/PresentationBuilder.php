@@ -107,7 +107,7 @@ class PresentationBuilder extends Controller
         }
 
 
-        // TODO nur flag "deleted" setzen, damit wiederherstellbar
+        // TODO{s:1} nur flag "deleted" setzen, damit wiederherstellbar
         $em->remove($pres);
         $em->flush();
 
@@ -125,7 +125,7 @@ class PresentationBuilder extends Controller
             throw new AccessDeniedException();
         }
 
-        // TODO generate thumbnail
+        // TODO{s:4} generate thumbnail
 
         // send file
         $response = new Response();

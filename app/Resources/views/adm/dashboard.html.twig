@@ -10,7 +10,7 @@
         <div id="todolist">
             <ul>
                 {% for t in todos %}
-                    <li class="todo-{{ t.getType() }}">
+                    <li class="todo-{{ t.getType() }} severity-{{ t.getSeverity() }}">
                         <span class="todo-li-text">{{ t.getText() }}</span>
                         <span class="todo-li-file">{{ t.getFile() }}</span>
                         <span class="todo-li-line">{{ 'Line'|trans }}: {{ t.getLine() }}</span>

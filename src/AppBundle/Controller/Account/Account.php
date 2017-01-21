@@ -86,7 +86,7 @@ class Account extends Controller
             return $this->redirectToRoute('account-edit');
         }
 
-        // TODO weitere Passwort-Checks (nicht zu einfach!)
+        // TODO{s:5,u:mz} weitere Passwort-Checks (nicht zu einfach!)
 
         if ($request->get('pw') != $request->get('pw-again')) {
             $this->addFlash('error', 'Die eingegebenen Passwörter stimmen nicht überein.');
