@@ -12,8 +12,6 @@ body { background: #F5F5F5; font: 16px/1.5 sans-serif; }
 #wrapper { background: #FFF; margin: 1em auto; max-width: 800px; width: 95%; }
 #container { padding: 1em; }
 
-#navi { height:42px; line-height:42px; background-color:#eee;
-    margin-bottom: 20px; }
 
 .navi-button { display:inline-block; padding:0 10px; }
 #navi-login { float:right; }
