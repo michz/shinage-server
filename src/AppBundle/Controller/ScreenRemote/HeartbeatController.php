@@ -197,7 +197,8 @@ class HeartbeatController extends Controller
 
         if (count($results) > 0) return $results[0];
 
-        // TODO get default presentation for screen (must be definable first)
-        return null;
+        // get default presentation for screen (must be defined first)
+        return $screen->getDefaultPresentation();
     }
 }
+

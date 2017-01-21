@@ -61,6 +61,12 @@ class Screen
     private $connect_code = '';
 
     /**
+     * @ORM\ManyToOne(targetEntity="Presentation")
+     * @ORM\JoinColumn(name="presentation_id", referencedColumnName="id")
+     */
+    protected $default_presentation;
+
+    /**
      * Set guid
      *
      * @param string $guid
@@ -251,4 +257,29 @@ class Screen
     {
         return $this->connect_code;
     }
+
+    /**
+     * Set default presentation
+     *
+     * @param \AppBundle\Entity\Presentation $presentation
+     *
+     * @return Screen
+     */
+    public function setDefaultPresentation(\AppBundle\Entity\Presentation $presentation)
+    {
+        $this->default_presentation = $presentation;
+
+        return $this;
+    }
+
+    /**
+     * Get default presentation
+     *
+     * @return \AppBundle\Entity\Presentation
+     */
+    public function getDefaultPresentation()
+    {
+        return $this->default_presentation;
+    }
+
 }
