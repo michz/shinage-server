@@ -92,13 +92,34 @@ class TodoList
     protected function parseFile($path, &$todos)
     {
         $file = file_get_contents($this->basepath . '/' . $path);
+        
         $matches = array();
+        preg_match_all(
+            '/(?P<type>TODO|FIXME)\{(?P<opt>[a-zA-Z0-9,:]*)\}[\s:]+(?P<text>.*)$/um',
+            $file,
+            $matches,
+            PREG_SET_ORDER | PREG_OFFSET_CAPTURE
+        );
+        $this->processMatches($matches, $todos, $file, $path);
 
-        preg_match_all('/(?P<type>TODO|FIXME)\{(?P<opt>[a-zA-Z0-9,:]*)\}[\s:]+(?P<text>.*)$/um', $file, $matches, PREG_SET_ORDER | PREG_OFFSET_CAPTURE);
+        $matches = array();
+        preg_match_all(
+            '/(?P<type>TODO|FIXME)[\s:]+(?P<text>.*)$/um',
+            $file,
+            $matches,
+            PREG_SET_ORDER | PREG_OFFSET_CAPTURE
+        );
+        $this->processMatches($matches, $todos, $file, $path);
+    }
+
+    protected function processMatches($matches, &$todos, $file, $path)
+    {
+        $r = array();
+
         foreach ($matches as $match) {
-            $opt  = $match['opt'];
-            $type = $match['type'];
-            $text = $match['text'];
+            $opt  = (isset($match['opt']))  ? $match['opt']  : [''];
+            $type = (isset($match['type'])) ? $match['type'] : [''];
+            $text = (isset($match['text'])) ? $match['text'] : [''];
 
             $options = explode(',', $opt[0]);
             $severity = 0;
@@ -119,22 +140,7 @@ class TodoList
             $todos[] = new TodoItem($text[0], $path, $line_number, strtolower($type[0]), $severity);
         }
 
-        $matches = array();
-        preg_match_all('/(?P<type>TODO|FIXME)[\s:]+(?P<text>.*)$/um', $file, $matches, PREG_SET_ORDER | PREG_OFFSET_CAPTURE);
-
-        foreach ($matches as $match) {
-            $type = $match['type'];
-            $text = $match['text'];
-
-            $off = $text[1];
-            list($before) = str_split($file, $off); // fetches all the text before the match
-            $line_number = strlen($before) - strlen(str_replace("\n", "", $before)) + 1;
-
-            $text[0] = strip_tags($text[0]);
-            $text[0] = str_replace(array('#}', '{#'), '', $text[0]);
-
-            $todos[] = new TodoItem($text[0], $path, $line_number, strtolower($type[0]));
-        }
+        return $r;
     }
 }
 
