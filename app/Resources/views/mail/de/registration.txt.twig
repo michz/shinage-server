@@ -1,0 +1,21 @@
+
+Herzlich willkommen bei Shinage!
+
+Vielen Dank für deine Registrierung.
+
+
+Bitte bestätige nun noch deine E-Mail-Adresse, um deine Registrierung abzuschließen.
+Klicke dazu bitte auf folgenden Link oder kopiere ihn in die Adresszeile deines Browsers:
+
+{{ absolute_url(path('registration-confirm', { confirmationToken: user.getConfirmationToken() })) }}
+
+
+Anschließend kannst du dich in deinem neuen Konto einloggen.
+
+
+Hast du diese Mail unerwartet erhalten oder hast du dich nicht bei Shinage angemeldet?
+Dann kannst du sie ignorieren, deine E-Mail-Adresse wird dann nach einer gewissen Zeit
+automatisch wieder aus unserer Datenbank entfernt.
+
+
+{% include('mail/de/_footer.txt.twig') %}

@@ -20,9 +20,6 @@ class DefaultController extends Controller
         $todos = $todo->getTodoList();
 
 
-        return $this->render('default/index.html.twig', [
-            'base_dir'  => realpath($this->getParameter('kernel.root_dir').'/..').DIRECTORY_SEPARATOR,
-            'todos'     => $todos
-        ]);
+        return $this->redirectToRoute('management-dashboard');
     }
 }

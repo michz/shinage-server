@@ -13,6 +13,7 @@ use AppBundle\Entity\Organization;
 use AppBundle\Entity\User;
 use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
 use FOS\UserBundle\Doctrine\UserManager;
+use FOS\UserBundle\Model\UserInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
@@ -66,11 +67,12 @@ class Registration extends Controller
                     $user->setConfirmationToken(User::generateToken());
                     $userManager->updateUser($user, true);
 
-                    // TODO{s:5} Confirmation-E-Mail senden
                     $this->addFlash(
                         'success',
                         'Willkommen! Bitte bestätige nun deine E-Mail-Adresse.'
                     );
+
+                    $this->sendRegistrationMail($user);
                 }
             }
             else {
@@ -111,6 +113,30 @@ class Registration extends Controller
             return $this->redirectToRoute('fos_user_security_login');
         }
 
+    }
+
+
+    public function sendRegistrationMail(UserInterface $user)
+    {
+        $message = \Swift_Message::newInstance()
+            ->setSubject($this->get('translator')->trans('SubjectRegistrationMail'))
+            ->setFrom($this->container->getParameter('mailer_from'))
+            ->setTo($user->getEmail())
+            ->setBody(
+                $this->renderView(
+                    'mail/de/registration.html.twig',
+                    array('user' => $user)
+                ),
+                'text/html'
+            )
+            ->addPart(
+                $this->renderView(
+                    'mail/de/registration.txt.twig',
+                    array('user' => $user)
+                ),
+                'text/plain'
+            );
+        $this->get('mailer')->send($message);
     }
 
 }
