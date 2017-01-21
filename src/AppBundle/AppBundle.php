@@ -9,7 +9,8 @@ use Doctrine\DBAL\Types\Type;
 class AppBundle extends Bundle
 {
 
-    public function boot() {
+    public function boot()
+    {
         if (!Type::hasType("enumscreenrole")) {
             Type::addType('enumscreenrole', 'AppBundle\ScreenRoleType');
         }

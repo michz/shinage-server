@@ -23,3 +23,10 @@ services:
         arguments:
             basepath: "%kernel.root_dir%"
             cache: "@cache.app"
+
+    app.registration.listener:
+        class: AppBundle\EventListener\RegistrationListener
+        arguments:
+            router: "@router.default"
+        tags:
+            - { name: kernel.event_subscriber }

@@ -12,6 +12,7 @@ namespace AppBundle\Entity;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Mapping as ORM;
 use FOS\UserBundle\Model\User as BaseUser;
+use Rollerworks\Bundle\PasswordStrengthBundle\Validator\Constraints as RollerworksPassword;
 
 /**
  * AppBundle\Entity\User
@@ -19,7 +20,8 @@ use FOS\UserBundle\Model\User as BaseUser;
  * @ORM\Entity
  * @ORM\Table(name="users")
  */
-class User extends BaseUser {
+class User extends BaseUser
+{
     /**
      * @ORM\Id
      * @ORM\Column(type="integer")
@@ -31,13 +33,26 @@ class User extends BaseUser {
      * @ORM\ManyToMany(targetEntity="Organization", inversedBy="users")
      * @ORM\JoinTable(name="users_organizations")
      */
-    private $organizations;
+    protected $organizations;
+
+
+    /**
+     * @RollerworksPassword\PasswordRequirements(requireLetters=true, requireNumbers=true)
+     */
+    protected $password;
 
 
     public function __construct()
     {
         parent::__construct();
         // your own logic
+    }
+
+    public function setEmail($email)
+    {
+        parent::setUsername($email);
+        parent::setUsernameCanonical($email);
+        return parent::setEmail($email);
     }
 
     public function getAllowedPoolPaths()
@@ -62,11 +77,15 @@ class User extends BaseUser {
 
     public function isPresentationAllowed(Presentation $presentation)
     {
-        if ($presentation->getOwnerUser() == $this) return true;
+        if ($presentation->getOwnerUser() == $this) {
+            return true;
+        }
 
         $orgas = $this->getOrganizations();
         foreach ($orgas as $orga) { /** @var Organization $orga */
-            if ($presentation->getOwnerOrga() == $orga) return true;
+            if ($presentation->getOwnerOrga() == $orga) {
+                return true;
+            }
         }
 
         return false;
@@ -77,16 +96,9 @@ class User extends BaseUser {
         return $this->isPresentationAllowed($slide->getPresentation());
     }
 
-    /**
-     * Add organization
-     *
-     * @param \AppBundle\Entity\Organization $organization
-     *
-     * @return User
-     */
 
-
-    public function getPresentations(EntityManager $em) {
+    public function getPresentations(EntityManager $em)
+    {
         $user = $this;
         $rep = $em->getRepository('AppBundle:Presentation');
         $pres = array();
@@ -108,6 +120,13 @@ class User extends BaseUser {
         return $pres;
     }
 
+    /**
+     * Add organization
+     *
+     * @param \AppBundle\Entity\Organization $organization
+     *
+     * @return User
+     */
     public function addOrganization(\AppBundle\Entity\Organization $organization)
     {
         $this->organizations[] = $organization;
@@ -133,5 +152,11 @@ class User extends BaseUser {
     public function getOrganizations()
     {
         return $this->organizations;
+    }
+
+
+    public static function generateToken()
+    {
+        return rtrim(strtr(base64_encode(random_bytes(32)), '+/', '-_'), '=');
     }
 }

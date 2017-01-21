@@ -92,7 +92,7 @@ class TodoList
     protected function parseFile($path, &$todos)
     {
         $file = file_get_contents($this->basepath . '/' . $path);
-        
+
         $matches = array();
         preg_match_all(
             '/(?P<type>TODO|FIXME)\{(?P<opt>[a-zA-Z0-9,:]*)\}[\s:]+(?P<text>.*)$/um',

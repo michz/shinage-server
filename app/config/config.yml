@@ -42,6 +42,7 @@ twig:
     debug:            "%kernel.debug%"
     strict_variables: "%kernel.debug%"
 
+
 # Doctrine Configuration
 doctrine:
     dbal:
@@ -97,7 +98,6 @@ fos_user:
     db_driver: orm
     firewall_name: main
     user_class: AppBundle\Entity\User
-    #user_class: Acme\UserBundle\Entity\User
 
 
 # Swiftmailer Configuration
