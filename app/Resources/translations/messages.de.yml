@@ -21,8 +21,12 @@ Password: Passwort
 PasswordAgain: Passwort wiederholen
 Save: Speichern
 ChangePassword: Passwort ändern
+ChangeEmail: E-Mail-Adresse ändern
+oldPassword: Bisheriges Passwort
 Name: Name
 me: Ich
 CreateNewPresentation: Neue Präsentation anlegen
 
 SubjectRegistrationMail: Deine Registrierung bei Shinage
+
+WrongOldPassword: Das bisherige Passwort ist leider falsch.

@@ -1,19 +1,36 @@
 {% extends 'base.html.twig' %}
-{% form_theme form 'bootstrap_3_layout.html.twig' %}
+{% form_theme form 'bootstrap_3_horizontal_layout.html.twig' %}
+{% form_theme form_pw 'bootstrap_3_horizontal_layout.html.twig' %}
 
 {% block body %}
         <div class="container">
 
-            <div id="next">
-                <h2>Willkommen!</h2>
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h3 class="panel-title">
+                        {{ 'ChangeEmail'|trans }}
+                    </h3>
+                </div>
+
+                <div class="panel-body">
+                    {{ form(form) }}
+                </div>
             </div>
 
-            <div class="form account-form">
-                {{ form_start(form) }}
-                {{ form_widget(form) }}
-                {{ form_end(form) }}
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h3 class="panel-title">
+                        {{ 'ChangePassword'|trans }}
+                    </h3>
+                </div>
+
+                <div class="panel-body">
+                    {{ form(form_pw) }}
+                </div>
             </div>
 
+
+            {#
             <div class="form account-form">
                 <h3>{{ 'ChangePassword'|trans }}</h3>
                 <form action="{{ path("account-password") }}" method="post">
@@ -30,6 +47,7 @@
                     </p>
                 </form>
             </div>
+            #}
         </div>
 
 

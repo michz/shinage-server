@@ -41,6 +41,11 @@ class User extends BaseUser
      */
     protected $password;
 
+    /**
+     * @RollerworksPassword\PasswordRequirements(requireLetters=true, requireNumbers=true)
+     */
+    protected $plainPassword;
+
 
     public function __construct()
     {

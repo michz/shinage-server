@@ -15,9 +15,12 @@ use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
+use Symfony\Component\Form\Extension\Core\Type\FormType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
+use Symfony\Component\Form\Extension\Core\Type\RepeatedType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\Request;
 
 
@@ -43,30 +46,105 @@ class Account extends Controller
      */
     public function editAction(Request $request)
     {
-        /** @var User $user */
+        /** @var User $user_logged_in */
         $user = $this->get('security.token_storage')->getToken()->getUser();
+        //$user = $user_logged_in->
         $userManager = $this->container->get('fos_user.user_manager');
+        $i18n = $this->get('translator');
 
-        $form = $this->createFormBuilder($user)
+        $form = $this->get('form.factory')->createNamedBuilder('form1name', FormType::class, $user)
             ->add('email', EmailType::class)
             #->add('password', PasswordType::class)
             ->add('save', SubmitType::class, array('label' => 'Save'))
             ->getForm();
 
-        $form->handleRequest($request);
 
-        if ($form->isSubmitted()) {
-            if ($form->isValid()) {
-                $userManager->updateUser($user, true);
-                $this->addFlash('success', 'Die Änderungen wurden gespeichert.');
+        $form_pw = $this->get('form.factory')->createNamedBuilder('form2name', FormType::class, $user)
+            ->add('old-password', PasswordType::class, array('label'=>'oldPassword', 'mapped' => false))
+            ->add('plainPassword', RepeatedType::class, array(
+                'type' => PasswordType::class,
+                'invalid_message' => 'PasswordsMustMatch',
+                'options' => array('attr' => array('class' => 'password-field')),
+                'required' => true,
+                'first_options'  => array('label' => 'Password'),
+                'second_options' => array('label' => 'PasswordAgain'),
+            ))
+            ->add('save', SubmitType::class, array('label' => 'Save'))
+            ->getForm();
+
+
+
+        if ('POST' === $request->getMethod()) {
+            if ($request->request->has('form1name')) {
+                $form->handleRequest($request);
+
+                if ($form->isSubmitted()) {
+                    if ($form->isValid()) {
+                        $userManager->updateUser($user, true);
+                        $this->addFlash('success', 'Die Änderungen wurden gespeichert.');
+                    } else {
+                        $this->addFlash(
+                            'error',
+                            'Die Änderungen konnten leider nicht gespeichert werden. Evtl. sind Eingaben nicht korrekt.'
+                        );
+                    }
+                }
             }
-            else {
-                $this->addFlash('error', 'Die Änderungen konnten leider nicht gespeichert werden. Evtl. sind Eingaben nicht korrekt.');
+
+            if ($request->request->has('form2name')) {
+                $form_pw->handleRequest($request);
+
+                if ($form_pw->isSubmitted()) {
+                    $encoderFactory = $this->get('security.encoder_factory');
+                    $encoder = $encoderFactory->getEncoder($user);
+
+                    if (!$encoder->isPasswordValid(
+                        $user->getPassword(),
+                        $form_pw->get('old-password')->getData(),
+                        $user->getSalt()
+                    )) {
+                        // wrong old password
+                        $form_pw->get('old-password')->addError(
+                            new FormError($i18n->trans('WrongOldPassword'))
+                        );
+                    } else {
+                        if ($form_pw->isValid()) {
+                            // now check if it is empty
+                            $pw = $form_pw->get('plainPassword')->getData();
+                            if (empty($pw)) {
+                                $this->addFlash('error', 'Das Passwort darf nicht leer sein.');
+                            } else {
+                                // TODO{s:5} Kriterien prüfen!
+
+                                // everythin seems ok, now set password and save
+                                //$user->setPassword($pw);
+                                $user->setPlainPassword($pw);
+
+                                /*
+                                // validate password
+                                $validator = $this->get('validator');
+                                $errors = $validator->validate($user);
+                                $form_pw->
+
+
+                                Dump($errors); exit;
+
+                                */
+
+                                $userManager->updateUser($user, true);
+                                $this->addFlash('success', 'Das Passwort wurde erfolgreich geändert.');
+                            }
+                        }
+                    }
+                }
             }
         }
 
+
+
         return $this->render('account/user.html.twig', [
-            'form' => $form->createView()
+            'form' => $form->createView(),
+            'form_pw' => $form_pw->createView()
         ]);
     }
 
@@ -81,6 +159,55 @@ class Account extends Controller
         $em = $this->getDoctrine()->getManager();
         $userManager = $this->container->get('fos_user.user_manager');
 
+        $form = $this->createFormBuilder($user)
+            ->add('old-password', PasswordType::class, array('label'=>'oldPassword'))
+            ->add('password', RepeatedType::class, array(
+                'type' => PasswordType::class,
+                'invalid_message' => 'PasswordsMustMatch',
+                'options' => array('attr' => array('class' => 'password-field')),
+                'required' => true,
+                'first_options'  => array('label' => 'Password'),
+                'second_options' => array('label' => 'PasswordAgain'),
+            ))
+            ->add('save', SubmitType::class, array('label' => 'Save'))
+            ->getForm();
+
+        if ($form->isSubmitted()) {
+            if ($form->isValid()) {
+                $encoderFactory = $this->get('security.encoder_factory');
+                $encoder = $encoderFactory->getEncoder($user);
+
+                if (!$encoder->isPasswordValid(
+                    $user->getPassword(),
+                    $form->get('old-password'),
+                    $user->getSalt()
+                )) {
+                    // wrong old password
+                    $this->addFlash('error', 'Das eingegebene bisherige Passwort stimmt leider nicht.');
+                    return $this->redirectToRoute('account-edit');
+                }
+
+                // now check if it is empty
+                if (empty($request->get('pw'))) {
+                    $this->addFlash('error', 'Das Passwort darf nicht leer sein.');
+                    return $this->redirectToRoute('account-edit');
+                }
+
+                // everythin seems ok, now set password and save
+                $user->setPlainPassword($request->get('pw'));
+                $userManager->updateUser($user, true);
+            } else {
+                $this->addFlash(
+                    'error',
+                    'Das Passwort konnte nicht geändert werden.'
+                );
+                return $this->redirectToRoute('account-edit');
+            }
+        }
+
+
+
+/*
         if (empty($request->get('pw'))) {
             $this->addFlash('error', 'Das Passwort darf nicht leer sein.');
             return $this->redirectToRoute('account-edit');
@@ -95,7 +222,7 @@ class Account extends Controller
 
         $user->setPlainPassword($request->get('pw'));
         $userManager->updateUser($user, true);
-
+*/
 
         $this->addFlash('success', 'Das Passwort wurde geändert.');
         return $this->redirectToRoute('account-edit');
