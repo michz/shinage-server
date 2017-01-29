@@ -15,7 +15,9 @@
                         {% include 'forms/edit-screen.html.twig' %}
                     </div>
                     <div class="screens-preview">
-                        <img class="preview" src="{{ path('management-dashboard-preview', {'screen_guid': screen.getGuid()}) }}">
+                        <a href="{{ path('screen-remote-client', { guid: screen.getGuid()}) }}" target="_blank">
+                            <img class="preview" src="{{ path('management-dashboard-preview', {'screen_guid': screen.getGuid()}) }}" data-toggle="tooltip" data-placement="auto-right" title="{{ 'ClickForPreview'|trans }}">
+                        </a>
                     </div>
                 </div>
             {% endfor %}
@@ -66,6 +68,13 @@
 
 {% endblock %}
 
+{% block scripts %}
+    <script>
+        $(document).ready(function(){
+            $('[data-toggle="tooltip"]').tooltip();
+        });
+    </script>
+{% endblock %}
 
 {% block stylesheets %}
 <style>
