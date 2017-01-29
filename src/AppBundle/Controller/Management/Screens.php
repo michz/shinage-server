@@ -174,8 +174,5 @@ class Screens extends Controller
         );
 
         $this->addFlash('success', 'Die virtuelle Anzeige wurde erstellt.');
-
     }
-
-
 }

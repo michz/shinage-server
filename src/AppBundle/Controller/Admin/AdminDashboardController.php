@@ -30,5 +30,4 @@ class AdminDashboardController extends Controller
             'todos'     => $todos,
         ]);
     }
-
 }

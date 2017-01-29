@@ -16,7 +16,8 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Entity
  * @ORM\Table(name="schedule")
  */
-class ScheduledPresentation {
+class ScheduledPresentation
+{
 
     /**
      * @ORM\Id @ORM\Column(type="integer")

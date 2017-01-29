@@ -16,7 +16,6 @@ use Doctrine\ORM\EntityManager;
 use AppBundle\Entity\Screen;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorage;
 
-
 class ScreenAssociation
 {
     protected $em = null;
@@ -52,7 +51,8 @@ class ScreenAssociation
         return $r;
     }
 
-    public function isUserAllowed(Screen $screen, User $user) {
+    public function isUserAllowed(Screen $screen, User $user)
+    {
         $rep = $this->em->getRepository('AppBundle:ScreenAssociation');
         $assoc = $rep->findBy(array('screen' => $screen->getGuid()));
         $orgas = $user->getOrganizations();

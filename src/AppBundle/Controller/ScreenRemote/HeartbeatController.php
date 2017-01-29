@@ -22,7 +22,6 @@ use AppBundle\Service\ScreenAssociation;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
-
 class HeartbeatController extends Controller
 {
     /**
@@ -137,7 +136,7 @@ class HeartbeatController extends Controller
         $basepath = $this->container->getParameter('path_screenshots');
 
         // move file
-        foreach($request->files as $uploadedFile) {
+        foreach ($request->files as $uploadedFile) {
             $name = $sGuid . '.png';
             $uploadedFile->move($basepath, $name);
             break;
@@ -147,23 +146,27 @@ class HeartbeatController extends Controller
     }
 
 
-    protected function generateUniqueConnectcode() {
+    protected function generateUniqueConnectcode()
+    {
         $em = $this->getDoctrine()->getManager();
         $rep = $em->getRepository('AppBundle:Screen');
 
         $code = '';
         $unique = false;
-        while(!$unique) {
+        while (!$unique) {
             $code = $this->generateConnectcode();
 
             $screens = $rep->findBy(array('connect_code' => $code));
-            if (count($screens) == 0) $unique = true;
+            if (count($screens) == 0) {
+                $unique = true;
+            }
         }
 
         return $code;
     }
 
-    protected function generateConnectcode() {
+    protected function generateConnectcode()
+    {
         $chars = "abcdefghkmnpqrstuvwxyz23456789";
         $chars_n = strlen($chars);
         $len = 8;
@@ -177,7 +180,8 @@ class HeartbeatController extends Controller
     }
 
 
-    protected function getCurrentPresentation(Screen $screen) {
+    protected function getCurrentPresentation(Screen $screen)
+    {
         $em = $this->getDoctrine()->getManager();
 
         $query = $em->createQuery(
@@ -195,10 +199,11 @@ class HeartbeatController extends Controller
 
         $results = $query->getResult();
 
-        if (count($results) > 0) return $results[0];
+        if (count($results) > 0) {
+            return $results[0];
+        }
 
         // get default presentation for screen (must be defined first)
         return $screen->getDefaultPresentation();
     }
 }
-

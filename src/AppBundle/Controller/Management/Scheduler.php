@@ -379,6 +379,5 @@ class Scheduler extends Controller
             $em->remove($o);
         }
         $em->flush();
-
     }
 }

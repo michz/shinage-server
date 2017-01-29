@@ -27,5 +27,4 @@ class OrganizationsController extends Controller
             #'screens' => $screens,
         ]);
     }
-
 }

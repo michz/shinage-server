@@ -19,14 +19,13 @@ use AppBundle\Exceptions\NoScreenGivenException;
 use AppBundle\Entity\Screen;
 use AppBundle\Entity\Organization;
 use AppBundle\Service\FilePool;
-use AppBundle\Service\PoolDirectory;
-use AppBundle\Service\PoolItem;
+use AppBundle\Service\Pool\PoolDirectory;
+use AppBundle\Service\Pool\PoolItem;
 use AppBundle\Entity\User;
 use AppBundle\Entity\Slide;
 use AppBundle\Exceptions\SlideTypeNotImplemented;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
-
 
 class PresentationBuilder extends Controller
 {
@@ -34,7 +33,8 @@ class PresentationBuilder extends Controller
     /**
      * @Route("/manage/presentations", name="management-presentations")
      */
-    public function managePresentationsAction(Request $request) {
+    public function managePresentationsAction(Request $request)
+    {
         $user = $this->get('security.token_storage')->getToken()->getUser();
         $pool = $this->get('app.filepool'); /** @var FilePool $pool */
 
@@ -115,7 +115,8 @@ class PresentationBuilder extends Controller
     }
 
     /**
-     * @Route("/manage/presentations/get-thumbnail/{file}", name="management-presentations-get-thumbnail", requirements={"file": ".*"})
+     * @Route("/manage/presentations/get-thumbnail/{file}", name="management-presentations-get-thumbnail",
+     *     requirements={"file": ".*"})
      */
     public function managePresentationsGetThumbnailAction(Request $request, $file)
     {
@@ -158,8 +159,7 @@ class PresentationBuilder extends Controller
                 $file = new File($this->container->getParameter('path_pool') . '/' . $file_path);
                 if (in_array($file->getMimeType(), $mime_image)) {
                     $type = 'image';
-                }
-                else {
+                } else {
                     throw new SlideTypeNotImplemented();
                 }
 
@@ -176,8 +176,7 @@ class PresentationBuilder extends Controller
                 }
 
                 $em->persist($slide);
-            }
-            else {
+            } else {
                 $slide = $em->find('\AppBundle\Entity\Slide', $o['id']); /** @var Slide $slide */
 
                 // check if user is allowed to view/edit slides of this presentation
@@ -259,7 +258,8 @@ class PresentationBuilder extends Controller
     }
 
 
-    public function getPresentationsForUser(User $user) {
+    public function getPresentationsForUser(User $user)
+    {
         $em = $this->getDoctrine()->getManager();
         return $user->getPresentations($em);
     }
@@ -267,7 +267,8 @@ class PresentationBuilder extends Controller
 
 
 
-    protected function buildFileTree(PoolDirectory $dir, $base = '') {
+    protected function buildFileTree(PoolDirectory $dir, $base = '')
+    {
         $r = '<ul class="tree-dir">';
         $contents = $dir->getContents();
         foreach ($contents as $c) { /** @var PoolItem $c */
@@ -281,7 +282,8 @@ class PresentationBuilder extends Controller
 
         foreach ($contents as $c) { /** @var PoolItem $c */
             if ($c->getType() == PoolItem::TYPE_FILE) {
-                $r .= '<li data-jstree=\'{"icon":"jstree-file"}\' data-poolpath=\''. $base . '/' . $c->getName() . '\'>' .
+                $r .= '<li data-jstree=\'{"icon":"jstree-file"}\' data-poolpath=\''. $base . '/' .
+                    $c->getName() . '\'>' .
                     $c->getName() .
                     "</li>\n";
             }

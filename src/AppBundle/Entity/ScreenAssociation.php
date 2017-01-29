@@ -11,7 +11,6 @@ namespace AppBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use FOS\UserBundle\Model\User as BaseUser;
 
-
 /**
  * AppBundle\Entity\ScreenAssociation
  *
@@ -19,7 +18,8 @@ use FOS\UserBundle\Model\User as BaseUser;
  * @ORM\Table(name="screen_associations")
  */
 
-class ScreenAssociation {
+class ScreenAssociation
+{
 
     /**
      * @ORM\Id

@@ -22,7 +22,6 @@ use Symfony\Component\HttpFoundation\Response;
 use AppBundle\Service\FilePool;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
-
 class FileManager extends Controller
 {
 
@@ -59,7 +58,8 @@ class FileManager extends Controller
 
 
     /**
-     * @Route("/manage/files-el-thumbnail/{base}/{file}", name="management-files-el-thumbnail", requirements={"base": ".*", "file": ".*"})
+     * @Route("/manage/files-el-thumbnail/{base}/{file}", name="management-files-el-thumbnail",
+     *     requirements={"base": ".*", "file": ".*"})
      */
     public function elThumbnailAction(Request $request, $base, $file)
     {
@@ -107,11 +107,17 @@ class FileManager extends Controller
                     'driver'        => 'LocalFileSystem',
                     'alias'         => $name,
                     'path'          => $path,
-                    'URL'           => $this->generateUrl('management-files-download',
-                                                array('file' => $basename)),
+                    'URL'           =>
+                    $this->generateUrl(
+                        'management-files-download',
+                        array('file' => $basename)
+                    ),
                     'tmbPath'       => $tmb_path,
-                    'tmbURL'        => $this->generateUrl('management-files-el-thumbnail',
-                                                array('base' => $basename, 'file' => '')),
+                    'tmbURL'        =>
+                    $this->generateUrl(
+                        'management-files-el-thumbnail',
+                        array('base' => $basename, 'file' => '')
+                    ),
                     'uploadDeny'    => array('all'),            // all mime not allowed to upload
                     'uploadAllow'   => array('image'),          // mime `image` allowed
                     'uploadOrder'   => array('deny', 'allow'),  // allowed specified mime only
@@ -134,5 +140,4 @@ class FileManager extends Controller
 
         return $response;
     }
-
 }

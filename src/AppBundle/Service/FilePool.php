@@ -10,15 +10,16 @@ namespace AppBundle\Service;
 
 use AppBundle\Entity\Organization;
 use AppBundle\Entity\User;
+use AppBundle\Service\Pool\PoolDirectory;
+use AppBundle\Service\Pool\PoolFile;
 use Doctrine\ORM\EntityManager;
 
 use AppBundle\Entity\Screen;
 use Symfony\Component\Config\Definition\Exception\Exception;
 
-
 class FilePool
 {
-    var $base = '';
+    protected $base = '';
 
     public function __construct($basepath)
     {
@@ -33,10 +34,10 @@ class FilePool
         if (!is_dir($basepath)) {
             throw new Exception('FilePool path does not exist and cannot be created.');
         }
-
     }
 
-    public function getUserPaths(User $user) {
+    public function getUserPaths(User $user)
+    {
         $paths = array();
         $paths['me'] = $this->getPathForUser($user);
 
@@ -48,19 +49,22 @@ class FilePool
         return $paths;
     }
 
-    public function getPathForUser(User $user) {
+    public function getPathForUser(User $user)
+    {
         $path = realpath($this->base) . '/user-' . $user->getId();
         self::createPathIfNeeded($path);
         return $path;
     }
 
-    public function getPathForOrga(Organization $organization) {
+    public function getPathForOrga(Organization $organization)
+    {
         $path = realpath($this->base) . '/orga-' . $organization->getId();
         self::createPathIfNeeded($path);
         return $path;
     }
 
-    public function getFileTree($base, $displayHidden = false) {
+    public function getFileTree($base, $displayHidden = false)
+    {
         $filename = substr($base, strrpos($base, '/')+1);
 
         $dir = new PoolDirectory($filename, $base);
@@ -69,15 +73,18 @@ class FilePool
         if ($handle = opendir($base)) {
             while (false !== ($entry = readdir($handle))) {
                 // ignore . and ..
-                if ($entry == '.' || $entry == '..') continue;
+                if ($entry == '.' || $entry == '..') {
+                    continue;
+                }
 
                 // ignore hidden files
-                if (!$displayHidden && substr($entry, 0, 1) == '.') continue;
+                if (!$displayHidden && substr($entry, 0, 1) == '.') {
+                    continue;
+                }
 
                 if (is_dir($base . '/' . $entry)) {
                     $files[] = $this->getFileTree($base . '/' . $entry, $displayHidden);
-                }
-                elseif (is_file($base . '/' . $entry)) {
+                } elseif (is_file($base . '/' . $entry)) {
                     $files[] = new PoolFile($entry, $base . '/' . $entry);
                 }
             }
@@ -86,99 +93,10 @@ class FilePool
         return $dir;
     }
 
-    protected static function createPathIfNeeded($path) {
+    protected static function createPathIfNeeded($path)
+    {
         if (!is_dir($path)) {
             mkdir($path, 0700);
         }
     }
-
-
-    /*
-    public function getScreensForUser(User $user)
-    {
-        $r = array();
-
-        $rep = $this->em->getRepository('AppBundle:ScreenAssociation');
-        $assoc = $rep->findBy(array('user_id' => $user->getId()));
-
-        foreach ($assoc as $a) {
-            $r[] = $a->getScreen();
-        }
-
-        // get organizations for user
-        $orgas = $user->getOrganizations();
-
-        foreach ($orgas as $o) {
-            $assoc = $rep->findBy(array('orga_id' => $o->getId()));
-            foreach ($assoc as $a) {
-                $r[] = $a->getScreen();
-            }
-        }
-
-        return $r;
-    }
-
-    public function isScreenAssociated(Screen $screen)
-    {
-        $rep = $this->em->getRepository('AppBundle:ScreenAssociation');
-        $assoc = $rep->findBy(array('screen' => $screen->getGuid()));
-
-        return (count($assoc) > 0);
-    }
-    */
 }
-
-abstract class PoolItem {
-    const TYPE_DIRECTORY    = 'dir';
-    const TYPE_FILE         = 'file';
-
-    protected $name         = '';
-    protected $fullpath     = '';
-
-    public function __construct($name, $path) {
-        $this->name = $name;
-        $this->fullpath = $path;
-    }
-
-    public function getName() {
-        return $this->name;
-    }
-
-    public function getFullPath() {
-        return $this->fullpath;
-    }
-
-    public abstract function getType();
-}
-
-class PoolDirectory extends PoolItem {
-
-    protected $contents = array();
-
-    public function __construct($filename, $fullpath)
-    {
-        parent::__construct($filename, $fullpath);
-    }
-
-    public function &getContents() {
-        return $this->contents;
-    }
-
-    public function getType() {
-        return PoolItem::TYPE_DIRECTORY;
-    }
-}
-
-
-class PoolFile extends PoolItem {
-
-    public function __construct($filename, $fullpath)
-    {
-        parent::__construct($filename, $fullpath);
-    }
-
-    public function getType() {
-        return PoolItem::TYPE_FILE;
-    }
-}
-

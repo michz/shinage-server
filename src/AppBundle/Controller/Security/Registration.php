@@ -8,7 +8,6 @@
 
 namespace AppBundle\Controller\Security;
 
-
 use AppBundle\Entity\Organization;
 use AppBundle\Entity\User;
 use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
@@ -22,8 +21,6 @@ use Symfony\Component\Form\Extension\Core\Type\RepeatedType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\HttpFoundation\Request;
-
-
 
 class Registration extends Controller
 {
@@ -74,8 +71,7 @@ class Registration extends Controller
 
                     $this->sendRegistrationMail($user);
                 }
-            }
-            else {
+            } else {
                 $this->addFlash(
                     'error',
                     'Die Registrierung war leider nicht möglich. Vielleicht war eine der Eingaben nicht korrekt?'
@@ -112,7 +108,6 @@ class Registration extends Controller
             );
             return $this->redirectToRoute('fos_user_security_login');
         }
-
     }
 
 
@@ -138,5 +133,4 @@ class Registration extends Controller
             );
         $this->get('mailer')->send($message);
     }
-
 }

@@ -281,5 +281,4 @@ class Screen
     {
         return $this->default_presentation;
     }
-
 }

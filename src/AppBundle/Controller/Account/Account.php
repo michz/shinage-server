@@ -8,7 +8,6 @@
 
 namespace AppBundle\Controller\Account;
 
-
 use AppBundle\Entity\Organization;
 use AppBundle\Entity\User;
 use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
@@ -22,8 +21,6 @@ use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\Request;
-
-
 
 class Account extends Controller
 {
@@ -85,7 +82,8 @@ class Account extends Controller
                     } else {
                         $this->addFlash(
                             'error',
-                            'Die Änderungen konnten leider nicht gespeichert werden. Evtl. sind Eingaben nicht korrekt.'
+                            'Die Änderungen konnten leider nicht gespeichert werden. '.
+                            'Evtl. sind Eingaben nicht korrekt.'
                         );
                     }
                 }
@@ -256,11 +254,14 @@ class Account extends Controller
                     $em->refresh($orga_new); // needed to notify $user that he is in a new organization
                     $this->addFlash('success', 'Die neue Organisation wurde gespeichert.');
                 } catch (UniqueConstraintViolationException $ex) {
-                    $this->addFlash('error', 'Der gewählte Name wird bereits für eine Organisation verwendet. Bitte wähle einen anderen, eindeutigen Namen.');
+                    $this->addFlash(
+                        'error',
+                        'Der gewählte Name wird bereits für eine Organisation verwendet. '.
+                        'Bitte wähle einen anderen, eindeutigen Namen.'
+                    );
                     $em = $this->getDoctrine()->resetManager();
                 }
-            }
-            else {
+            } else {
                 $this->addFlash('error', 'Die Organisation konnte leider nicht angelegt werden.');
             }
         }
@@ -326,8 +327,11 @@ class Account extends Controller
         $em->persist($user_new);
         $em->flush();
 
-        $this->addFlash('success',  'Der Benutzer (' . $user_new->getEmail() .
-            ') wurde der Organisation (' . $orga->getName() . ') hinzugefügt.');
+        $this->addFlash(
+            'success',
+            'Der Benutzer (' . $user_new->getEmail() .
+            ') wurde der Organisation (' . $orga->getName() . ') hinzugefügt.'
+        );
         return $this->redirectToRoute('account-organizations');
     }
 
@@ -358,6 +362,4 @@ class Account extends Controller
             ') wurde aus der Organisation (' . $organization->getName() . ') entfernt.');
         return $this->redirectToRoute('account-organizations');
     }
-
-
 }

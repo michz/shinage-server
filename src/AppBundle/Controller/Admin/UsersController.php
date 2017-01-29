@@ -21,11 +21,9 @@ class UsersController extends Controller
      */
     public function indexAction(Request $request)
     {
-
         // replace this example code with whatever you need
         return $this->render('adm/users.html.twig', [
-            #'screens' => $screens,
+            //'screens' => $screens,
         ]);
     }
-
 }

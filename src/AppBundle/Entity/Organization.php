@@ -17,7 +17,8 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Entity
  * @ORM\Table(name="organizations")
  */
-class Organization {
+class Organization
+{
     /**
      * @ORM\Id @ORM\Column(type="integer")
      * @ORM\GeneratedValue
