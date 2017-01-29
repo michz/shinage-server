@@ -156,7 +156,7 @@ class PresentationBuilder extends Controller
                 $presentation = $em->find('\AppBundle\Entity\Presentation', $o['presentation']);
 
                 // get file information
-                $file = new File($this->container->getParameter('path_pool') . '/' . $file_path);
+                $file = new File($this->container->getParameter('path_pool') . $file_path);
                 if (in_array($file->getMimeType(), $mime_image)) {
                     $type = 'image';
                 } else {
