@@ -21,6 +21,9 @@ $(document).ready(function() {
         //alert(s.file);
         console.log(s);
 
+        //make sure there is no trailing slash
+        img_base = img_base.replace(/\/+$/, '');
+
         var n = document.createElement("div");
         $(n).addClass('slide-img');
         $(n).addClass('slide-'+id);
