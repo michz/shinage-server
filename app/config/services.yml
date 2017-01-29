@@ -12,6 +12,7 @@ services:
         class: AppBundle\Service\ScreenAssociation
         arguments:
             em: "@doctrine.orm.entity_manager"
+            tokenStorage: "@security.token_storage"
 
     app.filepool:
         class: AppBundle\Service\FilePool
@@ -30,3 +31,11 @@ services:
             router: "@router.default"
         tags:
             - { name: kernel.event_subscriber }
+
+    app.form.type.owner:
+        class: AppBundle\Form\Type\OwnerType
+        arguments:
+            em: "@doctrine.orm.entity_manager"
+            tokenStorage: "@security.token_storage"
+        tags:
+            - { name: form.type }

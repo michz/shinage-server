@@ -47,6 +47,21 @@
                 </form>
             </div>
         </div>
+
+        <div class="panel panel-default">
+            <a name="create_virtual"></a>
+            <div class="panel-heading">
+                <h3 class="panel-title">
+                    Virtuelle Anzeige erstellen
+                </h3>
+            </div>
+
+            <div class="panel-body">
+                {% form_theme create_form 'bootstrap_3_horizontal_layout.html.twig' %}
+                {{ form(create_form) }}
+            </div>
+        </div>
+
     </div>
 
 {% endblock %}

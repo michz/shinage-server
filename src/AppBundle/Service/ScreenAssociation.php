@@ -10,18 +10,22 @@ namespace AppBundle\Service;
 
 use AppBundle\Entity\Organization;
 use AppBundle\Entity\User;
+use AppBundle\ScreenRoleType;
 use Doctrine\ORM\EntityManager;
 
 use AppBundle\Entity\Screen;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorage;
 
 
 class ScreenAssociation
 {
-    var $em = null;
+    protected $em = null;
+    protected $tokenStorage = null;
 
-    public function __construct(EntityManager $em)
+    public function __construct(EntityManager $em, TokenStorage $tokenStorage)
     {
         $this->em = $em;
+        $this->tokenStorage = $tokenStorage;
     }
 
     public function getScreensForUser(User $user)
@@ -54,10 +58,14 @@ class ScreenAssociation
         $orgas = $user->getOrganizations();
 
         foreach ($assoc as $a) { /** @var \AppBundle\Entity\ScreenAssociation $a */
-            if ($a->getUserId() == $user) return true;
+            if ($a->getUserId() == $user) {
+                return true;
+            }
 
             foreach ($orgas as $o) { /** @var Organization $o */
-                if ($a->getOrgaId() == $o) return true;
+                if ($a->getOrgaId() == $o) {
+                    return true;
+                }
             }
         }
 
@@ -70,5 +78,38 @@ class ScreenAssociation
         $assoc = $rep->findBy(array('screen' => $screen->getGuid()));
 
         return (count($assoc) > 0);
+    }
+
+    /**
+     * @param Screen $screen
+     * @param string $owner  (format: "user:<id>" or "orga:<id>")
+     * @param string $role   (from ScreenRoleType-enum)
+     * @return \AppBundle\Entity\ScreenAssociation
+     */
+    public function associateByString(Screen $screen, $owner, $role)
+    {
+        $assoc = new \AppBundle\Entity\ScreenAssociation();
+        $assoc->setScreen($screen);
+        $assoc->setRole($role);
+
+        $aOwner = explode(':', $owner);
+        switch ($aOwner[0]) {
+            case 'user':
+                $assoc->setUserId($this->em->find('AppBundle:User', $aOwner[1]));
+                break;
+            case 'orga':
+                $assoc->setOrgaId($this->em->find('AppBundle:Organization', $aOwner[1]));
+                break;
+            default:
+                // Error above. Use current user as default.
+                // TODO{s:0} Throw error?
+                $user = $this->tokenStorage->getToken()->getUser();
+                $assoc->setUserId($user);
+                break;
+        }
+
+        $this->em->persist($assoc);
+        $this->em->flush();
+        return $assoc;
     }
 }
