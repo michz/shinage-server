@@ -7,7 +7,7 @@
         <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Konto <span class="caret"></span></a>
         <ul class="dropdown-menu">
             <li><p class="navbar-text">{{ app.user.username }}</p></li>
-            <li><a href="{{ path('account') }}">{{ "Account"|trans }}</a></li>
+            <li><a href="{{ path('account-edit') }}">{{ "Account"|trans }}</a></li>
             <li role="separator" class="divider"></li>
             <li><a href="{{ path('fos_user_security_logout') }}">{{ 'layout.logout'|trans({}, 'FOSUserBundle') }}</a></li>
         </ul>

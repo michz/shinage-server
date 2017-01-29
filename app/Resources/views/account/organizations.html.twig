@@ -1,55 +1,61 @@
-{% extends 'base.html.twig' %}
+{% extends 'account/account.html.twig' %}
 
-{% block body %}
-        <div class="container">
+{% block account_main %}
+        {# TODO{s:0}: Erklären, wozu Organisationen gut sind #}
 
-            <div id="next">
-                <h2>Organisationen</h2>
-                <p>TODO: Erklären, wozu Organisationen gut sind</p>
-            </div>
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h3 class="panel-title">
+                {{ 'CreateOrganization'|trans }}
+            </h3>
+        </div>
 
-            <div>
+        <div class="panel-body">
+            {% form_theme form_create 'bootstrap_3_horizontal_layout.html.twig' %}
+            {{ form(form_create) }}
+        </div>
+    </div>
 
-                <div class="form account-form">
-                    <h3>Neue Organisation erstellen</h3>
-                    {{ form_start(form_create) }}
-                    {{ form_widget(form_create) }}
-                    {{ form_end(form_create) }}
+    <div>
+        {% for orga in organizations %}
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h3 class="panel-title">
+                        {{ orga.getName() }}
+                    </h3>
                 </div>
 
+                <div class="panel-body">
+                    {# TODO{s:0}: Orga-Bearbeiten: Form-Handling verbessern #}
 
-                {% for orga in organizations %}
-                <div class="form account-form">
-                    <h3>{{ orga.getName() }}</h3>
-                    <p><a class="leave" data-name="{{ orga.getName() }}" href="{{ path('account-orga-leave', {'id': orga.getId()}) }}">Diese Organisation verlassen.</a></p>
-                    <p style="margin-top:15px; font-weight:bold; ">Mitglieder:</p>
+                    <p><a class="leave" data-name="{{ orga.getName() }}" href="{{ path('account-orga-leave', {'id': orga.getId()}) }}">{{ 'LeaveThisOrga'|trans }}.</a></p>
+                    <p style="margin-top:15px; font-weight:bold; ">{{ 'Members'|trans }}:</p>
                     {% for user in orga.getUsers() %}
                         <p>
                             <a href="{{ path('account-orga-remove', { 'user_id':user.getId(), 'orga_id':orga.getId() }) }}">
                                 <img class="remove-user" data-user="{{ user.getEmail() }}" data-orga="{{ orga.getName() }}" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAABmJLR0QA/wD/AP+gvaeTAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAB3RJTUUH4QEHCR87wvuvuwAAAIRJREFUOMutU0EOwCAIa3byNSY+wv8f/YHPWHeYLtjhZcyEKNTGAgKSmIskpq9xxfXOdDqA4hHGXgD0hWjABoDDqvNSNXh7cPMyxbJRkB38VmKk0bE0zMOKqqhy4dyc1xSlSHlDsLH86pQEdpIJICn5QHT9mUKoiN/bGP5I4a8cHqboOF/dHiTQQ9S7CAAAAABJRU5ErkJggg==">
-                            </a> {{ user.getEmail() }}</p>
+                            </a> {{ user.getEmail() }}
+                        </p>
                     {% endfor %}
-                    <p style="margin-top:15px; font-weight:bold; ">Mitglied hinzufügen:</p>
-                    <form action="{{ path('account-orga-add-user') }}" method="post">
+                    <p style="margin-top:15px; font-weight:bold; ">{{ 'AddMember'|trans }}:</p>
+                    <form action="{{ path('account-orga-add-user') }}" method="post" class="form-horizontal">
                         <input type="hidden" name="organization" value="{{ orga.getId() }}">
-                        <p>
-                            <span class="label">{{ 'Email'|trans }}</span>
-                            <span class="input"><input type="text" name="email"></span>
-                        </p>
-                        <p>
-                            <input type="submit" value="{{ 'AddUser'|trans }}">
-                        </p>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label required">{{ 'Email'|trans }}</label>
+                            <div class="col-sm-10"><input type="text" name="email" required="required" class="form-control"></div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-sm-2"></div>
+                            <div class="col-sm-10">
+                                <input type="submit" value="{{ 'AddUser'|trans }}" class="btn-default btn">
+                            </div>
+                        </div>
                     </form>
                 </div>
-                {% endfor %}
-
             </div>
-        </div>
+        {% endfor %}
+    </div>
 
-
-{% endblock %}
-
-{% block stylesheets %}
 {% endblock %}
 
 {% block scripts %}

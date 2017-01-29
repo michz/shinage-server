@@ -1,60 +1,52 @@
-{% extends 'base.html.twig' %}
+{% extends 'account/account.html.twig' %}
 {% form_theme form 'bootstrap_3_horizontal_layout.html.twig' %}
 {% form_theme form_pw 'bootstrap_3_horizontal_layout.html.twig' %}
 
-{% block body %}
-        <div class="container">
-
-            <div class="panel panel-default">
-                <div class="panel-heading">
-                    <h3 class="panel-title">
-                        {{ 'ChangeEmail'|trans }}
-                    </h3>
-                </div>
-
-                <div class="panel-body">
-                    {{ form(form) }}
-                </div>
-            </div>
-
-            <div class="panel panel-default">
-                <div class="panel-heading">
-                    <h3 class="panel-title">
-                        {{ 'ChangePassword'|trans }}
-                    </h3>
-                </div>
-
-                <div class="panel-body">
-                    {{ form(form_pw) }}
-                </div>
-            </div>
-
-
-            {#
-            <div class="form account-form">
-                <h3>{{ 'ChangePassword'|trans }}</h3>
-                <form action="{{ path("account-password") }}" method="post">
-                    <p>
-                        <span class="label">{{ 'Password'|trans }}</span>
-                        <span class="input"><input type="password" name="pw"></span>
-                    </p>
-                    <p>
-                        <span class="label">{{ 'PasswordAgain'|trans }}</span>
-                        <span class="input"><input type="password" name="pw-again"></span>
-                    </p>
-                    <p>
-                        <input type="submit" value="{{ 'Save'|trans }}">
-                    </p>
-                </form>
-            </div>
-            #}
+{% block account_main %}
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h3 class="panel-title">
+                {{ 'ChangeEmail'|trans }}
+            </h3>
         </div>
 
+        <div class="panel-body">
+            {{ form(form) }}
+        </div>
+    </div>
+
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h3 class="panel-title">
+                {{ 'ChangePassword'|trans }}
+            </h3>
+        </div>
+
+        <div class="panel-body">
+            {{ form(form_pw) }}
+        </div>
+    </div>
+
+
+    {#
+    <div class="form account-form">
+        <h3>{{ 'ChangePassword'|trans }}</h3>
+        <form action="{{ path("account-password") }}" method="post">
+            <p>
+                <span class="label">{{ 'Password'|trans }}</span>
+                <span class="input"><input type="password" name="pw"></span>
+            </p>
+            <p>
+                <span class="label">{{ 'PasswordAgain'|trans }}</span>
+                <span class="input"><input type="password" name="pw-again"></span>
+            </p>
+            <p>
+                <input type="submit" value="{{ 'Save'|trans }}">
+            </p>
+        </form>
+    </div>
+    #}
+
 
 {% endblock %}
 
-{% block stylesheets %}
-{% endblock %}
-
-{% block scripts %}
-{% endblock %}
