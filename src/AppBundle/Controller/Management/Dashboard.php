@@ -35,6 +35,13 @@ class Dashboard extends Controller
         $assoc = $this->get('app.screenassociation'); /** @var ScreenAssociation $assoc */
         $screens = $assoc->getScreensForUser($user);
 
+        $countScreens = count($screens);
+
+        // no screens found
+        if ($countScreens < 1) {
+            return $this->render('manage/msg_no_screens.html.twig', []);
+        }
+
         return $this->render('manage/dashboard.html.twig', [
             'screens' => $screens,
         ]);

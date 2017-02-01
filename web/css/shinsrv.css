@@ -42,7 +42,7 @@ code { background: #F5F5F5; max-width: 100px; padding: 2px 6px; word-wrap: break
 /* other generic stuff */
 .dialog { display: none; }
 .dialog p { line-height: 14px;  font-size:16px; margin:4px 0; padding:0;  }
-.dialog .label { display: inline-block; width:140px; }
+.dialog .label { display: inline-block; width:140px; text-align: right; color: black;}
 .dialog .input input, .dialog .input select { width:210px; }
 
 /* dashboard */
@@ -61,11 +61,12 @@ code { background: #F5F5F5; max-width: 100px; padding: 2px 6px; word-wrap: break
 #chose-presentation li { position: relative; padding-left:20px; }
 #chose-presentation li img { position: absolute; left:1px; top:3px; cursor: pointer; }
 
-#pool-tree { float:left; width:200px; border: 1px solid #2a6496; overflow-x:scroll; min-height:300px; }
-#pool-tree ul li { list-style: circle; white-space: nowrap; font-size:14px; }
 
-.presentation-builder { float:left; width:550px; border:1px solid #3a87ad;
+#pool-tree { border: 1px solid #2a6496; overflow-x:scroll; min-height:300px; }
+#pool-tree ul li { list-style: circle; white-space: nowrap; font-size:14px; }
+#presentation-builder-container .presentation-builder { border:1px solid #3a87ad;
     min-height:300px; margin:0; padding:5px; }
+
 
 .elem { position:relative; display:inline-block;
     margin:0 5px; padding:0; background-color:#000000;
