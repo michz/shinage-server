@@ -24,7 +24,7 @@ $(document).ready(function() {
         var n = document.createElement("div");
         $(n).addClass('slide-img');
         $(n).addClass('slide-'+id);
-        $(n).append("<img src='" + img_base + '/' + s.file_path + "'>");
+        $(n).append("<img src='" + img_base + s.file_path + "'>");
         $("body").append(n);
         s.id = 'slide-'+id;
         s.next_slide = 'slide-' + (id+1);
