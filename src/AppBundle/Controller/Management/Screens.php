@@ -33,9 +33,6 @@ class Screens extends Controller
         /** @var EntityManager $em */
         $em = $this->getDoctrine()->getManager();
 
-        // screens that are associated to the user or to its organizations
-        $assoc = $this->get('app.screenassociation'); /** @var ScreenAssociation $assoc */
-        $screens = $assoc->getScreensForUser($user);
 
         //$createAssociation = new ScreenAssociation();
         //$createAssociation->setOrgaId($em->find('AppBundle:Organization', 2));
@@ -43,7 +40,14 @@ class Screens extends Controller
         $this->handleCreateVirtualScreen($request, $createForm);
 
 
-        // replace this example code with whatever you need
+        // make sure former changes to database are visible to getScreensForUser()
+        $em->flush();
+
+        // screens that are associated to the user or to its organizations
+        // (should be last call, so that newly created screens are recognized)
+        $assoc = $this->get('app.screenassociation'); /** @var ScreenAssociation $assoc */
+        $screens = $assoc->getScreensForUser($user);
+
         return $this->render('manage/screens.html.twig', [
             'screens' => $screens,
             'screens_count' => count($screens),
