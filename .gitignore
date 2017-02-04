@@ -15,12 +15,12 @@
 /vendor/
 /web/bundles/
 
-/data
+tests/_output/*
 
+/data
 
 .idea/*
 *~
 *.bak
 *.swp
 *.swo
-
