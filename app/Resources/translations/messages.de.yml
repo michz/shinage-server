@@ -23,6 +23,7 @@ CreateOrganization: Neue Organisation erstellen
 Members: Mitglieder
 LeaveThisOrga: Diese Organisation verlassen
 AddMember: Mitglied hinzufügen
+ApiKeys: API-Schlüssel
 
 AddUser: Benutzer hinzufügen
 Email: E-Mail
