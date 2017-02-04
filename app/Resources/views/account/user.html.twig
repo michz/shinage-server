@@ -1,6 +1,7 @@
 {% extends 'account/account.html.twig' %}
 {% form_theme form 'bootstrap_3_horizontal_layout.html.twig' %}
 {% form_theme form_pw 'bootstrap_3_horizontal_layout.html.twig' %}
+{% form_theme form_add_api_key 'bootstrap_3_horizontal_layout.html.twig' %}
 
 {% block account_main %}
     <div class="panel panel-default">
@@ -26,6 +27,37 @@
             {{ form(form_pw) }}
         </div>
     </div>
+
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h3 class="panel-title">
+                {{ 'ApiKeys'|trans }}
+            </h3>
+        </div>
+
+        <div class="panel-body">
+            {{ form(form_add_api_key) }}
+        </div>
+    </div>
+
+
+    {% for k in api_keys %}
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h3 class="panel-title">
+                    API-Key: {{ k.getName() }}
+                </h3>
+            </div>
+
+            <div class="panel-body">
+                <div class="col-sm-2">Schlüssel:</div>
+                <div class="col-sm-10"><span class="code">{{ k.getCode() }}</span></div>
+                <div class="col-sm-2">Rechte:</div>
+                <div class="col-sm-10">{{ k.getRolesReadable() }}</div>
+                <p><a href="{{ path('account-delete-apikey', { id: k.getId() }) }}">Schlüssel löschen</a></p>
+            </div>
+        </div>
+    {% endfor %}
 
 
     {#

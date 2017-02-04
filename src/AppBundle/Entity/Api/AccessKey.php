@@ -7,9 +7,12 @@
 
 namespace AppBundle\Entity\Api;
 
+use AppBundle\Entity\Interfaces\Ownable;
+use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Mapping as ORM;
 use \AppBundle\Entity\User;
 use \AppBundle\Entity\Organization;
+use Symfony\Component\Config\Definition\Exception\Exception;
 
 /**
  * AppBundle\Entity\Api\AccessKey
@@ -17,7 +20,7 @@ use \AppBundle\Entity\Organization;
  * @ORM\Entity
  * @ORM\Table(name="api_access_keys")
  */
-class AccessKey
+class AccessKey implements Ownable
 {
     /**
      * @ORM\Id @ORM\Column(type="integer")
@@ -36,7 +39,7 @@ class AccessKey
     protected $name;
 
     /**
-     * @ORM\Column(type="datetime")
+     * @ORM\Column(type="datetime", nullable=true)
      */
     protected $last_use;
 
@@ -77,6 +80,28 @@ class AccessKey
         );
         $this->setCode($code);
         return $this;
+    }
+
+
+    public function getOwnerString()
+    {
+        if ($this->getOwnerUser() != null) {
+            return 'user:' . $this->getOwnerUser()->getId();
+        }
+        if ($this->getOwnerOrga() != null) {
+            return 'orga:' . $this->getOwnerOrga()->getId();
+        }
+        return '';
+    }
+
+    public function setOwnerString($str)
+    {
+        throw new Exception();
+    }
+
+    public function getRolesReadable()
+    {
+        return implode(', ', $this->getRoles());
     }
 
     /**

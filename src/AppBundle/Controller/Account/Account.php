@@ -8,9 +8,13 @@
 
 namespace AppBundle\Controller\Account;
 
+use AppBundle\AppBundle;
+use AppBundle\Entity\Api\AccessKey;
 use AppBundle\Entity\Organization;
 use AppBundle\Entity\User;
+use AppBundle\Form\ApiKeyForm;
 use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
+use Doctrine\ORM\EntityManager;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
@@ -19,6 +23,7 @@ use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\Form\Extension\Core\Type\RepeatedType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Form\Form;
 use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -37,7 +42,7 @@ class Account extends Controller
      */
     public function editAction(Request $request)
     {
-        /** @var User $user_logged_in */
+        /** @var User $user */
         $user = $this->get('security.token_storage')->getToken()->getUser();
         //$user = $user_logged_in->
         $userManager = $this->container->get('fos_user.user_manager');
@@ -63,6 +68,16 @@ class Account extends Controller
             ->add('save', SubmitType::class, array('label' => 'Save'))
             ->getForm();
 
+
+        // build default AccessKey
+        $newApiKey = new AccessKey();
+        $newApiKey->setOwnerUser($user);
+
+
+        // build AccessKey-form and handle submission
+        $formApiKeyBuilder = $this->get('form.factory')->createNamedBuilder('form3name', ApiKeyForm::class, $newApiKey);
+        $createApiKeyForm = $formApiKeyBuilder->getForm();
+        $this->handleCreateApiToken($request, $createApiKeyForm);
 
 
         if ('POST' === $request->getMethod()) {
@@ -119,10 +134,16 @@ class Account extends Controller
         }
 
 
+        // get API keys
+        $em = $this->getDoctrine()->getManager();
+        $rep = $em->getRepository('AppBundle:Api\AccessKey');
+        $apiKeys = $rep->findBy(array('owner_user' => $user));
 
         return $this->render('account/user.html.twig', [
-            'form' => $form->createView(),
-            'form_pw' => $form_pw->createView()
+            'form'                  => $form->createView(),
+            'form_pw'               => $form_pw->createView(),
+            'form_add_api_key'      => $createApiKeyForm->createView(),
+            'api_keys'              => $apiKeys,
         ]);
     }
 
@@ -262,5 +283,65 @@ class Account extends Controller
         $this->addFlash('success', 'Die Benutzer (' . $user_other->getEmail() .
             ') wurde aus der Organisation (' . $organization->getName() . ') entfernt.');
         return $this->redirectToRoute('account-organizations');
+    }
+
+
+    /**
+     * @Route("/account/delete-api-key/{id}", name="account-delete-apikey")
+     */
+    public function deleteApiKeyAction(Request $request, $id)
+    {
+        /** @var EntityManager $em */
+        $em = $this->getDoctrine()->getManager();
+        /** @var User $user */
+        $user = $this->get('security.token_storage')->getToken()->getUser();
+
+        $key = $em->find('AppBundle:Api\AccessKey', $id);
+        if ($key->getOwnerUser() == $user || in_array($key->getOwnerOrga(), $user->getOrganizations())) {
+            $em->remove($key);
+            $em->flush();
+
+            $this->addFlash('success', 'Der Schlüssel (' . $key->getCode() . ') wurde gelöscht.');
+        } else {
+            $this->addFlash('error', 'Der Schlüssel (' . $key->getCode() . ') konnte leider nicht gelöscht werden.');
+        }
+
+        // Redirect to referer if possible
+        $ref = $request->headers->get('referer');
+        if (empty($ref)) {
+            return $this->redirectToRoute('account-edit');
+        }
+        return $this->redirect($ref);
+    }
+
+    /**
+     * Handles the create-api-key submission.
+     * @param Request $request
+     * @param Form $createApiKeyForm
+     */
+    protected function handleCreateApiToken(Request $request, Form $createApiKeyForm)
+    {
+        /** @var EntityManager $em */
+        $em = $this->getDoctrine()->getManager();
+
+        if ('POST' !== $request->getMethod() || !$request->request->has($createApiKeyForm->getName())) {
+            return;
+        }
+
+        $createApiKeyForm->handleRequest($request);
+
+        if (!$createApiKeyForm->isSubmitted() || !$createApiKeyForm->isValid()) {
+            return;
+        }
+
+        /** @var \AppBundle\Entity\Api\AccessKey $apiKey */
+        $apiKey = $createApiKeyForm->getData();
+        $apiKey->generateAndSetCode();
+
+        // @TODO Debug: Standardrollen entfernen und konfigurierbar machen
+        $apiKey->setRoles(['FILE_UPLOAD']);
+
+        $em->persist($apiKey);
+        $em->flush();
     }
 }
