@@ -30,7 +30,7 @@ class CreateVirtualScreenForm extends AbstractType
                     new NotBlank()
                 ]
             ])
-            ->add('owner', OwnerType::class, ['label' => 'Owner'])
+            ->add('owner', OwnerType::class, ['label' => 'Owner', 'ownable' => $builder->getData()])
             ->add('create', SubmitType::class)
         ;
     }

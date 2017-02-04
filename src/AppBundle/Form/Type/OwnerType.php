@@ -38,38 +38,39 @@ class OwnerType extends AbstractType
         // save entity that should be owned
         $this->entity = $options['ownable'];
 
-
-        // Event: While building set default value
-        $builder->addEventListener(
-            FormEvents::PRE_SET_DATA,
-            function (FormEvent $event) use ($builder) {
-                $event->setData($this->entity->getOwnerString());
-            }
-        );
-
-        // Event: After submission, modify entity
-        $builder->addEventListener(
-            FormEvents::SUBMIT,
-            function (FormEvent $event) {
-                $entity = $this->entity;
-                $owner = $event->getData();
-
-                $aOwner = explode(':', $owner);
-                switch ($aOwner[0]) {
-                    case 'user':
-                        $entity->setOwnerUser($this->em->find('AppBundle:User', $aOwner[1]));
-                        break;
-                    case 'orga':
-                        $entity->setOwnerOrga($this->em->find('AppBundle:Organization', $aOwner[1]));
-                        break;
-                    default:
-                        // Error above. Use current user as default.
-                        $user = $this->tokenStorage->getToken()->getUser();
-                        $entity->setOwnerUser($user);
-                        break;
+        if ($this->entity != null) {
+            // Event: While building set default value
+            $builder->addEventListener(
+                FormEvents::PRE_SET_DATA,
+                function (FormEvent $event) use ($builder) {
+                    $event->setData($this->entity->getOwnerString());
                 }
-            }
-        );
+            );
+
+            // Event: After submission, modify entity
+            $builder->addEventListener(
+                FormEvents::SUBMIT,
+                function (FormEvent $event) {
+                    $entity = $this->entity;
+                    $owner = $event->getData();
+
+                    $aOwner = explode(':', $owner);
+                    switch ($aOwner[0]) {
+                        case 'user':
+                            $entity->setOwnerUser($this->em->find('AppBundle:User', $aOwner[1]));
+                            break;
+                        case 'orga':
+                            $entity->setOwnerOrga($this->em->find('AppBundle:Organization', $aOwner[1]));
+                            break;
+                        default:
+                            // Error above. Use current user as default.
+                            $user = $this->tokenStorage->getToken()->getUser();
+                            $entity->setOwnerUser($user);
+                            break;
+                    }
+                }
+            );
+        }
     }
 
     public function configureOptions(OptionsResolver $resolver)
