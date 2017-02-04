@@ -93,7 +93,7 @@ class FilePool
         return $dir;
     }
 
-    protected static function createPathIfNeeded($path)
+    public static function createPathIfNeeded($path)
     {
         if (!is_dir($path)) {
             mkdir($path, 0700);
