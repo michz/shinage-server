@@ -30,7 +30,16 @@ a { color: #0000F0; }
 a:hover { text-decoration: none; }
 
 code { background: #F5F5F5; max-width: 100px; padding: 2px 6px; word-wrap: break-word; }
-
+.code {
+    display:inline-block;
+    margin: 2px;
+    padding: 2px 6px;
+    font-family: monospace;
+    color: #333;
+    border: 1px solid #ddd;
+    background-color: #eee;
+    border-radius: 3px;
+}
 
 /* flash messages */
 .flash { margin:7px 3px; padding:9px; font-size:1.1em;
@@ -109,6 +118,27 @@ code { background: #F5F5F5; max-width: 100px; padding: 2px 6px; word-wrap: break
 
 .account-form { border:1px solid #92AAB0; margin:10px 0; padding:5px; }
 
+/* make sidebar nav vertical */
+@media (min-width: 768px) {
+    .sidebar-nav .navbar .navbar-collapse {
+        padding: 0;
+        max-height: none;
+    }
+    .sidebar-nav .navbar ul {
+        float: none;
+    }
+    .sidebar-nav .navbar ul:not {
+        display: block;
+    }
+    .sidebar-nav .navbar li {
+        float: none;
+        display: block;
+    }
+    .sidebar-nav .navbar li a {
+        padding-top: 12px;
+        padding-bottom: 12px;
+    }
+}
 
 /* screen box */
 .screen-editor { display:inline-block; margin:5px; padding:0;

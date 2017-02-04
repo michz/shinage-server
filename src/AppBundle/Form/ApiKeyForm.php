@@ -8,29 +8,49 @@
 namespace AppBundle\Form;
 
 use AppBundle\Form\Type\OwnerType;
+use Doctrine\ORM\EntityManager;
+use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
+use Symfony\Component\Form\FormEvent;
+use Symfony\Component\Form\FormEvents;
 use Symfony\Component\Form\FormView;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\PropertyAccess\PropertyAccess;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorage;
 use Symfony\Component\Validator\Constraints\LengthValidator;
 use Symfony\Component\Validator\Constraints\NotBlank;
 
-class CreateVirtualScreenForm extends AbstractType
+class ApiKeyForm extends AbstractType
 {
+
+    /** @var EntityManager|null $em */
+    protected $em = null;
+
+
+    protected $tokenStorage = null;
+
+    public function __construct(EntityManager $em, TokenStorage $tokenStorage)
+    {
+        $this->em = $em;
+        $this->tokenStorage = $tokenStorage;
+    }
+
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        // TODO{s:0} length constraint?
         $builder
             ->add('name', TextType::class, [
-                'label' => 'Name',
+                'label' => 'Titel',
                 'constraints' => [
                     new NotBlank()
+                    // TODO{s:1} constraint: unique for user/orga
                 ]
             ])
-            ->add('owner', OwnerType::class, ['label' => 'Owner', 'ownable' => $builder->getData()])
+            ->add('code', TextType::class, ['disabled' => true, 'data' => '.....'])
+            ->add('owner_string', OwnerType::class, ['label' => 'Owner', 'ownable' => $builder->getData()])
             ->add('create', SubmitType::class)
         ;
     }

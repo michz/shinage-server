@@ -14,11 +14,6 @@ class DefaultController extends Controller
      */
     public function indexAction(Request $request)
     {
-        $todo = $this->get('app.todolist');
-        /** @var TodoList $todo */
-        $todos = $todo->getTodoList();
-
-
         return $this->redirectToRoute('management-dashboard');
     }
 }

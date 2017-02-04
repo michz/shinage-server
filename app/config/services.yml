@@ -19,6 +19,9 @@ services:
         arguments:
             basepath: "%path_pool%"
 
+    app.apiroleregistry:
+        class: AppBundle\Service\ApiRoleRegistry
+
     app.todolist:
         class: AppBundle\Service\TodoList
         arguments:
@@ -34,6 +37,14 @@ services:
 
     app.form.type.owner:
         class: AppBundle\Form\Type\OwnerType
+        arguments:
+            em: "@doctrine.orm.entity_manager"
+            tokenStorage: "@security.token_storage"
+        tags:
+            - { name: form.type }
+
+    app.form.type.apikeyform:
+        class: AppBundle\Form\ApiKeyForm
         arguments:
             em: "@doctrine.orm.entity_manager"
             tokenStorage: "@security.token_storage"

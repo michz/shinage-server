@@ -2,9 +2,9 @@
 
 namespace AppBundle;
 
+use AppBundle\Service\ApiRoleRegistry;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 use Doctrine\DBAL\Types\Type;
-
 
 class AppBundle extends Bundle
 {
@@ -20,6 +20,12 @@ class AppBundle extends Bundle
         $em = $this->container->get('doctrine.orm.default_entity_manager');
         $platform = $em->getConnection()->getDatabasePlatform();
         $platform->registerDoctrineTypeMapping('enum', 'string');
+    }
 
+    protected function registerApiRoles()
+    {
+        /** @var ApiRoleRegistry $registry */
+        $registry = $this->container->get('app.apiroleregistry');
+        $registry->registerRole('FILE_UPLOAD');
     }
 }
