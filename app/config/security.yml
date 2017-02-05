@@ -25,8 +25,8 @@ security:
         - { path: ^/register, role: IS_AUTHENTICATED_ANONYMOUSLY }
 #        - { path: ^/resetting, role: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/adm/modify_screen, role: ROLE_USER }
-        - { path: ^/adm/, role: ROLE_ADMIN }  # TODO: Aktivieren
-        - { path: ^/manage/, role: ROLE_USER }
+        - { path: ^/adm, role: ROLE_ADMIN }
+        - { path: ^/manage, role: ROLE_USER }
 
 
 
