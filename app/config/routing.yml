@@ -2,5 +2,10 @@ app:
     resource: "@AppBundle/Controller/"
     type:     annotation
 
+app_api:
+    type: rest
+    prefix: "api/v1/"
+    resource: "@AppBundle/Api/"
+
 fos_user:
     resource: "@FOSUserBundle/Resources/config/routing/all.xml"

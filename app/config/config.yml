@@ -109,4 +109,20 @@ swiftmailer:
     password:  "%mailer_password%"
     spool:     { type: memory }
 
+fos_rest:
+    routing_loader:
+        default_format: json      # All responses should be JSON formated
+        include_format: true      # We do not include format in request, so that all responses
+                                  # will eventually be JSON formated
+    view:
+        formats:
+            json: true
+            rss: false
+            xml: false
+        templating_formats:
+            html: true
+        force_redirects:
+            html: true
+        failed_validation: HTTP_BAD_REQUEST
+        default_engine: twig
 

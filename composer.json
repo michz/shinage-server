@@ -26,7 +26,9 @@
         "symfony/debug": "^3.2",
         "studio-42/elfinder": "2.1.x@dev",
         "symfony/assetic-bundle": "^2.8",
-        "rollerworks/password-strength-bundle": "^1.5"
+        "rollerworks/password-strength-bundle": "^1.5",
+        "friendsofsymfony/rest-bundle": "^2.1",
+        "jms/serializer-bundle": "^1.1"
     },
     "require-dev": {
         "sensio/generator-bundle": "^3.0",
