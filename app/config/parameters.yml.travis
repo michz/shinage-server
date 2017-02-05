@@ -1,0 +1,14 @@
+parameters:
+    database_host: 127.0.0.1
+    database_port: null
+    database_name: travis
+    database_user: travis
+    database_password: travis
+    mailer_transport: smtp
+    mailer_host: 127.0.0.1
+    mailer_user: null
+    mailer_password: null
+    mailer_from: travis-ci@mztx.de
+    secret: abcdefghijksecretlmnopqrstuvwxyz
+swiftmailer:
+    disable_delivery: true
