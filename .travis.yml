@@ -1,0 +1,19 @@
+language: php
+php:
+  - '5.6'
+  - '7.0'
+  - '7.1'
+
+services:
+  - mysql
+
+before_script:
+  - mysql -e 'CREATE DATABASE shinage_test;'
+  - cp app/config/parameters.yml.travis app/config/parameters.yml
+  - composer install #--prefer-source
+  #- php bin/console doctrine:database:create --env=test
+  - php bin/console doctrine:schema:create --env=test
+  - php bin/console doctrine:schema:update --force --env=test
+
+script:
+  - ./run-tests.sh
