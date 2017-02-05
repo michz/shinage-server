@@ -4,9 +4,15 @@ php:
   - '7.0'
   - '7.1'
 
+services:
+  - mysql
+
 before_script:
   - cp app/config/parameters.yml.travis app/config/parameters.yml
   - composer install #--prefer-source
+  - php bin/console doctrine:database:create --env=test
+  - php bin/console doctrine:schema:create --env=test
+  - php bin/console doctrine:fixtures:load -n --env=test
 
 script:
   - ./run-tests.sh
