@@ -1,7 +1,7 @@
 parameters:
     database_host: 127.0.0.1
     database_port: null
-    database_name: travis
+    database_name: shinage-test
     database_user: travis
     database_password: ~
     mailer_transport: smtp
