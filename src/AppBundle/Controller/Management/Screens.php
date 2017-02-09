@@ -13,6 +13,7 @@ use AppBundle\Entity\Guid;
 use AppBundle\Entity\Screen;
 use AppBundle\Entity\User;
 use AppBundle\Form\CreateVirtualScreenForm;
+use AppBundle\Service\SchedulerService;
 use AppBundle\Service\ScreenAssociation;
 use Doctrine\ORM\EntityManager;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -32,13 +33,16 @@ class Screens extends Controller
         $user = $this->get('security.token_storage')->getToken()->getUser();
         /** @var EntityManager $em */
         $em = $this->getDoctrine()->getManager();
+        /** @var SchedulerService $scheduler */
+        $scheduler = $this->get('app.scheduler');
 
 
-        //$createAssociation = new ScreenAssociation();
-        //$createAssociation->setOrgaId($em->find('AppBundle:Organization', 2));
-        $createForm = $this->createForm(CreateVirtualScreenForm::class); //, $createAssociation);
+        // @TODO{s:5} Standardpräsentation pro Screen einstellen
+        // @TODO{s:5} Anzeigen, welche Präsentation grad aktuell ist
+
+        // "create virtual screen" form
+        $createForm = $this->createForm(CreateVirtualScreenForm::class);
         $this->handleCreateVirtualScreen($request, $createForm);
-
 
         // make sure former changes to database are visible to getScreensForUser()
         $em->flush();
@@ -47,6 +51,10 @@ class Screens extends Controller
         // (should be last call, so that newly created screens are recognized)
         $assoc = $this->get('app.screenassociation'); /** @var ScreenAssociation $assoc */
         $screens = $assoc->getScreensForUser($user);
+
+        foreach ($screens as $screen) {
+            $scheduler->updateScreen($screen);
+        }
 
         return $this->render('manage/screens.html.twig', [
             'screens' => $screens,

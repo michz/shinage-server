@@ -23,48 +23,54 @@ class Screen
      * @ORM\Id
      * @ORM\Column(type="string", length=36)
      */
-    private $guid;
+    protected $guid;
 
     /**
      * @ORM\Column(type="string", length=200)
      */
-    private $name = 'unbenannte Anzeige';
+    protected $name = 'unbenannte Anzeige';
 
     /**
      * @ORM\Column(type="text")
      */
-    private $location = '';
+    protected $location = '';
 
     /**
      * @ORM\Column(type="text")
      */
-    private $notes = '';
+    protected $notes = '';
 
     /**
      * @ORM\Column(type="text")
      */
-    private $admin_c = '';
+    protected $admin_c = '';
 
     /**
      * @ORM\Column(type="datetime")
      */
-    private $first_connect;
+    protected $first_connect;
 
     /**
      * @ORM\Column(type="datetime")
      */
-    private $last_connect;
+    protected $last_connect;
 
     /**
      * @ORM\Column(type="string", length=8)
      */
-    private $connect_code = '';
+    protected $connect_code = '';
 
     /**
      * @ORM\ManyToOne(targetEntity="Presentation")
      * @ORM\JoinColumn(name="presentation_id", referencedColumnName="id")
      */
     protected $default_presentation;
+
+    /**
+     * Can hold the current presentation. (Will not be saved to database.)
+     * @var \AppBundle\Entity\Presentation $current_presentation
+     */
+    protected $current_presentation = null;
 
     /**
      * Set guid
@@ -280,5 +286,17 @@ class Screen
     public function getDefaultPresentation()
     {
         return $this->default_presentation;
+    }
+
+
+    public function setCurrentPresentation(\AppBundle\Entity\Presentation $presentation = null)
+    {
+        $this->current_presentation = $presentation;
+        return $this;
+    }
+
+    public function getCurrentPresentation()
+    {
+        return $this->current_presentation;
     }
 }

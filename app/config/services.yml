@@ -4,12 +4,14 @@ parameters:
 #    parameter_name: value
 
 services:
-#    service_name:
-#        class: AppBundle\Directory\ClassName
-#        arguments: ["@another_service_name", "plain_value", "%parameter_name%"]
-
     app.screenassociation:
         class: AppBundle\Service\ScreenAssociation
+        arguments:
+            em: "@doctrine.orm.entity_manager"
+            tokenStorage: "@security.token_storage"
+
+    app.scheduler:
+        class: AppBundle\Service\SchedulerService
         arguments:
             em: "@doctrine.orm.entity_manager"
             tokenStorage: "@security.token_storage"

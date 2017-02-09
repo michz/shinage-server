@@ -256,4 +256,10 @@ class Presentation implements \JsonSerializable
     {
         return $this->slides;
     }
+
+
+    public function __toString()
+    {
+        return $this->getTitle();
+    }
 }

@@ -6,6 +6,8 @@ use AppBundle\Service\ApiRoleRegistry;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 use Doctrine\DBAL\Types\Type;
 
+// @TODO{s:5} Favicon + Apple-Touch-Icon
+
 class AppBundle extends Bundle
 {
 

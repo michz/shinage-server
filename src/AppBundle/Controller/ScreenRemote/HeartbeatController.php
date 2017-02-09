@@ -182,28 +182,7 @@ class HeartbeatController extends Controller
 
     protected function getCurrentPresentation(Screen $screen)
     {
-        $em = $this->getDoctrine()->getManager();
-
-        $query = $em->createQuery(
-            'SELECT p
-                    FROM AppBundle:ScheduledPresentation p
-                    WHERE
-                        (
-                        (p.scheduled_start <= :now AND p.scheduled_end >= :now)
-                        ) AND 
-                        p.screen = :screen
-                    ORDER BY p.scheduled_start ASC'
-        )
-            ->setParameter('now', date('Y-m-d H:i:s'))
-            ->setParameter('screen', $screen);
-
-        $results = $query->getResult();
-
-        if (count($results) > 0) {
-            return $results[0];
-        }
-
-        // get default presentation for screen (must be defined first)
-        return $screen->getDefaultPresentation();
+        $scheduler = $this->get('app.scheduler');
+        return $scheduler->getCurrentPresentation($screen, true);
     }
 }
