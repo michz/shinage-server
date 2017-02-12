@@ -10,6 +10,7 @@ namespace AppBundle\Controller\Management;
 
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\Config\Definition\Exception\Exception;
 use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\HttpFoundation\Request;
 use AppBundle\Exceptions\NoScreenGivenException;
@@ -130,7 +131,11 @@ class FileManager extends Controller
             // https://github.com/Studio-42/elFinder/wiki/Connector-configuration-options
             $opts = array(
                 // 'debug' => true,
-                'roots' => $roots
+                'roots' => $roots,
+                'bind' => [
+                    'mkdir mkfile rename duplicate upload rm paste extract archive put' =>
+                        [$this, 'elBindInvalidateQuotaCache'],
+                ]
             );
 
             // run elFinder
@@ -139,5 +144,10 @@ class FileManager extends Controller
         });
 
         return $response;
+    }
+
+    public function elBindInvalidateQuotaCache($cmd, &$result, $args, $elfinder, $volume)
+    {
+        // @TODO{s:4} invalidate quota cache
     }
 }
