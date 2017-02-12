@@ -9,6 +9,7 @@
 
 namespace AppBundle\Entity;
 
+use AppBundle\Entity\Interfaces\Owner;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Mapping as ORM;
 use FOS\UserBundle\Model\User as BaseUser;
@@ -20,7 +21,7 @@ use Rollerworks\Bundle\PasswordStrengthBundle\Validator\Constraints as Rollerwor
  * @ORM\Entity
  * @ORM\Table(name="users")
  */
-class User extends BaseUser
+class User extends BaseUser implements Owner
 {
     /**
      * @ORM\Id
@@ -163,5 +164,14 @@ class User extends BaseUser
     public static function generateToken()
     {
         return rtrim(strtr(base64_encode(random_bytes(32)), '+/', '-_'), '=');
+    }
+
+    /**
+     * Generates a string that identifies this entity as a user with it's id.
+     * @return string
+     */
+    public function getOwnerString()
+    {
+        return 'user:' . $this->getId();
     }
 }

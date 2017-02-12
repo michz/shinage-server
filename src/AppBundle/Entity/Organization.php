@@ -9,6 +9,7 @@
 
 namespace AppBundle\Entity;
 
+use AppBundle\Entity\Interfaces\Owner;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -17,7 +18,7 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Entity
  * @ORM\Table(name="organizations")
  */
-class Organization
+class Organization implements Owner
 {
     /**
      * @ORM\Id @ORM\Column(type="integer")
@@ -111,5 +112,14 @@ class Organization
     public function getUsers()
     {
         return $this->users;
+    }
+
+    /**
+     * Generates a string that identifies this entity as a organization with it's id.
+     * @return string
+     */
+    public function getOwnerString()
+    {
+        return 'orga:' . $this->getId();
     }
 }
