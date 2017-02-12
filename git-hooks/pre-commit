@@ -9,7 +9,7 @@
 
 PHPCS_BIN=./vendor/bin/phpcs
 PHPCS_CODING_STANDARD=PSR2
-PHPCS_IGNORE=src/AppBundle/Resource/
+PHPCS_IGNORE="src/AppBundle/Resource/|app/"
 TMP_STAGING=".tmp_staging"
 
 # comma-seperated list of sniffs from the standard that should be used
