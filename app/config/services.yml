@@ -4,6 +4,16 @@ parameters:
 #    parameter_name: value
 
 services:
+#    service_name:
+#        class: AppBundle\Directory\ClassName
+#        arguments: ["@another_service_name", "plain_value", "%parameter_name%"]
+
+    app.twig_extension:
+        class: AppBundle\Twig\AppExtension
+        public: false
+        tags:
+            - { name: twig.extension }
+
     app.screenassociation:
         class: AppBundle\Service\ScreenAssociation
         arguments:
@@ -28,6 +38,12 @@ services:
         class: AppBundle\Service\TodoList
         arguments:
             basepath: "%kernel.root_dir%"
+            cache: "@cache.app"
+
+    app.quotacalculator:
+        class: AppBundle\Service\QuotaCalculator
+        arguments:
+            filePool: "@app.filepool"
             cache: "@cache.app"
 
     app.registration.listener:
