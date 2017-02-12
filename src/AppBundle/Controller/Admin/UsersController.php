@@ -8,6 +8,10 @@
 
 namespace AppBundle\Controller\Admin;
 
+use AppBundle\Entity\User;
+use AppBundle\Service\QuotaCalculator;
+use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\EntityRepository;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
@@ -21,9 +25,26 @@ class UsersController extends Controller
      */
     public function indexAction(Request $request)
     {
-        // replace this example code with whatever you need
+        /** @var EntityManager $em */
+        $em = $this->getDoctrine()->getManager();
+
+        /** @var EntityRepository $repUsers */
+        $repUsers = $em->getRepository('AppBundle:User');
+
+        $users = $repUsers->findAll();
+        $quotas = [];
+
+        /** @var QuotaCalculator $quotaCalculator */
+        $quotaCalculator = $this->get('app.quotacalculator');
+
+        /** @var User $user */
+        foreach ($users as $user) {
+            $quotas[$user->getId()] = $quotaCalculator->getQuotaForUser($user);
+        }
+
         return $this->render('adm/users.html.twig', [
-            //'screens' => $screens,
+            'users'  => $users,
+            'quotas' => $quotas,
         ]);
     }
 }

@@ -8,6 +8,10 @@
 
 namespace AppBundle\Controller\Admin;
 
+use AppBundle\Entity\Organization;
+use AppBundle\Service\QuotaCalculator;
+use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\EntityRepository;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
@@ -21,10 +25,26 @@ class OrganizationsController extends Controller
      */
     public function indexAction(Request $request)
     {
+        /** @var EntityManager $em */
+        $em = $this->getDoctrine()->getManager();
 
-        // replace this example code with whatever you need
+        /** @var EntityRepository $repUsers */
+        $repOrgas = $em->getRepository('AppBundle:Organization');
+
+        $orgas = $repOrgas->findAll();
+        $quotas = [];
+
+        /** @var QuotaCalculator $quotaCalculator */
+        $quotaCalculator = $this->get('app.quotacalculator');
+
+        /** @var Organization $orga */
+        foreach ($orgas as $orga) {
+            $quotas[$orga->getId()] = $quotaCalculator->getQuotaForOrga($orga);
+        }
+
         return $this->render('adm/organizations.html.twig', [
-            #'screens' => $screens,
+            'orgas'  => $orgas,
+            'quotas' => $quotas,
         ]);
     }
 }

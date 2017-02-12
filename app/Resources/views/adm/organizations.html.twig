@@ -2,8 +2,32 @@
 
 {% block body %}
 
-    TODO: Admin-Orgas
+    <div class="container">
+        <div class="page-header">
+            <h2>{{ 'Organizations'|trans }}</h2>
+        </div>
 
+        <table class="table table-hover">
+            <thead>
+            <tr>
+                <th>Name</th>
+                <th>Quota</th>
+                <th>Aktionen</th>
+            </tr>
+            </thead>
+            <tbody>
+
+            {% for orga in orgas %}
+                <tr>
+                    <td>{{ orga.getName() }}</td>
+                    <td>{{ quotas[orga.getId()].getUsedAbsolute()|formatBytes }}B</td>
+                    <td></td>
+                </tr>
+            {% endfor %}
+
+            </tbody>
+        </table>
+    </div>
 
 {% endblock %}
 

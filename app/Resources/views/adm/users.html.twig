@@ -2,7 +2,32 @@
 
 {% block body %}
 
-    TODO: Admin-Users
+<div class="container">
+    <div class="page-header">
+        <h2>{{ 'Users'|trans }}</h2>
+    </div>
+
+    <table class="table table-hover">
+        <thead>
+            <tr>
+                <th>E-Mail</th>
+                <th>Quota</th>
+                <th>Aktionen</th>
+            </tr>
+        </thead>
+        <tbody>
+
+        {% for user in users %}
+            <tr>
+                <td>{{ user.getEMail() }}</td>
+                <td>{{ quotas[user.getId()].getUsedAbsolute()|formatBytes }}B</td>
+                <td></td>
+            </tr>
+        {% endfor %}
+
+        </tbody>
+    </table>
+</div>
 
 
 {% endblock %}
