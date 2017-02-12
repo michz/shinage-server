@@ -8,6 +8,8 @@
 
 namespace AppBundle\Service;
 
+use AppBundle\Entity\Interfaces\Ownable;
+use AppBundle\Entity\Interfaces\Owner;
 use AppBundle\Entity\Organization;
 use AppBundle\Entity\QuotaCalculated;
 use AppBundle\Entity\User;
@@ -17,6 +19,7 @@ use Doctrine\ORM\EntityManager;
 
 use AppBundle\Entity\Screen;
 use Symfony\Component\Cache\Adapter\FilesystemAdapter;
+use Symfony\Component\Cache\CacheItem;
 
 class QuotaCalculator
 {
@@ -40,11 +43,21 @@ class QuotaCalculator
      */
     public function getQuotaForUser(User $user)
     {
-        $base = $this->filePool->getPathForUser($user);
-        $used = $this->getDirectorySizeRecursive($base);
-        $quota = new QuotaCalculated();
-        $quota->setUsedAbsolute($used);
-        return $quota;
+        $cacheId = $this->getCacheId($user);
+
+        /** @var CacheItem $cacheItem */
+        $cacheItem = $this->cache->getItem($cacheId);
+
+        if (!$cacheItem->isHit()) {
+            $base = $this->filePool->getPathForUser($user);
+            $used = $this->getDirectorySizeRecursive($base);
+            $quota = new QuotaCalculated();
+            $quota->setUsedAbsolute($used);
+            $cacheItem->set($quota);
+            $cacheItem->tag($cacheId);
+        }
+
+        return $cacheItem->get();
     }
 
     /**
@@ -53,11 +66,21 @@ class QuotaCalculator
      */
     public function getQuotaForOrga(Organization $orga)
     {
-        $base = $this->filePool->getPathForOrga($orga);
-        $used = $this->getDirectorySizeRecursive($base);
-        $quota = new QuotaCalculated();
-        $quota->setUsedAbsolute($used);
-        return $quota;
+        $cacheId = $this->getCacheId($orga);
+
+        /** @var CacheItem $cacheItem */
+        $cacheItem = $this->cache->getItem($cacheId);
+
+        if (!$cacheItem->isHit()) {
+            $base = $this->filePool->getPathForOrga($orga);
+            $used = $this->getDirectorySizeRecursive($base);
+            $quota = new QuotaCalculated();
+            $quota->setUsedAbsolute($used);
+            $cacheItem->set($quota);
+            $cacheItem->tag($cacheId);
+        }
+
+        return $cacheItem->get();
     }
 
     protected function getDirectorySizeRecursive($base)
@@ -77,5 +100,10 @@ class QuotaCalculator
             }
             return $s;
         }
+    }
+
+    protected function getCacheId(Owner $owner)
+    {
+        return str_replace(':', '-', $owner->getOwnerString() . ':quota');
     }
 }
