@@ -22,6 +22,17 @@ services:
             em: "@doctrine.orm.entity_manager"
             tokenStorage: "@security.token_storage"
 
+    app.template.manager:
+        class: AppBundle\Service\TemplateManager
+        arguments:
+            templatePoolPath: "%path_pool%/templates"
+
+    app.template.renderer:
+        class: AppBundle\Service\TemplateRenderer
+        arguments:
+            twig: "@twig"
+            templateManager: "@app.template.manager"
+
     app.filepool:
         class: AppBundle\Service\FilePool
         arguments:

@@ -41,6 +41,11 @@ class Presentation implements \JsonSerializable
      */
     protected $settings = '';
 
+    /**
+     * @ORM\Column(type="string", length=200)
+     */
+    protected $template = 'diashow';
+
 
     /**
      * @ORM\ManyToOne(targetEntity="User")
@@ -222,7 +227,6 @@ class Presentation implements \JsonSerializable
     public function setOwner(\AppBundle\Entity\User $owner = null)
     {
         $this->owner = $owner;
-
         return $this;
     }
 
@@ -234,5 +238,28 @@ class Presentation implements \JsonSerializable
     public function getOwner()
     {
         return $this->owner;
+    }
+
+    /**
+     * Set template
+     *
+     * @param string $template
+     *
+     * @return Presentation
+     */
+    public function setTemplate($template)
+    {
+        $this->template = $template;
+        return $this;
+    }
+
+    /**
+     * Get template
+     *
+     * @return string
+     */
+    public function getTemplate()
+    {
+        return $this->template;
     }
 }
