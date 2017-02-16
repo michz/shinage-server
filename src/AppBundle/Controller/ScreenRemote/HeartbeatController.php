@@ -8,6 +8,7 @@
 
 namespace AppBundle\Controller\ScreenRemote;
 
+use AppBundle\Entity\Presentation;
 use AppBundle\Entity\ScheduledPresentation;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -54,11 +55,9 @@ class HeartbeatController extends Controller
         $is_assoc = $assoc->isScreenAssociated($screen);
 
         $presentation = null;
-        /** @var ScheduledPresentation $current */
-        $current = $this->getCurrentPresentation($screen);
-        if ($current != null) {
-            $presentation = $current->getPresentation();
-        }
+        /** @var Presentation $presentation */
+        $presentation = $this->getCurrentPresentation($screen);
+
         return $this->json([
             'status'        => 'ok',
             'screen_status' => ($is_assoc) ? 'registered' : 'not_registered',
@@ -84,12 +83,10 @@ class HeartbeatController extends Controller
             throw new NoScreenGivenException();
         }
 
-        $presentation = null;
-        /** @var ScheduledPresentation $current */
-        $current = $this->getCurrentPresentation($screen);
+        /** @var Presentation $presentation */
+        $presentation = $this->getCurrentPresentation($screen);
         $slides_json = '[]';
-        if ($current != null) {
-            $presentation = $current->getPresentation();
+        if ($presentation != null) {
             $slides_json = json_encode($presentation->getSlides()->getValues());
         }
 
