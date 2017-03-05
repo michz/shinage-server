@@ -8,7 +8,6 @@
 
 namespace AppBundle\Service;
 
-use AppBundle\Entity\Organization;
 use AppBundle\Entity\User;
 use AppBundle\ScreenRoleType;
 use Doctrine\ORM\EntityManager;
@@ -42,7 +41,7 @@ class ScreenAssociation
         $orgas = $user->getOrganizations();
 
         foreach ($orgas as $o) {
-            $assoc = $rep->findBy(array('orga_id' => $o->getId()));
+            $assoc = $rep->findBy(array('user_id' => $o->getId()));
             foreach ($assoc as $a) {
                 $r[] = $a->getScreen();
             }
@@ -63,7 +62,7 @@ class ScreenAssociation
             }
 
             foreach ($orgas as $o) { /** @var Organization $o */
-                if ($a->getOrgaId() == $o) {
+                if ($a->getUserId() == $o) {
                     return true;
                 }
             }
@@ -95,10 +94,8 @@ class ScreenAssociation
         $aOwner = explode(':', $owner);
         switch ($aOwner[0]) {
             case 'user':
-                $assoc->setUserId($this->em->find('AppBundle:User', $aOwner[1]));
-                break;
             case 'orga':
-                $assoc->setOrgaId($this->em->find('AppBundle:Organization', $aOwner[1]));
+                $assoc->setUserId($this->em->find('AppBundle:User', $aOwner[1]));
                 break;
             default:
                 // Error above. Use current user as default.

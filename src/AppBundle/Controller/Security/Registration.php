@@ -8,7 +8,6 @@
 
 namespace AppBundle\Controller\Security;
 
-use AppBundle\Entity\Organization;
 use AppBundle\Entity\User;
 use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
 use FOS\UserBundle\Doctrine\UserManager;

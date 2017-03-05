@@ -2,7 +2,6 @@
 namespace AppBundle\Form\Type;
 
 use AppBundle\Entity\Interfaces\Ownable;
-use AppBundle\Entity\Organization;
 use AppBundle\Entity\User;
 use Doctrine\ORM\EntityManager;
 use Symfony\Component\Form\AbstractType;
@@ -43,7 +42,7 @@ class OwnerType extends AbstractType
             $builder->addEventListener(
                 FormEvents::PRE_SET_DATA,
                 function (FormEvent $event) use ($builder) {
-                    $event->setData($this->entity->getOwnerString());
+                    $event->setData($this->entity->getOwner()->getId());
                 }
             );
 
@@ -57,15 +56,12 @@ class OwnerType extends AbstractType
                     $aOwner = explode(':', $owner);
                     switch ($aOwner[0]) {
                         case 'user':
-                            $entity->setOwnerUser($this->em->find('AppBundle:User', $aOwner[1]));
-                            break;
-                        case 'orga':
-                            $entity->setOwnerOrga($this->em->find('AppBundle:Organization', $aOwner[1]));
+                            $entity->setOwner($this->em->find('AppBundle:User', $aOwner[1]));
                             break;
                         default:
                             // Error above. Use current user as default.
                             $user = $this->tokenStorage->getToken()->getUser();
-                            $entity->setOwnerUser($user);
+                            $entity->setOwner($user);
                             break;
                     }
                 }
@@ -82,7 +78,7 @@ class OwnerType extends AbstractType
 
         $choices = ['me' => 'user:' . $user->getId()];
 
-        /** @var Organization $orga */
+        /** @var User $orga */
         foreach ($user->getOrganizations() as $orga) {
             $choices['Organisation: ' . $orga->getName()] = 'orga:'.$orga->getId();
         }

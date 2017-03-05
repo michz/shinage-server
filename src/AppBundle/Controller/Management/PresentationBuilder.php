@@ -17,7 +17,6 @@ use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\HttpFoundation\Request;
 use AppBundle\Exceptions\NoScreenGivenException;
 use AppBundle\Entity\Screen;
-use AppBundle\Entity\Organization;
 use AppBundle\Service\FilePool;
 use AppBundle\Service\Pool\PoolDirectory;
 use AppBundle\Service\Pool\PoolItem;
@@ -227,7 +226,7 @@ class PresentationBuilder extends Controller
 
         $presentation = new Presentation();
         $presentation->setTitle($request->get('title'));
-        $presentation->setOwnerUser($user);
+        $presentation->setOwner($user);
 
         $em->persist($presentation);
         $em->flush();

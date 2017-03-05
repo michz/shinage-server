@@ -46,13 +46,8 @@ class Presentation implements \JsonSerializable
      * @ORM\ManyToOne(targetEntity="User")
      * @ORM\JoinColumn(name="user_id", referencedColumnName="id", nullable=true)
      */
-    protected $owner_user;
+    protected $owner;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="Organization")
-     * @ORM\JoinColumn(name="orga_id", referencedColumnName="id", nullable=true)
-     */
-    protected $owner_orga;
 
     /**
      * @ORM\OneToMany(targetEntity="Slide", mappedBy="presentation")
@@ -168,53 +163,7 @@ class Presentation implements \JsonSerializable
         return $this->settings;
     }
 
-    /**
-     * Set ownerUser
-     *
-     * @param \AppBundle\Entity\User $ownerUser
-     *
-     * @return Presentation
-     */
-    public function setOwnerUser(\AppBundle\Entity\User $ownerUser = null)
-    {
-        $this->owner_user = $ownerUser;
 
-        return $this;
-    }
-
-    /**
-     * Get ownerUser
-     *
-     * @return \AppBundle\Entity\User
-     */
-    public function getOwnerUser()
-    {
-        return $this->owner_user;
-    }
-
-    /**
-     * Set ownerOrga
-     *
-     * @param \AppBundle\Entity\Organization $ownerOrga
-     *
-     * @return Presentation
-     */
-    public function setOwnerOrga(\AppBundle\Entity\Organization $ownerOrga = null)
-    {
-        $this->owner_orga = $ownerOrga;
-
-        return $this;
-    }
-
-    /**
-     * Get ownerOrga
-     *
-     * @return \AppBundle\Entity\Organization
-     */
-    public function getOwnerOrga()
-    {
-        return $this->owner_orga;
-    }
     /**
      * Constructor
      */
@@ -261,5 +210,29 @@ class Presentation implements \JsonSerializable
     public function __toString()
     {
         return $this->getTitle();
+    }
+
+    /**
+     * Set owner
+     *
+     * @param \AppBundle\Entity\User $owner
+     *
+     * @return Presentation
+     */
+    public function setOwner(\AppBundle\Entity\User $owner = null)
+    {
+        $this->owner = $owner;
+
+        return $this;
+    }
+
+    /**
+     * Get owner
+     *
+     * @return \AppBundle\Entity\User
+     */
+    public function getOwner()
+    {
+        return $this->owner;
     }
 }

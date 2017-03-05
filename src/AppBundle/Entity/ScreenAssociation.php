@@ -41,12 +41,6 @@ class ScreenAssociation
     protected $user_id;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Organization")
-     * @ORM\JoinColumn(name="orga_id", referencedColumnName="id", nullable=true)
-     */
-    protected $orga_id;
-
-    /**
      * @ORM\Column(type="enumscreenrole")
      */
     protected $role;
@@ -131,29 +125,5 @@ class ScreenAssociation
     public function getUserId()
     {
         return $this->user_id;
-    }
-
-    /**
-     * Set orgaId
-     *
-     * @param \AppBundle\Entity\Organization $orgaId
-     *
-     * @return ScreenAssociation
-     */
-    public function setOrgaId(\AppBundle\Entity\Organization $orgaId = null)
-    {
-        $this->orga_id = $orgaId;
-
-        return $this;
-    }
-
-    /**
-     * Get orgaId
-     *
-     * @return \AppBundle\Entity\Organization
-     */
-    public function getOrgaId()
-    {
-        return $this->orga_id;
     }
 }

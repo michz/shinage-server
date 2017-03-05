@@ -13,8 +13,11 @@ class AppBundle extends Bundle
 
     public function boot()
     {
-        if (!Type::hasType("enumscreenrole")) {
-            Type::addType('enumscreenrole', 'AppBundle\ScreenRoleType');
+        if (!Type::hasType(ScreenRoleType::ENUM_SCREENROLE)) {
+            Type::addType(ScreenRoleType::ENUM_SCREENROLE, 'AppBundle\ScreenRoleType');
+        }
+        if (!Type::hasType(UserType::ENUM_USER_TYPE)) {
+            Type::addType(UserType::ENUM_USER_TYPE, 'AppBundle\UserType');
         }
 
         // suppress error "Unknown database type enum requested, (...)"

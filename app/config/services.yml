@@ -16,6 +16,12 @@ services:
             em: "@doctrine.orm.entity_manager"
             tokenStorage: "@security.token_storage"
 
+    app.orgamanager:
+        class: AppBundle\Service\OrganizationManager
+        arguments:
+            em: "@doctrine.orm.entity_manager"
+            tokenStorage: "@security.token_storage"
+
     app.filepool:
         class: AppBundle\Service\FilePool
         arguments:

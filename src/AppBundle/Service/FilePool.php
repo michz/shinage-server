@@ -8,7 +8,6 @@
 
 namespace AppBundle\Service;
 
-use AppBundle\Entity\Organization;
 use AppBundle\Entity\User;
 use AppBundle\Service\Pool\PoolDirectory;
 use AppBundle\Service\Pool\PoolFile;
@@ -42,8 +41,8 @@ class FilePool
         $paths['me'] = $this->getPathForUser($user);
 
         $orgas = $user->getOrganizations();
-        foreach ($orgas as $o) { /** @var Organization $o */
-            $paths['Org: '.$o->getName()] = $this->getPathForOrga($o);
+        foreach ($orgas as $o) { /** @var User $o */
+            $paths['Org: '.$o->getName()] = $this->getPathForUser($o);
         }
 
         return $paths;
@@ -52,13 +51,6 @@ class FilePool
     public function getPathForUser(User $user)
     {
         $path = realpath($this->base) . '/user-' . $user->getId();
-        self::createPathIfNeeded($path);
-        return $path;
-    }
-
-    public function getPathForOrga(Organization $organization)
-    {
-        $path = realpath($this->base) . '/orga-' . $organization->getId();
         self::createPathIfNeeded($path);
         return $path;
     }
