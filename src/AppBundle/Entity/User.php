@@ -9,6 +9,7 @@
 
 namespace AppBundle\Entity;
 
+use AppBundle\UserType;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Mapping as ORM;
 use FOS\UserBundle\Model\User as BaseUser;
@@ -30,11 +31,23 @@ class User extends BaseUser
     protected $id;
 
     /**
-     * @ORM\ManyToMany(targetEntity="Organization", inversedBy="users")
-     * @ORM\JoinTable(name="users_organizations")
+     * @ORM\Column(type="enumusertype")
      */
-    protected $organizations;
+    protected $userType = UserType::USER_TYPE_USER;
+    
+    /**
+     * @ORM\Column(type="string", length=200)
+     */
+    protected $name = '';
 
+    /**
+     * @ORM\ManyToMany(targetEntity="User")
+     * @ORM\JoinTable(name="users_orgas",
+     *      joinColumns={@ORM\JoinColumn(name="user_id", referencedColumnName="id")},
+     *      inverseJoinColumns={@ORM\JoinColumn(name="organization_id", referencedColumnName="id")}
+     *      )
+     */
+    private $organizations;
 
     /**
      * @RollerworksPassword\PasswordRequirements(requireLetters=true, requireNumbers=true)
@@ -51,6 +64,8 @@ class User extends BaseUser
     {
         parent::__construct();
         // your own logic
+        $this->organizations = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->users = new \Doctrine\Common\Collections\ArrayCollection();
     }
 
     public function setEmail($email)
@@ -60,13 +75,14 @@ class User extends BaseUser
         return parent::setEmail($email);
     }
 
+
     public function getAllowedPoolPaths()
     {
         $r = array();
         $r[] = 'user-' . $this->id;
 
         $orgas = $this->getOrganizations();
-        foreach ($orgas as $orga) { /** @var Organization $orga */
+        foreach ($orgas as $orga) { /** @var User $orga */
             $r[] = 'orga-' . $orga->getId();
         }
 
@@ -80,21 +96,23 @@ class User extends BaseUser
         return (in_array($base, $this->getAllowedPoolPaths()));
     }
 
+
     public function isPresentationAllowed(Presentation $presentation)
     {
-        if ($presentation->getOwnerUser() == $this) {
+        if ($presentation->getOwner() == $this) {
             return true;
         }
 
         $orgas = $this->getOrganizations();
-        foreach ($orgas as $orga) { /** @var Organization $orga */
-            if ($presentation->getOwnerOrga() == $orga) {
+        foreach ($orgas as $orga) { /** @var User $orga */
+            if ($presentation->getOwner() == $orga) {
                 return true;
             }
         }
 
         return false;
     }
+
 
     public function isSlideAllowed(Slide $slide)
     {
@@ -108,15 +126,15 @@ class User extends BaseUser
         $rep = $em->getRepository('AppBundle:Presentation');
         $pres = array();
 
-        $pres_user = $rep->findBy(array('owner_user' => $user));
+        $pres_user = $rep->findBy(array('owner' => $user));
 
         foreach ($pres_user as $p) {
             $pres['me'][] = $p;
         }
 
         $orgas = $user->getOrganizations();
-        foreach ($orgas as $orga) { /** @var Organization $orga */
-            $pres_orga = $rep->findBy(array('owner_orga' => $orga));
+        foreach ($orgas as $orga) { /** @var User $orga */
+            $pres_orga = $rep->findBy(array('owner' => $orga));
             foreach ($pres_orga as $p) {
                 $pres[$orga->getName()][] = $p;
             }
@@ -125,14 +143,44 @@ class User extends BaseUser
         return $pres;
     }
 
+
+    public static function generateToken()
+    {
+        return rtrim(strtr(base64_encode(random_bytes(32)), '+/', '-_'), '=');
+    }
+
     /**
-     * Add organization
+     * Set userType
      *
-     * @param \AppBundle\Entity\Organization $organization
+     * @param enumusertype $userType
      *
      * @return User
      */
-    public function addOrganization(\AppBundle\Entity\Organization $organization)
+    public function setUserType($userType)
+    {
+        $this->userType = $userType;
+
+        return $this;
+    }
+
+    /**
+     * Get userType
+     *
+     * @return enumusertype
+     */
+    public function getUserType()
+    {
+        return $this->userType;
+    }
+
+    /**
+     * Add organization
+     *
+     * @param \AppBundle\Entity\User $organization
+     *
+     * @return User
+     */
+    public function addOrganization(\AppBundle\Entity\User $organization)
     {
         $this->organizations[] = $organization;
 
@@ -142,9 +190,9 @@ class User extends BaseUser
     /**
      * Remove organization
      *
-     * @param \AppBundle\Entity\Organization $organization
+     * @param \AppBundle\Entity\User $organization
      */
-    public function removeOrganization(\AppBundle\Entity\Organization $organization)
+    public function removeOrganization(\AppBundle\Entity\User $organization)
     {
         $this->organizations->removeElement($organization);
     }
@@ -159,9 +207,27 @@ class User extends BaseUser
         return $this->organizations;
     }
 
-
-    public static function generateToken()
+    /**
+     * Set name
+     *
+     * @param string $name
+     *
+     * @return User
+     */
+    public function setName($name)
     {
-        return rtrim(strtr(base64_encode(random_bytes(32)), '+/', '-_'), '=');
+        $this->name = $name;
+
+        return $this;
+    }
+
+    /**
+     * Get name
+     *
+     * @return string
+     */
+    public function getName()
+    {
+        return $this->name;
     }
 }

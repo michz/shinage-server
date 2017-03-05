@@ -10,12 +10,14 @@ namespace AppBundle\Controller\Account;
 
 use AppBundle\AppBundle;
 use AppBundle\Entity\Api\AccessKey;
-use AppBundle\Entity\Organization;
 use AppBundle\Entity\User;
 use AppBundle\Form\ApiKeyForm;
+use AppBundle\UserType;
 use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
 use Doctrine\ORM\EntityManager;
+use FOS\UserBundle\Doctrine\UserManager;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Symfony\Bundle\AsseticBundle\Command\DumpCommand;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\Extension\Core\Type\FormType;
@@ -71,7 +73,7 @@ class Account extends Controller
 
         // build default AccessKey
         $newApiKey = new AccessKey();
-        $newApiKey->setOwnerUser($user);
+        $newApiKey->setOwner($user);
 
 
         // build AccessKey-form and handle submission
@@ -137,7 +139,7 @@ class Account extends Controller
         // get API keys
         $em = $this->getDoctrine()->getManager();
         $rep = $em->getRepository('AppBundle:Api\AccessKey');
-        $apiKeys = $rep->findBy(array('owner_user' => $user));
+        $apiKeys = $rep->findBy(array('owner' => $user));
 
         return $this->render('account/user.html.twig', [
             'form'                  => $form->createView(),
@@ -153,33 +155,39 @@ class Account extends Controller
      */
     public function orgaAction(Request $request)
     {
+        /** @var UserManager $userManager */
+        $userManager = $this->container->get('fos_user.user_manager');
         /** @var User $user */
         $user = $this->get('security.token_storage')->getToken()->getUser();
         $em = $this->getDoctrine()->getManager();
 
-        $orga_new = new Organization();
+        $orga_new = new User();
+        $orga_new->setUserType(UserType::USER_TYPE_ORGA);
 
         $form_create = $this->createFormBuilder($orga_new)
             ->add('Name', TextType::class, array('trim' => true))
+            ->add('email', EmailType::class, array('label' => 'E-Mail'))
             ->add('save', SubmitType::class, array('label' => 'Save'))
             ->getForm();
         $form_create->handleRequest($request);
         if ($form_create->isSubmitted()) {
             if ($form_create->isValid()) {
-                $em->persist($orga_new);
-
+                $orga_new->setUsername($orga_new->getName());
+                $orga_new->setPassword('');
+                $orga_new->setPlainPassword('');
                 try {
+                    $userManager->updateUser($orga_new, true);
                     $em->flush();
                     $user->addOrganization($orga_new);
-                    $em->persist($user);
+                    $userManager->updateUser($user);
                     $em->flush();
                     $em->refresh($orga_new); // needed to notify $user that he is in a new organization
                     $this->addFlash('success', 'Die neue Organisation wurde gespeichert.');
                 } catch (UniqueConstraintViolationException $ex) {
                     $this->addFlash(
                         'error',
-                        'Der gewählte Name wird bereits für eine Organisation verwendet. '.
-                        'Bitte wähle einen anderen, eindeutigen Namen.'
+                        'Der gewählte Name oder die E-Mail-Adresse wird bereits verwendet. '.
+                        'Bitte probiere es mit einer anderen Kombination.'
                     );
                     $em = $this->getDoctrine()->resetManager();
                 }
@@ -188,11 +196,11 @@ class Account extends Controller
             }
         }
 
-
         $orgas = $user->getOrganizations();
         return $this->render('account/organizations.html.twig', [
             'form_create' => $form_create->createView(),
-            'organizations' => $orgas
+            'organizations' => $orgas,
+            'orgaManager' => $this->container->get('app.orgamanager'),
         ]);
     }
 
@@ -205,7 +213,7 @@ class Account extends Controller
         $user = $this->get('security.token_storage')->getToken()->getUser();
         $em = $this->getDoctrine()->getManager();
 
-        $organization = $em->find('AppBundle\Entity\Organization', $id);
+        $organization = $em->find('AppBundle\Entity\User', $id);
         $user->removeOrganization($organization);
         $em->persist($user);
         $em->flush();
@@ -225,7 +233,7 @@ class Account extends Controller
         $em = $this->getDoctrine()->getManager();
         $rep = $em->getRepository('AppBundle:User');
         $user_new = $rep->findOneBy(array('email' => $request->get('email')));
-        $orga = $em->find('AppBundle\Entity\Organization', $request->get('organization'));
+        $orga = $em->find('AppBundle\Entity\User', $request->get('organization'));
 
         // check if user is allowed to edit organization
         if (!$user->getOrganizations()->contains($orga)) {
@@ -267,7 +275,7 @@ class Account extends Controller
         $user = $this->get('security.token_storage')->getToken()->getUser();
         $em = $this->getDoctrine()->getManager();
 
-        $organization = $em->find('AppBundle\Entity\Organization', $orga_id);
+        $organization = $em->find('AppBundle\Entity\User', $orga_id);
         $user_other = $em->find('AppBundle\Entity\User', $user_id);
 
         // check if user is allowed to edit organization
@@ -297,7 +305,7 @@ class Account extends Controller
         $user = $this->get('security.token_storage')->getToken()->getUser();
 
         $key = $em->find('AppBundle:Api\AccessKey', $id);
-        if ($key->getOwnerUser() == $user || in_array($key->getOwnerOrga(), $user->getOrganizations())) {
+        if ($key->getOwner() == $user || $user->getOrganizations()->contains($key->getOwner())) {
             $em->remove($key);
             $em->flush();
 

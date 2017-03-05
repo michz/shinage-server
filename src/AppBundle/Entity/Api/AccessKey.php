@@ -11,7 +11,6 @@ use AppBundle\Entity\Interfaces\Ownable;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Mapping as ORM;
 use \AppBundle\Entity\User;
-use \AppBundle\Entity\Organization;
 use Symfony\Component\Config\Definition\Exception\Exception;
 
 /**
@@ -20,7 +19,7 @@ use Symfony\Component\Config\Definition\Exception\Exception;
  * @ORM\Entity
  * @ORM\Table(name="api_access_keys")
  */
-class AccessKey implements Ownable
+class AccessKey
 {
     /**
      * @ORM\Id @ORM\Column(type="integer")
@@ -52,13 +51,7 @@ class AccessKey implements Ownable
      * @ORM\ManyToOne(targetEntity="AppBundle\Entity\User")
      * @ORM\JoinColumn(name="user_id", referencedColumnName="id", nullable=true)
      */
-    protected $owner_user;
-
-    /**
-     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Organization")
-     * @ORM\JoinColumn(name="orga_id", referencedColumnName="id", nullable=true)
-     */
-    protected $owner_orga;
+    protected $owner;
 
 
     /**
@@ -80,23 +73,6 @@ class AccessKey implements Ownable
         );
         $this->setCode($code);
         return $this;
-    }
-
-
-    public function getOwnerString()
-    {
-        if ($this->getOwnerUser() != null) {
-            return 'user:' . $this->getOwnerUser()->getId();
-        }
-        if ($this->getOwnerOrga() != null) {
-            return 'orga:' . $this->getOwnerOrga()->getId();
-        }
-        return '';
-    }
-
-    public function setOwnerString($str)
-    {
-        throw new Exception();
     }
 
     public function getRolesReadable()
@@ -210,51 +186,28 @@ class AccessKey implements Ownable
         return $this->roles;
     }
 
+
     /**
-     * Set ownerUser
+     * Set owner
      *
-     * @param User $ownerUser
+     * @param \AppBundle\Entity\User $owner
      *
      * @return AccessKey
      */
-    public function setOwnerUser(User $ownerUser = null)
+    public function setOwner(\AppBundle\Entity\User $owner = null)
     {
-        $this->owner_user = $ownerUser;
+        $this->owner = $owner;
 
         return $this;
     }
 
     /**
-     * Get ownerUser
+     * Get owner
      *
-     * @return User
+     * @return \AppBundle\Entity\User
      */
-    public function getOwnerUser()
+    public function getOwner()
     {
-        return $this->owner_user;
-    }
-
-    /**
-     * Set ownerOrga
-     *
-     * @param Organization $ownerOrga
-     *
-     * @return AccessKey
-     */
-    public function setOwnerOrga(Organization $ownerOrga = null)
-    {
-        $this->owner_orga = $ownerOrga;
-
-        return $this;
-    }
-
-    /**
-     * Get ownerOrga
-     *
-     * @return Organization
-     */
-    public function getOwnerOrga()
-    {
-        return $this->owner_orga;
+        return $this->owner;
     }
 }

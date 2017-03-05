@@ -135,7 +135,7 @@ class Screens extends Controller
         if ($who == 'me') {
             $assoc->setUserId($user);
         } else {
-            $orga = $em->find('\AppBundle\Entity\Organization', $who);
+            $orga = $em->find('\AppBundle\Entity\User', $who);
             $assoc->setOrgaId($orga);
         }
 
