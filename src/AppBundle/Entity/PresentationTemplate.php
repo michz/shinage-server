@@ -14,8 +14,10 @@ abstract class PresentationTemplate
 
 
     abstract public function getDisplayName($language);
+    abstract public function getDescription($language);
     abstract public function getAuthor();
     abstract public function getWebsite();
+    abstract public function getBasePath();
 
 
     public function __construct($templatePath)
@@ -23,6 +25,12 @@ abstract class PresentationTemplate
         $this->templatePath = $templatePath;
     }
 
+    public function getTemplateFile()
+    {
+        return 'pres.html.twig';
+    }
+
+    /*
     public function getPresentationHtml(Presentation $presentation)
     {
         $htmlPath = $this->templatePath . '/pres.html.twig';
@@ -31,4 +39,5 @@ abstract class PresentationTemplate
         }
         return '';
     }
+    */
 }

@@ -25,7 +25,7 @@ services:
     app.template.manager:
         class: AppBundle\Service\TemplateManager
         arguments:
-            templatePoolPath: "%path_pool%/templates"
+            templatePoolPath: "%path_templates%"
 
     app.template.renderer:
         class: AppBundle\Service\TemplateRenderer

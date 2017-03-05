@@ -9,9 +9,11 @@
 namespace AppBundle\Service;
 
 use AppBundle\Entity\PresentationTemplate;
+use Symfony\Component\ClassLoader\MapClassLoader;
 
 class TemplateManager
 {
+
     /** @var string */
     protected $templatePoolPath = '';
 
@@ -20,7 +22,7 @@ class TemplateManager
 
     public function __construct($templatePoolPath)
     {
-        $this->templatePoolPath;
+        $this->templatePoolPath = $templatePoolPath;
 
         $this->loadTemplates();
     }
@@ -28,9 +30,24 @@ class TemplateManager
     protected function loadTemplates()
     {
         $directories = $this->getTemplateDirectories();
+        $this->createAutoloader($directories);
         foreach ($directories as $directory) {
-            $template = $this->loadTemplate($this->templatePoolPath.'/'.$directory);
+            $realpath = realpath($this->templatePoolPath);
+            $template = $this->loadTemplate('ShinageTemplates\\BuiltIn\\'.$directory, $realpath.'/'.$directory);
+            $this->templates['ShinageTemplates\\BuiltIn\\'.$directory] = $template;
         }
+    }
+
+    protected function createAutoloader($directories)
+    {
+        $classes = [];
+        foreach ($directories as $directory) {
+            $realpath = realpath($this->templatePoolPath.'/'.$directory);
+            $classes['ShinageTemplates\\BuiltIn\\'.$directory] = $realpath.'/'.$directory.'.php';
+        }
+
+        $loader = new MapClassLoader($classes);
+        $loader->register();
     }
 
     protected function getTemplateDirectories()
@@ -57,13 +74,25 @@ class TemplateManager
         return $directories;
     }
 
-    protected function loadTemplate($directory)
+    protected function loadTemplate($name, $directory)
     {
-        //@TODO look for template.php
+        return new $name($directory);
     }
 
     public function getTemplates()
     {
-        //@TODO
+        return $this->templates;
+    }
+
+    /**
+     * @param string $name
+     * @return PresentationTemplate|null
+     */
+    public function getTemplate($name)
+    {
+        if (isset($this->templates[$name])) {
+            return $this->templates[$name];
+        }
+        return null;
     }
 }

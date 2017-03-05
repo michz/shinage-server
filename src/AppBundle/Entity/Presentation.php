@@ -44,7 +44,7 @@ class Presentation implements \JsonSerializable
     /**
      * @ORM\Column(type="string", length=200)
      */
-    protected $template = 'diashow';
+    protected $template = 'SimpleSlideshow';
 
 
     /**

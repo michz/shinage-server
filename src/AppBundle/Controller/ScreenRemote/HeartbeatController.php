@@ -10,6 +10,8 @@ namespace AppBundle\Controller\ScreenRemote;
 
 use AppBundle\Entity\Presentation;
 use AppBundle\Entity\ScheduledPresentation;
+use AppBundle\Service\TemplateManager;
+use AppBundle\Service\TemplateRenderer;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Config\Definition\Exception\Exception;
@@ -77,6 +79,11 @@ class HeartbeatController extends Controller
             throw new NoScreenGivenException();
         }
 
+        /** @var TemplateManager $manager */
+        $manager = $this->container->get('app.template.manager');
+        /** @var TemplateRenderer $renderer */
+        $renderer = $this->container->get('app.template.renderer');
+
         $em = $this->getDoctrine()->getManager();
         $screen = $em->find('\AppBundle\Entity\Screen', $guid);
         if ($screen == null) {
@@ -90,11 +97,19 @@ class HeartbeatController extends Controller
             $slides_json = json_encode($presentation->getSlides()->getValues());
         }
 
+        $tpl = $manager->getTemplate($presentation->getTemplate());
+        return $renderer->render($tpl, [
+            'screen' => $screen,
+            'presentation'  => $presentation,
+            'slides_json'  => $slides_json,
+        ]);
+/*
         return $this->render('presentations/framework.html.twig', [
             'screen' => $screen,
             'presentation'  => $presentation,
             'slides_json'  => $slides_json,
         ]);
+*/
     }
 
     /**
