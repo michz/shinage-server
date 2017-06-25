@@ -8,7 +8,11 @@
 
 namespace AppBundle\Controller\ScreenRemote;
 
+use AppBundle\Entity\Presentation;
 use AppBundle\Entity\ScheduledPresentation;
+use AppBundle\Entity\ScreenRemote\PlayablePresentation;
+use AppBundle\Entity\ScreenRemote\PlayablePresentationSlide;
+use AppBundle\Entity\Slide;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Config\Definition\Exception\Exception;
@@ -25,48 +29,91 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 class HeartbeatController extends Controller
 {
     /**
-     * @Route("/screen-remote/heartbeat", name="screen-remote-heartbeat")
+     * TODO screen-guid-requirement genauer angeben
+     * @Route("/screen-remote/heartbeat/{screenId}", name="screen-remote-heartbeat", requirements={"screenId": ".*"})
      */
-    public function heartbeatAction(Request $request)
+    public function heartbeatAction(Request $request, $screenId)
     {
-        $sGuid = $request->get('screen', null);
-        if (!$sGuid) {
-            throw new NoScreenGivenException();
+        if (!$screenId) {
+            return $this->json([
+                'status'        => 'error',
+                'error_code'    => 'NO_SCREEN_GIVEN',
+                'error_message' => 'No screen was given in this request.',
+            ], 500);
         }
 
         $em = $this->getDoctrine()->getManager();
-        $screen = $em->find('\AppBundle\Entity\Screen', $sGuid);
+        $screen = $em->find('\AppBundle\Entity\Screen', $screenId);
         if ($screen == null) {
             $screen = new Screen();
-            $screen->setGuid($sGuid);
+            $screen->setGuid($screenId);
             $screen->setFirstConnect(new \DateTime());
             $screen->setConnectCode($this->generateUniqueConnectcode());
         }
 
         $screen->setLastConnect(new \DateTime());
 
-        $em->persist($screen);
-        $em->flush();
-
         // check if screen is associated
         $assoc = $this->get('app.screenassociation');
         /** @var ScreenAssociation $assoc */
         $is_assoc = $assoc->isScreenAssociated($screen);
+        if (!$is_assoc) {
+            $screen->setConnectCode($this->generateUniqueConnectcode());
+        }
+
+        $em->persist($screen);
+        $em->flush();
 
         $presentation = null;
-        /** @var ScheduledPresentation $current */
+        /* * @var ScheduledPresentation $current */
+        /** @var Presentation $current */
         $current = $this->getCurrentPresentation($screen);
         if ($current != null) {
-            $presentation = $current->getPresentation();
+            //$presentation = $current->getPresentation();
+            $presentation = $current;
         }
         return $this->json([
             'status'        => 'ok',
             'screen_status' => ($is_assoc) ? 'registered' : 'not_registered',
             'connect_code'  => $screen->getConnectCode(),
-            'presentation'  => $presentation,
+            'presentation'  => $presentation->getId(),
         ]);
     }
 
+    /**
+     * @Route("/screen-remote/presentation/{id}", name="screen-remote-presentation", requirements={"id": "\d+"})
+     */
+    public function presentationAction(Request $request, $id)
+    {
+        // @TODO Sicherheit
+
+        $em = $this->getDoctrine()->getManager();
+        $presentation = $em->find('\AppBundle\Entity\Presentation', $id);
+        if (!$presentation) {
+            // @TODO better error handling/output
+            throw new \Exception("Presentation not found.");
+        }
+
+        // @TODO in Service auslagern
+        $playable = new PlayablePresentation();
+        $playable->lastModified = 0; // @TODO lastModified für Presentation implementieren
+
+        // @TODO Sort slides?
+
+        /** @var Slide $slide */
+        foreach ($presentation->getSlides() as $slide) {
+            $playableSlide = new PlayablePresentationSlide();
+            $playableSlide->title = $slide->getId();
+            $playableSlide->type = "Image"; // $slide->getSlideType(); // @TODO Transformieren
+            $playableSlide->duration = $slide->getDuration() * 1000;
+            $playableSlide->src = $request->getSchemeAndHttpHost() .
+                $this->generateUrl('screen-remote-client-file', ['file' => $slide->getFilePath()]);
+            $playableSlide->transition = "none";
+            $playable->slides[] = $playableSlide;
+        }
+
+        return $this->json($playable);
+    }
 
     /**
      * @Route("/screen-remote/client/{guid}", name="screen-remote-client")
