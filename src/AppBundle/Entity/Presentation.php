@@ -41,6 +41,11 @@ class Presentation implements \JsonSerializable
      */
     protected $settings = '';
 
+    /**
+     * @ORM\Column(type="integer", length=16)
+     */
+    protected $lastModified = 0;
+
 
     /**
      * @ORM\ManyToOne(targetEntity="User")
@@ -170,6 +175,22 @@ class Presentation implements \JsonSerializable
     public function __construct()
     {
         $this->slides = new \Doctrine\Common\Collections\ArrayCollection();
+    }
+
+    /**
+     * @return integer
+     */
+    public function getLastModified()
+    {
+        return $this->lastModified;
+    }
+
+    /**
+     * @param integer $lastModified
+     */
+    public function setLastModified($lastModified)
+    {
+        $this->lastModified = $lastModified;
     }
 
     /**

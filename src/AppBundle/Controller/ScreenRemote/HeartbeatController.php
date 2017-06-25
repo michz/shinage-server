@@ -94,7 +94,7 @@ class HeartbeatController extends Controller
 
         // @TODO in Service auslagern
         $playable = new PlayablePresentation();
-        $playable->lastModified = 0; // @TODO lastModified für Presentation implementieren
+        $playable->lastModified = $presentation->getLastModified();
 
         /** @var Slide $slide */
         foreach ($presentation->getSlides() as $slide) {
