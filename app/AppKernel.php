@@ -9,6 +9,13 @@ use Symfony\Component\Debug\Debug;
 
 class AppKernel extends Kernel
 {
+    public function __construct($environment, $debug)
+    {
+        parent::__construct($environment, $debug);
+        date_default_timezone_set("Europe/Berlin");
+    }
+
+
     public function registerBundles()
     {
         $bundles = [
