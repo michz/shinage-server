@@ -13,6 +13,7 @@ use AppBundle\Entity\ScheduledPresentation;
 use AppBundle\Entity\ScreenRemote\PlayablePresentation;
 use AppBundle\Entity\ScreenRemote\PlayablePresentationSlide;
 use AppBundle\Entity\Slide;
+use AppBundle\Service\Remote\PlayableBuilder;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\File\Exception\AccessDeniedException;
@@ -92,21 +93,9 @@ class HeartbeatController extends Controller
             throw new \Exception("Presentation not found.");
         }
 
-        // @TODO in Service auslagern
-        $playable = new PlayablePresentation();
-        $playable->lastModified = $presentation->getLastModified();
-
-        /** @var Slide $slide */
-        foreach ($presentation->getSlides() as $slide) {
-            $playableSlide = new PlayablePresentationSlide();
-            $playableSlide->title = $slide->getId();
-            $playableSlide->type = "Image"; // $slide->getSlideType(); // @TODO Transformieren
-            $playableSlide->duration = $slide->getDuration() * 1000;
-            $playableSlide->src = $request->getSchemeAndHttpHost() .
-                $this->generateUrl('screen-remote-client-file', ['file' => $slide->getFilePath()]);
-            $playableSlide->transition = "none";
-            $playable->slides[] = $playableSlide;
-        }
+        /** @var PlayableBuilder $playableBuilder */
+        $playableBuilder = $this->container->get('app.remote.playable_builder');
+        $playable = $playableBuilder->build($presentation, $request->getSchemeAndHttpHost());
 
         return $this->json($playable);
     }
