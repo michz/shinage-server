@@ -8,10 +8,14 @@
 
 namespace AppBundle\Controller\ScreenRemote;
 
+use AppBundle\Entity\Presentation;
 use AppBundle\Entity\ScheduledPresentation;
+use AppBundle\Entity\ScreenRemote\PlayablePresentation;
+use AppBundle\Entity\ScreenRemote\PlayablePresentationSlide;
+use AppBundle\Entity\Slide;
+use AppBundle\Service\Remote\PlayableBuilder;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Symfony\Component\Config\Definition\Exception\Exception;
 use Symfony\Component\HttpFoundation\File\Exception\AccessDeniedException;
 use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\HttpFoundation\Request;
@@ -20,84 +24,80 @@ use AppBundle\Entity\Screen;
 
 use AppBundle\Service\ScreenAssociation;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 class HeartbeatController extends Controller
 {
     /**
-     * @Route("/screen-remote/heartbeat", name="screen-remote-heartbeat")
+     * TODO screen-guid-requirement genauer angeben
+     * @Route("/screen-remote/heartbeat/{screenId}", name="screen-remote-heartbeat", requirements={"screenId": ".*"})
      */
-    public function heartbeatAction(Request $request)
+    public function heartbeatAction(Request $request, $screenId)
     {
-        $sGuid = $request->get('screen', null);
-        if (!$sGuid) {
-            throw new NoScreenGivenException();
+        if (!$screenId) {
+            return $this->json([
+                'status'        => 'error',
+                'error_code'    => 'NO_SCREEN_GIVEN',
+                'error_message' => 'No screen was given in this request.',
+            ], 500);
         }
 
         $em = $this->getDoctrine()->getManager();
-        $screen = $em->find('\AppBundle\Entity\Screen', $sGuid);
+        $screen = $em->find('\AppBundle\Entity\Screen', $screenId);
         if ($screen == null) {
             $screen = new Screen();
-            $screen->setGuid($sGuid);
+            $screen->setGuid($screenId);
             $screen->setFirstConnect(new \DateTime());
             $screen->setConnectCode($this->generateUniqueConnectcode());
         }
 
         $screen->setLastConnect(new \DateTime());
 
-        $em->persist($screen);
-        $em->flush();
-
         // check if screen is associated
         $assoc = $this->get('app.screenassociation');
         /** @var ScreenAssociation $assoc */
         $is_assoc = $assoc->isScreenAssociated($screen);
+        if (!$is_assoc) {
+            $screen->setConnectCode($this->generateUniqueConnectcode());
+        }
+
+        $em->persist($screen);
+        $em->flush();
 
         $presentation = null;
-        /** @var ScheduledPresentation $current */
+        /* * @var ScheduledPresentation $current */
+        /** @var Presentation $current */
         $current = $this->getCurrentPresentation($screen);
         if ($current != null) {
-            $presentation = $current->getPresentation();
+            //$presentation = $current->getPresentation();
+            $presentation = $current;
         }
         return $this->json([
             'status'        => 'ok',
             'screen_status' => ($is_assoc) ? 'registered' : 'not_registered',
             'connect_code'  => $screen->getConnectCode(),
-            'presentation'  => $presentation,
+            'presentation'  => $presentation->getId(),
         ]);
     }
 
-
     /**
-     * @Route("/screen-remote/client/{guid}", name="screen-remote-client")
+     * @Route("/screen-remote/presentation/{id}", name="screen-remote-presentation", requirements={"id": "\d+"})
      */
-    public function clientAction(Request $request, $guid)
+    public function presentationAction(Request $request, $id)
     {
-        // Which screen?
-        if (!$guid) {
-            throw new NoScreenGivenException();
-        }
+        // @TODO Sicherheit
 
         $em = $this->getDoctrine()->getManager();
-        $screen = $em->find('\AppBundle\Entity\Screen', $guid);
-        if ($screen == null) {
-            throw new NoScreenGivenException();
+        $presentation = $em->find('\AppBundle\Entity\Presentation', $id);
+        if (!$presentation) {
+            // @TODO better error handling/output
+            throw new \Exception("Presentation not found.");
         }
 
-        $presentation = null;
-        /** @var ScheduledPresentation $current */
-        $current = $this->getCurrentPresentation($screen);
-        $slides_json = '[]';
-        if ($current != null) {
-            $presentation = $current->getPresentation();
-            $slides_json = json_encode($presentation->getSlides()->getValues());
-        }
+        /** @var PlayableBuilder $playableBuilder */
+        $playableBuilder = $this->container->get('app.remote.playable_builder');
+        $playable = $playableBuilder->build($presentation, $request->getSchemeAndHttpHost());
 
-        return $this->render('presentations/framework.html.twig', [
-            'screen' => $screen,
-            'presentation'  => $presentation,
-            'slides_json'  => $slides_json,
-        ]);
+        return $this->json($playable);
     }
 
     /**
@@ -105,7 +105,7 @@ class HeartbeatController extends Controller
      */
     public function clientFileAction(Request $request, $file)
     {
-        // TODO check somehow security
+        // @TODO check somehow security
 
         $pool_base = realpath($this->container->getParameter('path_pool'));
         $path = realpath($pool_base . '/' . $file);

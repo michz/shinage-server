@@ -174,6 +174,8 @@ class PresentationBuilder extends Controller
                     throw new AccessDeniedException();
                 }
 
+                $presentation->setLastModified(time());
+                $em->persist($presentation);
                 $em->persist($slide);
             } else {
                 $slide = $em->find('\AppBundle\Entity\Slide', $o['id']); /** @var Slide $slide */
@@ -182,6 +184,10 @@ class PresentationBuilder extends Controller
                 if (!$user->isSlideAllowed($slide)) {
                     throw new AccessDeniedException();
                 }
+
+                $presentation = $slide->getPresentation();
+                $presentation->setLastModified(time());
+                $em->persist($presentation);
 
                 $slide->setSortOrder($o['sort_order']);
                 $em->persist($slide);
@@ -210,6 +216,11 @@ class PresentationBuilder extends Controller
 
         $slide->setDuration($request->get('duration'));
         $em->persist($slide);
+
+        $presentation = $slide->getPresentation();
+        $presentation->setLastModified(time());
+        $em->persist($presentation);
+
         $em->flush();
 
         return $this->json(['status' => 'ok']);
@@ -227,6 +238,7 @@ class PresentationBuilder extends Controller
         $presentation = new Presentation();
         $presentation->setTitle($request->get('title'));
         $presentation->setOwner($user);
+        $presentation->setLastModified(time());
 
         $em->persist($presentation);
         $em->flush();
@@ -249,6 +261,10 @@ class PresentationBuilder extends Controller
         if (!$user->isSlideAllowed($slide)) {
             throw new AccessDeniedException();
         }
+
+        $presentation = $slide->getPresentation();
+        $presentation->setLastModified(time());
+        $em->persist($presentation);
 
         $em->remove($slide);
         $em->flush();

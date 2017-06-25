@@ -7,11 +7,7 @@
 
 namespace AppBundle\Entity\Api;
 
-use AppBundle\Entity\Interfaces\Ownable;
-use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Mapping as ORM;
-use \AppBundle\Entity\User;
-use Symfony\Component\Config\Definition\Exception\Exception;
 
 /**
  * AppBundle\Entity\Api\AccessKey

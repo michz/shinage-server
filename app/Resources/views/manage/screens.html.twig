@@ -18,9 +18,7 @@
                         Aktuell: {{ screen.getCurrentPresentation() }}
                     </div>
                     <div class="screens-preview">
-                        <a href="{{ path('screen-remote-client', { guid: screen.getGuid()}) }}" target="_blank">
-                            <img class="preview" src="{{ path('management-dashboard-preview', {'screen_guid': screen.getGuid()}) }}" data-toggle="tooltip" data-placement="auto-right" title="{{ 'ClickForPreview'|trans }}">
-                        </a>
+                        <img class="preview" src="{{ path('management-dashboard-preview', {'screen_guid': screen.getGuid()}) }}">
                     </div>
                 </div>
             {% endfor %}
