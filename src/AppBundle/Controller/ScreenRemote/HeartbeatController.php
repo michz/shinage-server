@@ -96,8 +96,6 @@ class HeartbeatController extends Controller
         $playable = new PlayablePresentation();
         $playable->lastModified = 0; // @TODO lastModified für Presentation implementieren
 
-        // @TODO Sort slides?
-
         /** @var Slide $slide */
         foreach ($presentation->getSlides() as $slide) {
             $playableSlide = new PlayablePresentationSlide();
@@ -118,7 +116,7 @@ class HeartbeatController extends Controller
      */
     public function clientFileAction(Request $request, $file)
     {
-        // TODO check somehow security
+        // @TODO check somehow security
 
         $pool_base = realpath($this->container->getParameter('path_pool'));
         $path = realpath($pool_base . '/' . $file);
