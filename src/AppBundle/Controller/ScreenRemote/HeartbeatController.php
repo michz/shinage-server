@@ -15,7 +15,6 @@ use AppBundle\Entity\ScreenRemote\PlayablePresentationSlide;
 use AppBundle\Entity\Slide;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Symfony\Component\Config\Definition\Exception\Exception;
 use Symfony\Component\HttpFoundation\File\Exception\AccessDeniedException;
 use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\HttpFoundation\Request;
@@ -24,7 +23,6 @@ use AppBundle\Entity\Screen;
 
 use AppBundle\Service\ScreenAssociation;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 class HeartbeatController extends Controller
 {
@@ -113,38 +111,6 @@ class HeartbeatController extends Controller
         }
 
         return $this->json($playable);
-    }
-
-    /**
-     * @Route("/screen-remote/client/{guid}", name="screen-remote-client")
-     */
-    public function clientAction(Request $request, $guid)
-    {
-        // Which screen?
-        if (!$guid) {
-            throw new NoScreenGivenException();
-        }
-
-        $em = $this->getDoctrine()->getManager();
-        $screen = $em->find('\AppBundle\Entity\Screen', $guid);
-        if ($screen == null) {
-            throw new NoScreenGivenException();
-        }
-
-        $presentation = null;
-        /** @var ScheduledPresentation $current */
-        $current = $this->getCurrentPresentation($screen);
-        $slides_json = '[]';
-        if ($current != null) {
-            $presentation = $current->getPresentation();
-            $slides_json = json_encode($presentation->getSlides()->getValues());
-        }
-
-        return $this->render('presentations/framework.html.twig', [
-            'screen' => $screen,
-            'presentation'  => $presentation,
-            'slides_json'  => $slides_json,
-        ]);
     }
 
     /**
