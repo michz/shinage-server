@@ -29,6 +29,11 @@ AppBundle\Entity\Presentation:
       unique: false
       nullable: false
       column: last_modified
+    type:
+      type: string
+      length: 200
+      unique: false
+      nullable: false
   manyToOne:
     owner:
       targetEntity: AppBundle\Entity\User

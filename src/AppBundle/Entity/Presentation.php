@@ -34,14 +34,9 @@ class Presentation
     /** @var User */
     protected $owner;
 
+    /** @var string */
+    protected $type;
 
-    /**
-     * Constructor
-     */
-    public function __construct()
-    {
-        $this->slides = new ArrayCollection();
-    }
 
     /**
      * Get id
@@ -171,5 +166,21 @@ class Presentation
     public function getOwner()
     {
         return $this->owner;
+    }
+
+    /**
+     * @return string
+     */
+    public function getType()
+    {
+        return $this->type;
+    }
+
+    /**
+     * @param string $type
+     */
+    public function setType($type)
+    {
+        $this->type = $type;
     }
 }
