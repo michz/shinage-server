@@ -1,0 +1,63 @@
+AppBundle\Entity\Slide:
+  type: entity
+  table: slides
+  id:
+    id:
+      type: integer
+      scale: 0
+      length: null
+      unique: false
+      nullable: false
+      precision: 0
+      id: true
+      generator:
+        strategy: IDENTITY
+  fields:
+    slide_type:
+      type: string
+      scale: 0
+      length: 100
+      unique: false
+      nullable: false
+      precision: 0
+    duration:
+      type: integer
+      scale: 0
+      length: null
+      unique: false
+      nullable: false
+      precision: 0
+    notes:
+      type: text
+      scale: 0
+      length: null
+      unique: false
+      nullable: false
+      precision: 0
+    file_path:
+      type: text
+      scale: 0
+      length: null
+      unique: false
+      nullable: false
+      precision: 0
+    sort_order:
+      type: integer
+      scale: 0
+      length: null
+      unique: false
+      nullable: false
+      precision: 0
+  manyToOne:
+    presentation:
+      targetEntity: AppBundle\Entity\Presentation
+      cascade: {  }
+      fetch: LAZY
+      mappedBy: null
+      inversedBy: slides
+      joinColumns:
+        presentation_id:
+          referencedColumnName: id
+          nullable: false
+      orphanRemoval: false
+  lifecycleCallbacks: {  }

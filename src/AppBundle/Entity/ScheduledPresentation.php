@@ -8,43 +8,24 @@
 
 namespace AppBundle\Entity;
 
-use Doctrine\ORM\Mapping as ORM;
-
 /**
  * AppBundle\Entity\ScheduledPresentation
- *
- * @ORM\Entity
- * @ORM\Table(name="schedule")
  */
 class ScheduledPresentation
 {
-
-    /**
-     * @ORM\Id @ORM\Column(type="integer")
-     * @ORM\GeneratedValue
-     */
+    /** @var int */
     private $id;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="Screen", fetch="EAGER")
-     * @ORM\JoinColumn(name="screen_id", referencedColumnName="guid", nullable=false)
-     */
+    /** @var string */
     private $screen;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="Presentation", fetch="EAGER")
-     * @ORM\JoinColumn(name="presentation_id", referencedColumnName="id", nullable=false)
-     */
+    /** @var Presentation */
     private $presentation;
 
-    /**
-     * @ORM\Column(type="datetime")
-     */
+    /** @var \DateTime */
     private $scheduled_start;
 
-    /**
-     * @ORM\Column(type="datetime")
-     */
+    /** @var \DateTime */
     private $scheduled_end;
 
     /**

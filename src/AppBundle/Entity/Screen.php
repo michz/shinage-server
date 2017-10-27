@@ -13,63 +13,37 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * AppBundle\Entity\Screen
- *
- * @ORM\Entity
- * @ORM\Table(name="screens")
  */
 class Screen
 {
-    /**
-     * @ORM\Id
-     * @ORM\Column(type="string", length=36)
-     */
+    /** @var string */
     protected $guid;
 
-    /**
-     * @ORM\Column(type="string", length=200)
-     */
+    /** @var string */
     protected $name = 'unbenannte Anzeige';
 
-    /**
-     * @ORM\Column(type="text")
-     */
+    /** @var string */
     protected $location = '';
 
-    /**
-     * @ORM\Column(type="text")
-     */
+    /** @var string */
     protected $notes = '';
 
-    /**
-     * @ORM\Column(type="text")
-     */
+    /** @var string */
     protected $admin_c = '';
 
-    /**
-     * @ORM\Column(type="datetime")
-     */
+    /** @var \DateTime */
     protected $first_connect;
 
-    /**
-     * @ORM\Column(type="datetime")
-     */
+    /** @var \DateTime */
     protected $last_connect;
 
-    /**
-     * @ORM\Column(type="string", length=8)
-     */
+    /** @var string */
     protected $connect_code = '';
 
-    /**
-     * @ORM\ManyToOne(targetEntity="Presentation")
-     * @ORM\JoinColumn(name="presentation_id", referencedColumnName="id")
-     */
+    /** @var Presentation */
     protected $default_presentation;
 
-    /**
-     * Can hold the current presentation. (Will not be saved to database.)
-     * @var \AppBundle\Entity\Presentation $current_presentation
-     */
+    /** @var Presentation */
     protected $current_presentation = null;
 
     /**

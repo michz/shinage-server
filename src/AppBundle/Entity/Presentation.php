@@ -9,55 +9,30 @@
 
 namespace AppBundle\Entity;
 
-use Doctrine\ORM\Mapping as ORM;
-
 /**
  * AppBundle\Entity\Presentation
- *
- * @ORM\Entity
- * @ORM\Table(name="presentations")
  */
 class Presentation implements \JsonSerializable
 {
-    /**
-     * @ORM\Id
-     * @ORM\Column(type="integer")
-     * @ORM\GeneratedValue(strategy="AUTO")
-     */
+    /** @var int */
     protected $id;
 
-    /**
-     * @ORM\Column(type="string", length=200)
-     */
+    /** @var string */
     protected $title = 'Presentation';
 
-    /**
-     * @ORM\Column(type="text")
-     */
+    /** @var string */
     protected $notes = '';
 
-    /**
-     * @ORM\Column(type="text")
-     */
+    /** @var string */
     protected $settings = '';
 
-    /**
-     * @ORM\Column(type="integer", length=16)
-     */
+    /** @var int */
     protected $lastModified = 0;
 
-
-    /**
-     * @ORM\ManyToOne(targetEntity="User")
-     * @ORM\JoinColumn(name="user_id", referencedColumnName="id", nullable=true)
-     */
+    /** @var User */
     protected $owner;
 
-
-    /**
-     * @ORM\OneToMany(targetEntity="Slide", mappedBy="presentation")
-     * @ORM\OrderBy({"sort_order" = "ASC"})
-     */
+    /** @var \Doctrine\Common\Collections\ArrayCollection */
     protected $slides;
 
 
