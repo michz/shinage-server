@@ -24,3 +24,5 @@ tests/_output/*
 *.bak
 *.swp
 *.swo
+
+.web-server-pid
