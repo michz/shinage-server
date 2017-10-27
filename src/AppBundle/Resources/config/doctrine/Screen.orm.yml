@@ -4,66 +4,44 @@ AppBundle\Entity\Screen:
   id:
     guid:
       type: string
-      scale: 0
       length: 36
       unique: false
       nullable: false
-      precision: 0
       id: true
   fields:
     name:
       type: string
-      scale: 0
       length: 200
       unique: false
       nullable: false
-      precision: 0
     location:
       type: text
-      scale: 0
-      length: null
       unique: false
       nullable: false
-      precision: 0
     notes:
       type: text
-      scale: 0
-      length: null
       unique: false
       nullable: false
-      precision: 0
     admin_c:
       type: text
-      scale: 0
-      length: null
       unique: false
       nullable: false
-      precision: 0
     first_connect:
       type: datetime
-      scale: 0
-      length: null
       unique: false
       nullable: false
-      precision: 0
     last_connect:
       type: datetime
-      scale: 0
-      length: null
       unique: false
       nullable: false
-      precision: 0
     connect_code:
       type: string
-      scale: 0
       length: 8
       unique: false
       nullable: false
-      precision: 0
   manyToOne:
     default_presentation:
       targetEntity: AppBundle\Entity\Presentation
-      cascade: {  }
       fetch: LAZY
       mappedBy: null
       inversedBy: null

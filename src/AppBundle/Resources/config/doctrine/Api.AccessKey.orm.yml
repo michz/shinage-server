@@ -4,47 +4,36 @@ AppBundle\Entity\Api\AccessKey:
   id:
     id:
       type: integer
-      scale: 0
       length: null
       unique: false
       nullable: false
-      precision: 0
       id: true
       generator:
         strategy: IDENTITY
   fields:
     code:
       type: string
-      scale: 0
       length: 32
       unique: true
       nullable: false
-      precision: 0
     name:
       type: string
-      scale: 0
       length: 255
       unique: false
       nullable: false
-      precision: 0
     last_use:
       type: datetime
-      scale: 0
       length: null
       unique: false
       nullable: true
-      precision: 0
     roles:
       type: simple_array
-      scale: 0
       length: null
       unique: false
       nullable: false
-      precision: 0
   manyToOne:
     owner:
       targetEntity: AppBundle\Entity\User
-      cascade: {  }
       fetch: LAZY
       mappedBy: null
       inversedBy: null

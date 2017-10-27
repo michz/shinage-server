@@ -4,48 +4,34 @@ AppBundle\Entity\Presentation:
   id:
     id:
       type: integer
-      scale: 0
       length: null
       unique: false
       nullable: false
-      precision: 0
       id: true
       generator:
         strategy: IDENTITY
   fields:
     title:
       type: string
-      scale: 0
       length: 200
       unique: false
       nullable: false
-      precision: 0
     notes:
       type: text
-      scale: 0
-      length: null
       unique: false
       nullable: false
-      precision: 0
     settings:
       type: text
-      scale: 0
-      length: null
       unique: false
       nullable: false
-      precision: 0
     lastModified:
-      type: integer
-      scale: 0
-      length: 16
+      type: datetime
       unique: false
       nullable: false
-      precision: 0
       column: last_modified
   manyToOne:
     owner:
       targetEntity: AppBundle\Entity\User
-      cascade: {  }
       fetch: LAZY
       mappedBy: null
       inversedBy: null
@@ -53,14 +39,4 @@ AppBundle\Entity\Presentation:
         user_id:
           referencedColumnName: id
       orphanRemoval: false
-  oneToMany:
-    slides:
-      targetEntity: AppBundle\Entity\Slide
-      cascade: {  }
-      fetch: LAZY
-      mappedBy: presentation
-      inversedBy: null
-      orphanRemoval: false
-      orderBy:
-        sort_order: ASC
   lifecycleCallbacks: {  }
