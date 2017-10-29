@@ -13,6 +13,7 @@ use AppBundle\Entity\ScheduledPresentation;
 use AppBundle\Entity\ScreenRemote\PlayablePresentation;
 use AppBundle\Entity\ScreenRemote\PlayablePresentationSlide;
 use AppBundle\Entity\Slide;
+use AppBundle\Service\PresentationBuilders\PresentationBuilderChain;
 use AppBundle\Service\Remote\PlayableBuilder;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -27,6 +28,7 @@ use Symfony\Component\HttpFoundation\Response;
 
 class HeartbeatController extends Controller
 {
+    const JSONP_DUMMY = 'REPLACE_JSONP_CALLBACK_DUMMY';
     /**
      * TODO screen-guid-requirement genauer angeben
      * @Route("/screen-remote/heartbeat/{screenId}", name="screen-remote-heartbeat", requirements={"screenId": ".*"})
@@ -70,12 +72,21 @@ class HeartbeatController extends Controller
         if ($current != null) {
             //$presentation = $current->getPresentation();
             $presentation = $current;
+
+            /** @var PresentationBuilderChain $playableBuilderChain */
+            $playableBuilderChain = $this->get('app.presentation_builder_chain');
+            $playableBuilder = $playableBuilderChain->getBuilderForPresentation($current);
+            $lastModified = $playableBuilder->getLastModified($current);
+        } else {
+            $lastModified = new \DateTime('now');
         }
+
         return $this->json([
             'status'        => 'ok',
             'screen_status' => ($is_assoc) ? 'registered' : 'not_registered',
             'connect_code'  => $screen->getConnectCode(),
             'presentation'  => $presentation->getId(),
+            'last_modified'  => $lastModified->format('Y-m-d H:i:s'),
         ]);
     }
 
@@ -93,9 +104,24 @@ class HeartbeatController extends Controller
             throw new \Exception("Presentation not found.");
         }
 
-        /** @var PlayableBuilder $playableBuilder */
-        $playableBuilder = $this->container->get('app.remote.playable_builder');
-        $playable = $playableBuilder->build($presentation, $request->getSchemeAndHttpHost());
+        /** @var PresentationBuilderChain $playableBuilderChain */
+        $playableBuilderChain = $this->get('app.presentation_builder_chain');
+        $playableBuilder = $playableBuilderChain->getBuilderForPresentation($presentation);
+        $playable = $playableBuilder->buildPresentation($presentation);
+
+        /* * @var PlayableBuilder $playableBuilder */
+        #$playableBuilder = $this->container->get('app.remote.playable_builder');
+        #$playable = $playableBuilder->build($presentation, $request->getSchemeAndHttpHost());
+
+        if (is_string($playable)) {
+            $callback = $request->get('callback');
+            if ($callback !== null && 0 === strpos($playable, self::JSONP_DUMMY)) {
+                $playable = substr_replace($playable, $callback, 0, strlen(self::JSONP_DUMMY));
+            }
+            return new Response($playable, 200, [
+                'Content-Type' => 'application/json'
+            ]);
+        }
 
         return $this->json($playable);
     }

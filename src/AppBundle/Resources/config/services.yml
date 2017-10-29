@@ -58,3 +58,11 @@ services:
             $tokenStorage: "@security.token_storage"
         tags:
             - { name: form.type }
+
+    app.presentation_builder_chain:
+        class: AppBundle\Service\PresentationBuilders\PresentationBuilderChain
+
+    app.presentations.mirror:
+        class: AppBundle\Service\PresentationBuilders\MirrorPresentation
+        tags:
+            - app.presentation_builder
