@@ -27,6 +27,7 @@
         "studio-42/elfinder": "2.1.x@dev",
         "symfony/assetic-bundle": "^2.8",
         "rollerworks/password-strength-bundle": "^1.5",
+        "guzzlehttp/guzzle": "^6.3",
         "roave/security-advisories": "dev-master"
     },
     "require-dev": {
