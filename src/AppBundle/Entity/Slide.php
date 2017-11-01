@@ -9,52 +9,30 @@
 
 namespace AppBundle\Entity;
 
-use Doctrine\ORM\Mapping as ORM;
-
 /**
  * AppBundle\Entity\Slide
- *
- * @ORM\Entity
- * @ORM\Table(name="slides")
  */
 class Slide implements \JsonSerializable
 {
-    /**
-     * @ORM\Id
-     * @ORM\Column(type="integer")
-     * @ORM\GeneratedValue(strategy="AUTO")
-     */
+    /** @var int */
     protected $id;
 
-    /**
-     * @ORM\Column(type="string", length=100)
-     */
+    /** @var string */
     protected $slide_type = 'image';
 
-    /**
-     * @ORM\Column(type="integer", nullable=false)
-     */
+    /** @var int */
     protected $duration = 0;
 
-    /**
-     * @ORM\Column(type="text")
-     */
+    /** @var string */
     protected $notes = '';
 
-    /**
-     * @ORM\Column(type="text")
-     */
+    /** @var string */
     protected $file_path = '';
 
-    /**
-     * @ORM\Column(type="integer", nullable=false)
-     */
+    /** @var int */
     protected $sort_order = 0;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="Presentation", inversedBy="slides")
-     * @ORM\JoinColumn(name="presentation_id", referencedColumnName="id", nullable=false)
-     */
+    /** @var Presentation */
     protected $presentation;
 
 

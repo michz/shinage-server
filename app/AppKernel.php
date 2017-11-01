@@ -1,11 +1,10 @@
 <?php
 
+use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpKernel\Kernel;
 use Symfony\Component\Config\Loader\LoaderInterface;
+use AppBundle\DependencyInjection\Compiler\PresentationBuilderPass;
 
-use Symfony\Component\Debug\Debug;
-
-#Debug::enable();
 
 class AppKernel extends Kernel
 {
@@ -62,5 +61,10 @@ class AppKernel extends Kernel
     public function registerContainerConfiguration(LoaderInterface $loader)
     {
         $loader->load($this->getRootDir().'/config/config_'.$this->getEnvironment().'.yml');
+    }
+
+    public function build(ContainerBuilder $container)
+    {
+        $container->addCompilerPass(new PresentationBuilderPass());
     }
 }

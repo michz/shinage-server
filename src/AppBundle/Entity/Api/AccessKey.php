@@ -7,46 +7,29 @@
 
 namespace AppBundle\Entity\Api;
 
-use Doctrine\ORM\Mapping as ORM;
+use AppBundle\Entity\User;
 
 /**
  * AppBundle\Entity\Api\AccessKey
- *
- * @ORM\Entity
- * @ORM\Table(name="api_access_keys")
  */
 class AccessKey
 {
-    /**
-     * @ORM\Id @ORM\Column(type="integer")
-     * @ORM\GeneratedValue
-     */
+    /** @var int */
     protected $id;
 
-    /**
-     * @ORM\Column(type="string", length=32, unique=true)
-     */
+    /** @var string */
     protected $code;
 
-    /**
-     * @ORM\Column(type="string", length=255)
-     */
+    /** @var string */
     protected $name;
 
-    /**
-     * @ORM\Column(type="datetime", nullable=true)
-     */
+    /** @var \DateTime */
     protected $last_use;
 
-    /**
-     * @ORM\Column(type="simple_array")
-     */
+    /** @var array */
     protected $roles;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\User")
-     * @ORM\JoinColumn(name="user_id", referencedColumnName="id", nullable=true)
-     */
+    /** @var User */
     protected $owner;
 
 

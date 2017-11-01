@@ -11,42 +11,24 @@ namespace AppBundle\Entity;
 
 use AppBundle\UserType;
 use Doctrine\ORM\EntityManager;
-use Doctrine\ORM\Mapping as ORM;
 use FOS\UserBundle\Model\User as BaseUser;
 use Rollerworks\Bundle\PasswordStrengthBundle\Validator\Constraints as RollerworksPassword;
 
 /**
  * AppBundle\Entity\User
- *
- * @ORM\Entity
- * @ORM\Table(name="users")
  */
 class User extends BaseUser
 {
-    /**
-     * @ORM\Id
-     * @ORM\Column(type="integer")
-     * @ORM\GeneratedValue(strategy="AUTO")
-     */
+    /** @var int */
     protected $id;
 
-    /**
-     * @ORM\Column(type="enumusertype")
-     */
+    /** @var string */
     protected $userType = UserType::USER_TYPE_USER;
-    
-    /**
-     * @ORM\Column(type="string", length=200)
-     */
+
+    /** @var string */
     protected $name = '';
 
-    /**
-     * @ORM\ManyToMany(targetEntity="User")
-     * @ORM\JoinTable(name="users_orgas",
-     *      joinColumns={@ORM\JoinColumn(name="user_id", referencedColumnName="id")},
-     *      inverseJoinColumns={@ORM\JoinColumn(name="organization_id", referencedColumnName="id")}
-     *      )
-     */
+    /** @var \Doctrine\Common\Collections\ArrayCollection */
     private $organizations;
 
     /**

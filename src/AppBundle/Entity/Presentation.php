@@ -9,81 +9,33 @@
 
 namespace AppBundle\Entity;
 
-use Doctrine\ORM\Mapping as ORM;
+use Doctrine\Common\Collections\ArrayCollection;
 
 /**
  * AppBundle\Entity\Presentation
- *
- * @ORM\Entity
- * @ORM\Table(name="presentations")
  */
-class Presentation implements \JsonSerializable
+class Presentation
 {
-    /**
-     * @ORM\Id
-     * @ORM\Column(type="integer")
-     * @ORM\GeneratedValue(strategy="AUTO")
-     */
+    /** @var int */
     protected $id;
 
-    /**
-     * @ORM\Column(type="string", length=200)
-     */
+    /** @var string */
     protected $title = 'Presentation';
 
-    /**
-     * @ORM\Column(type="text")
-     */
+    /** @var string */
     protected $notes = '';
 
-    /**
-     * @ORM\Column(type="text")
-     */
+    /** @var string */
     protected $settings = '';
 
-    /**
-     * @ORM\Column(type="integer", length=16)
-     */
+    /** @var int */
     protected $lastModified = 0;
 
-
-    /**
-     * @ORM\ManyToOne(targetEntity="User")
-     * @ORM\JoinColumn(name="user_id", referencedColumnName="id", nullable=true)
-     */
+    /** @var User */
     protected $owner;
 
-
-    /**
-     * @ORM\OneToMany(targetEntity="Slide", mappedBy="presentation")
-     * @ORM\OrderBy({"sort_order" = "ASC"})
-     */
-    protected $slides;
-
-
-    /**
-     * @brief  Returns serialized entity.
-     * @return array
-     */
-    public function jsonSerialize()
-    {
-        $slides_a = array();
-        $slides = $this->getSlides();
-
-
-        foreach ($slides as $slide) {
-            $slides_a[] = ($slide);
-        }
-
-
-        return array(
-            'id'        => $this->id,
-            'title'     => $this->title,
-            'notes'     => $this->notes,
-            'settings'  => $this->settings,
-            'slides'    => $slides_a
-        );
-    }
+    /** @var string */
+    protected $type;
 
 
     /**
@@ -168,15 +120,6 @@ class Presentation implements \JsonSerializable
         return $this->settings;
     }
 
-
-    /**
-     * Constructor
-     */
-    public function __construct()
-    {
-        $this->slides = new \Doctrine\Common\Collections\ArrayCollection();
-    }
-
     /**
      * @return integer
      */
@@ -194,40 +137,8 @@ class Presentation implements \JsonSerializable
     }
 
     /**
-     * Add slide
-     *
-     * @param \AppBundle\Entity\Slide $slide
-     *
-     * @return Presentation
+     * @return string
      */
-    public function addSlide(\AppBundle\Entity\Slide $slide)
-    {
-        $this->slides[] = $slide;
-
-        return $this;
-    }
-
-    /**
-     * Remove slide
-     *
-     * @param \AppBundle\Entity\Slide $slide
-     */
-    public function removeSlide(\AppBundle\Entity\Slide $slide)
-    {
-        $this->slides->removeElement($slide);
-    }
-
-    /**
-     * Get slides
-     *
-     * @return \Doctrine\Common\Collections\Collection
-     */
-    public function getSlides()
-    {
-        return $this->slides;
-    }
-
-
     public function __toString()
     {
         return $this->getTitle();
@@ -236,11 +147,11 @@ class Presentation implements \JsonSerializable
     /**
      * Set owner
      *
-     * @param \AppBundle\Entity\User $owner
+     * @param User $owner
      *
      * @return Presentation
      */
-    public function setOwner(\AppBundle\Entity\User $owner = null)
+    public function setOwner(User $owner = null)
     {
         $this->owner = $owner;
 
@@ -250,10 +161,26 @@ class Presentation implements \JsonSerializable
     /**
      * Get owner
      *
-     * @return \AppBundle\Entity\User
+     * @return User
      */
     public function getOwner()
     {
         return $this->owner;
+    }
+
+    /**
+     * @return string
+     */
+    public function getType()
+    {
+        return $this->type;
+    }
+
+    /**
+     * @param string $type
+     */
+    public function setType($type)
+    {
+        $this->type = $type;
     }
 }

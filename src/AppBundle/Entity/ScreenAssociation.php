@@ -8,41 +8,24 @@
 
 namespace AppBundle\Entity;
 
-use Doctrine\ORM\Mapping as ORM;
-use FOS\UserBundle\Model\User as BaseUser;
+use AppBundle\ScreenRoleType;
 
 /**
  * AppBundle\Entity\ScreenAssociation
- *
- * @ORM\Entity
- * @ORM\Table(name="screen_associations")
  */
 
 class ScreenAssociation
 {
-
-    /**
-     * @ORM\Id
-     * @ORM\Column(type="integer")
-     * @ORM\GeneratedValue(strategy="AUTO")
-     */
+    /** @var int */
     protected $id;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="Screen")
-     * @ORM\JoinColumn(name="screen_id", referencedColumnName="guid", nullable=false)
-     */
+    /** @var Screen */
     protected $screen;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="User")
-     * @ORM\JoinColumn(name="user_id", referencedColumnName="id", nullable=true)
-     */
+    /** @var User */
     protected $user_id;
 
-    /**
-     * @ORM\Column(type="enumscreenrole")
-     */
+    /** @var ScreenRoleType */
     protected $role;
 
     /**
@@ -58,7 +41,7 @@ class ScreenAssociation
     /**
      * Set role
      *
-     * @param enumscreenrole $role
+     * @param ScreenRoleType $role
      *
      * @return ScreenAssociation
      */
@@ -72,7 +55,7 @@ class ScreenAssociation
     /**
      * Get role
      *
-     * @return enumscreenrole
+     * @return ScreenRoleType
      */
     public function getRole()
     {
