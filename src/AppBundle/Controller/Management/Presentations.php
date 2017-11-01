@@ -9,10 +9,17 @@
 namespace AppBundle\Controller\Management;
 
 use AppBundle\Entity\Presentation;
+use AppBundle\Service\PresentationBuilders\PresentationBuilderChain;
 use Doctrine\ORM\EntityManager;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Config\Definition\Exception\Exception;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\FormType;
+use Symfony\Component\Form\Extension\Core\Type\SubmitType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Form\Form;
+use Symfony\Component\Form\FormBuilder;
 use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\HttpFoundation\Request;
 use AppBundle\Exceptions\NoScreenGivenException;
@@ -44,9 +51,52 @@ class Presentations extends Controller
         ]);
     }
 
+    /**
+     * @Route("/manage/presentations/create", name="management-presentations-create")
+     */
+    public function createPresentationForm(Request $request)
+    {
+        $user = $this->get('security.token_storage')->getToken()->getUser();
+
+        /** @var PresentationBuilderChain $builderChain */
+        $builderChain = $this->get('app.presentation_builder_chain');
+
+        $presentation = new Presentation();
+        $form = $this->get('form.factory')->createNamedBuilder('form_presentation', FormType::class, $presentation)
+            ->add('title', TextType::class)
+            ->add('type', ChoiceType::class, ['choices' => $this->getTypeChoices($builderChain->getTypes())])
+            #->add('password', PasswordType::class)
+            ->add('save', SubmitType::class, ['label' => 'Create'])
+            ->getForm();
+
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            // @TODO make owner chosable
+            $presentation->setOwner($user);
+
+            $em = $this->getDoctrine()->getManager();
+            $em->persist($presentation);
+            $em->flush();
+            return $this->redirectToRoute('management-presentations');
+        }
+
+        return $this->render('manage/presentations/create.html.twig', [
+            'form' => $form->createView(),
+        ]);
+    }
+
     public function getPresentationsForUser(User $user)
     {
         $em = $this->getDoctrine()->getManager();
         return $user->getPresentations($em);
+    }
+
+    protected function getTypeChoices($types)
+    {
+        $ret = [];
+        foreach ($types as $type) {
+            $ret[$type] = $type;
+        }
+        return $ret;
     }
 }

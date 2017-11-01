@@ -18,6 +18,11 @@ class MirrorPresentation implements PresentationBuilderInterface
         return ($presentation->getType() === self::PRESENTATION_TYPE);
     }
 
+    public function getSupportedTypes()
+    {
+        return [self::PRESENTATION_TYPE];
+    }
+
     public function buildPresentation(Presentation $presentation)
     {
         $settings = json_decode($presentation->getSettings());

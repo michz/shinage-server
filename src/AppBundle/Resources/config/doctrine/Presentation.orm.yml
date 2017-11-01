@@ -27,7 +27,7 @@ AppBundle\Entity\Presentation:
     lastModified:
       type: datetime
       unique: false
-      nullable: false
+      nullable: true
       column: last_modified
     type:
       type: string

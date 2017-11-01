@@ -35,4 +35,9 @@ interface PresentationBuilderInterface
      * @return \DateTime
      */
     public function getLastModified(Presentation $presentation);
+
+    /**
+     * @return array
+     */
+    public function getSupportedTypes();
 }

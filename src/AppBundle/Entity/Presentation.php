@@ -28,8 +28,8 @@ class Presentation
     /** @var string */
     protected $settings = '';
 
-    /** @var int */
-    protected $lastModified = 0;
+    /** @var \DateTime */
+    protected $lastModified = null;
 
     /** @var User */
     protected $owner;
@@ -121,7 +121,7 @@ class Presentation
     }
 
     /**
-     * @return integer
+     * @return \DateTime
      */
     public function getLastModified()
     {
@@ -129,7 +129,7 @@ class Presentation
     }
 
     /**
-     * @param integer $lastModified
+     * @param \DateTime $lastModified
      */
     public function setLastModified($lastModified)
     {
