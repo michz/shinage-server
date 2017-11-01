@@ -26,6 +26,7 @@ class ApiRoleRegistry
         if (array_key_exists($role, $this->roles)) {
             throw new \Exception('Role ' . $role . ' already registered.');
         }
+        $this->roles[$role] = $role;
         return $this;
     }
 }
