@@ -21,6 +21,12 @@
                     <h2>{{ presentation.title }}</h2>
                     <p>{{ presentation.lastModified|date('Y-m-d') }}</p>
                     <p>{{ presentation.notes }}</p>
+                    <p>
+                        <a class="btn btn-default" href="{{ path("management-presentations-edit", { id: presentation.id })  }}">
+                            <i class="fa fa-pencil"></i>
+                            {{ "Edit Presentation"|trans }}
+                        </a>
+                    </p>
                 </div>
             {% endfor %}
         {% endfor %}

@@ -85,6 +85,14 @@ class Presentations extends Controller
         ]);
     }
 
+    /**
+     * @Route("/manage/presentation/edit/{id}", name="management-presentations-edit", requirements={"id": "[0-9]+"})
+     */
+    public function editPresentationAction(Request $request)
+    {
+        // @TODO
+    }
+
     public function getPresentationsForUser(User $user)
     {
         $em = $this->getDoctrine()->getManager();
