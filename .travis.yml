@@ -16,4 +16,5 @@ before_script:
   - php bin/console doctrine:fixtures:load -n --env=test
 
 script:
-  - ./run-tests.sh
+  - ./vendor/bin/phpspec run
+
