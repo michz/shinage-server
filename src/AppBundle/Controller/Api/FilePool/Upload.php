@@ -6,8 +6,6 @@ use AppBundle\Service\FilePool;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
-use AppBundle\Service\TodoList;
-use Symfony\Component\Intl\Data\Bundle\Reader\JsonBundleReader;
 
 class Upload extends Controller
 {

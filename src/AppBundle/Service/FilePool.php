@@ -11,9 +11,6 @@ namespace AppBundle\Service;
 use AppBundle\Entity\User;
 use AppBundle\Service\Pool\PoolDirectory;
 use AppBundle\Service\Pool\PoolFile;
-use Doctrine\ORM\EntityManager;
-
-use AppBundle\Entity\Screen;
 use Symfony\Component\Config\Definition\Exception\Exception;
 
 class FilePool

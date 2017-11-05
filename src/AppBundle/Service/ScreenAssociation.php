@@ -9,9 +9,7 @@
 namespace AppBundle\Service;
 
 use AppBundle\Entity\User;
-use AppBundle\ScreenRoleType;
 use Doctrine\ORM\EntityManager;
-
 use AppBundle\Entity\Screen;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorage;
 

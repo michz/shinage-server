@@ -9,12 +9,7 @@
 namespace AppBundle\Controller\ScreenRemote;
 
 use AppBundle\Entity\Presentation;
-use AppBundle\Entity\ScheduledPresentation;
-use AppBundle\Entity\ScreenRemote\PlayablePresentation;
-use AppBundle\Entity\ScreenRemote\PlayablePresentationSlide;
-use AppBundle\Entity\Slide;
 use AppBundle\Service\PresentationBuilders\PresentationBuilderChain;
-use AppBundle\Service\Remote\PlayableBuilder;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\File\Exception\AccessDeniedException;
@@ -22,7 +17,6 @@ use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\HttpFoundation\Request;
 use AppBundle\Exceptions\NoScreenGivenException;
 use AppBundle\Entity\Screen;
-
 use AppBundle\Service\ScreenAssociation;
 use Symfony\Component\HttpFoundation\Response;
 

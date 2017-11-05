@@ -11,8 +11,6 @@ namespace AppBundle\Controller\Admin;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
-use AppBundle\Service\ScreenAssociation;
-use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 class AdminDashboardController extends Controller
 {

@@ -8,31 +8,17 @@
 
 namespace AppBundle\Controller\Management;
 
-use AppBundle\AppBundle;
 use AppBundle\Entity\Presentation;
 use AppBundle\Service\PresentationBuilders\PresentationBuilderChain;
-use Doctrine\ORM\EntityManager;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Symfony\Component\Config\Definition\Exception\Exception;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\FormType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
-use Symfony\Component\Form\Form;
-use Symfony\Component\Form\FormBuilder;
-use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\HttpFoundation\Request;
-use AppBundle\Exceptions\NoScreenGivenException;
-use AppBundle\Entity\Screen;
-use AppBundle\Service\FilePool;
-use AppBundle\Service\Pool\PoolDirectory;
-use AppBundle\Service\Pool\PoolItem;
 use AppBundle\Entity\User;
-use AppBundle\Entity\Slide;
-use AppBundle\Exceptions\SlideTypeNotImplemented;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 class PresentationsController extends Controller
 {

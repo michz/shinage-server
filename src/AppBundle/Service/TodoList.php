@@ -8,12 +8,6 @@
 
 namespace AppBundle\Service;
 
-use AppBundle\Entity\User;
-use Doctrine\ORM\EntityManager;
-
-use AppBundle\Entity\Screen;
-use Symfony\Component\Cache\Adapter\FilesystemAdapter;
-
 class TodoList
 {
     protected $extensions = array('php', 'md', 'txt', 'htm', 'html', 'twig');

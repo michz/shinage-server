@@ -5,7 +5,6 @@ namespace AppBundle\DependencyInjection\Compiler;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\Reference;
-use AppBundle\Service\PresentationBuilders\PresentationBuilderChain;
 
 /**
  * @author   :  Michael Zapf <m.zapf@mztx.de>

@@ -12,13 +12,9 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\HttpFoundation\Request;
-use AppBundle\Exceptions\NoScreenGivenException;
-use AppBundle\Entity\Screen;
 use AppBundle\Entity\User;
-
 use Symfony\Component\HttpFoundation\StreamedResponse;
 use Symfony\Component\HttpFoundation\Response;
-
 use AppBundle\Service\FilePool;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 

@@ -8,7 +8,6 @@
 
 namespace AppBundle\Controller\Account;
 
-use AppBundle\AppBundle;
 use AppBundle\Entity\Api\AccessKey;
 use AppBundle\Entity\User;
 use AppBundle\Form\ApiKeyForm;
@@ -17,7 +16,6 @@ use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
 use Doctrine\ORM\EntityManager;
 use FOS\UserBundle\Doctrine\UserManager;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
-use Symfony\Bundle\AsseticBundle\Command\DumpCommand;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\Extension\Core\Type\FormType;

@@ -9,8 +9,6 @@
 
 namespace AppBundle\Entity;
 
-use Doctrine\ORM\Mapping as ORM;
-
 /**
  * AppBundle\Entity\Screen
  */

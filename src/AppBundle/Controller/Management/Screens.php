@@ -8,7 +8,6 @@
 
 namespace AppBundle\Controller\Management;
 
-use AppBundle\AppBundle;
 use AppBundle\Entity\Guid;
 use AppBundle\Entity\Screen;
 use AppBundle\Entity\User;

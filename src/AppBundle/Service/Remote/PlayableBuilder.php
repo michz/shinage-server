@@ -10,8 +10,6 @@ namespace AppBundle\Service\Remote;
 
 use AppBundle\Entity\Presentation;
 use AppBundle\Entity\ScreenRemote\PlayablePresentation;
-use AppBundle\Entity\ScreenRemote\PlayablePresentationSettings;
-use AppBundle\Entity\ScreenRemote\PlayablePresentationSlide;
 use AppBundle\Entity\Slide;
 use Symfony\Component\Routing\Router;
 

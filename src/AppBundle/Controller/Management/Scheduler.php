@@ -13,12 +13,8 @@ use Doctrine\ORM\EntityManager;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
-use AppBundle\Exceptions\NoScreenGivenException;
-use AppBundle\Entity\Screen;
-
 use AppBundle\Service\ScreenAssociation;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
-use Symfony\Component\Validator\Constraints\DateTime;
 
 class Scheduler extends Controller
 {

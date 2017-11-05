@@ -9,7 +9,6 @@
 namespace AppBundle\Controller\Security;
 
 use AppBundle\Entity\User;
-use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
 use FOS\UserBundle\Doctrine\UserManager;
 use FOS\UserBundle\Model\UserInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -18,7 +17,6 @@ use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\Form\Extension\Core\Type\RepeatedType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
-use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\HttpFoundation\Request;
 
 class Registration extends Controller
