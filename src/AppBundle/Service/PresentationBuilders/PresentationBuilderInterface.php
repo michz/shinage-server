@@ -3,14 +3,13 @@
 namespace AppBundle\Service\PresentationBuilders;
 
 use AppBundle\Entity\Presentation;
+use AppBundle\PresentationEditors\PresentationEditorInterface;
+use Symfony\Component\DependencyInjection\Container;
 
 /**
- * Created by solutionDrive GmbH.
- *
- * @author   :  Michael Zapf <mz@solutionDrive.de>
+ * @author   :  Michael Zapf <m.zapf@mztx.de>
  * @date     :  27.10.17
  * @time     :  11:49
- * @copyright:  2017 solutionDrive GmbH
  */
 interface PresentationBuilderInterface
 {
@@ -35,6 +34,15 @@ interface PresentationBuilderInterface
      * @return \DateTime
      */
     public function getLastModified(Presentation $presentation);
+
+    /**
+     * @param Presentation $presentation
+     * @param string       $parameters
+     * @param Container    $container
+     *
+     * @return PresentationEditorInterface
+     */
+    public function getEditor(Presentation $presentation, $parameters, Container $container);
 
     /**
      * @return array

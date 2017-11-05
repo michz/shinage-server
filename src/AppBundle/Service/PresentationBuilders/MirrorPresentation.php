@@ -3,6 +3,8 @@
 namespace AppBundle\Service\PresentationBuilders;
 
 use AppBundle\Entity\Presentation;
+use AppBundle\PresentationEditors\MirrorEditor;
+use Symfony\Component\DependencyInjection\Container;
 
 /**
  * @author   :  Michael Zapf <m.zapf@mtx.de>
@@ -48,6 +50,15 @@ class MirrorPresentation implements PresentationBuilderInterface
             return new \DateTime('now');
         }
         return new \DateTime($lastModifiedRaw[0]);
+    }
+
+    public function getEditor(Presentation $presentation, $parameters, Container $container)
+    {
+        $editor = new MirrorEditor();
+        $editor->setPresentation($presentation)
+            ->setParameters($parameters)
+            ->setContainer($container);
+        return $editor;
     }
 
     protected function checkValid(Presentation $presentation)
