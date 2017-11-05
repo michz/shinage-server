@@ -66,5 +66,9 @@ class AppKernel extends Kernel
     public function build(ContainerBuilder $container)
     {
         $container->addCompilerPass(new PresentationBuilderPass());
+
+        // configure Annotations (ignore solutionDrive specific header annotations)
+        \Doctrine\Common\Annotations\AnnotationReader::addGlobalIgnoredName('time');
+        \Doctrine\Common\Annotations\AnnotationReader::addGlobalIgnoredName('date');
     }
 }
