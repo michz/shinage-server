@@ -20,6 +20,36 @@ body { background: #F5F5F5; font: 16px/1.5 sans-serif; }
     background-color: #ffd4cb;
 }
 
+.sidebar-nav li {
+    border-top: 1px solid #e7e7e7;
+    background-color: #fff;
+}
+
+.sidebar-nav li.first {
+    border-top: 0;
+    background-color: #fff;
+}
+
+/*
+.sidebar-nav li.current {
+    border-left: 3px solid red;
+}
+*/
+.sidebar-nav li.current a:before {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    width: 2px;
+    content: "";
+    border-left: 2px solid #ee0000;
+}
+
+
+
+.sidebar-nav li.current a {
+    font-weight: bold;
+}
 
 
 h1, h2 { line-height: 1.2; margin: 0 0 .5em; font-weight:bold; }

@@ -112,4 +112,6 @@ swiftmailer:
     password:  "%mailer_password%"
     spool:     { type: memory }
 
-
+knp_menu:
+    twig:
+        template: menu/menu.html.twig
