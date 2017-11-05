@@ -1,0 +1,26 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <div class="container">
+        <div class="page-header">
+            <h1>{{ 'Edit Presentation'|trans }}</h1>
+        </div>
+
+        <div class="panel-body">
+            {{ render(controller(
+            editControllerAction,
+            { 'id': presentation, 'parameters': parameters }
+            )) }}
+        </div>
+    </div>
+
+{% endblock %}
+
+{% block scripts %}
+    <script>
+    </script>
+{% endblock %}
+
+
+{% block stylesheets %}
+{% endblock %}

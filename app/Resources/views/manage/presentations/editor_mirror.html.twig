@@ -1,0 +1,19 @@
+{% extends 'manage/presentations/editor_base.html.twig' %}
+
+{% block body %}
+    <div class="panel-body">
+        {% form_theme form 'bootstrap_3_horizontal_layout.html.twig' %}
+        {{ form_start(form) }}
+        {{ form_widget(form) }}
+        {{ form_end(form) }}
+    </div>
+{% endblock %}
+
+{% block scripts %}
+    <script>
+    </script>
+{% endblock %}
+
+
+{% block stylesheets %}
+{% endblock %}
