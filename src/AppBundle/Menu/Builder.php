@@ -5,6 +5,7 @@ namespace AppBundle\Menu;
 use Knp\Menu\FactoryInterface;
 use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 use Symfony\Component\DependencyInjection\ContainerAwareTrait;
+use Symfony\Component\HttpFoundation\RequestStack;
 
 /**
  * @author   :  Michael Zapf <m.zapf@mztx.de>
@@ -15,9 +16,19 @@ class Builder implements ContainerAwareInterface
 {
     use ContainerAwareTrait;
 
-    public function accountMenu(FactoryInterface $factory, array $options)
+    private $factory;
+
+    /**
+     * @param FactoryInterface $factory
+     */
+    public function __construct(FactoryInterface $factory)
     {
-        $menu = $factory->createItem('root');
+        $this->factory = $factory;
+    }
+
+    public function accountMenu(array $options)
+    {
+        $menu = $this->factory->createItem('root');
 
         $menu->setChildrenAttribute('class', 'nav navbar-nav');
 
