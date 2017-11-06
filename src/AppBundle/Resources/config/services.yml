@@ -66,3 +66,9 @@ services:
         class: AppBundle\Service\PresentationBuilders\MirrorPresentation
         tags:
             - app.presentation_builder
+
+    app.menu_builder:
+        class: AppBundle\Menu\Builder
+        arguments: ["@knp_menu.factory"]
+        tags:
+            - { name: knp_menu.menu_builder, method: accountMenu, alias: account }
