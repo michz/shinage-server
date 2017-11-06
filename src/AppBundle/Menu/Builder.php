@@ -5,7 +5,6 @@ namespace AppBundle\Menu;
 use Knp\Menu\FactoryInterface;
 use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 use Symfony\Component\DependencyInjection\ContainerAwareTrait;
-use Symfony\Component\HttpFoundation\RequestStack;
 
 /**
  * @author   :  Michael Zapf <m.zapf@mztx.de>
