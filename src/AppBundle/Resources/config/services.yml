@@ -67,6 +67,11 @@ services:
         tags:
             - app.presentation_builder
 
+    app.presentations.slideshow:
+        class: AppBundle\Service\PresentationBuilders\SlideshowPresentation
+        tags:
+            - app.presentation_builder
+
     app.menu_builder:
         class: AppBundle\Menu\Builder
         arguments: ["@knp_menu.factory"]
