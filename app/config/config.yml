@@ -21,7 +21,7 @@ framework:
     form:            ~
     csrf_protection: ~
     validation:      { enable_annotations: true }
-    serializer:      ~
+    #serializer:      ~
     templating:
         engines: ['twig']
     default_locale:  "%locale%"
@@ -115,3 +115,6 @@ swiftmailer:
 knp_menu:
     twig:
         template: menu/menu.html.twig
+
+jms_serializer:
+
