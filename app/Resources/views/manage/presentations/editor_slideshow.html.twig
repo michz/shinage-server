@@ -9,14 +9,17 @@
                 </div>
             </div>
 
-            <div id="slides" class="col-xs-8">
+            <div id="slides" class="col-sm-8">
             </div>
-            <div id="sideTab" class="col-xs-4">
+            <div id="sideTab" class="col-sm-4">
                 <ul>
                     <li><a href="#tabAdd">{{ "Add"|trans }}</a></li>
                     <li><a href="#tabSlide">{{ "Slide"|trans }}</a></li>
                 </ul>
-                <div id="tabAdd">TODO: Add</div>
+                <div id="tabAdd">
+                    TODO: Add
+                    <button id="btnAddSlideImage">{{ "Image"|trans }}</button>
+                </div>
                 <div id="tabSlide">TODO: Slide settings</div>
             </div>
         </div>
@@ -25,84 +28,18 @@
 
 
 {% block scripts %}
-    {% javascripts
-    '@jquery' '@shinage' '@notify'
-    %}
-    <script src="{{ asset_url }}"></script>
-    <script src="{{ asset('js/jquery-ui/jquery-ui.min.js') }}"></script>
-    {% endjavascripts %}
-
     <script>
-        SlideshowEditor = {
-            container: null,
-            slides: [],
-            saveUrl: "",
-            init: function (container, saveUrl) {
-                this.saveUrl = saveUrl;
-                this.container = $(container);
-                var that = this;
-                $("#slides", this.container).sortable({
-                    "items": "> .slide",
-                    "update": function(e, ui) {
-                        var data = that.serialize();
-                        $.post({
-                            "url": that.saveUrl,
-                            "data": {
-                                "slides": JSON.stringify(data)
-                            },
-                            "dataType": "json"
-                        }).done(function (content) {
-                            console.log(content);
-                        }).fail(function (e) {
-                            console.log("Fehler: "+e);
-                        });
-                    }
-                });
-                return this;
-            },
-            appendSlide: function (slide) {
-                var slideDiv = $("#prototypes .prototype.slide."+slide.type, this.container).clone();
-                slideDiv.removeClass("prototype");
-                slideDiv.attr('data-slide', JSON.stringify(slide));
-                console.log(slideDiv);
-                this.provisionSlide(slideDiv, slide);
-                $("#slides", this.container).append(slideDiv);
-                return this;
-            },
-            loadSlides: function (slides) {
-                for (var i = 0; i < slides.length; i++) {
-                    this.appendSlide(slides[i]);
-                }
-                return this;
-            },
-            provisionSlide: function (div, slide) {
-                if (slide.type === "Image") {
-                    this.provisionImageSlide(div, slide);
-                }
-                return this;
-            },
-            provisionImageSlide: function (div, slide) {
-                $("img", div).attr("src", slide.src);
-                return this;
-            },
-            serialize: function() {
-                var data = [];
-                var that = this;
-                $("#slides .slide", this.container).each(function () {
-                    data.push($(this).data("slide"));
-                });
-                return data;
-            }
-        };
+        document.addEventListener('DOMContentLoaded',
+            function () {
 
+                SlideshowEditor
+                    .init("#slideshowEditor", "{{ path("management-presentations-edit", { id: presentationId, parameters: "update" }) }}")
+                    .loadSlides({{ slidesJson|raw }});
 
-        SlideshowEditor
-            .init("#slideshowEditor", "{{ path("management-presentations-edit", { id: presentationId, parameters: "update" }) }}")
-            .loadSlides({{ slidesJson|raw }});
-
-        $(document).ready(function () {
-            console.log($("#sideTab"));
-            $("#sideTab").tabs();
-        });
+                console.log($("#sideTab"));
+                $("#sideTab").tabs();
+            },
+            false
+        );
     </script>
 {% endblock %}

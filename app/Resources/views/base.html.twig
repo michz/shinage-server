@@ -10,6 +10,7 @@
         <link rel="stylesheet" type="text/css" href="{{ asset('css/reset.css') }}" />
         <link rel="stylesheet" type="text/css" href="{{ asset('css/shinsrv.css') }}" />
         <link rel="stylesheet" type="text/css" href="{{ asset('css/slideshow-editor.css') }}" />
+        <link rel="stylesheet" type="text/css" href="{{ asset('js/jquery-ui/jquery-ui.min.css') }}"></link>
 
         <link href="{{ asset('css/bootstrap.min.css') }}" rel="stylesheet">
         <link href="{{ asset('css/font-awesome.min.css') }}" rel="stylesheet">
@@ -58,13 +59,15 @@
             <img src="{{ asset('img/spin.gif') }}">
         </div>
 
-        {% javascripts
-        '@jquery' '@shinage' '@notify'
-        %}
-        <script src="{{ asset_url }}"></script>
-        {% endjavascripts %}
-
-        <script src="{{ asset('js/bootstrap.min.js') }}"></script>
+        <script src="{{ asset('js/lib/jquery-3.1.1.min.js') }}"></script>
+        <script src="{{ asset('js/jquery-ui/jquery-ui.min.js') }}"></script>
+        <script src="{{ asset('js/lib/notify.min.js') }}"></script>
+        <script src="{{ asset('js/lib/moment.min.js') }}"></script>
+        <script src="{{ asset('js/shinage.js') }}"></script>
+        {#<script src="{{ asset('js/shinage-client.js') }}"></script>#}
+        <script src="{{ asset('js/lib/fullcalendar.min.js') }}"></script>
+        <script src="{{ asset('js/lib/fullcalendar-locale-all.js') }}"></script>
+        <script src="{{ asset('js/slideshowEditor.js') }}"></script>
 
         <script>
             $.notify.defaults({ autoHideDelay: 2000, showDuration: 250 });
