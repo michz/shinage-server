@@ -1,0 +1,20 @@
+#slideshowEditor #prototypes {
+    display: none;
+}
+
+#slideshowEditor .slide {
+    display: inline-block;
+    margin: 2px;
+    width: 160px;
+    height: 110px;
+    border: 1px solid #d5d5d5;
+    text-align: center;
+    background-color: #ececec;
+}
+
+#slideshowEditor .slide.Image img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: contain; /* fancy CSS3! */
+}
