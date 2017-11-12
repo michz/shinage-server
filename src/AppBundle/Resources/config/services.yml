@@ -77,3 +77,8 @@ services:
         arguments: ["@knp_menu.factory"]
         tags:
             - { name: knp_menu.menu_builder, method: accountMenu, alias: account }
+
+    app.serializer.subscriber.slides:
+        class: AppBundle\Serializer\Subscriber\SlideDeserializerSubscriber
+        tags:
+            - jms_serializer.event_subscriber
