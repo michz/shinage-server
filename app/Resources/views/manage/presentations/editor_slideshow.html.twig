@@ -2,14 +2,22 @@
 
 {% block body %}
     <div class="panel-body">
-        <div id="slideshowEditor">
+        <div id="slideshowEditor" class="row">
             <div id="prototypes">
                 <div class="prototype slide Image">
                     <img>
                 </div>
             </div>
 
-            <div id="slides">
+            <div id="slides" class="col-xs-8">
+            </div>
+            <div id="sideTab" class="col-xs-4">
+                <ul>
+                    <li><a href="#tabAdd">{{ "Add"|trans }}</a></li>
+                    <li><a href="#tabSlide">{{ "Slide"|trans }}</a></li>
+                </ul>
+                <div id="tabAdd">TODO: Add</div>
+                <div id="tabSlide">TODO: Slide settings</div>
             </div>
         </div>
     </div>
@@ -91,5 +99,10 @@
         SlideshowEditor
             .init("#slideshowEditor", "{{ path("management-presentations-edit", { id: presentationId, parameters: "update" }) }}")
             .loadSlides({{ slidesJson|raw }});
+
+        $(document).ready(function () {
+            console.log($("#sideTab"));
+            $("#sideTab").tabs();
+        });
     </script>
 {% endblock %}
