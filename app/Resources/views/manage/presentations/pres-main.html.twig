@@ -1,13 +1,13 @@
 {% extends 'base.html.twig' %}
 
 {% block body %}
-    <div class="container">
+    <div class="container presentations">
         <div class="page-header">
             <h1>{{ 'Presentations'|trans }}</h1>
         </div>
         <div class="row">
             <a class="btn btn-primary" href="{{ path("management-presentations-create") }}">
-                <i class="fa fa-plus"></i>
+                <i class="fa fa-plus fa-fw"></i>
                 {{ "Create Presentation"|trans }}
             </a>
         </div>
@@ -17,13 +17,13 @@
 
         {% for presentationGroup in presentations %}
             {% for presentation in presentationGroup %}
-                <div class="row">
+                <div class="row slide">
                     <h2>{{ presentation.title }}</h2>
                     <p>{{ presentation.lastModified|date('Y-m-d') }}</p>
                     <p>{{ presentation.notes }}</p>
                     <p>
                         <a class="btn btn-default" href="{{ path("management-presentations-edit", { id: presentation.id })  }}">
-                            <i class="fa fa-pencil"></i>
+                            <i class="fa fa-pencil fa-fw"></i>
                             {{ "Edit Presentation"|trans }}
                         </a>
                     </p>
