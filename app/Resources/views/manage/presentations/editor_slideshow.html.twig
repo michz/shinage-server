@@ -9,18 +9,30 @@
                 </div>
             </div>
 
-            <div id="slides" class="col-sm-8">
+            <div id="slides" class="col-sm-7">
             </div>
-            <div id="sideTab" class="col-sm-4">
-                <ul>
-                    <li><a href="#tabAdd">{{ "Add"|trans }}</a></li>
-                    <li><a href="#tabSlide">{{ "Slide"|trans }}</a></li>
-                </ul>
-                <div id="tabAdd">
-                    TODO: Add
-                    <button id="btnAddSlideImage">{{ "Image"|trans }}</button>
+            <div id="sideTabContainer" class="col-sm-5">
+                <div id="sideTab">
+                    <ul>
+                        <li><a href="#tabAdd">{{ "Add"|trans }}</a></li>
+                        <li><a href="#tabSlide">{{ "Slide"|trans }}</a></li>
+                    </ul>
+                    <div id="tabAdd">
+                        <button id="btnAddSlideImage" class="add Image btn btn-default"
+                                data-prototype='{"type":"Image","duration":5000,"title":"Slide","transition":"","src":"//via.placeholder.com/500x380"}'>
+                            <i class="fa fa-image fa-lg fa-fw"></i> {{ "Add Image"|trans }}
+                        </button>
+                    </div>
+                    <div id="tabSlide">
+                        <div class="settings Image">
+                            <label for="settingsImageSrc">{{ "Image Source"|trans }}:</label>
+                            <input type="text" name="src" id="settingsImageSrc">
+                        </div>
+                        <div class="settingsButtons">
+                            <button id="btnSaveSettings" class="btn btn-primary"><i class="fa fa-save fa-lg fa-fw"></i>{{ "Save"|trans }}</button>
+                        </div>
+                    </div>
                 </div>
-                <div id="tabSlide">TODO: Slide settings</div>
             </div>
         </div>
     </div>
@@ -36,7 +48,6 @@
                     .init("#slideshowEditor", "{{ path("management-presentations-edit", { id: presentationId, parameters: "update" }) }}")
                     .loadSlides({{ slidesJson|raw }});
 
-                console.log($("#sideTab"));
                 $("#sideTab").tabs();
             },
             false

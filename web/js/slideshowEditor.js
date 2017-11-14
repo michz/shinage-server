@@ -1,5 +1,8 @@
+// @TODO Language Strings?
+
 SlideshowEditor = {
     container: null,
+    selectedSlide: null,
     slides: [],
     saveUrl: "",
     init: function (container, saveUrl) {
@@ -11,37 +14,85 @@ SlideshowEditor = {
         $("#slides", this.container).sortable({
             "items": "> .slide",
             "update": function(e, ui) {
-                var data = that.serialize();
-                $.post({
-                    "url": that.saveUrl,
-                    "data": {
-                        "slides": JSON.stringify(data)
-                    },
-                    "dataType": "json"
-                }).done(function (content) {
-                    console.log(content);
-                }).fail(function (e) {
-                    console.log("Fehler: "+e);
-                });
+                that.saveSlides();
             }
         });
 
         // select slide handler
         $(this.container).on("click", "#slides > .slide", null, $.proxy(this.selectSlide, this));
+        $(this.container).on("click", "#slides > .slide .removeSlide", null, $.proxy(this.removeSlideButton, this));
+
+        $(".settings input", this.container).on("change", $.proxy(this.settingsChanged, this));
+
+        $("#btnSaveSettings").on('click', $.proxy(this.saveSlides, this));
+        $("#tabAdd .add").on('click', $.proxy(this.addSlideButton, this));
+
+        this.setupAjax();
 
         return this;
     },
+    setupAjax: function() {
+        $.ajaxSetup({
+            'beforeSend': function () {
+                var noti = $.notify("Speichern...", {
+                    'autoHide': false,
+                    'className': 'info',
+                    'clickToHide': false
+                });
+                $(document).trigger('notify-hide');
+            },
+            'success': function () {
+                $('.notifyjs-wrapper').trigger('notify-hide');
+                $.notify("Speichern fehlgeschlagen.", 'success');
+            },
+            'error': function () {
+                $('.notifyjs-wrapper').trigger('notify-hide');
+                $.notify("Speichern fehlgeschlagen.", 'error');
+            }
+        });
+    },
+    addSlideButton: function (e) {
+        var slide = $(e.currentTarget).data('prototype');
+        this.appendSlide(slide);
+        this.saveSlides();
+    },
     selectSlide: function (e) {
+        var slide = $(e.currentTarget).data("slide");
+        for (var property in slide) {
+            if (slide.hasOwnProperty(property)) {
+                $("#tabSlide .settings input[name="+property+"]", this.container).val(slide[property]);
+            }
+        }
+
         // this is the SlideshowEditor object; e.currentTarget the event handler's element
-        console.log(e.currentTarget);
-        // @TODO
+        $("#tabSlide .settings", this.container).hide();
+        $("#tabSlide .settings."+slide.type, this.container).show();
+
+        this.selectedSlide = slide;
+    },
+    removeSlideButton: function (e) {
+        var slide = $(e.currentTarget).parent();
+        slide.remove();
+        this.saveSlides();
+    },
+    settingsChanged: function (e) {
+        if (this.selectedSlide === null) {
+            return;
+        }
+        var key = $(e.currentTarget).attr('name');
+        var value = $(e.currentTarget).val();
+        this.selectedSlide[key] = value;
+        this.saveSlides();
     },
     appendSlide: function (slide) {
         var slideDiv = $("#prototypes .prototype.slide."+slide.type, this.container).clone();
         slideDiv.removeClass("prototype");
         slideDiv.attr('data-slide', JSON.stringify(slide));
-        console.log(slideDiv);
         this.provisionSlide(slideDiv, slide);
+
+        // add remove button
+        slideDiv.append("<div class='removeSlide'><i class='fa fa-trash'></i></div>");
+
         $("#slides", this.container).append(slideDiv);
         return this;
     },
@@ -68,6 +119,21 @@ SlideshowEditor = {
             data.push($(this).data("slide"));
         });
         return data;
+    },
+    saveSlides: function () {
+        var data = this.serialize();
+        $.post({
+            "url": this.saveUrl,
+            "data": {
+                "slides": JSON.stringify(data)
+            },
+            "dataType": "json"
+        }).done(function (content) {
+            console.log(content);
+        }).fail(function (e) {
+            console.log("Fehler: "+e);
+        });
+
     }
 };
 
