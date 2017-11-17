@@ -17,8 +17,8 @@
 
         {% for presentationGroup in presentations %}
             {% for presentation in presentationGroup %}
-                <div class="row slide">
-                    <h2>{{ presentation.title }}</h2>
+                <h2 class="ui top attached block header">{{ presentation.title }}</h2>
+                <div class="ui bottom attached segment row slide">
                     <p>{{ presentation.lastModified|date('Y-m-d') }}</p>
                     <p>{{ presentation.notes }}</p>
                     <p>

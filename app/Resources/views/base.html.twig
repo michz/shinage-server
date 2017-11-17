@@ -10,10 +10,12 @@
         <link rel="stylesheet" type="text/css" href="{{ asset('css/reset.css') }}" />
         <link rel="stylesheet" type="text/css" href="{{ asset('css/shinsrv.css') }}" />
         <link rel="stylesheet" type="text/css" href="{{ asset('css/slideshow-editor.css') }}" />
-        <link rel="stylesheet" type="text/css" href="{{ asset('js/jquery-ui/jquery-ui.min.css') }}"></link>
+        <link rel="stylesheet" type="text/css" href="{{ asset('js/jquery-ui/jquery-ui.min.css') }}" />
 
-        <link href="{{ asset('css/bootstrap.min.css') }}" rel="stylesheet">
-        <link href="{{ asset('css/font-awesome.min.css') }}" rel="stylesheet">
+        {#<link href="{{ asset('css/bootstrap.min.css') }}" rel="stylesheet">
+        <link href="{{ asset('css/font-awesome.min.css') }}" rel="stylesheet">#}
+
+        <link rel="stylesheet" type="text/css" href="{{ asset('semantic-ui/semantic.min.css') }}">
 
         <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
         <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -59,8 +61,15 @@
             <img src="{{ asset('img/spin.gif') }}">
         </div>
 
+
+
         <script src="{{ asset('js/lib/jquery-3.1.1.min.js') }}"></script>
+        <script src="{{ asset('semantic-ui/semantic.min.js') }}"></script>
+        <script>
+            $('.ui.dropdown').dropdown();
+        </script>
         <script src="{{ asset('js/jquery-ui/jquery-ui.min.js') }}"></script>
+
         <script src="{{ asset('js/lib/notify.min.js') }}"></script>
         <script src="{{ asset('js/lib/moment.min.js') }}"></script>
         <script src="{{ asset('js/shinage.js') }}"></script>
