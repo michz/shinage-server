@@ -36,21 +36,23 @@
         {% endif %}
 
         {# flash messages #}
-        {% for flash_message in app.session.flashBag.get('error') %}
-            <div class="alert alert-danger">
-                {{ flash_message }}
-            </div>
-        {% endfor %}
-        {% for flash_message in app.session.flashBag.get('success') %}
-            <div class="flash flash-success">
-                {{ flash_message }}
-            </div>
-        {% endfor %}
-        {% for flash_message in app.session.flashBag.get('notice') %}
-            <div class="flash flash-notice">
-                {{ flash_message }}
-            </div>
-        {% endfor %}
+        <div class="ui container">
+            {% for flash_message in app.session.flashBag.get('error') %}
+                <div class="alert alert-danger">
+                    {{ flash_message }}
+                </div>
+            {% endfor %}
+            {% for flash_message in app.session.flashBag.get('success') %}
+                <div class="flash flash-success">
+                    {{ flash_message }}
+                </div>
+            {% endfor %}
+            {% for flash_message in app.session.flashBag.get('notice') %}
+                <div class="flash flash-notice">
+                    {{ flash_message }}
+                </div>
+            {% endfor %}
+        </div>
 
         {# main content #}
         {% block body %}{% endblock %}

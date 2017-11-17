@@ -1,28 +1,12 @@
 {% extends 'base.html.twig' %}
 
 {% block body %}
-        <div class="container">
-
-            <div class="row">
-                <div class="col-sm-3">
-                    <div class="sidebar-nav">
-                        <div class="navbar navbar-default" role="navigation">
-                            <div class="navbar-header">
-                                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".sidebar-navbar-collapse">
-                                    <span class="sr-only">Toggle navigation</span>
-                                    <span class="icon-bar"></span>
-                                    <span class="icon-bar"></span>
-                                    <span class="icon-bar"></span>
-                                </button>
-                                <span class="visible-xs navbar-brand">Einstellungen</span>
-                            </div>
-                            <div class="navbar-collapse collapse sidebar-navbar-collapse">
-                                {{ knp_menu_render('account') }}
-                            </div><!--/.nav-collapse -->
-                        </div>
-                    </div>
+        <div class="ui main container">
+            <div class="ui stackable grid">
+                <div class="four wide column">
+                    {{ knp_menu_render('account') }}
                 </div>
-                <div class="col-sm-9">
+                <div class="twelve wide column">
                     {% block account_main %}{% endblock %}
                 </div>
             </div>

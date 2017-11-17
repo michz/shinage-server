@@ -1,13 +1,18 @@
 
 {% set route = app.request.attributes.get('_route') %}
 
-<div class="ui menu">
-    <div class="item">Shinage</div>
-    {% include 'navi/manage.html.twig' %}
-    <div class="right menu">
-        {% if is_granted("ROLE_ADMIN") %}
-            {% include 'navi/admin.html.twig' %}
-        {% endif %}
-        {% include 'navi/login.html.twig' %}
+<div class="ui container">
+    <div class="ui menu">
+        <div class="item">Shinage</div>
+        {% include 'navi/manage.html.twig' %}
+        <div class="right menu">
+            {% if is_granted("ROLE_ADMIN") %}
+                {% include 'navi/admin.html.twig' %}
+            {% endif %}
+            {% include 'navi/login.html.twig' %}
+        </div>
     </div>
+</div>
+
+<div class="ui hidden divider">
 </div>
