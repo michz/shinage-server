@@ -2,14 +2,11 @@
 
 
 {% block fos_user_content %}
-<div class="panel panel-default">
-    <div class="panel-heading">
-        <h3 class="panel-title">
-            Einloggen
-        </h3>
-    </div>
+    <h3 class="ui top attached block header">
+        Einloggen
+    </h3>
 
-    <div class="panel-body">
+    <div class="ui bottom attached segment">
         {{ include('@FOSUser/Security/login_content.html.twig') }}
     </div>
 </div>
