@@ -2,6 +2,8 @@
 
 namespace AppBundle\Entity\PresentationSettings;
 
+use JMS\Serializer\Annotation as JMS;
+
 /**
  * @author   :  Michael Zapf <m.zapf@mztx.de>
  * @date     :  05.11.17
@@ -9,10 +11,16 @@ namespace AppBundle\Entity\PresentationSettings;
  */
 class Mirror
 {
-    /** @var string */
+    /**
+     * @var string
+     * @JMS\Type("string")
+     */
     protected $url;
 
-    /** @var string */
+    /**
+     * @var string
+     * @JMS\Type("string")
+     */
     protected $type;
 
     /**

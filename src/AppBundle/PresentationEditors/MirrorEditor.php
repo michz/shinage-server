@@ -28,7 +28,7 @@ class MirrorEditor implements PresentationEditorInterface
 
     public function render(Request $request)
     {
-        $serializer = $this->container->get('serializer');
+        $serializer = $this->container->get('jms_serializer');
         try {
             $setttings = $serializer->deserialize($this->presentation->getSettings(), Mirror::class, 'json');
         } catch (\Exception $ex) {
