@@ -36,15 +36,6 @@ interface PresentationBuilderInterface
     public function getLastModified(Presentation $presentation);
 
     /**
-     * @param Presentation $presentation
-     * @param string       $parameters
-     * @param Container    $container
-     *
-     * @return PresentationEditorInterface
-     */
-    public function getEditor(Presentation $presentation, $parameters, Container $container);
-
-    /**
      * @return array
      */
     public function getSupportedTypes();

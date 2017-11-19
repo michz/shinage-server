@@ -67,8 +67,18 @@ services:
         tags:
             - app.presentation_builder
 
+    app.presentations.slideshow:
+        class: AppBundle\Service\PresentationBuilders\SlideshowPresentation
+        tags:
+            - app.presentation_builder
+
     app.menu_builder:
         class: AppBundle\Menu\Builder
         arguments: ["@knp_menu.factory"]
         tags:
             - { name: knp_menu.menu_builder, method: accountMenu, alias: account }
+
+    app.serializer.subscriber.slides:
+        class: AppBundle\Serializer\Subscriber\SlideDeserializerSubscriber
+        tags:
+            - jms_serializer.event_subscriber

@@ -1,15 +1,21 @@
 {% extends 'base.html.twig' %}
 
 {% block body %}
-    <div class="container">
+    <div class="ui main container">
         <div class="page-header">
             <h1>Dashboard</h1>
         </div>
-        <div class="dash-screen-wrapper">
+        <div class="ui cards">
             {% for screen in screens %}
-                <div class="dash-screen">
-                    <img class="preview" src="{{ path('management-dashboard-preview', {'screen_guid': screen.getGuid()}) }}">
-                    <span class="name">{{ screen.getName() }}</span>
+                <div class="card">
+                    <div class="content">
+                        <div class="header">
+                            {{ screen.getName() }}
+                        </div>
+                    </div>
+                    <div class="image">
+                        <img class="preview" src="{{ path('management-dashboard-preview', {'screen_guid': screen.getGuid()}) }}">
+                    </div>
                 </div>
             {% endfor %}
         </div>

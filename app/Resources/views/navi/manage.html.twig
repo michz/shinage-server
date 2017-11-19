@@ -1,19 +1,9 @@
 {% if is_granted("IS_AUTHENTICATED_REMEMBERED") %}
 
-<li class="{{ route starts with 'management-dashboard' ? 'active' }}">
-    <a href="{{ path('management-dashboard') }}">{{ "Dashboard"|trans }}</a>
-</li>
-<li class="{{ route starts with 'management-files' ? 'active' }}">
-    <a href="{{ path('management-files') }}">{{ "Files"|trans }}</a>
-</li>
-<li class="{{ route starts with 'management-presentations' ? 'active' }}">
-    <a href="{{ path('management-presentations') }}">{{ "Presentations"|trans }}</a>
-</li>
-<li class="{{ route starts with 'management-screens' ? 'active' }}">
-    <a href="{{ path('management-screens') }}">{{ "Screens"|trans }}</a>
-</li>
-<li class="{{ route starts with 'management-scheduler' ? 'active' }}">
-    <a href="{{ path('management-scheduler') }}">{{ "Schedule"|trans }}</a>
-</li>
+<a class="item {{ route starts with 'management-dashboard' ? 'active' }}" href="{{ path('management-dashboard') }}">{{ "Dashboard"|trans }}</a>
+<a class="item {{ route starts with 'management-files' ? 'active' }}" href="{{ path('management-files') }}">{{ "Files"|trans }}</a>
+<a class="item {{ route starts with 'management-presentations' ? 'active' }}" href="{{ path('management-presentations') }}">{{ "Presentations"|trans }}</a>
+<a class="item {{ route starts with 'management-screens' ? 'active' }}" href="{{ path('management-screens') }}">{{ "Screens"|trans }}</a>
+<a class="item {{ route starts with 'management-scheduler' ? 'active' }}" href="{{ path('management-scheduler') }}">{{ "Schedule"|trans }}</a>
 
 {% endif %}

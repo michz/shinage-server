@@ -52,15 +52,6 @@ class MirrorPresentation implements PresentationBuilderInterface
         return new \DateTime($lastModifiedRaw[0]);
     }
 
-    public function getEditor(Presentation $presentation, $parameters, Container $container)
-    {
-        $editor = new MirrorEditor();
-        $editor->setPresentation($presentation)
-            ->setParameters($parameters)
-            ->setContainer($container);
-        return $editor;
-    }
-
     protected function checkValid(Presentation $presentation)
     {
         $settings = json_decode($presentation->getSettings());

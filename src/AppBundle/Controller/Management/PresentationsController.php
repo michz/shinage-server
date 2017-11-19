@@ -40,6 +40,8 @@ class PresentationsController extends Controller
 
     /**
      * @Route("/manage/presentations/create", name="management-presentations-create")
+     *
+     * @throws \Symfony\Component\OptionsResolver\Exception\InvalidOptionsException
      */
     public function createPresentationAction(Request $request)
     {
@@ -70,45 +72,6 @@ class PresentationsController extends Controller
         return $this->render('manage/presentations/create.html.twig', [
             'form' => $form->createView(),
         ]);
-    }
-
-    /**
-     * @Route(
-     *     "/manage/presentations/edit/{id}/{parameters}",
-     *     name="management-presentations-edit",
-     *     requirements={"id": "[0-9]+", "parameters": ".*"},
-     *     defaults={"parameters": "/"}
-     *     )
-     */
-    public function editPresentationAction(Request $request, $id, $parameters)
-    {
-        return $this->render('manage/presentations/edit.html.twig', [
-            'editControllerAction' => 'AppBundle:Management\\Presentations:editPresentationEditor',
-            'presentation' => $id,
-            'parameters' => $parameters,
-        ]);
-    }
-
-    /**
-     * No public route, no direct access.
-     *
-     * @param Request $request
-     * @param int     $id
-     * @param string  $parameters
-     *
-     * @return Response
-     */
-    public function editPresentationEditorAction(Request $request, $id, $parameters)
-    {
-        // get parent controller's request
-        $masterRequest = $this->get('request_stack')->getMasterRequest();
-
-        $presentation = $this->getDoctrine()->getEntityManager()->find('AppBundle:Presentation', $id);
-
-        $builderChain = $this->get('app.presentation_builder_chain');
-        $builder = $builderChain->getBuilderForPresentation($presentation);
-        $editor = $builder->getEditor($presentation, $parameters, $this->container);
-        return $editor->render($masterRequest);
     }
 
     public function getPresentationsForUser(User $user)

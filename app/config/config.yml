@@ -21,7 +21,7 @@ framework:
     form:            ~
     csrf_protection: ~
     validation:      { enable_annotations: true }
-    serializer:      ~
+    #serializer:      ~
     templating:
         engines: ['twig']
     default_locale:  "%locale%"
@@ -42,7 +42,7 @@ twig:
     debug:            "%kernel.debug%"
     strict_variables: "%kernel.debug%"
     form_themes:
-        - 'form/fields.html.twig'
+        - 'form/semantic-ui-form-theme.html.twig'
 
 # Doctrine Configuration
 doctrine:
@@ -66,34 +66,6 @@ doctrine:
         naming_strategy: doctrine.orm.naming_strategy.underscore
         auto_mapping: true
 
-assetic:
-    debug:          '%kernel.debug%'
-    #use_controller: '%kernel.debug%'
-    use_controller: true
-    bundles:        ['AppBundle']
-    filters:
-        cssrewrite: ~
-    assets:
-        jquery:
-            inputs:
-                - '@AppBundle/Resources/public/js/lib/jquery-3.1.1.min.js'
-        shinage:
-            inputs:
-                - '@AppBundle/Resources/public/js/shinage.js'
-        shinage_client:
-            inputs:
-                - '@AppBundle/Resources/public/js/shinage-client.js'
-        fullcalendar:
-            inputs:
-                - '@AppBundle/Resources/public/js/lib/fullcalendar.min.js'
-                - '@AppBundle/Resources/public/js/lib/fullcalendar-locale-all.js'
-        moment:
-            inputs:
-                - '@AppBundle/Resources/public/js/lib/moment.min.js'
-        notify:
-            inputs:
-                - '@AppBundle/Resources/public/js/lib/notify.min.js'
-
 
 fos_user:
     from_email:
@@ -115,3 +87,6 @@ swiftmailer:
 knp_menu:
     twig:
         template: menu/menu.html.twig
+
+jms_serializer:
+

@@ -17,18 +17,22 @@ class AppKernel extends Kernel
 
     public function registerBundles()
     {
+        // configure Annotations
+        \Doctrine\Common\Annotations\AnnotationReader::addGlobalIgnoredName('time');
+        \Doctrine\Common\Annotations\AnnotationReader::addGlobalIgnoredName('date');
+
         $bundles = [
             new Symfony\Bundle\FrameworkBundle\FrameworkBundle(),
             new Symfony\Bundle\SecurityBundle\SecurityBundle(),
             new Symfony\Bundle\TwigBundle\TwigBundle(),
             new Symfony\Bundle\MonologBundle\MonologBundle(),
             new Symfony\Bundle\SwiftmailerBundle\SwiftmailerBundle(),
-            new Symfony\Bundle\AsseticBundle\AsseticBundle(),
             new FOS\UserBundle\FOSUserBundle(),
             new Doctrine\Bundle\DoctrineBundle\DoctrineBundle(),
             new Sensio\Bundle\FrameworkExtraBundle\SensioFrameworkExtraBundle(),
             new Rollerworks\Bundle\PasswordStrengthBundle\RollerworksPasswordStrengthBundle(),
             new \Knp\Bundle\MenuBundle\KnpMenuBundle(),
+            new JMS\SerializerBundle\JMSSerializerBundle(),
 
             new AppBundle\AppBundle(),
         ];
@@ -68,9 +72,5 @@ class AppKernel extends Kernel
     public function build(ContainerBuilder $container)
     {
         $container->addCompilerPass(new PresentationBuilderPass());
-
-        // configure Annotations (ignore solutionDrive specific header annotations)
-        \Doctrine\Common\Annotations\AnnotationReader::addGlobalIgnoredName('time');
-        \Doctrine\Common\Annotations\AnnotationReader::addGlobalIgnoredName('date');
     }
 }

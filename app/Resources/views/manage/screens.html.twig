@@ -1,24 +1,24 @@
 {% extends 'base.html.twig' %}
 
 {% block body %}
-    <div class="container">
+    <div class="ui main container">
         <div class="page-header">
             <h1>{{ 'Screens'|trans }}</h1>
         </div>
 
         {# TODO: save multiple/all at once (perhaps "dirty" flag and iteration?) #}
 
-        <div id="screens-wrapper">
+        <div class="ui cards">
             {% for screen in screens %}
-                <div class="screen-editor">
-                    <div class="screen-form">
+                <div class="card">
+                    <div class="image">
+                        <img class="preview" src="{{ path('management-dashboard-preview', {'screen_guid': screen.getGuid()}) }}">
+                    </div>
+                    <div class="content">
                         {% include 'forms/edit-screen.html.twig' %}
                     </div>
-                    <div>
+                    <div class="extra content">
                         Aktuell: {{ screen.getCurrentPresentation() }}
-                    </div>
-                    <div class="screens-preview">
-                        <img class="preview" src="{{ path('management-dashboard-preview', {'screen_guid': screen.getGuid()}) }}">
                     </div>
                 </div>
             {% endfor %}
@@ -26,45 +26,35 @@
         
         {# TODO Übersetzen #}
 
-        <div class="panel panel-default">
-            <div class="panel-heading">
-                <h3 class="panel-title">
-                    Anzeige verbinden
-                </h3>
-            </div>
+        <h3 class="ui top attached block header">
+            Anzeige verbinden
+        </h3>
 
-            <div class="panel-body">
-                <form action="{{ path('management-connect-screen') }}" method="post" class="form-inline">
-                    <label class="" for="inlineFormInput">Verbindungskennung:</label>
-                    <input type="text" class="form-control mb-0 mr-sm-4 mb-sm-2" id="inlineFormInput" placeholder="12345678" name="connect_code" maxlength="8">
+        <div class="ui bottom attached segment">
+            <form action="{{ path('management-connect-screen') }}" method="post" class="form-inline">
+                <label class="" for="inlineFormInput">Verbindungskennung:</label>
+                <input type="text" class="form-control mb-0 mr-sm-4 mb-sm-2" id="inlineFormInput" placeholder="12345678" name="connect_code" maxlength="8">
 
-                    <label class="mr-sm-4" for="who">Verbinden mit: </label>
-                    <select class="custom-select mb-2 mr-sm-2 mb-sm-0" id="who" name="who">
-                        <option value="me">meinem Konto</option>
-                        {% for orga in organizations %}
-                            <option value="{{ orga.getId() }}">{{ "Organization"|trans }}: {{ orga.getName() }}</option>
-                        {% endfor %}
-                    </select>
+                <label class="mr-sm-4" for="who">Verbinden mit: </label>
+                <select class="custom-select mb-2 mr-sm-2 mb-sm-0" id="who" name="who">
+                    <option value="me">meinem Konto</option>
+                    {% for orga in organizations %}
+                        <option value="{{ orga.getId() }}">{{ "Organization"|trans }}: {{ orga.getName() }}</option>
+                    {% endfor %}
+                </select>
 
-                    <button type="submit" class="btn btn-primary">{{ "Connect"|trans }}</button>
-                </form>
-            </div>
+                <button type="submit" class="btn btn-primary">{{ "Connect"|trans }}</button>
+            </form>
         </div>
 
-        <div class="panel panel-default">
-            <a name="create_virtual"></a>
-            <div class="panel-heading">
-                <h3 class="panel-title">
-                    Virtuelle Anzeige erstellen
-                </h3>
-            </div>
+        <a name="create_virtual"></a>
+        <h3 class="ui top attached block header">
+            Virtuelle Anzeige erstellen
+        </h3>
 
-            <div class="panel-body">
-                {% form_theme create_form 'bootstrap_3_horizontal_layout.html.twig' %}
-                {{ form(create_form) }}
-            </div>
+        <div class="ui bottom attached segment">
+            {{ form(create_form) }}
         </div>
-
     </div>
 
 {% endblock %}

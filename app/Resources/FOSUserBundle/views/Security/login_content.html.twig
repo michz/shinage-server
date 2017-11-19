@@ -4,45 +4,18 @@
     <div class="flash flash-error">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
 {% endif %}
 
-
-
     <div id="flash-container">
     </div>
 
-
-
-        <form class="form-signin" accept-charset="UTF-8" action="{{ path("fos_user_security_check") }}" method="post">
-            {% if csrf_token %}
-                <input type="hidden" name="_csrf_token" value="{{ csrf_token }}" />
-            {% endif %}
-            <label for="login_field" class="sr-only">{{ 'form.email'|trans }}</label>
+    <form class="form-signin" accept-charset="UTF-8" action="{{ path("fos_user_security_check") }}" method="post">
+        {% if csrf_token %}
+            <input type="hidden" name="_csrf_token" value="{{ csrf_token }}" />
+        {% endif %}
+        <div class="ui fluid input">
             <input type="email" id="login_field" name="_username" class="form-control" placeholder="{{ 'form.email'|trans }}" required="required" autofocus="autofocus">
-            <label for="password" class="sr-only">{{ 'security.login.password'|trans }}</label>
+        </div>
+        <div class="ui fluid input">
             <input type="password" name="_password" id="password" class="form-control" placeholder="{{ 'security.login.password'|trans }}" required>
-            {#
-            <div class="checkbox">
-                <label>
-                    <input type="checkbox" value="remember-me"> Remember me
-                </label>
-            </div>
-            #}
-            <button class="btn btn-lg btn-primary btn-block" type="submit" data-disable-with="{{ 'security.login.submitted'|trans }}" id="_submit" name="_submit">{{ 'security.login.submit'|trans }}</button>
-        </form>
-
-
-
-<!--
-<form action="" method="post">
-
-    <label for="username"></label>
-    <input type="text" id="username" name="_username" value="{{ last_username }}" required="required" />
-
-    <label for="password"></label>
-    <input type="password" id="password" name="_password" required="required" />
-
-    <input type="checkbox" id="remember_me" name="_remember_me" value="on" />
-    <label for="remember_me">{{ 'security.login.remember_me'|trans }}</label>
-
-    <input type="submit" id="_submit" name="_submit" value="" />
-</form>
--->
+        </div>
+        <button class="ui primary button" type="submit" data-disable-with="{{ 'security.login.submitted'|trans }}" id="_submit" name="_submit">{{ 'security.login.submit'|trans }}</button>
+    </form>

@@ -9,9 +9,13 @@
 
         <link rel="stylesheet" type="text/css" href="{{ asset('css/reset.css') }}" />
         <link rel="stylesheet" type="text/css" href="{{ asset('css/shinsrv.css') }}" />
+        <link rel="stylesheet" type="text/css" href="{{ asset('css/slideshow-editor.css') }}" />
+        <link rel="stylesheet" type="text/css" href="{{ asset('js/jquery-ui/jquery-ui.min.css') }}" />
 
-        <link href="{{ asset('css/bootstrap.min.css') }}" rel="stylesheet">
-        <link href="{{ asset('css/font-awesome.min.css') }}" rel="stylesheet">
+        {#<link href="{{ asset('css/bootstrap.min.css') }}" rel="stylesheet">
+        <link href="{{ asset('css/font-awesome.min.css') }}" rel="stylesheet">#}
+
+        <link rel="stylesheet" type="text/css" href="{{ asset('semantic-ui/semantic.min.css') }}">
 
         <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
         <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -32,21 +36,23 @@
         {% endif %}
 
         {# flash messages #}
-        {% for flash_message in app.session.flashBag.get('error') %}
-            <div class="alert alert-danger">
-                {{ flash_message }}
-            </div>
-        {% endfor %}
-        {% for flash_message in app.session.flashBag.get('success') %}
-            <div class="flash flash-success">
-                {{ flash_message }}
-            </div>
-        {% endfor %}
-        {% for flash_message in app.session.flashBag.get('notice') %}
-            <div class="flash flash-notice">
-                {{ flash_message }}
-            </div>
-        {% endfor %}
+        <div class="ui container">
+            {% for flash_message in app.session.flashBag.get('error') %}
+                <div class="alert alert-danger">
+                    {{ flash_message }}
+                </div>
+            {% endfor %}
+            {% for flash_message in app.session.flashBag.get('success') %}
+                <div class="flash flash-success">
+                    {{ flash_message }}
+                </div>
+            {% endfor %}
+            {% for flash_message in app.session.flashBag.get('notice') %}
+                <div class="flash flash-notice">
+                    {{ flash_message }}
+                </div>
+            {% endfor %}
+        </div>
 
         {# main content #}
         {% block body %}{% endblock %}
@@ -57,13 +63,22 @@
             <img src="{{ asset('img/spin.gif') }}">
         </div>
 
-        {% javascripts
-        '@jquery' '@shinage' '@notify'
-        %}
-        <script src="{{ asset_url }}"></script>
-        {% endjavascripts %}
 
-        <script src="{{ asset('js/bootstrap.min.js') }}"></script>
+
+        <script src="{{ asset('js/lib/jquery-3.1.1.min.js') }}"></script>
+        <script src="{{ asset('semantic-ui/semantic.min.js') }}"></script>
+        <script>
+            $('.ui.dropdown').dropdown();
+        </script>
+        <script src="{{ asset('js/jquery-ui/jquery-ui.min.js') }}"></script>
+
+        <script src="{{ asset('js/lib/notify.min.js') }}"></script>
+        <script src="{{ asset('js/lib/moment.min.js') }}"></script>
+        <script src="{{ asset('js/shinage.js') }}"></script>
+        {#<script src="{{ asset('js/shinage-client.js') }}"></script>#}
+        <script src="{{ asset('js/lib/fullcalendar.min.js') }}"></script>
+        <script src="{{ asset('js/lib/fullcalendar-locale-all.js') }}"></script>
+        <script src="{{ asset('js/slideshowEditor.js') }}"></script>
 
         <script>
             $.notify.defaults({ autoHideDelay: 2000, showDuration: 250 });

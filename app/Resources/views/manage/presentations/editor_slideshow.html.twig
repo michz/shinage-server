@@ -1,0 +1,59 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <div class="ui main container">
+        <div id="slideshowEditor" class="ui stackable grid">
+            <div id="prototypes">
+                <div class="prototype slide Image">
+                    <img>
+                </div>
+            </div>
+
+            <div id="slides" class="ten wide column">
+            </div>
+            <div id="sideTabContainer" class="six wide column">
+                <div id="sideTab">
+                    <ul>
+                        <li><a href="#tabAdd">{{ "Add"|trans }}</a></li>
+                        <li><a href="#tabSlide">{{ "Slide"|trans }}</a></li>
+                    </ul>
+                    <div id="tabAdd">
+                        <button id="btnAddSlideImage" class="add Image ui button"
+                                data-prototype='{"type":"Image","duration":5000,"title":"Slide","transition":"","src":"//via.placeholder.com/500x380"}'>
+                            <i class="fa fa-image fa-lg fa-fw"></i> {{ "Add Image"|trans }}
+                        </button>
+                    </div>
+                    <div id="tabSlide">
+                        <div class="settings Image">
+                            <label for="settingsImageSrc">{{ "Image Source"|trans }}:</label>
+                            <input type="text" name="src" id="settingsImageSrc">
+                        </div>
+                        <div class="settingsButtons">
+                            <button id="btnSaveSettings" class="ui button primary"><i class="fa fa-save fa-lg fa-fw"></i>{{ "Save"|trans }}</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+
+{% block scripts %}
+    <script>
+        document.addEventListener('DOMContentLoaded',
+            function () {
+
+                SlideshowEditor
+                    .init("#slideshowEditor", "{{ path('presentation-editor-slideshow-update', { presentationId: presentation.id }) }}")
+                    .loadSlides({{ slidesJson|raw }});
+
+                $("#sideTab").tabs();
+            },
+            false
+        );
+    </script>
+{% endblock %}
+
+{% block stylesheets %}
+{% endblock %}
