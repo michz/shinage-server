@@ -35,13 +35,4 @@ class SlideshowPresentation implements PresentationBuilderInterface
     {
         return $presentation->getLastModified();
     }
-
-    public function getEditor(Presentation $presentation, $parameters, Container $container)
-    {
-        $editor = new SlideshowEditor();
-        $editor->setPresentation($presentation)
-            ->setParameters($parameters)
-            ->setContainer($container);
-        return $editor;
-    }
 }

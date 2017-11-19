@@ -34,18 +34,13 @@ SlideshowEditor = {
     setupAjax: function() {
         $.ajaxSetup({
             'beforeSend': function () {
-                var noti = $.notify("Speichern...", {
-                    'autoHide': false,
-                    'className': 'info',
-                    'clickToHide': false
-                });
                 $(document).trigger('notify-hide');
             },
             'success': function () {
                 $('.notifyjs-wrapper').trigger('notify-hide');
-                $.notify("Speichern fehlgeschlagen.", 'success');
+                $.notify("Gespeichert.", 'success');
             },
-            'error': function () {
+            'error': function (e) {
                 $('.notifyjs-wrapper').trigger('notify-hide');
                 $.notify("Speichern fehlgeschlagen.", 'error');
             }
@@ -127,11 +122,19 @@ SlideshowEditor = {
             "data": {
                 "slides": JSON.stringify(data)
             },
-            "dataType": "json"
+            "dataType": "json",
+            'beforeSend': function () {
+                $.notify("Speichern...", {
+                    'autoHide': false,
+                    'className': 'info',
+                    'clickToHide': false
+                });
+            }
         }).done(function (content) {
-            console.log(content);
+            // do nothing by now
         }).fail(function (e) {
-            console.log("Fehler: "+e);
+            console.log("Error saving slides: ");
+            console.log(e);
         });
 
     }

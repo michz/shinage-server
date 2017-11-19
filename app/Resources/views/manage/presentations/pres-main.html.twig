@@ -22,7 +22,7 @@
                     <p>{{ presentation.lastModified|date('Y-m-d') }}</p>
                     <p>{{ presentation.notes }}</p>
                     <p>
-                        <a class="btn btn-default" href="{{ path("management-presentations-edit", { id: presentation.id })  }}">
+                        <a class="btn btn-default" href="{{ path("presentation-editor-" ~ presentation.type, { presentationId: presentation.id })  }}">
                             <i class="fa fa-pencil fa-fw"></i>
                             {{ "Edit Presentation"|trans }}
                         </a>
