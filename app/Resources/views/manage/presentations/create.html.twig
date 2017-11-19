@@ -1,13 +1,12 @@
 {% extends 'base.html.twig' %}
 
 {% block body %}
-    <div class="container">
+    <div class="main ui container">
         <div class="page-header">
             <h1>{{ 'Create Presentation'|trans }}</h1>
         </div>
 
         <div class="panel-body">
-            {% form_theme form 'bootstrap_3_horizontal_layout.html.twig' %}
             {{ form_start(form) }}
             {{ form_widget(form) }}
             {{ form_end(form) }}

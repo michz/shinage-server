@@ -4,7 +4,7 @@
 {% block title %} :: Zeitplan{% endblock %}
 
 {% block body %}
-    <div class="container">
+    <div class="ui main container">
         <div class="page-header">
             <h1>{{ 'Schedule'|trans }}</h1>
         </div>
@@ -97,14 +97,13 @@
         var uri_change_scheduled = '{{ path('management-change-scheduled') }}';
         var uri_delete_scheduled = '{{ path('management-delete-scheduled') }}';
     </script>
-    {% javascripts
-    '@moment' '@fullcalendar'
-    '@AppBundle/Resources/public/js/scheduler.js'
-    %}
-    <script src="{{ asset_url }}"></script>
+    <script src="{{ asset('js/lib/moment.min.js') }}"></script>
+    <script src="{{ asset('js/lib/fullcalendar.min.js') }}"></script>
+    <script src="{{ asset('js/lib/fullcalendar-locale-all.js') }}"></script>
     <script src="{{ asset('js/jquery-ui/jquery-ui.min.js') }}"></script>
 
     <script src="{{ asset('js/jquery.datetimepicker.full.min.js') }}"></script>
+    <script src="{{ asset('js/scheduler.js') }}"></script>
 
     <script>
         var showCreateDialog = function(start, stop, success) {
@@ -166,8 +165,4 @@
             });
         });
     </script>
-    {% endjavascripts %}
-
-
-
 {% endblock %}
