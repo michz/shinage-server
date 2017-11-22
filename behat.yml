@@ -1,0 +1,18 @@
+default:
+  suites:
+    login_features:
+      paths:
+        - "%paths.base%/features/Login"
+      contexts:
+        - DefaultContext
+        - LoginContext
+        - UserContext:
+            entityManager: "@doctrine.orm.entity_manager"
+            userManager: "@fos_user.user_manager"
+  extensions:
+    Behat\MinkExtension:
+      base_url:  'http://localhost:8000/app_test.php'
+      sessions:
+        default:
+          goutte: ~
+    Behat\Symfony2Extension: ~

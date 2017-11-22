@@ -1,7 +1,7 @@
 language: php
 php:
-  - '7.0'
   - '7.1'
+  - '7.2'
 
 services:
   - mysql
@@ -10,11 +10,14 @@ before_script:
   - mysql -e 'CREATE DATABASE shinage_test;'
   - cp app/config/parameters.yml.travis app/config/parameters.yml
   - composer install #--prefer-source
-  #- php bin/console doctrine:database:create --env=test
+  - php bin/console assets:install --env=test
+  - php bin/console doctrine:database:create --env=test
   - php bin/console doctrine:schema:create --env=test
   - php bin/console doctrine:schema:update --force --env=test
   - php bin/console doctrine:fixtures:load -n --env=test
+  - php bin/console server:start 127.0.0.1:8000 --env=test
 
 script:
   - ./vendor/bin/phpspec run
+  - ./vendor/bin/behat --strict -n
 

@@ -39,8 +39,9 @@
         "phpspec/phpspec": "^4.0",
         "symfony/web-server-bundle": "^3.3",
         "behat/behat": "^3.4",
-        "bex/behat-screenshot": "^1.2",
-        "friends-of-behat/symfony-extension": "^1.0"
+        "behat/mink-extension": "^2.2",
+        "behat/mink-goutte-driver": "^1.2",
+        "behat/symfony2-extension": "^2.1"
     },
     "scripts": {
         "symfony-scripts": [
