@@ -4,7 +4,7 @@
     "type": "project",
     "description": "The \"Symfony Standard Edition\" distribution",
     "autoload": {
-        "psr-4": { "": "src/" },
+        "psr-4": { "AppBundle\\": "src/AppBundle/" },
         "classmap": [ "app/AppKernel.php", "app/AppCache.php" ]
     },
     "autoload-dev": {
@@ -37,7 +37,11 @@
         "squizlabs/php_codesniffer": "2.*",
         "doctrine/doctrine-fixtures-bundle": "^2.4",
         "phpspec/phpspec": "^4.0",
-        "symfony/web-server-bundle": "^3.3"
+        "symfony/web-server-bundle": "^3.3",
+        "behat/behat": "^3.4",
+        "behat/mink-extension": "^2.2",
+        "behat/mink-goutte-driver": "^1.2",
+        "behat/symfony2-extension": "^2.1"
     },
     "scripts": {
         "symfony-scripts": [
