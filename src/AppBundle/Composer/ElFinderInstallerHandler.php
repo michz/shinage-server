@@ -7,7 +7,6 @@
 
 namespace AppBundle\Composer;
 
-use Composer\Script\Event;
 use Sensio\Bundle\DistributionBundle\Composer\ScriptHandler;
 
 class ElFinderInstallerHandler extends ScriptHandler
@@ -15,10 +14,8 @@ class ElFinderInstallerHandler extends ScriptHandler
 
     /**
      * Call the demo command of the Acme Demo Bundle.
-     *
-     * @param $event Event A instance
      */
-    public static function installElFinderAssets(Event $event)
+    public static function installElFinderAssets()
     {
         $currentDir = getcwd();
 
@@ -41,9 +38,6 @@ class ElFinderInstallerHandler extends ScriptHandler
 
     private static function copyDirectory(string $src, string $dst)
     {
-        if (!mkdir($dst) && !is_dir($dst)) {
-            throw new \RuntimeException(sprintf('Directory "%s" was not created', $dst));
-        }
         $dir = opendir($src);
         if ($dir === false) {
             throw new \RuntimeException(sprintf('Directory "%s" could not be opened.', $dst));
