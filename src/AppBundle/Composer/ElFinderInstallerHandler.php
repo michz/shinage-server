@@ -30,6 +30,9 @@ class ElFinderInstallerHandler extends ScriptHandler
         if (!is_dir($targetCssDir)) {
             mkdir($targetCssDir, 0777, true);
         }
+        if (!is_dir($targetImageDir)) {
+            mkdir($targetImageDir, 0777, true);
+        }
         copy($elFinderDir . '/js/elfinder.min.js', $targetJsDir . '/elfinder.min.js');
         copy($elFinderDir . '/js/i18n/elfinder.de.js', $targetJsDir . '/elfinder.de.js');
         copy($elFinderDir . '/css/elfinder.min.css', $targetCssDir . '/elfinder.min.css');
