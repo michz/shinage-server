@@ -16,11 +16,10 @@ class ElFinderInstallerHandler extends ScriptHandler
     /**
      * Call the demo command of the Acme Demo Bundle.
      *
-     * @param $event CommandEvent A instance
+     * @param $event Event A instance
      */
     public static function installElFinderAssets(Event $event)
     {
-        $options = self::getOptions($event);
         $currentDir = getcwd();
 
         $elFinderDir = $currentDir . '/vendor/studio-42/elfinder/';
@@ -42,9 +41,12 @@ class ElFinderInstallerHandler extends ScriptHandler
 
     private static function copyDirectory(string $src, string $dst)
     {
-        $dir = opendir($src);
         if (!mkdir($dst) && !is_dir($dst)) {
             throw new \RuntimeException(sprintf('Directory "%s" was not created', $dst));
+        }
+        $dir = opendir($src);
+        if ($dir === false) {
+            throw new \RuntimeException(sprintf('Directory "%s" could not be opened.', $dst));
         }
         while (false !== ($file = readdir($dir))) {
             if (($file !== '.') && ($file !== '..')) {
