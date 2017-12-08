@@ -1,0 +1,5 @@
+filter:
+    paths: ['*']
+    excluded_paths:
+        - "web/js/lib/fullcalendar-locale-all.js"
+        - "web/js/fullcalendar/gcal.js"
