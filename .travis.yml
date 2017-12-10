@@ -18,6 +18,10 @@ before_script:
   - php bin/console server:start 127.0.0.1:8000 --env=test
 
 script:
+  - ./bin/console lint:yaml app/
+  - ./bin/console lint:yaml src/
+  - ./bin/console lint:twig app/
+  - ./bin/console lint:twig src/
   - ./vendor/bin/phpspec run
   - ./vendor/bin/behat --strict -n
 

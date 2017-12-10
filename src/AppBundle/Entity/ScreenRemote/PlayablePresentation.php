@@ -12,7 +12,7 @@ class PlayablePresentation
     /** @var PlayablePresentationSettings */
     public $settings;
 
-    /** @var array[PlayablePresentationSlide]  */
+    /** @var PlayablePresentationSlide[]  */
     public $slides = [];
 
     /** @var int */

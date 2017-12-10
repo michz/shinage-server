@@ -18,7 +18,6 @@ use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\HttpFoundation\Request;
 use AppBundle\Entity\User;
-use Symfony\Component\HttpFoundation\Response;
 
 class PresentationsController extends Controller
 {
@@ -26,7 +25,7 @@ class PresentationsController extends Controller
     /**
      * @Route("/manage/presentations", name="management-presentations")
      */
-    public function managePresentationsAction(Request $request)
+    public function managePresentationsAction()
     {
         // @TODO Security
         $user = $this->get('security.token_storage')->getToken()->getUser();

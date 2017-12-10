@@ -11,6 +11,8 @@ class Upload extends Controller
 {
 
     /**
+     * @param Request $request
+     *
      * @Route("/api/v1/filepool/upload", name="api-filepool-upload")
      */
     public function uploadAction(Request $request)
@@ -30,26 +32,35 @@ class Upload extends Controller
         // decode file
         $fileContent = base64_decode($object->filecontent);
 
-        $succ = (bool) $this->saveFile($folder, $object->filename, $fileContent);
-
+        /*$succ = (bool)*/ $this->saveFile($folder, $object->filename, $fileContent);
 
         // @TODO{s:5} Sinnvolle Antwort (JSON)
-        var_dump($succ);
         exit;
     }
 
-    protected function getOwnerBase($ownerString)
+    /**
+     * @param string $ownerString
+     *
+     * @return string
+     */
+    protected function getOwnerBase(string $ownerString): string
     {
         $base = $tmb_path = realpath($this->container->getParameter('path_pool')) . '/' .
             str_replace(':', '-', $ownerString);
         return $base;
     }
 
-    protected function saveFile($folder, $filename, $content)
+    /**
+     * @param string $folder
+     * @param string $filename
+     * @param string $content
+     *
+     * @return bool
+     */
+    protected function saveFile(string $folder, string $filename, string $content): bool
     {
-        var_dump($folder);
         FilePool::createPathIfNeeded($folder);
 
-        return file_put_contents($folder . '/' . $filename, $content);
+        return (bool)file_put_contents($folder . '/' . $filename, $content);
     }
 }

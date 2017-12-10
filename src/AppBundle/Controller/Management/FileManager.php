@@ -24,16 +24,22 @@ class FileManager extends Controller
     /**
     * @Route("/manage/files", name="management-files")
     */
-    public function filesAction(Request $request)
+    public function filesAction()
     {
-        return $this->render('file-manager/index.html.twig', [
-        ]);
+        return $this->render('file-manager/index.html.twig', []);
     }
 
     /**
+     * @param Request $request
+     * @param string  $file
+     *
+     * @return Response
+     *
+     * @throws \RuntimeException
+     *
      * @Route("/manage/files-download/{file}", name="management-files-download", requirements={"file": ".*"})
      */
-    public function downloadAction(Request $request, $file)
+    public function downloadAction(/** @scrutinizer ignore-unused */ Request $request, string $file)
     {
         $user = $this->get('security.token_storage')->getToken()->getUser();
         /** @var User $user */
@@ -43,9 +49,13 @@ class FileManager extends Controller
             throw new AccessDeniedException();
         }
 
-        $path = realpath($this->container->getParameter('path_pool')) . '/' . $file;
-
-        $file = new File($this->container->getParameter('path_pool') . '/' . $file);
+        // @TODO cleanup here and do not use getParamter() twice
+        $realPathPool = realpath($this->getParameter('path_pool'));
+        if ($realPathPool === false) {
+            throw new \RuntimeException('Pool path not found.');
+        }
+        $path = $realPathPool . '/' . $file;
+        $file = new File($this->getParameter('path_pool') . '/' . $file);
         $response = new Response();
         $response->headers->set('Content-Type', $file->getMimeType());
         $response->setContent(file_get_contents($path));
@@ -54,13 +64,23 @@ class FileManager extends Controller
 
 
     /**
+     * @param Request $request
+     * @param string  $base
+     * @param string  $file
+     *
+     * @return Response
+     *
      * @Route("/manage/files-el-thumbnail/{base}/{file}", name="management-files-el-thumbnail",
      *     requirements={"base": ".*", "file": ".*"})
      */
-    public function elThumbnailAction(Request $request, $base, $file)
+    public function elThumbnailAction(/** @scrutinizer ignore-unused */ Request $request, string $base, string $file)
     {
-        $path = realpath($this->container->getParameter('path_pool')) .
-            '/.el-thumbnails/' . $base . '/' . $file;
+        // @TODO Refactor: Make method "getPoolPath" or so to avoid code duplication
+        $realPoolPath = realpath($this->getParameter('path_pool'));
+        if ($realPoolPath === false) {
+            throw new \LogicException('Pool path not found.');
+        }
+        $path = $realPoolPath . '/.el-thumbnails/' . $base . '/' . $file;
 
         /** @var User $user */
         $user = $this->get('security.token_storage')->getToken()->getUser();
@@ -80,14 +100,14 @@ class FileManager extends Controller
     /**
      * @Route("/manage/files-connector", name="management-files-connector")
      */
-    public function connectorAction(Request $request)
+    public function connectorAction()
     {
 
         $response = new StreamedResponse();
         $response->setCallback(function () {
             $pool = $this->get('app.filepool'); /** @var FilePool $pool */
 
-            #$path = $this->container->getParameter('path_pool');
+            #$path = $this->getParameter('path_pool');
             $user = $this->get('security.token_storage')->getToken()->getUser();
 
             // get root directories
@@ -96,7 +116,7 @@ class FileManager extends Controller
 
             foreach ($paths as $name => $path) {
                 $basename = basename($path);
-                $tmb_path = realpath($this->container->getParameter('path_pool')) .
+                $tmb_path = realpath($this->getParameter('path_pool')) .
                     '/.el-thumbnails/' . $basename . '/';
 
                 $roots[] = array(

@@ -15,6 +15,8 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use AppBundle\Service\ScreenAssociation;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
+use AppBundle\Entity\Screen;
+use AppBundle\Entity\Presentation;
 
 class Scheduler extends Controller
 {
@@ -22,7 +24,7 @@ class Scheduler extends Controller
     /**
      * @Route("/manage/scheduler", name="management-scheduler")
      */
-    public function schedulerAction(Request $request)
+    public function schedulerAction()
     {
         // user that is logged in
         $user = $this->get('security.token_storage')->getToken()->getUser();
@@ -49,13 +51,17 @@ class Scheduler extends Controller
     }
 
     /**
+     * @throws \InvalidArgumentException
+     * @throws \LogicException
+     * @throws \Symfony\Component\Security\Core\Exception\AccessDeniedException
+     *
      * @Route("/manage/get-schedule", name="management-get-schedule")
      */
     public function getScheduleAction(Request $request)
     {
         $guid = $request->get('screen');
         $em = $this->getDoctrine()->getManager();
-        $screen = $em->find('\AppBundle\Entity\Screen', $guid);
+        $screen = $em->find(Screen::class, $guid);
 
         // parse start and end time
         $start = new \DateTime($request->get('start'), new \DateTimeZone('UTC'));
@@ -108,13 +114,19 @@ class Scheduler extends Controller
     }
 
     /**
+     * @throws \Doctrine\ORM\ORMInvalidArgumentException
+     * @throws \InvalidArgumentException
+     * @throws \Symfony\Component\Security\Core\Exception\AccessDeniedException
+     * @throws \LogicException
+     * @throws \Doctrine\ORM\OptimisticLockException
+     *
      * @Route("/manage/add-scheduled", name="management-add-scheduled")
      */
     public function addScheduledAction(Request $request)
     {
         $guid   = $request->get('screen');
         $em     = $this->getDoctrine()->getManager();
-        $screen = $em->find('\AppBundle\Entity\Screen', $guid);
+        $screen = $em->find(Screen::class, $guid);
 
         // Check if user is allowed to see/edit screen
         $user = $this->get('security.token_storage')->getToken()->getUser();
@@ -127,7 +139,7 @@ class Scheduler extends Controller
         $end    = new \DateTime($request->get('end'), new \DateTimeZone('UTC'));
 
         $pres_id = $request->get('presentation');
-        $pres   = $em->find('\AppBundle\Entity\Presentation', $pres_id);
+        $pres   = $em->find(Presentation::class, $pres_id);
 
         $s = new ScheduledPresentation();
         $s->setScheduledStart($start);
@@ -145,6 +157,14 @@ class Scheduler extends Controller
     }
 
     /**
+     * @throws \Symfony\Component\Security\Core\Exception\AccessDeniedException
+     * @throws \Doctrine\ORM\TransactionRequiredException
+     * @throws \Doctrine\ORM\ORMInvalidArgumentException
+     * @throws \Doctrine\ORM\OptimisticLockException
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \LogicException
+     * @throws \InvalidArgumentException
+     *
      * @Route("/manage/change-scheduled", name="management-change-scheduled")
      */
     public function changeScheduledAction(Request $request)
@@ -156,8 +176,8 @@ class Scheduler extends Controller
         $start  = new \DateTime($request->get('start'), new \DateTimeZone('UTC'));
         $end    = new \DateTime($request->get('end'), new \DateTimeZone('UTC'));
         $guid   = $request->get('screen');
-        $screen = $em->find('\AppBundle\Entity\Screen', $guid);
-        $s      = $em->find('\AppBundle\Entity\ScheduledPresentation', $id); /** @var ScheduledPresentation $s */
+        $screen = $em->find(Screen::class, $guid);
+        $s      = $em->find(ScheduledPresentation::class, $id); /** @var ScheduledPresentation $s */
 
         // Check if user is allowed to see/edit screen
         $user = $this->get('security.token_storage')->getToken()->getUser();
@@ -181,6 +201,17 @@ class Scheduler extends Controller
     }
 
     /**
+     * @param Request $request
+     *
+     * @return \Symfony\Component\HttpFoundation\JsonResponse
+     * @throws \Symfony\Component\Security\Core\Exception\AccessDeniedException
+     * @throws \InvalidArgumentException
+     * @throws \LogicException
+     * @throws \Doctrine\ORM\ORMInvalidArgumentException
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Doctrine\ORM\OptimisticLockException
+     * @throws \Doctrine\ORM\TransactionRequiredException
+     *
      * @Route("/manage/delete-scheduled", name="management-delete-scheduled")
      */
     public function deleteScheduledAction(Request $request)
@@ -189,7 +220,7 @@ class Scheduler extends Controller
         $em = $this->getDoctrine()->getManager();  /** @var EntityManager  $em */
 
         /** @var ScheduledPresentation $s */
-        $s = $em->find('\AppBundle\Entity\ScheduledPresentation', $id);
+        $s = $em->find(ScheduledPresentation::class, $id);
         $screen = $s->getScreen();
 
         // Check if user is allowed to see/edit screen
@@ -205,7 +236,16 @@ class Scheduler extends Controller
         return $this->json(['status' => 'ok']);
     }
 
-
+    /**
+     * @param ScheduledPresentation $s
+     *
+     * @throws \InvalidArgumentException
+     * @throws \LogicException
+     * @throws \Doctrine\ORM\ORMInvalidArgumentException
+     * @throws \Doctrine\ORM\OptimisticLockException
+     *
+     * @TODO{p:6} Move this to own service and WRITE TESTS!
+     */
     protected function handleCollisions(ScheduledPresentation $s)
     {
         $em = $this->getDoctrine()->getManager();  /** @var EntityManager  $em */

@@ -25,27 +25,33 @@ use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Form;
 use Symfony\Component\Form\FormError;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 
 class Account extends Controller
 {
     /**
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse
+     *
      * @Route("/account", name="account")
      */
-    public function indexAction(Request $request)
+    public function indexAction()
     {
         return $this->redirectToRoute('account-edit');
     }
 
     /**
+     * @param Request $request
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     *
      * @Route("/account/edit", name="account-edit")
      */
     public function editAction(Request $request)
     {
         /** @var User $user */
         $user = $this->get('security.token_storage')->getToken()->getUser();
-        //$user = $user_logged_in->
-        $userManager = $this->container->get('fos_user.user_manager');
+        $userManager = $this->get('fos_user.user_manager');
         $i18n = $this->get('translator');
 
         $form = $this->get('form.factory')->createNamedBuilder('form1name', FormType::class, $user)
@@ -149,12 +155,14 @@ class Account extends Controller
 
 
     /**
+     * @throws \LogicException
+     *
      * @Route("/account/organizations", name="account-organizations")
      */
     public function orgaAction(Request $request)
     {
         /** @var UserManager $userManager */
-        $userManager = $this->container->get('fos_user.user_manager');
+        $userManager = $this->get('fos_user.user_manager');
         /** @var User $user */
         $user = $this->get('security.token_storage')->getToken()->getUser();
         $em = $this->getDoctrine()->getManager();
@@ -187,7 +195,7 @@ class Account extends Controller
                         'Der gewählte Name oder die E-Mail-Adresse wird bereits verwendet. '.
                         'Bitte probiere es mit einer anderen Kombination.'
                     );
-                    $em = $this->getDoctrine()->resetManager();
+                    $this->getDoctrine()->resetManager();
                 }
             } else {
                 $this->addFlash('error', 'Die Organisation konnte leider nicht angelegt werden.');
@@ -198,20 +206,22 @@ class Account extends Controller
         return $this->render('account/organizations.html.twig', [
             'form_create' => $form_create->createView(),
             'organizations' => $orgas,
-            'orgaManager' => $this->container->get('app.orgamanager'),
+            'orgaManager' => $this->get('app.orgamanager'),
         ]);
     }
 
     /**
+     * @throws \LogicException
+     *
      * @Route("/account/organizations/leave/{id}", name="account-orga-leave")
      */
-    public function orgaLeaveAction(Request $request, $id)
+    public function orgaLeaveAction(/** @scrutinizer ignore-unused */ Request $request, $id)
     {
         /** @var User $user */
         $user = $this->get('security.token_storage')->getToken()->getUser();
         $em = $this->getDoctrine()->getManager();
 
-        $organization = $em->find('AppBundle\Entity\User', $id);
+        $organization = $em->find(User::class, $id);
         $user->removeOrganization($organization);
         $em->persist($user);
         $em->flush();
@@ -221,6 +231,12 @@ class Account extends Controller
     }
 
     /**
+     * @param Request $request
+     *
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse
+     *
+     * @throws \LogicException
+     *
      * @Route("/account/organizations/add-user", name="account-orga-add-user")
      */
     public function orgaAddUserAction(Request $request)
@@ -231,7 +247,7 @@ class Account extends Controller
         $em = $this->getDoctrine()->getManager();
         $rep = $em->getRepository('AppBundle:User');
         $user_new = $rep->findOneBy(array('email' => $request->get('email')));
-        $orga = $em->find('AppBundle\Entity\User', $request->get('organization'));
+        $orga = $em->find(User::class, $request->get('organization'));
 
         // check if user is allowed to edit organization
         if (!$user->getOrganizations()->contains($orga)) {
@@ -265,16 +281,24 @@ class Account extends Controller
 
 
     /**
+     * @param Request $request
+     * @param         $orga_id
+     * @param         $user_id
+     *
+     * @return RedirectResponse
+     *
+     * @throws \LogicException
+     *
      * @Route("/account/organizations/remove/{orga_id}/{user_id}", name="account-orga-remove")
      */
-    public function orgaRemoveAction(Request $request, $orga_id, $user_id)
+    public function orgaRemoveAction(/** @scrutinizer ignore-unused */ Request $request, $orga_id, $user_id)
     {
         /** @var User $user */
         $user = $this->get('security.token_storage')->getToken()->getUser();
         $em = $this->getDoctrine()->getManager();
 
-        $organization = $em->find('AppBundle\Entity\User', $orga_id);
-        $user_other = $em->find('AppBundle\Entity\User', $user_id);
+        $organization = $em->find(User::class, $orga_id);
+        $user_other = $em->find(User::class, $user_id);
 
         // check if user is allowed to edit organization
         if (!$user->getOrganizations()->contains($organization)) {
@@ -293,6 +317,18 @@ class Account extends Controller
 
 
     /**
+     * @param Request $request
+     * @param         $id
+     *
+     * @return RedirectResponse
+     *
+     * @throws \InvalidArgumentException
+     * @throws \LogicException
+     * @throws \Doctrine\ORM\ORMInvalidArgumentException
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Doctrine\ORM\OptimisticLockException
+     * @throws \Doctrine\ORM\TransactionRequiredException
+     *
      * @Route("/account/delete-api-key/{id}", name="account-delete-apikey")
      */
     public function deleteApiKeyAction(Request $request, $id)
@@ -303,7 +339,7 @@ class Account extends Controller
         $user = $this->get('security.token_storage')->getToken()->getUser();
 
         $key = $em->find('AppBundle:Api\AccessKey', $id);
-        if ($key->getOwner() == $user || $user->getOrganizations()->contains($key->getOwner())) {
+        if ($key->getOwner() === $user || $user->getOrganizations()->contains($key->getOwner())) {
             $em->remove($key);
             $em->flush();
 
@@ -322,8 +358,14 @@ class Account extends Controller
 
     /**
      * Handles the create-api-key submission.
+     *
      * @param Request $request
-     * @param Form $createApiKeyForm
+     * @param Form    $createApiKeyForm
+     *
+     * @throws \InvalidArgumentException
+     * @throws \Doctrine\ORM\ORMInvalidArgumentException
+     * @throws \LogicException
+     * @throws \Doctrine\ORM\OptimisticLockException
      */
     protected function handleCreateApiToken(Request $request, Form $createApiKeyForm)
     {

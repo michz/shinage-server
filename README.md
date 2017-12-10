@@ -1,6 +1,8 @@
 Shinage Server
 ==============
 
+[![Build Status](https://travis-ci.org/michz/shinage-server.svg?branch=master)](https://travis-ci.org/michz/shinage-server)
+[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/michz/shinage-server/badges/quality-score.png)](https://scrutinizer-ci.com/g/michz/shinage-server/)
 
 Introduction
 ------------

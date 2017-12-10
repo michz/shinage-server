@@ -23,11 +23,18 @@ use Symfony\Component\HttpFoundation\Response;
 class HeartbeatController extends Controller
 {
     const JSONP_DUMMY = 'REPLACE_JSONP_CALLBACK_DUMMY';
+
     /**
      * TODO screen-guid-requirement genauer angeben
+     *
+     * @throws \UnexpectedValueException
+     * @throws \LogicException
+     * @throws \InvalidArgumentException
+     * @throws \AppBundle\Exceptions\NoSuitablePresentationBuilderFoundException
+     *
      * @Route("/screen-remote/heartbeat/{screenId}", name="screen-remote-heartbeat", requirements={"screenId": ".*"})
      */
-    public function heartbeatAction(Request $request, $screenId)
+    public function heartbeatAction(/** @scrutinizer ignore-unused */ Request $request, $screenId)
     {
         if (!$screenId) {
             return $this->json([
@@ -38,8 +45,8 @@ class HeartbeatController extends Controller
         }
 
         $em = $this->getDoctrine()->getManager();
-        $screen = $em->find('\AppBundle\Entity\Screen', $screenId);
-        if ($screen == null) {
+        $screen = $em->find(Screen::class, $screenId);
+        if ($screen === null) {
             $screen = new Screen();
             $screen->setGuid($screenId);
             $screen->setFirstConnect(new \DateTime());
@@ -60,11 +67,9 @@ class HeartbeatController extends Controller
         $em->flush();
 
         $presentation = null;
-        /* * @var ScheduledPresentation $current */
         /** @var Presentation $current */
         $current = $this->getCurrentPresentation($screen);
-        if ($current != null) {
-            //$presentation = $current->getPresentation();
+        if ($current !== null) {
             $presentation = $current;
 
             /** @var PresentationBuilderChain $playableBuilderChain */
@@ -77,7 +82,7 @@ class HeartbeatController extends Controller
 
         return $this->json([
             'status'        => 'ok',
-            'screen_status' => ($is_assoc) ? 'registered' : 'not_registered',
+            'screen_status' => $is_assoc ? 'registered' : 'not_registered',
             'connect_code'  => $screen->getConnectCode(),
             'presentation'  => $presentation->getId(),
             'last_modified'  => $lastModified->format('Y-m-d H:i:s'),
@@ -85,6 +90,17 @@ class HeartbeatController extends Controller
     }
 
     /**
+     * @param Request $request
+     * @param         $id
+     *
+     * @return \Symfony\Component\HttpFoundation\JsonResponse|Response
+     *
+     * @throws \RuntimeException
+     * @throws \LogicException
+     * @throws \InvalidArgumentException
+     * @throws \AppBundle\Exceptions\NoSuitablePresentationBuilderFoundException
+     * @throws \Exception
+     *
      * @Route("/screen-remote/presentation/{id}", name="screen-remote-presentation", requirements={"id": "\d+"})
      */
     public function presentationAction(Request $request, $id)
@@ -92,10 +108,10 @@ class HeartbeatController extends Controller
         // @TODO Sicherheit
 
         $em = $this->getDoctrine()->getManager();
-        $presentation = $em->find('\AppBundle\Entity\Presentation', $id);
+        $presentation = $em->find(Presentation::class, $id);
         if (!$presentation) {
             // @TODO better error handling/output
-            throw new \Exception("Presentation not found.");
+            throw new \RuntimeException('Presentation not found.');
         }
 
         /** @var PresentationBuilderChain $playableBuilderChain */
@@ -107,10 +123,10 @@ class HeartbeatController extends Controller
         #$playableBuilder = $this->container->get('app.remote.playable_builder');
         #$playable = $playableBuilder->build($presentation, $request->getSchemeAndHttpHost());
 
-        if (is_string($playable)) {
+        if (\is_string($playable)) {
             $callback = $request->get('callback');
             if ($callback !== null && 0 === strpos($playable, self::JSONP_DUMMY)) {
-                $playable = substr_replace($playable, $callback, 0, strlen(self::JSONP_DUMMY));
+                $playable = substr_replace($playable, $callback, 0, \strlen(self::JSONP_DUMMY));
             }
             return new Response($playable, 200, [
                 'Content-Type' => 'application/json'
@@ -121,15 +137,17 @@ class HeartbeatController extends Controller
     }
 
     /**
+     * @throws \Symfony\Component\HttpFoundation\File\Exception\AccessDeniedException
+     *
      * @Route("/screen-remote/client-file/{file}", name="screen-remote-client-file", requirements={"file": ".*"})
      */
-    public function clientFileAction(Request $request, $file)
+    public function clientFileAction(/** @scrutinizer ignore-unused */ Request $request, $file)
     {
         // @TODO check somehow security
 
-        $pool_base = realpath($this->container->getParameter('path_pool'));
+        $pool_base = realpath($this->getParameter('path_pool'));
         $path = realpath($pool_base . '/' . $file);
-        if (substr($path, 0, strlen($pool_base)) != $pool_base) {
+        if (0 !== strpos($path, $pool_base)) {
             throw new AccessDeniedException();
         }
 
@@ -142,6 +160,8 @@ class HeartbeatController extends Controller
 
 
     /**
+     * @throws \AppBundle\Exceptions\NoScreenGivenException
+     *
      * @Route("/screen-remote/upload-screenshot", name="screen-remote-screenshot")
      */
     public function uploadScreenshotAction(Request $request)
@@ -153,7 +173,7 @@ class HeartbeatController extends Controller
         }
 
         // get path from configuration
-        $basepath = $this->container->getParameter('path_screenshots');
+        $basepath = $this->getParameter('path_screenshots');
 
         // move file
         foreach ($request->files as $uploadedFile) {
@@ -165,8 +185,14 @@ class HeartbeatController extends Controller
         return $this->json(['status' => 'ok']);
     }
 
-
-    protected function generateUniqueConnectcode()
+    /**
+     * @return string
+     *
+     * @throws \UnexpectedValueException
+     * @throws \LogicException
+     * @throws \InvalidArgumentException
+     */
+    protected function generateUniqueConnectcode(): string
     {
         $em = $this->getDoctrine()->getManager();
         $rep = $em->getRepository('AppBundle:Screen');
@@ -177,7 +203,7 @@ class HeartbeatController extends Controller
             $code = $this->generateConnectcode();
 
             $screens = $rep->findBy(array('connect_code' => $code));
-            if (count($screens) == 0) {
+            if (\count($screens) === 0) {
                 $unique = true;
             }
         }
@@ -185,21 +211,28 @@ class HeartbeatController extends Controller
         return $code;
     }
 
-    protected function generateConnectcode()
+    /**
+     * @return string
+     */
+    protected function generateConnectcode(): string
     {
-        $chars = "abcdefghkmnpqrstuvwxyz23456789";
-        $chars_n = strlen($chars);
+        $chars = 'abcdefghkmnpqrstuvwxyz23456789';
+        $chars_n = \strlen($chars);
         $len = 8;
         $code = '';
 
         for ($i = 0; $i < $len; ++$i) {
-            $code .= $chars[mt_rand(0, $chars_n-1)];
+            $code .= $chars[random_int(0, $chars_n-1)];
         }
 
         return $code;
     }
 
-
+    /**
+     * @param Screen $screen
+     *
+     * @return mixed
+     */
     protected function getCurrentPresentation(Screen $screen)
     {
         $scheduler = $this->get('app.scheduler');

@@ -38,38 +38,20 @@ var screen_colors = [
 var screen_colors_count = screen_colors.length;
 var global_evt_src = 1;
 
-// TODO Full status display showing if ajax transactions are running
+// @TODO Full status display showing if ajax transactions are running
 
 var placePresentationBySelection = function(start, end) {
-    var screen = getSelectedScreen();
-
-    showCreateDialog(start, end,
+    showCreateDialog(
+        start,
+        end,
         function() {
             $('#calendar').fullCalendar('refetchEvents');
-        });
-    return;
-
-    var title = prompt('TODO: Show possible presentations.');
-    var eventData;
-
-    if (title) {
-        $.ajax({
-            url: uri_add_scheduled,
-            method: 'POST',
-            data: {
-                'screen':       $(screen).data('guid'),
-                'presentation': title,
-                'start':        start.format('YYYY-MM-DD HH:mm:ss'),
-                'end':          end.format('YYYY-MM-DD HH:mm:ss')
-            }
-        }).done(function() {
-            $('#calendar').fullCalendar('refetchEventSources', $(screen).data('event-src'));
-        });
-    }
-    $('#calendar').fullCalendar('unselect');
+        }
+    );
 };
 
 var saveChanged = function (event, revertFunc) {
+    /** global: uri_change_scheduled */
     ajaxLoadShow();
     $.ajax({
         url: uri_change_scheduled,
@@ -92,11 +74,11 @@ var saveChanged = function (event, revertFunc) {
     });
 }
 
-var resizePresentation = function( event, delta, revertFunc, jsEvent, ui, view ) {
+var resizePresentation = function(event, delta, revertFunc) {
     saveChanged(event, revertFunc);
 };
 
-var movePresentation = function( event, delta, revertFunc, jsEvent, ui, view ) {
+var movePresentation = function(event, delta, revertFunc) {
     saveChanged(event, revertFunc);
 }
 
@@ -104,8 +86,11 @@ var deletePresentation = function(event) {
     var r = confirm("Soll die Präsentation  \"" + event.presentation.title + "\" (" +
         event.start.format('DD.MM.YYYY HH:mm') + ") wirklich entfernt werden?");
 
-    if (r != true) return;
+    if (r !== true) {
+        return;
+    }
 
+    /** global: uri_delete_scheduled */
     ajaxLoadShow();
     $.ajax({
         url: uri_delete_scheduled,
@@ -122,6 +107,7 @@ var deletePresentation = function(event) {
 };
 
 var addEventSource = function(screen, id) {
+    /** global: uri_get_schedule */
     var colset = screen_colors[$(screen).data('color-set')];
     var bg_col = colset.dark;
     var fg_col = colset.light;
@@ -188,7 +174,9 @@ $(document).ready(function() {
                 $(element).css('background-color', col.dark);
                 $(element).css('color', col.light);
             }
-            if (!event.presentation) return;
+            if (!event.presentation) {
+                return;
+            }
 
             element.append('<div class="fc-event-title">' + event.presentation.title + '</div>');
             element.find('.fc-content').append("<div class='event-delete'><img src='data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAABmJLR0QA/wD/AP+gvaeTAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAB3RJTUUH4QECDRkgLhOZPwAAAJZJREFUOMutU0kOxDAIMz11PoOUR+T/x/5gvjA9jedQ6FBET9RSJBKb4CyAJBwk4fO8nvmscfJNclQJFg/T4AIjN/4xC2cz8NvJh8oZ6g4szjicBGsVVhsVRnYxk+B7E1+PmC5JbxLimsYcOQMR32wF8EGNF4DdtSKCBU0sqbpadRZaGqcp54FLbD1j+yO1v3K7mbrt/ANBpmKW31STdQAAAABJRU5ErkJggg=='></div>");
@@ -208,12 +196,11 @@ $(document).ready(function() {
         $(this).parent().toggleClass('visible');
         e.stopPropagation();
 
-        var col = screen_colors[$(this).parent().data('color-set')];
+        //var col = screen_colors[$(this).parent().data('color-set')];
         if ($(this).parent().hasClass('visible')) {
             addEventSource($(this).parent().get(0), $(this).parent().data('event-src'));
             setScreenColor($(this).parent().get(0));
-        }
-        else {
+        } else {
             $('#calendar').fullCalendar('removeEventSource', $(this).parent().data('event-src'));
             setScreenColor($(this).parent().get(0));
         }
@@ -235,5 +222,4 @@ $(document).ready(function() {
         addEventSource(this, global_evt_src);
         global_evt_src++;
     });
-
 });

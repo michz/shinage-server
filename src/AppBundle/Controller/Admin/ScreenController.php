@@ -13,13 +13,14 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use AppBundle\Service\ScreenAssociation;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
+use AppBundle\Entity\Screen;
 
 class ScreenController extends Controller
 {
     /**
      * @Route("/adm/screens", name="admin-screens")
      */
-    public function indexAction(Request $request)
+    public function indexAction()
     {
         $rep = $this->getDoctrine()->getRepository('AppBundle:Screen');
         $screens = $rep->findAll();
@@ -32,6 +33,14 @@ class ScreenController extends Controller
     }
 
     /**
+     * @param Request $request
+     *
+     * @return \Symfony\Component\HttpFoundation\JsonResponse|\Symfony\Component\HttpFoundation\RedirectResponse
+     *
+     * @throws \Symfony\Component\Security\Core\Exception\AccessDeniedException
+     * @throws \LogicException
+     * @throws \InvalidArgumentException
+     *
      * @Route("/adm/modify_screen", name="modify-screen")
      */
     public function modifyAction(Request $request)
@@ -41,10 +50,10 @@ class ScreenController extends Controller
         $loc = $request->get('txtLocation');
         $notes = $request->get('txtNotes');
         $admin = $request->get('txtAdmin');
-        $ajax = boolval(($request->get('ajax', '0') == '1') ? true : false);
+        $ajax = ($request->get('ajax', '0') === '1');
 
         $em = $this->getDoctrine()->getManager();
-        $screen = $em->find('\AppBundle\Entity\Screen', $guid);
+        $screen = $em->find(Screen::class, $guid);
 
         // Check if screen may be edited by current user
         $user = $this->get('security.token_storage')->getToken()->getUser();

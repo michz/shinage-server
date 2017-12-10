@@ -25,7 +25,7 @@ class Dashboard extends Controller
     /**
     * @Route("/manage/dashboard", name="management-dashboard")
     */
-    public function dashboardAction(Request $request)
+    public function dashboardAction()
     {
         // user that is logged in
         $user = $this->get('security.token_storage')->getToken()->getUser();
@@ -34,7 +34,7 @@ class Dashboard extends Controller
         $assoc = $this->get('app.screenassociation'); /** @var ScreenAssociation $assoc */
         $screens = $assoc->getScreensForUser($user);
 
-        $countScreens = count($screens);
+        $countScreens = \count($screens);
 
         // no screens found
         if ($countScreens < 1) {
@@ -47,16 +47,20 @@ class Dashboard extends Controller
     }
 
     /**
+     * @throws \LogicException
+     * @throws \Symfony\Component\Security\Core\Exception\AccessDeniedException
+     * @throws NoScreenGivenException
+     *
      * @Route("/manage/dashboard/preview/{screen_guid}", name="management-dashboard-preview")
      */
-    public function previewAction(Request $request, $screen_guid)
+    public function previewAction(/** @scrutinizer ignore-unused */ Request $request, $screen_guid)
     {
         /** @var User $user */
         $user = $this->get('security.token_storage')->getToken()->getUser();
         $em = $this->getDoctrine()->getManager();
 
         //$screen_guid = $request->get('screen');
-        $screen = $em->find('AppBundle\Entity\Screen', $screen_guid); /** @var Screen $screen */
+        $screen = $em->find(Screen::class, $screen_guid); /** @var Screen $screen */
         if (!$screen) {
             throw new NoScreenGivenException();
         }
@@ -67,10 +71,10 @@ class Dashboard extends Controller
         }
 
         // get screenshot path
-        $basepath = $this->container->getParameter('path_screenshots');
+        $basepath = $this->getParameter('path_screenshots');
         $file_path = $basepath . '/' . $screen->getGuid() . '.png';
         if (!is_file($file_path)) {
-            $file_path = $this->container->getParameter('kernel.root_dir') . '/Resources/img/no-preview.png';
+            $file_path = $this->getParameter('kernel.root_dir') . '/Resources/img/no-preview.png';
         }
 
         $file = new File($file_path);

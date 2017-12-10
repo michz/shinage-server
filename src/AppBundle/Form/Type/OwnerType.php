@@ -1,7 +1,6 @@
 <?php
 namespace AppBundle\Form\Type;
 
-use AppBundle\Entity\Interfaces\Ownable;
 use AppBundle\Entity\User;
 use Doctrine\ORM\EntityManager;
 use Symfony\Component\Form\AbstractType;
@@ -12,16 +11,15 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorage;
 
+// @TODO I think this can be refactored and simplified.
 class OwnerType extends AbstractType
 {
     /** @var EntityManager|null $em */
-    protected $em = null;
+    protected $em;
 
+    protected $tokenStorage;
 
-    protected $tokenStorage = null;
-
-    /** @var Ownable $entity */
-    protected $entity = null;
+    protected $entity;
 
     public function __construct(EntityManager $em, TokenStorage $tokenStorage)
     {
@@ -36,11 +34,11 @@ class OwnerType extends AbstractType
         // save entity that should be owned
         $this->entity = $options['ownable'];
 
-        if ($this->entity != null) {
+        if ($this->entity !== null) {
             // Event: While building set default value
             $builder->addEventListener(
                 FormEvents::PRE_SET_DATA,
-                function (FormEvent $event) use ($builder) {
+                function (FormEvent $event) {
                     $event->setData($this->entity->getOwner()->getId());
                 }
             );

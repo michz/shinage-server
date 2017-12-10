@@ -33,18 +33,6 @@ class PlayableBuilder
         $playable = new PlayablePresentation();
         $playable->lastModified = $presentation->getLastModified();
 
-        /** @var Slide $slide */
-        #foreach ($presentation->getSlides() as $slide) {
-        #    $playableSlide = new PlayablePresentationSlide();
-        #    $playableSlide->title = $slide->getId();
-        #    $playableSlide->type = $this->getPlayerSlideType($slide->getSlideType());
-        #    $playableSlide->duration = $slide->getDuration() * 1000;
-        #    $playableSlide->src = $hostScheme .
-        #        $this->router->generate('screen-remote-client-file', ['file' => $slide->getFilePath()]);
-        #    $playableSlide->transition = "none";
-        #    $playable->slides[] = $playableSlide;
-        #}
-
         return $playable;
     }
 

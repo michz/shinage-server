@@ -10,6 +10,7 @@
 namespace AppBundle\Entity;
 
 use AppBundle\UserType;
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManager;
 use FOS\UserBundle\Model\User as BaseUser;
 use Rollerworks\Bundle\PasswordStrengthBundle\Validator\Constraints as RollerworksPassword;
@@ -28,7 +29,7 @@ class User extends BaseUser
     /** @var string */
     protected $name = '';
 
-    /** @var \Doctrine\Common\Collections\ArrayCollection */
+    /** @var ArrayCollection */
     private $organizations;
 
     /**
@@ -45,9 +46,7 @@ class User extends BaseUser
     public function __construct()
     {
         parent::__construct();
-        // your own logic
-        $this->organizations = new \Doctrine\Common\Collections\ArrayCollection();
-        $this->users = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->organizations = new ArrayCollection();
     }
 
     public function setEmail($email)
@@ -75,30 +74,24 @@ class User extends BaseUser
     {
         $file = ltrim($path, "/\r\n\t ");
         $base = substr($file, 0, strpos($file, '/'));
-        return (in_array($base, $this->getAllowedPoolPaths()));
+        return \in_array($base, $this->getAllowedPoolPaths(), true);
     }
 
 
     public function isPresentationAllowed(Presentation $presentation)
     {
-        if ($presentation->getOwner() == $this) {
+        if ($presentation->getOwner() === $this) {
             return true;
         }
 
         $orgas = $this->getOrganizations();
         foreach ($orgas as $orga) { /** @var User $orga */
-            if ($presentation->getOwner() == $orga) {
+            if ($presentation->getOwner() === $orga) {
                 return true;
             }
         }
 
         return false;
-    }
-
-
-    public function isSlideAllowed(Slide $slide)
-    {
-        return $this->isPresentationAllowed($slide->getPresentation());
     }
 
 
