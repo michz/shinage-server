@@ -1,5 +1,7 @@
 <?php
 
+namespace shinage\server\behat;
+
 /**
  * @author   :  Michael Zapf <m.zapf@mztx.de>
  * @date     :  20.11.17

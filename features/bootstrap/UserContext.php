@@ -1,5 +1,7 @@
 <?php
 
+namespace shinage\server\behat;
+
 use AppBundle\Entity\User;
 use Behat\Behat\Context\Context;
 use Doctrine\ORM\EntityManagerInterface;

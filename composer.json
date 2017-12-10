@@ -4,7 +4,10 @@
     "type": "project",
     "description": "The \"Symfony Standard Edition\" distribution",
     "autoload": {
-        "psr-4": { "AppBundle\\": "src/AppBundle/" },
+        "psr-4": {
+            "AppBundle\\": "src/AppBundle/" ,
+            "shinage\\server\\behat\\": "features/bootstrap/"
+        },
         "classmap": [ "app/AppKernel.php", "app/AppCache.php" ]
     },
     "autoload-dev": {

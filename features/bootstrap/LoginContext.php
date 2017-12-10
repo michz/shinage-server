@@ -1,5 +1,7 @@
 <?php
 
+namespace shinage\server\behat;
+
 use Behat\Mink\Driver\BrowserKitDriver;
 use Behat\Mink\Exception\UnsupportedDriverActionException;
 use Doctrine\ORM\EntityManagerInterface;
@@ -34,8 +36,12 @@ class LoginContext extends \Behat\MinkExtension\Context\RawMinkContext
      * @param string                 $firewallName
      * @param                        $session
      */
-    public function __construct(EntityManagerInterface $entityManager, UserManagerInterface $userManager, string $firewallName, $session)
-    {
+    public function __construct(
+        EntityManagerInterface $entityManager,
+        UserManagerInterface $userManager,
+        string $firewallName,
+        $session
+    ) {
         $this->entityManager = $entityManager;
         $this->userManager = $userManager;
         $this->firewallName = $firewallName;
