@@ -4,8 +4,8 @@ namespace AppBundle\Service\Pool;
 
 class PoolDirectory extends PoolItem
 {
-
-    protected $contents = array();
+    /** @var PoolFile[] */
+    protected $contents = [];
 
     public function __construct($filename, $fullpath)
     {

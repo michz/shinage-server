@@ -7,6 +7,7 @@
 
 namespace AppBundle\Controller\PresentationEditors;
 
+use AppBundle\Entity\jstree\FileNode;
 use AppBundle\Entity\Presentation;
 use AppBundle\Entity\PresentationSettings\Slideshow;
 use AppBundle\Entity\Slides\ImageSlide;
@@ -39,11 +40,7 @@ class SlideshowEditorController extends AbstractPresentationEditor
         }
 
         $serializer = $this->get('jms_serializer');
-        try {
-            $settings = $serializer->deserialize($presentation->getSettings(), Slideshow::class, 'json');
-        } catch (\Exception $exception) {
-            $settings = new Slideshow();
-        }
+        $settings = $this->getCurrentSettingsOrEmpty($presentation);
 
         $slides = $settings->getSlides();
         $slidesJson = $serializer->serialize($slides, 'json');
@@ -78,8 +75,7 @@ class SlideshowEditorController extends AbstractPresentationEditor
         $slides = $serializer->deserialize($slidesJson, 'array<'.ImageSlide::class.'>', 'json');
 
         /** @var Slideshow $settings */
-        $settingsJson = $presentation->getSettings();
-        $settings = $serializer->deserialize($settingsJson, Slideshow::class, 'json');
+        $settings = $this->getCurrentSettingsOrEmpty($presentation);
         $settings->setSlides($slides);
         $presentation->setSettings($serializer->serialize($settings, 'json'));
 
@@ -91,6 +87,27 @@ class SlideshowEditorController extends AbstractPresentationEditor
     }
 
     /**
+     * @Route(
+     *     "/manage/presentations/editor/slideshow/{presentationId}/fileTree",
+     *     name="presentation-editor-slideshow-filetree",
+     *     requirements={"presentationId": "[0-9]+"}
+     * )
+     */
+    public function fileTreeAction()
+    {
+        /** @var User $user */
+        $user = $this->get('security.token_storage')->getToken()->getUser();
+
+        $filePool = $this->get('app.filepool');
+        $fileTreeBuilder = $this->get('app.jstree.builder');
+
+        $fileTreeBuilder->addNewRoot($filePool->getPathForUser($user), 'me');
+
+        $serializer = $this->get('jms_serializer');
+        return new Response($serializer->serialize($fileTreeBuilder->getTree(), 'json'));
+    }
+
+    /**
      * @param Presentation $presentation
      *
      * @return bool
@@ -98,5 +115,22 @@ class SlideshowEditorController extends AbstractPresentationEditor
     public function supports(Presentation $presentation): bool
     {
         return ($presentation->getType() === 'slideshow');
+    }
+
+    /**
+     * @param Presentation $presentation
+     *
+     * @return Slideshow
+     */
+    protected function getCurrentSettingsOrEmpty(Presentation $presentation): Slideshow
+    {
+
+        $serializer = $this->get('jms_serializer');
+        try {
+            $settings = $serializer->deserialize($presentation->getSettings(), Slideshow::class, 'json');
+        } catch (\Exception $exception) {
+            $settings = new Slideshow();
+        }
+        return $settings;
     }
 }

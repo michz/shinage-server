@@ -1,3 +1,4 @@
+// @TODO Transform this Javascript monster into a jQuery plugin to better bind it and better instantiate it
 // @TODO Language Strings?
 
 window.SlideshowEditor = {
@@ -47,12 +48,41 @@ window.SlideshowEditor = {
         });
     },
     addSlideButton: function (e) {
-        var slide = $(e.currentTarget).data('prototype');
-        this.appendSlide(slide);
-        this.saveSlides();
+        //var slide = $(e.currentTarget).data('prototype');
+        //this.appendSlide(slide);
+        //this.saveSlides();
+
+        $("#choseImageOverlay")
+            .modal('setting', 'transition', 'fade up')
+            .modal('setting', 'observeChanges', true)
+            .modal('setting', 'onVisible', function() {
+                $("#selectFilesPane").trigger("resize");
+            })
+            .modal('setting', 'onApprove', $.proxy(function () {
+                $("#selectFilesPane").elfinder('instance').exec('getfile');
+                for (var i = 0; i < window.selectedFiles.length; i++) {
+                    var file = window.selectedFiles[i];
+                    console.log(file);
+
+                    var slide = $(e.currentTarget).data('prototype');
+                    console.log(slide);
+                    slide.src = file.url;
+                    this.appendSlide(slide);
+                    this.saveSlides();
+                }
+            }, this))
+            .modal('show');
+
+        //initElFinder();
     },
     selectSlide: function (e) {
         var slide = $(e.currentTarget).data("slide");
+
+        // visualization
+        $('#slides > .slide', this.container).removeClass('selected');
+        $(e.currentTarget).addClass('selected');
+
+        // Write properties in slide settings pane
         for (var property in slide) {
             if (slide.hasOwnProperty(property)) {
                 $("#tabSlide .settings input[name="+property+"]", this.container).val(slide[property]);
@@ -64,6 +94,7 @@ window.SlideshowEditor = {
         $("#tabSlide .settings."+slide.type, this.container).show();
 
         this.selectedSlide = slide;
+        $('.tabular.menu .item').tab('change tab', 'tabSlide');
     },
     removeSlideButton: function (e) {
         var slide = $(e.currentTarget).parent();
@@ -86,7 +117,7 @@ window.SlideshowEditor = {
         this.provisionSlide(slideDiv, slide);
 
         // add remove button
-        slideDiv.append("<div class='removeSlide'><i class='fa fa-trash'></i></div>");
+        slideDiv.append("<div class='removeSlide'><i class='remove icon'></i></div>");
 
         $("#slides", this.container).append(slideDiv);
         return this;
@@ -135,7 +166,6 @@ window.SlideshowEditor = {
             console.log("Error saving slides: ");
             console.log(e);
         });
-
     }
 };
 
