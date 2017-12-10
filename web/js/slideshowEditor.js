@@ -1,3 +1,4 @@
+// @TODO Transform this Javascript monster into a jQuery plugin to better bind it and better instantiate it
 // @TODO Language Strings?
 
 window.SlideshowEditor = {
@@ -50,6 +51,10 @@ window.SlideshowEditor = {
         var slide = $(e.currentTarget).data('prototype');
         this.appendSlide(slide);
         this.saveSlides();
+
+        $("#choseImageOverlay")
+            .modal('setting', 'transition', 'fade up')
+            .modal('show');
     },
     selectSlide: function (e) {
         var slide = $(e.currentTarget).data("slide");

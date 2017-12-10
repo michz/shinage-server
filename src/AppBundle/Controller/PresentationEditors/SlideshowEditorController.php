@@ -7,6 +7,7 @@
 
 namespace AppBundle\Controller\PresentationEditors;
 
+use AppBundle\Entity\jstree\FileNode;
 use AppBundle\Entity\Presentation;
 use AppBundle\Entity\PresentationSettings\Slideshow;
 use AppBundle\Entity\Slides\ImageSlide;
@@ -83,6 +84,26 @@ class SlideshowEditorController extends AbstractPresentationEditor
         $em->flush();
 
         return new Response('', 204);
+    }
+
+    /**
+     * @Route(
+     *     "/manage/presentations/editor/slideshow/{presentationId}/fileTree",
+     *     name="presentation-editor-slideshow-filetree",
+     *     requirements={"presentationId": "[0-9]+"}
+     * )
+     */
+    public function fileTreeAction()
+    {
+        $rootNodes = [];
+        $root = new FileNode();
+        $root->text = 'rooNode';
+        $root->icon = '';
+        $root->children = [];
+        $rootNodes[] = $root;
+
+        $serializer = $this->get('jms_serializer');
+        return new Response($serializer->serialize($rootNodes, 'json'));
     }
 
     /**

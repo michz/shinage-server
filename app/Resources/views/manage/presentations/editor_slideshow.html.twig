@@ -20,7 +20,7 @@
                 <div id="tabAdd" class="ui bottom attached tab segment active" data-tab="tabAdd">
                     <button id="btnAddSlideImage" class="add Image ui button"
                             data-prototype='{"type":"Image","duration":5000,"title":"Slide","transition":"","src":"//via.placeholder.com/500x380"}'>
-                        <i class="fa fa-image fa-lg fa-fw"></i> {{ "Add Image"|trans }}
+                        <i class="image icon"></i> {{ "Add Image"|trans }}
                     </button>
                 </div>
                 <div id="tabSlide" class="ui bottom attached tab segment" data-tab="tabSlide">
@@ -37,10 +37,41 @@
             </div>
         </div>
     </div>
+
+    <div id="choseImageOverlay" class="ui modal">
+        <div class="header">{{ "Choose an image"|trans }}</div>
+        <div class="content">
+            <div class="ui grid">
+                <div class="ui four wide column">
+                    <div id="directoryTree">
+                        <ul>
+                            <li data-jstree='{"opened":true,"selected":true}'>Root
+                                <ul>
+                                    <li data-jstree='{"disabled":true}'>Child</li>
+                                    <li data-jstree='{"icon":"//jstree.com/tree.png"}'>
+                                        Child</li>
+                                    <li data-jstree='{"icon":"glyphicon glyphicon-leaf"}'>
+                                        Child</li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="ui twelve wide column">
+                    Bilder
+                </div>
+            </div>
+        </div>
+        <div class="actions">
+            <div class="ui cancel button">{{ "Cancel"|trans }}</div>
+            <div class="ui approve primary button">{{ "Add selected to slideshow"|trans }}</div>
+        </div>
+    </div>
 {% endblock %}
 
 
 {% block scripts %}
+    <script src="{{ asset('js/jstree/jstree.min.js') }}"></script>
     <script>
         document.addEventListener(
             'DOMContentLoaded',
@@ -50,6 +81,21 @@
                 SlideshowEditor
                     .init("#slideshowEditor", "{{ path('presentation-editor-slideshow-update', { presentationId: presentation.id }) }}")
                     .loadSlides({{ slidesJson|raw }});
+
+                // @TODO load on dialog open
+                var files = [];
+                $.ajax({
+                    method: 'get',
+                    dataType: 'json',
+                    url: '{{ path('presentation-editor-slideshow-filetree', { presentationId: presentation.id }) }}',
+                    success: function (files) {
+                        $('#directoryTree').jstree({
+                            core: {
+                                data: files
+                            }
+                        });
+                    }
+                });
             },
             false
         );
@@ -57,4 +103,5 @@
 {% endblock %}
 
 {% block stylesheets %}
+    <link rel="stylesheet" href="{{ asset('js/jstree/themes/default/style.min.css') }}" />
 {% endblock %}
