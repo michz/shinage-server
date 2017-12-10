@@ -22,6 +22,11 @@ services:
         arguments:
             $basepath: "%path_pool%"
 
+    app.jstree.builder:
+        class: AppBundle\Service\JstreeFileTreeBuilder
+        arguments:
+            $filePool: "@app.filepool"
+
     app.apiroleregistry:
         class: AppBundle\Service\ApiRoleRegistry
 

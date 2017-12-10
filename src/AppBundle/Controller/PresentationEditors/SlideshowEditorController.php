@@ -95,15 +95,16 @@ class SlideshowEditorController extends AbstractPresentationEditor
      */
     public function fileTreeAction()
     {
-        $rootNodes = [];
-        $root = new FileNode();
-        $root->text = 'rooNode';
-        $root->icon = '';
-        $root->children = [];
-        $rootNodes[] = $root;
+        /** @var User $user */
+        $user = $this->get('security.token_storage')->getToken()->getUser();
+
+        $filePool = $this->get('app.filepool');
+        $fileTreeBuilder = $this->get('app.jstree.builder');
+
+        $fileTreeBuilder->addNewRoot($filePool->getPathForUser($user), 'me');
 
         $serializer = $this->get('jms_serializer');
-        return new Response($serializer->serialize($rootNodes, 'json'));
+        return new Response($serializer->serialize($fileTreeBuilder->getTree(), 'json'));
     }
 
     /**
