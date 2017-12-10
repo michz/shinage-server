@@ -41,25 +41,7 @@
     <div id="choseImageOverlay" class="ui modal">
         <div class="header">{{ "Choose an image"|trans }}</div>
         <div class="content">
-            <div class="ui grid">
-                <div class="ui six wide column">
-                    <div id="directoryTree">
-                        <ul>
-                            <li data-jstree='{"opened":true,"selected":true}'>Root
-                                <ul>
-                                    <li data-jstree='{"disabled":true}'>Child</li>
-                                    <li data-jstree='{"icon":"//jstree.com/tree.png"}'>
-                                        Child</li>
-                                    <li data-jstree='{"icon":"glyphicon glyphicon-leaf"}'>
-                                        Child</li>
-                                </ul>
-                            </li>
-                        </ul>
-                    </div>
-                </div>
-                <div class="ui ten wide column">
-                    Bilder
-                </div>
+            <div id="selectFilesPane">
             </div>
         </div>
         <div class="actions">
@@ -71,31 +53,89 @@
 
 
 {% block scripts %}
-    <script src="{{ asset('js/jstree/jstree.min.js') }}"></script>
+    <script src="{{ asset('js/jquery-ui/jquery-ui.min.js') }}"></script>
+    <script src="{{ asset('js/elfinder/elfinder.min.js') }}"></script>
+    <script src="{{ asset('js/elfinder/elfinder.de.js') }}"></script>
+
     <script>
         document.addEventListener(
             'DOMContentLoaded',
             function () {
                 $('.tabular.menu .item').tab();
 
+                window.initElFinder = function () {
+                    var options = {
+                        url  : '{{ path('management-files-connector') }}',
+                        lang : '{{ app.request.locale }}',
+                        uiOptions : {
+                            // toolbar configuration
+                            toolbar : [
+                                ['back', 'forward'],
+                                // ['reload'],
+                                // ['home', 'up'],
+                                ['mkdir', 'mkfile', 'upload'],
+                                ['open', 'download', 'getfile'],
+                                ['info'],
+                                ['quicklook'],
+                                ['copy', 'cut', 'paste'],
+                                ['rm'],
+                                ['duplicate', 'rename', 'edit', 'resize'],
+                                ['extract', 'archive'],
+                                /*['search'],*/
+                                ['view']
+                            ],
+
+                            // directories tree options
+                            tree : {
+                                // expand current root on init
+                                openRootOnLoad : true,
+                                // auto load current dir parents
+                                syncTree : true
+                            },
+
+                            // navbar options
+                            navbar : {
+                                minWidth : 150,
+                                maxWidth : 500
+                            },
+
+                            // current working directory options
+                            cwd : {
+                                // display parent directory in listing as ".."
+                                oldSchool : false
+                            }
+                        },
+                        handlers : {
+                            dblclick : function(event, elfinderInstance) {
+                                event.preventDefault();
+                                elfinderInstance.exec('getfile')
+                                    .done(function() { elfinderInstance.exec('quicklook'); })
+                                    .fail(function() { elfinderInstance.exec('open'); });
+                            }
+                        },
+
+                        getFileCallback : function(files, fm) {
+                            window.selectedFiles = files;
+                        },
+
+                        commandsOptions : {
+                            getfile: {
+                                multiple: true
+                            },
+                            quicklook : {
+                                width : 640,  // Set default width/height voor quicklook
+                                height : 480
+                            }
+                        }
+                    };
+                    $('#selectFilesPane').elfinder(options);
+                };
+
+                initElFinder();
+
                 SlideshowEditor
                     .init("#slideshowEditor", "{{ path('presentation-editor-slideshow-update', { presentationId: presentation.id }) }}")
                     .loadSlides({{ slidesJson|raw }});
-
-                // @TODO load on dialog open
-                var files = [];
-                $.ajax({
-                    method: 'get',
-                    dataType: 'json',
-                    url: '{{ path('presentation-editor-slideshow-filetree', { presentationId: presentation.id }) }}',
-                    success: function (files) {
-                        $('#directoryTree').jstree({
-                            core: {
-                                data: files
-                            }
-                        });
-                    }
-                });
             },
             false
         );
@@ -103,5 +143,6 @@
 {% endblock %}
 
 {% block stylesheets %}
-    <link rel="stylesheet" href="{{ asset('js/jstree/themes/default/style.min.css') }}" />
+    <link rel="stylesheet" type="text/css" href="{{ asset('js/jquery-ui/jquery-ui.min.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ asset('css/elfinder/css/elfinder.min.css') }}">
 {% endblock %}

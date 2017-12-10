@@ -48,13 +48,32 @@ window.SlideshowEditor = {
         });
     },
     addSlideButton: function (e) {
-        var slide = $(e.currentTarget).data('prototype');
-        this.appendSlide(slide);
-        this.saveSlides();
+        //var slide = $(e.currentTarget).data('prototype');
+        //this.appendSlide(slide);
+        //this.saveSlides();
 
         $("#choseImageOverlay")
             .modal('setting', 'transition', 'fade up')
+            .modal('setting', 'observeChanges', true)
+            .modal('setting', 'onVisible', function() {
+                $("#selectFilesPane").trigger("resize");
+            })
+            .modal('setting', 'onApprove', $.proxy(function () {
+                $("#selectFilesPane").elfinder('instance').exec('getfile');
+                for (var i = 0; i < window.selectedFiles.length; i++) {
+                    var file = window.selectedFiles[i];
+                    console.log(file);
+
+                    var slide = $(e.currentTarget).data('prototype');
+                    console.log(slide);
+                    slide.src = file.url;
+                    this.appendSlide(slide);
+                    this.saveSlides();
+                }
+            }, this))
             .modal('show');
+
+        //initElFinder();
     },
     selectSlide: function (e) {
         var slide = $(e.currentTarget).data("slide");
