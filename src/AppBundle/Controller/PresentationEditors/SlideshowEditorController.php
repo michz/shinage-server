@@ -39,11 +39,7 @@ class SlideshowEditorController extends AbstractPresentationEditor
         }
 
         $serializer = $this->get('jms_serializer');
-        try {
-            $settings = $serializer->deserialize($presentation->getSettings(), Slideshow::class, 'json');
-        } catch (\Exception $exception) {
-            $settings = new Slideshow();
-        }
+        $settings = $this->getCurrentSettingsOrEmpty($presentation);
 
         $slides = $settings->getSlides();
         $slidesJson = $serializer->serialize($slides, 'json');
@@ -78,8 +74,7 @@ class SlideshowEditorController extends AbstractPresentationEditor
         $slides = $serializer->deserialize($slidesJson, 'array<'.ImageSlide::class.'>', 'json');
 
         /** @var Slideshow $settings */
-        $settingsJson = $presentation->getSettings();
-        $settings = $serializer->deserialize($settingsJson, Slideshow::class, 'json');
+        $settings = $this->getCurrentSettingsOrEmpty($presentation);
         $settings->setSlides($slides);
         $presentation->setSettings($serializer->serialize($settings, 'json'));
 
@@ -98,5 +93,22 @@ class SlideshowEditorController extends AbstractPresentationEditor
     public function supports(Presentation $presentation): bool
     {
         return ($presentation->getType() === 'slideshow');
+    }
+
+    /**
+     * @param Presentation $presentation
+     *
+     * @return Slideshow
+     */
+    protected function getCurrentSettingsOrEmpty(Presentation $presentation): Slideshow
+    {
+
+        $serializer = $this->get('jms_serializer');
+        try {
+            $settings = $serializer->deserialize($presentation->getSettings(), Slideshow::class, 'json');
+        } catch (\Exception $exception) {
+            $settings = new Slideshow();
+        }
+        return $settings;
     }
 }

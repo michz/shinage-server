@@ -53,6 +53,12 @@ window.SlideshowEditor = {
     },
     selectSlide: function (e) {
         var slide = $(e.currentTarget).data("slide");
+
+        // visualization
+        $('#slides > .slide', this.container).removeClass('selected');
+        $(e.currentTarget).addClass('selected');
+
+        // Write properties in slide settings pane
         for (var property in slide) {
             if (slide.hasOwnProperty(property)) {
                 $("#tabSlide .settings input[name="+property+"]", this.container).val(slide[property]);
@@ -64,6 +70,7 @@ window.SlideshowEditor = {
         $("#tabSlide .settings."+slide.type, this.container).show();
 
         this.selectedSlide = slide;
+        $('.tabular.menu .item').tab('change tab', 'tabSlide');
     },
     removeSlideButton: function (e) {
         var slide = $(e.currentTarget).parent();
@@ -86,7 +93,7 @@ window.SlideshowEditor = {
         this.provisionSlide(slideDiv, slide);
 
         // add remove button
-        slideDiv.append("<div class='removeSlide'><i class='fa fa-trash'></i></div>");
+        slideDiv.append("<div class='removeSlide'><i class='remove icon'></i></div>");
 
         $("#slides", this.container).append(slideDiv);
         return this;
@@ -135,7 +142,6 @@ window.SlideshowEditor = {
             console.log("Error saving slides: ");
             console.log(e);
         });
-
     }
 };
 

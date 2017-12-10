@@ -13,10 +13,15 @@
     background-color: #ececec;
 }
 
+#slideshowEditor .slide.selected {
+    border: 1px solid #2b5759;
+    background-color: #e1f3fa;
+}
+
 #slideshowEditor .slide .removeSlide {
     display: inline-block;
     position: absolute;
-    right: 6px;
+    right: 0px;
     top: 2px;
     font-size: 18px;
 }
@@ -28,12 +33,3 @@
     object-fit: contain; /* fancy CSS3! */
 }
 
-#slideshowEditor .settings input {
-    display: block;
-    width: 100%;
-}
-
-#slideshowEditor .settingsButtons {
-    display: block;
-    margin: 10px 0 0;
-}
