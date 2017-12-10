@@ -1,5 +1,14 @@
 <?php
 
+namespace shinage\server\behat;
+
+use Behat\Mink\Driver\BrowserKitDriver;
+use Behat\Mink\Exception\UnsupportedDriverActionException;
+use Doctrine\ORM\EntityManagerInterface;
+use FOS\UserBundle\Model\UserManagerInterface;
+use Symfony\Component\BrowserKit\Cookie;
+use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
+
 /**
  * @author   :  Michael Zapf <m.zapf@mztx.de>
  * @date     :  20.11.17
@@ -8,6 +17,37 @@
 
 class LoginContext extends \Behat\MinkExtension\Context\RawMinkContext
 {
+    /** @var EntityManagerInterface */
+    private $entityManager;
+
+    /** @var UserManagerInterface */
+    private $userManager;
+
+    /** @var string */
+    private $firewallName;
+
+    private $session;
+
+    /**
+     * LoginContext constructor.
+     *
+     * @param EntityManagerInterface $entityManager
+     * @param UserManagerInterface   $userManager
+     * @param string                 $firewallName
+     * @param                        $session
+     */
+    public function __construct(
+        EntityManagerInterface $entityManager,
+        UserManagerInterface $userManager,
+        string $firewallName,
+        $session
+    ) {
+        $this->entityManager = $entityManager;
+        $this->userManager = $userManager;
+        $this->firewallName = $firewallName;
+        $this->session = $session;
+    }
+
 
     /**
      * @Given /^I am on page "([^"]*)"$/
@@ -80,5 +120,30 @@ class LoginContext extends \Behat\MinkExtension\Context\RawMinkContext
         if ($elem === null) {
             throw new \Exception('I cannot see error message.');
         }
+    }
+
+
+    /**
+     * @Given /^I am logged in as user "([^"]*)"$/
+     */
+    public function iAmLoggedInAsUser($username)
+    {
+        $driver = $this->getSession()->getDriver();
+        if (! ($driver instanceof BrowserKitDriver)) {
+            throw new UnsupportedDriverActionException('This step is only supported by the BrowserKitDriver', $driver);
+        }
+
+        $client = $driver->getClient();
+        $client->getCookieJar()->set(new Cookie(session_name(), true));
+
+        $firewall = $this->firewallName;
+        $user = $this->userManager->findUserBy(['username' => $username]);
+        /** @var \FOS\UserBundle\Model\UserInterface $user */
+        $token = new UsernamePasswordToken($user, null, $firewall, $user->getRoles());
+        $this->session->set('_security_'.$firewall, serialize($token));
+        $this->session->save();
+
+        $cookie = new Cookie($this->session->getName(), $this->session->getId());
+        $client->getCookieJar()->set($cookie);
     }
 }

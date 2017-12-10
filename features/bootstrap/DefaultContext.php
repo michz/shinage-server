@@ -1,5 +1,7 @@
 <?php
 
+namespace shinage\server\behat;
+
 use Behat\MinkExtension\Context\MinkContext;
 use Behat\Symfony2Extension\Context\KernelAwareContext;
 use Doctrine\Common\DataFixtures\Purger\ORMPurger;

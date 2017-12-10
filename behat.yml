@@ -4,9 +4,29 @@ default:
       paths:
         - "%paths.base%/features/Login"
       contexts:
-        - DefaultContext
-        - LoginContext
-        - UserContext:
+        - \shinage\server\behat\DefaultContext
+        - \shinage\server\behat\GeneralWebpagesContext
+        - \shinage\server\behat\LoginContext:
+            entityManager: "@doctrine.orm.entity_manager"
+            userManager: "@fos_user.user_manager"
+            session: "@session"
+            firewallName: "main"
+        - \shinage\server\behat\UserContext:
+            entityManager: "@doctrine.orm.entity_manager"
+            userManager: "@fos_user.user_manager"
+    presentation_editor_features:
+      paths:
+        - "%paths.base%/features/PresentationEditors"
+      contexts:
+        - \shinage\server\behat\DefaultContext
+        - \shinage\server\behat\GeneralWebpagesContext
+        - \shinage\server\behat\LoginContext:
+            entityManager: "@doctrine.orm.entity_manager"
+            userManager: "@fos_user.user_manager"
+            session: "@session"
+            firewallName: "main"
+        - \shinage\server\behat\PresentationEditorsContext
+        - \shinage\server\behat\UserContext:
             entityManager: "@doctrine.orm.entity_manager"
             userManager: "@fos_user.user_manager"
   extensions:
