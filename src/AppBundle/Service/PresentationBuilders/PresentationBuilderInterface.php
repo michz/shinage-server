@@ -3,8 +3,6 @@
 namespace AppBundle\Service\PresentationBuilders;
 
 use AppBundle\Entity\Presentation;
-use AppBundle\PresentationEditors\PresentationEditorInterface;
-use Symfony\Component\DependencyInjection\Container;
 
 /**
  * @author   :  Michael Zapf <m.zapf@mztx.de>

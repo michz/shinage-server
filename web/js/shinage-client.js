@@ -17,9 +17,9 @@ $(document).ready(function() {
     var id = 0;
     var lastSlide = null;
 
+    /** global: slides */
     slides.forEach(function(s) {
-        //alert(s.file);
-        console.log(s);
+        /** global: img_base */
 
         var n = document.createElement("div");
         $(n).addClass('slide-img');
@@ -37,7 +37,7 @@ $(document).ready(function() {
     //if (slides != undefined) {
     //}
     //
-    //TODO: Warten bis Bilder geladen sind?
+    // @TODO: Warten bis Bilder geladen sind?
     // http://stackoverflow.com/a/5623965
 
 
@@ -47,8 +47,11 @@ $(document).ready(function() {
 
 var getSlide = function(id) {
     for (var i = 0; i < slides.length; ++i) {
-        if (slides[i].id == id) return slides[i];
+        if (slides[i].id == id) {
+            return slides[i];
+        }
     }
+    return null;
 };
 
 var showSlide = function(s) {
@@ -86,4 +89,4 @@ function Slide(type) {
         return this.duration;
     };
 }
-    */
+*/

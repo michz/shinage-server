@@ -21,7 +21,7 @@ class Builder
         $this->factory = $factory;
     }
 
-    public function accountMenu(array $options)
+    public function accountMenu(/** @scrutinizer ignore-unused */ array $options)
     {
         $menu = $this->factory->createItem('root');
 

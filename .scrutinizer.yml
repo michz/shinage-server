@@ -10,4 +10,11 @@ filter:
         - "web/js/elfinder/"
         - "web/js/fullcalendar/"
         - "web/js/jquery.datetimepicker.full.min.js"
-        - "web/semantic-ui"
+        - "web/semantic-ui/"
+        - "web/app*.php"
+        - "src/AppBundle/spec/"
+        - "src/AppBundle/tests/"
+
+build:
+    tests:
+        override: ['php -v']

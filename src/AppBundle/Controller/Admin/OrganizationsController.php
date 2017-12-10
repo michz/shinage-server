@@ -10,19 +10,14 @@ namespace AppBundle\Controller\Admin;
 
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Symfony\Component\HttpFoundation\Request;
 
 class OrganizationsController extends Controller
 {
     /**
      * @Route("/adm/organizations", name="admin-organizations")
      */
-    public function indexAction(Request $request)
+    public function indexAction()
     {
-
-        // replace this example code with whatever you need
-        return $this->render('adm/organizations.html.twig', [
-            #'screens' => $screens,
-        ]);
+        return $this->render('adm/organizations.html.twig', []);
     }
 }

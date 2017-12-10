@@ -10,9 +10,6 @@ namespace AppBundle\Controller\PresentationEditors;
 use AppBundle\Entity\Presentation;
 use AppBundle\Entity\PresentationSettings\Slideshow;
 use AppBundle\Entity\Slides\ImageSlide;
-use Symfony\Component\Form\Extension\Core\Type\FormType;
-use Symfony\Component\Form\Extension\Core\Type\SubmitType;
-use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -20,15 +17,20 @@ use Symfony\Component\Routing\Annotation\Route;
 class SlideshowEditorController extends AbstractPresentationEditor
 {
     /**
+     * @param Request $request
+     * @param         $presentationId
+     *
+     * @return Response
+     *
+     * @throws \RuntimeException
+     *
      * @Route(
      *     "/manage/presentations/editor/slideshow/{presentationId}",
      *     name="presentation-editor-slideshow",
      *     requirements={"presentationId": "[0-9]+"}
      * )
-     *
-     * @throws \RuntimeException
      */
-    public function editAction(Request $request, $presentationId)
+    public function editAction(/** @scrutinizer ignore-unused */ Request $request, $presentationId)
     {
         $presentation = $this->getPresentation($presentationId);
         if (!$this->supports($presentation)) {
@@ -83,6 +85,11 @@ class SlideshowEditorController extends AbstractPresentationEditor
         return new Response('', 204);
     }
 
+    /**
+     * @param Presentation $presentation
+     *
+     * @return bool
+     */
     public function supports(Presentation $presentation): bool
     {
         return ($presentation->getType() === 'slideshow');

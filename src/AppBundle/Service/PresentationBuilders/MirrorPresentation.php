@@ -3,8 +3,6 @@
 namespace AppBundle\Service\PresentationBuilders;
 
 use AppBundle\Entity\Presentation;
-use AppBundle\PresentationEditors\MirrorEditor;
-use Symfony\Component\DependencyInjection\Container;
 
 /**
  * @author   :  Michael Zapf <m.zapf@mtx.de>

@@ -47,7 +47,11 @@ class FilePool
 
     public function getPathForUser(User $user)
     {
-        $path = realpath($this->base) . '/user-' . $user->getId();
+        $realBasePath = realpath($this->base);
+        if ($realBasePath === false) {
+            throw new \RuntimeException('Data pool base path not found.');
+        }
+        $path = $realBasePath . '/user-' . $user->getId();
         self::createPathIfNeeded($path);
         return $path;
     }

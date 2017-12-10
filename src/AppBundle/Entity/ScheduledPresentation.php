@@ -16,7 +16,7 @@ class ScheduledPresentation
     /** @var int */
     private $id;
 
-    /** @var string */
+    /** @var Screen */
     private $screen;
 
     /** @var Presentation */
@@ -41,11 +41,11 @@ class ScheduledPresentation
     /**
      * Set screen
      *
-     * @param \AppBundle\Entity\Screen $screen
+     * @param Screen $screen
      *
      * @return ScheduledPresentation
      */
-    public function setScreen(\AppBundle\Entity\Screen $screen = null)
+    public function setScreen(Screen $screen = null)
     {
         $this->screen = $screen;
 
@@ -55,7 +55,7 @@ class ScheduledPresentation
     /**
      * Get screen
      *
-     * @return \AppBundle\Entity\Screen
+     * @return Screen
      */
     public function getScreen()
     {
@@ -113,11 +113,11 @@ class ScheduledPresentation
     /**
      * Set presentation
      *
-     * @param \AppBundle\Entity\Presentation $presentation
+     * @param Presentation $presentation
      *
      * @return ScheduledPresentation
      */
-    public function setPresentation(\AppBundle\Entity\Presentation $presentation = null)
+    public function setPresentation(Presentation $presentation = null)
     {
         $this->presentation = $presentation;
 
@@ -127,7 +127,7 @@ class ScheduledPresentation
     /**
      * Get presentation
      *
-     * @return \AppBundle\Entity\Presentation
+     * @return Presentation
      */
     public function getPresentation()
     {

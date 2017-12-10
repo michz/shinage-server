@@ -1,6 +1,6 @@
 // @TODO Language Strings?
 
-SlideshowEditor = {
+window.SlideshowEditor = {
     container: null,
     selectedSlide: null,
     slides: [],
@@ -13,7 +13,7 @@ SlideshowEditor = {
         var that = this;
         $("#slides", this.container).sortable({
             "items": "> .slide",
-            "update": function(e, ui) {
+            "update": function () {
                 that.saveSlides();
             }
         });
@@ -40,7 +40,7 @@ SlideshowEditor = {
                 $('.notifyjs-wrapper').trigger('notify-hide');
                 $.notify("Gespeichert.", 'success');
             },
-            'error': function (e) {
+            'error': function () {
                 $('.notifyjs-wrapper').trigger('notify-hide');
                 $.notify("Speichern fehlgeschlagen.", 'error');
             }
@@ -109,7 +109,6 @@ SlideshowEditor = {
     },
     serialize: function() {
         var data = [];
-        var that = this;
         $("#slides .slide", this.container).each(function () {
             data.push($(this).data("slide"));
         });
@@ -130,7 +129,7 @@ SlideshowEditor = {
                     'clickToHide': false
                 });
             }
-        }).done(function (content) {
+        }).done(function () {
             // do nothing by now
         }).fail(function (e) {
             console.log("Error saving slides: ");

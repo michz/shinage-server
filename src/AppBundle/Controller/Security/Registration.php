@@ -22,6 +22,12 @@ use Symfony\Component\HttpFoundation\Request;
 class Registration extends Controller
 {
     /**
+     * @param Request $request
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     *
+     * @throws \LogicException
+     *
      * @Route("/registration", name="registration")
      */
     public function indexAction(Request $request)
@@ -29,7 +35,7 @@ class Registration extends Controller
         //$rep = $this->getDoctrine()->getRepository('AppBundle:Screen');
         $user = new User();
         /** @var UserManager $userManager */
-        $userManager = $this->container->get('fos_user.user_manager');
+        $userManager = $this->get('fos_user.user_manager');
 
         $form = $this->createFormBuilder($user)
             ->add('email', EmailType::class)
@@ -50,7 +56,7 @@ class Registration extends Controller
             if ($form->isValid()) {
                 // check if there is already a user with same email
                 $oldUser = $userManager->findUserByEmail($user->getEmail());
-                if ($oldUser != null) {
+                if ($oldUser !== null) {
                     $this->addFlash(
                         'error',
                         'Die genannte E-Mail-Adresse wird leider bereits genutzt.'
@@ -82,37 +88,46 @@ class Registration extends Controller
     }
 
     /**
+     * @param Request $request
+     * @param string  $confirmationToken
+     *
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse
+     *
+     * @throws \LogicException
+     *
      * @Route("/registration/confirm/{confirmationToken}", name="registration-confirm")
      */
-    public function confirmAction(Request $request, $confirmationToken)
+    public function confirmAction(/** @scrutinizer ignore-unused */ Request $request, string $confirmationToken)
     {
         /** @var UserManager $userManager */
-        $userManager = $this->container->get('fos_user.user_manager');
+        $userManager = $this->get('fos_user.user_manager');
         $user = $userManager->findUserByConfirmationToken($confirmationToken);
 
-        if ($user == null) {
+        if ($user === null) {
             $this->addFlash(
                 'error',
                 'Zu dem Bestätigungscode konnte leider kein Benutzer gefunden werden.'
             );
             return $this->redirectToRoute('fos_user_security_login');
-        } else {
-            $user->setEnabled(true);
-            $userManager->updateUser($user);
-            $this->addFlash(
-                'success',
-                'Vielen Dank! Dein Konto ist nun freigeschaltet und du kannst dich einloggen.'
-            );
-            return $this->redirectToRoute('fos_user_security_login');
         }
+
+        $user->setEnabled(true);
+        $userManager->updateUser($user);
+        $this->addFlash(
+            'success',
+            'Vielen Dank! Dein Konto ist nun freigeschaltet und du kannst dich einloggen.'
+        );
+        return $this->redirectToRoute('fos_user_security_login');
     }
 
-
+    /**
+     * @param UserInterface $user
+     */
     public function sendRegistrationMail(UserInterface $user)
     {
         $message = \Swift_Message::newInstance()
             ->setSubject($this->get('translator')->trans('SubjectRegistrationMail'))
-            ->setFrom($this->container->getParameter('mailer_from'))
+            ->setFrom($this->getParameter('mailer_from'))
             ->setTo($user->getEmail())
             ->setBody(
                 $this->renderView(
