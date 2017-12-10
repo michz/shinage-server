@@ -41,6 +41,7 @@ class FileManager extends Controller
      */
     public function downloadAction(/** @scrutinizer ignore-unused */ Request $request, string $file)
     {
+        // @TODO replace by PoolController
         $user = $this->get('security.token_storage')->getToken()->getUser();
         /** @var User $user */
 
@@ -102,6 +103,14 @@ class FileManager extends Controller
      */
     public function connectorAction()
     {
+        $poolBase = realpath($this->getParameter('path_pool'));
+        if ($poolBase === false) {
+            throw new \RuntimeException('Pool path not found.');
+        }
+        $thumbBase = $poolBase . '/.el-thumbnails/';
+        if (!is_dir($thumbBase)) {
+            @mkdir($thumbBase, 0777, true);
+        }
 
         $response = new StreamedResponse();
         $response->setCallback(function () {
@@ -125,8 +134,8 @@ class FileManager extends Controller
                     'path'          => $path,
                     'URL'           =>
                     $this->generateUrl(
-                        'management-files-download',
-                        array('file' => $basename)
+                        'pool-get',
+                        array('userRoot' => $basename, 'path' => '')
                     ),
                     'tmbPath'       => $tmb_path,
                     'tmbURL'        =>

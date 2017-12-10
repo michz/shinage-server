@@ -22,6 +22,17 @@ services:
         arguments:
             $basepath: "%path_pool%"
 
+    app.filepool.permission_checker:
+        class: AppBundle\Service\FilePoolPermissionChecker
+        arguments:
+            $filePool: "@app.filepool"
+
+    app.filepool.url_builder:
+        class: AppBundle\Service\FilePoolUrlBuilder
+        arguments:
+            $basePath: "%path_pool%"
+            $router: "@router"
+
     app.jstree.builder:
         class: AppBundle\Service\JstreeFileTreeBuilder
         arguments:
@@ -87,3 +98,6 @@ services:
         class: AppBundle\Serializer\Subscriber\SlideDeserializerSubscriber
         tags:
             - jms_serializer.event_subscriber
+
+    app.pool.access_denied_handler:
+        class: AppBundle\Component\Event\AccessDeniedHandler
