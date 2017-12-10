@@ -10,6 +10,7 @@ namespace AppBundle\Controller\PresentationEditors;
 use AppBundle\Entity\Presentation;
 use AppBundle\Entity\PresentationSettings\Slideshow;
 use AppBundle\Entity\Slides\ImageSlide;
+use JMS\Serializer\Exception\RuntimeException;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -38,7 +39,11 @@ class SlideshowEditorController extends AbstractPresentationEditor
         }
 
         $serializer = $this->get('jms_serializer');
-        $settings = $serializer->deserialize($presentation->getSettings(), Slideshow::class, 'json');
+        try {
+            $settings = $serializer->deserialize($presentation->getSettings(), Slideshow::class, 'json');
+        } catch (\Exception $exception) {
+            $settings = new Slideshow();
+        }
 
         $slides = $settings->getSlides();
         $slidesJson = $serializer->serialize($slides, 'json');

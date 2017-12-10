@@ -5,13 +5,33 @@ default:
         - "%paths.base%/features/Login"
       contexts:
         - DefaultContext
-        - LoginContext
+        - GeneralWebpagesContext
+        - LoginContext:
+            entityManager: "@doctrine.orm.entity_manager"
+            userManager: "@fos_user.user_manager"
+            session: "@session"
+            firewallName: "main"
+        - UserContext:
+            entityManager: "@doctrine.orm.entity_manager"
+            userManager: "@fos_user.user_manager"
+    presentation_editor_features:
+      paths:
+        - "%paths.base%/features/PresentationEditors"
+      contexts:
+        - DefaultContext
+        - GeneralWebpagesContext
+        - LoginContext:
+            entityManager: "@doctrine.orm.entity_manager"
+            userManager: "@fos_user.user_manager"
+            session: "@session"
+            firewallName: "main"
+        - PresentationEditorsContext
         - UserContext:
             entityManager: "@doctrine.orm.entity_manager"
             userManager: "@fos_user.user_manager"
   extensions:
     Behat\MinkExtension:
-      base_url:  'http://localhost:8000/app_test.php'
+      base_url:  'http://localhost:8001/app_test.php'
       sessions:
         default:
           goutte: ~

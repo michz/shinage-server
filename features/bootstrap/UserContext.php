@@ -4,6 +4,7 @@ use AppBundle\Entity\User;
 use Behat\Behat\Context\Context;
 use Doctrine\ORM\EntityManagerInterface;
 use FOS\UserBundle\Model\UserManagerInterface;
+use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 
 /**
  * @author   :  Michael Zapf <m.zapf@mztx.de>
@@ -22,8 +23,10 @@ class UserContext implements Context
     /**
      * UserContext constructor.
      */
-    public function __construct(EntityManagerInterface $entityManager, UserManagerInterface $userManager)
-    {
+    public function __construct(
+        EntityManagerInterface $entityManager,
+        UserManagerInterface $userManager
+    ) {
         $this->entityManager = $entityManager;
         $this->userManager = $userManager;
     }
