@@ -1,5 +1,13 @@
 filter:
-    paths: ['*']
+    paths:
+        - "app/"
+        - "src/"
+        - "web/"
     excluded_paths:
-        - "web/js/lib/fullcalendar-locale-all.js"
-        - "web/js/fullcalendar/gcal.js"
+        - "web/js/jstree/"
+        - "web/js/jquery-ui/"
+        - "web/js/lib/"
+        - "web/js/elfinder/"
+        - "web/js/fullcalendar/"
+        - "web/js/jquery.datetimepicker.full.min.js"
+        - "web/semantic-ui"
