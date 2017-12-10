@@ -15,7 +15,7 @@ class Slideshow
      * @var array
      * @JMS\Type("array<AppBundle\Entity\Slides\Slide>")
      */
-    protected $slides;
+    protected $slides = [];
 
     /**
      * @return array
