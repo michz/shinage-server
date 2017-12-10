@@ -1,6 +1,7 @@
 <?php
 
 use Symfony\Component\HttpFoundation\Request;
+use shinage\serverApp\AppKernel;
 
 /** @var \Composer\Autoload\ClassLoader $loader */
 $loader = require __DIR__.'/../vendor/autoload.php';

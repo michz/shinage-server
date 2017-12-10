@@ -35,4 +35,6 @@ default:
       sessions:
         default:
           goutte: ~
-    Behat\Symfony2Extension: ~
+    Behat\Symfony2Extension:
+      kernel:
+        class: '\shinage\serverApp\AppKernel'
