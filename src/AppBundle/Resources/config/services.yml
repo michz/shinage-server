@@ -33,11 +33,6 @@ services:
             $basePath: "%path_pool%"
             $router: "@router"
 
-    app.jstree.builder:
-        class: AppBundle\Service\JstreeFileTreeBuilder
-        arguments:
-            $filePool: "@app.filepool"
-
     app.apiroleregistry:
         class: AppBundle\Service\ApiRoleRegistry
 
