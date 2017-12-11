@@ -6,8 +6,8 @@
             <h1>{{ 'Presentations'|trans }}</h1>
         </div>
         <div class="row">
-            <a class="btn btn-primary" href="{{ path("management-presentations-create") }}">
-                <i class="fa fa-plus fa-fw"></i>
+            <a class="ui primary button" href="{{ path("management-presentations-create") }}">
+                <i class="icon plus"></i>
                 {{ "Create Presentation"|trans }}
             </a>
         </div>
@@ -22,8 +22,8 @@
                     <p>{{ presentation.lastModified|date('Y-m-d') }}</p>
                     <p>{{ presentation.notes }}</p>
                     <p>
-                        <a class="btn btn-default" href="{{ path("presentation-editor-" ~ presentation.type, { presentationId: presentation.id })  }}">
-                            <i class="fa fa-pencil fa-fw"></i>
+                        <a class="ui button default" href="{{ path("presentation-editor-" ~ presentation.type, { presentationId: presentation.id })  }}">
+                            <i class="icon pencil"></i>
                             {{ "Edit Presentation"|trans }}
                         </a>
                     </p>
