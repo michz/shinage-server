@@ -130,17 +130,17 @@
                             url: form.attr('action'),
                             data: form.serialize()
                         })
-                            .fail(function(){
-                                $.notify("Beim Eintragen ist leider ein Fehler aufgetreten.", "error");
-                            })
-                            .done(function(){
-                                $.notify("Die Präsentation wurde eingetragen.", "success");
-                                var cb = $('#diag-place').dialog('option', 'successCallback');
-                                cb();
-                            })
-                            .always(function(){
-                                ajaxLoadHide();
-                            });
+                        .fail(function(){
+                            $.notify("Beim Eintragen ist leider ein Fehler aufgetreten.", "error");
+                        })
+                        .done(function(){
+                            $.notify("Die Präsentation wurde eingetragen.", "success");
+                            var cb = $('#diag-place').dialog('option', 'successCallback');
+                            cb();
+                        })
+                        .always(function(){
+                            ajaxLoadHide();
+                        });
 
                         $(this).dialog("close");
                     },
