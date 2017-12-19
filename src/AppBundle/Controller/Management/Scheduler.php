@@ -14,6 +14,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use AppBundle\Service\ScreenAssociation;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use AppBundle\Entity\Screen;
 use AppBundle\Entity\Presentation;
@@ -67,7 +68,7 @@ class Scheduler extends Controller
         $start = new \DateTime($request->get('start'), new \DateTimeZone('UTC'));
         $end = new \DateTime($request->get('end'), new \DateTimeZone('UTC'));
 
-        $r = array();
+        $sched = [];
         if ($screen) {
             // Check if user is allowed to see/edit screen
             $user = $this->get('security.token_storage')->getToken()->getUser();
@@ -94,23 +95,11 @@ class Scheduler extends Controller
                 ->setParameter('screen', $guid);
 
             $sched = $query->getResult();
-
-            foreach ($sched as $s) {
-                /** @var ScheduledPresentation $s */
-                $o          = new \stdClass();
-                $o->id      = $s->getId();
-                $o->start   = $s->getScheduledStart()->format('Y-m-d H:i:s');
-                $o->end     = $s->getScheduledEnd()->format('Y-m-d H:i:s');
-                $o->screen  = $s->getScreen()->getGuid();
-                $o->presentation = $s->getPresentation();
-                $r[]        = $o;
-            }
-
-            #$presentations = $rep->findBy(array('user_id' => $user->getId()));
         }
 
         // is AJAX request
-        return $this->json($r);
+        $serializer = $this->get('jms_serializer');
+        return new Response($serializer->serialize($sched, 'json'));
     }
 
     /**
