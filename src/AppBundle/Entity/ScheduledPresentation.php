@@ -8,24 +8,48 @@
 
 namespace AppBundle\Entity;
 
+use JMS\Serializer\Annotation as JMS;
+
 /**
+ * @JMS\VirtualProperty(
+ *     "screen",
+ *     exp="object.getScreen().getGuid()",
+ *     options={@JMS\SerializedName("screen")}
+ *  )
  * AppBundle\Entity\ScheduledPresentation
  */
 class ScheduledPresentation
 {
-    /** @var int */
+    /**
+     * @var int
+     * @JMS\Type("integer")
+     */
     private $id;
 
-    /** @var Screen */
+    /**
+     * @var Screen
+     * @JMS\Exclude()
+     */
     private $screen;
 
-    /** @var Presentation */
+    /**
+     * @var Presentation
+     * @JMS\Type(Presentation::class)
+     */
     private $presentation;
 
-    /** @var \DateTime */
+    /**
+     * @var \DateTime
+     * @JMS\Type("DateTime<'Y-m-d H:i:s'>")
+     * @JMS\SerializedName("start")
+     */
     private $scheduled_start;
 
-    /** @var \DateTime */
+    /**
+     * @var \DateTime
+     * @JMS\Type("DateTime<'Y-m-d H:i:s'>")
+     * @JMS\SerializedName("end")
+     */
     private $scheduled_end;
 
     /**

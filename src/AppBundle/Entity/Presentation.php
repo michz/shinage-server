@@ -6,33 +6,54 @@
  * Time: 11:29
  */
 
-
 namespace AppBundle\Entity;
+
+use JMS\Serializer\Annotation as JMS;
 
 /**
  * AppBundle\Entity\Presentation
  */
 class Presentation
 {
-    /** @var int */
+    /**
+     * @var int
+     * @JMS\Type("integer")
+     */
     protected $id;
 
-    /** @var string */
+    /**
+     * @var string
+     * @JMS\Type("string")
+     */
     protected $title = 'Presentation';
 
-    /** @var string */
+    /**
+     * @var string
+     * @JMS\Type("string")
+     */
     protected $notes = '';
 
-    /** @var string */
+    /**
+     * @var string
+     * @JMS\Exclude()
+     */
     protected $settings = '';
 
-    /** @var \DateTime */
+    /**
+     * @var \DateTime
+     * @JMS\Type("DateTime")
+     */
     protected $lastModified = null;
 
-    /** @var User */
+    /**
+     * @var User
+     */
     protected $owner;
 
-    /** @var string */
+    /**
+     * @var string
+     * @JMS\Type("string")
+     */
     protected $type;
 
 
