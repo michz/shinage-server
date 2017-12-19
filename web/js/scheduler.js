@@ -155,6 +155,7 @@ $(document).ready(function() {
             center: 'title',
             right: 'month,agendaWeek,agendaDay'
         },
+        height: 'auto',
         locale: 'de',
         //defaultDate: '2016-12-12',
         defaultView: 'agendaWeek',
