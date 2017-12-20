@@ -34,4 +34,4 @@ security:
         - { path: ^/adm/modify_screen, role: ROLE_USER }
         - { path: ^/adm, role: ROLE_ADMIN }
         - { path: ^/manage, role: ROLE_USER }
-        - { path: ^/pool, role: ROLE_POOL_USER }
+        - { path: ^/pool, role: IS_AUTHENTICATED_ANONYMOUSLY }

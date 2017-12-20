@@ -8,10 +8,7 @@
 
 namespace AppBundle\Service;
 
-use AppBundle\Entity\User;
-use AppBundle\Service\Pool\PoolDirectory;
-use AppBundle\Service\Pool\PoolFile;
-use Symfony\Component\Config\Definition\Exception\Exception;
+use Symfony\Component\HttpFoundation\File\Exception\AccessDeniedException;
 use Symfony\Component\HttpFoundation\File\Exception\FileNotFoundException;
 use Symfony\Component\Routing\RouterInterface;
 
@@ -47,6 +44,10 @@ class FilePoolUrlBuilder
         $absolute = realpath($this->concatPaths($this->basePath, $relative));
         if ($absolute === false) {
             throw new FileNotFoundException($relative);
+        }
+        $absoluteBase = realpath($this->basePath);
+        if (0 !== strpos($absolute, $absoluteBase)) {
+            throw new AccessDeniedException($relative);
         }
         return $absolute;
     }
