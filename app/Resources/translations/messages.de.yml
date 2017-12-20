@@ -58,3 +58,6 @@ WrongOldPassword: Das bisherige Passwort ist leider falsch.
 Choose to add: Auswählen zum Hinzufügen
 Cancel: Abbrechen
 Add selected to slideshow: Ausgewählte zur Slideshow hinzufügen
+
+Warning: Achtung
+Files uploaded here are accessible without authentication: Dateien, die hier hochgeladen werden, sind grundsätzlich öffentlich erreichbar
