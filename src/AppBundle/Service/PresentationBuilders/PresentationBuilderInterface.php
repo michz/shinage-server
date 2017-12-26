@@ -3,6 +3,7 @@
 namespace AppBundle\Service\PresentationBuilders;
 
 use AppBundle\Entity\Presentation;
+use AppBundle\Entity\ScreenRemote\PlayablePresentation;
 
 /**
  * @author   :  Michael Zapf <m.zapf@mztx.de>
@@ -22,7 +23,7 @@ interface PresentationBuilderInterface
     /**
      * @param Presentation $presentation
      *
-     * @return \JsonSerializable|string
+     * @return PlayablePresentation|string
      */
     public function buildPresentation(Presentation $presentation);
 
