@@ -90,3 +90,20 @@ knp_menu:
 
 jms_serializer:
 
+
+shinage_player:
+  uuid: "00000000-0000-0000-0000-000000000000"
+  local:
+    enabled: false
+    path: "/mnt/usb"
+  remote:
+    enabled: true
+    host: "127.0.0.1:8001"
+    protocol: "http"
+    base_path: "/"
+    controller:
+      heartbeat: "/screen-remote/heartbeat/%s"
+      presentation: "/screen-remote/presentation/%d"
+      asset: "/screen-remote/client-file/%s"
+      screenshot: "/screen-remote/upload-screenshot"
+

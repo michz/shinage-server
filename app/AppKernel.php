@@ -2,6 +2,7 @@
 
 namespace shinage\serverApp;
 
+use mztx\ShinagePlayerBundle\ShinagePlayerBundle;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpKernel\Kernel;
 use Symfony\Component\Config\Loader\LoaderInterface;
@@ -36,6 +37,8 @@ class AppKernel extends Kernel
             new \JMS\SerializerBundle\JMSSerializerBundle(),
 
             new \AppBundle\AppBundle(),
+
+            new ShinagePlayerBundle(),
         ];
 
         if (in_array($this->getEnvironment(), ['dev', 'test'], true)) {
