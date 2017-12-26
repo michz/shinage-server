@@ -36,7 +36,7 @@
         {% endif %}
 
         {# flash messages #}
-        <div class="ui container">
+        <div class="ui flashTop container">
             {% for flash_message in app.session.flashBag.get('error') %}
                 <div class="alert alert-danger">
                     {{ flash_message }}
