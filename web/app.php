@@ -8,7 +8,6 @@ $loader = require __DIR__.'/../vendor/autoload.php';
 include_once __DIR__.'/../var/bootstrap.php.cache';
 
 $kernel = new AppKernel('prod', false);
-$kernel->loadClassCache();
 //$kernel = new AppCache($kernel);
 
 // When using the HttpCache, you need to call the method in your front controller

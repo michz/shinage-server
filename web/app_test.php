@@ -24,7 +24,6 @@ $loader = require __DIR__.'/../vendor/autoload.php';
 Debug::enable();
 
 $kernel = new AppKernel('test', true);
-$kernel->loadClassCache();
 $request = Request::createFromGlobals();
 $response = $kernel->handle($request);
 $response->send();
