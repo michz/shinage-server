@@ -43,7 +43,7 @@ class Presentation
      * @var \DateTime
      * @JMS\Type("DateTime")
      */
-    protected $lastModified = null;
+    protected $lastModified;
 
     /**
      * @var User
@@ -56,6 +56,13 @@ class Presentation
      */
     protected $type;
 
+    /**
+     * Presentation constructor.
+     */
+    public function __construct()
+    {
+        $this->lastModified = new \DateTime();
+    }
 
     /**
      * Get id
