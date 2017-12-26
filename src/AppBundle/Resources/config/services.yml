@@ -82,6 +82,8 @@ services:
         class: AppBundle\Service\PresentationBuilders\SlideshowPresentation
         tags:
             - app.presentation_builder
+        arguments:
+            $serializer: '@jms_serializer'
 
     app.menu_builder:
         class: AppBundle\Menu\Builder

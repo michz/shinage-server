@@ -10,6 +10,7 @@ namespace AppBundle\Controller\ScreenRemote;
 
 use AppBundle\Entity\Presentation;
 use AppBundle\Service\PresentationBuilders\PresentationBuilderChain;
+use JMS\Serializer\SerializerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\File\Exception\AccessDeniedException;
@@ -85,7 +86,7 @@ class HeartbeatController extends Controller
             'screen_status' => $is_assoc ? 'registered' : 'not_registered',
             'connect_code'  => $screen->getConnectCode(),
             'presentation'  => $presentation->getId(),
-            'last_modified'  => $lastModified->format('Y-m-d H:i:s'),
+            'last_modified' => $lastModified ? $lastModified->format('Y-m-d H:i:s') : '0000-00-00 00:00:00',
         ]);
     }
 
@@ -133,7 +134,9 @@ class HeartbeatController extends Controller
             ]);
         }
 
-        return $this->json($playable);
+        /** @var SerializerInterface $serializer */
+        $serializer = $this->get('jms_serializer');
+        return new Response($serializer->serialize($playable, 'json'));
     }
 
     /**
