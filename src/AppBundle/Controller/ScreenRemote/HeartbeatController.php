@@ -35,7 +35,7 @@ class HeartbeatController extends Controller
      *
      * @Route("/screen-remote/heartbeat/{screenId}", name="screen-remote-heartbeat", requirements={"screenId": ".*"})
      */
-    public function heartbeatAction(/** @scrutinizer ignore-unused */ Request $request, $screenId)
+    public function heartbeatAction(Request $request, $screenId)
     {
         if (!$screenId) {
             return $this->json([
@@ -54,7 +54,10 @@ class HeartbeatController extends Controller
             $screen->setConnectCode($this->generateUniqueConnectcode());
         }
 
-        $screen->setLastConnect(new \DateTime());
+        $isPreview = $request->headers->get('X-PREVIEW');
+        if ($isPreview !== '1') {
+            $screen->setLastConnect(new \DateTime());
+        }
 
         // check if screen is associated
         $assoc = $this->get('app.screenassociation');
@@ -120,23 +123,26 @@ class HeartbeatController extends Controller
         $playableBuilder = $playableBuilderChain->getBuilderForPresentation($presentation);
         $playable = $playableBuilder->buildPresentation($presentation);
 
-        /* * @var PlayableBuilder $playableBuilder */
-        #$playableBuilder = $this->container->get('app.remote.playable_builder');
-        #$playable = $playableBuilder->build($presentation, $request->getSchemeAndHttpHost());
-
-        if (\is_string($playable)) {
-            $callback = $request->get('callback');
-            if ($callback !== null && 0 === strpos($playable, self::JSONP_DUMMY)) {
-                $playable = substr_replace($playable, $callback, 0, \strlen(self::JSONP_DUMMY));
-            }
-            return new Response($playable, 200, [
-                'Content-Type' => 'application/json'
-            ]);
-        }
-
         /** @var SerializerInterface $serializer */
         $serializer = $this->get('jms_serializer');
-        return new Response($serializer->serialize($playable, 'json'));
+        if (\is_string($playable)) {
+            $output = $playable;
+        } else {
+            $output = $serializer->serialize($playable, 'json');
+        }
+
+        $callback = $request->get('callback');
+        if ($callback !== null) {
+            if (0 === strpos($output, self::JSONP_DUMMY)) {
+                $output = substr_replace($output, $callback, 0, \strlen(self::JSONP_DUMMY));
+            } else {
+                $output = $callback.'('.$output.')';
+            }
+        }
+
+        return new Response($output, 200, [
+            'Content-Type' => 'application/json'
+        ]);
     }
 
     /**

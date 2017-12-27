@@ -1,0 +1,29 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <div class="ui main container">
+        <div id="screenSelector">
+            <select class="ui dropdown">
+                <option disabled selected value="">{{ 'Please chose screen...'|trans }}</option>
+                {% for screen in screens %}
+                    <option value="{{ screen.guid }}">{{ screen.name }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div id="previewArea">
+            <iframe id="previewFrame"></iframe>
+        </div>
+    </div>
+    {% endblock %}
+
+
+{% block scripts %}
+    <script>
+        $('#screenSelector select').on('change', function (e) {
+            var basePreviewUrl = '{{ path('shinage.player.index') }}';
+            var target = e.currentTarget;
+            var guid = $(target).val();
+            $('#previewFrame').attr('src', basePreviewUrl + '?preview=1&screen=' + guid);
+        });
+    </script>
+{% endblock %}
