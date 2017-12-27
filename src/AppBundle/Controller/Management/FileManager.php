@@ -16,6 +16,7 @@ use AppBundle\Entity\User;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 use Symfony\Component\HttpFoundation\Response;
 use AppBundle\Service\FilePool;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 class FileManager extends Controller
@@ -116,47 +117,47 @@ class FileManager extends Controller
         $response->setCallback(function () {
             $pool = $this->get('app.filepool'); /** @var FilePool $pool */
 
-            #$path = $this->getParameter('path_pool');
             $user = $this->get('security.token_storage')->getToken()->getUser();
 
             // get root directories
             $paths = $pool->getUserPaths($user);
-            $roots = array();
+            $roots = [];
 
             foreach ($paths as $name => $path) {
                 $basename = basename($path);
                 $tmb_path = realpath($this->getParameter('path_pool')) .
                     '/.el-thumbnails/' . $basename . '/';
 
-                $roots[] = array(
+                $roots[] = [
                     'driver'        => 'LocalFileSystem',
                     'alias'         => $name,
                     'path'          => $path,
                     'URL'           =>
                     $this->generateUrl(
                         'pool-get',
-                        array('userRoot' => $basename, 'path' => '')
+                        ['userRoot' => $basename, 'path' => ''],
+                        UrlGeneratorInterface::ABSOLUTE_URL
                     ),
                     'tmbPath'       => $tmb_path,
                     'tmbURL'        =>
                     $this->generateUrl(
                         'management-files-el-thumbnail',
-                        array('base' => $basename, 'file' => '')
+                        ['base' => $basename, 'file' => '']
                     ),
-                    'uploadDeny'    => array('all'),            // all mime not allowed to upload
-                    'uploadAllow'   => array('image'),          // mime `image` allowed
-                    'uploadOrder'   => array('deny', 'allow'),  // allowed specified mime only
+                    'uploadDeny'    => ['all'],            // all mime not allowed to upload
+                    'uploadAllow'   => ['image'],          // mime `image` allowed
+                    'uploadOrder'   => ['deny', 'allow'],  // allowed specified mime only
                     'accessControl' => 'access'                 // disable and hide dot starting files
-                );
+                ];
             }
 
 
             // Documentation for connector options:
             // https://github.com/Studio-42/elFinder/wiki/Connector-configuration-options
-            $opts = array(
+            $opts = [
                 // 'debug' => true,
                 'roots' => $roots
-            );
+            ];
 
             // run elFinder
             $connector = new \elFinderConnector(new \elFinder($opts));
