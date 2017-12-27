@@ -10,7 +10,6 @@ namespace AppBundle\Controller\PresentationEditors;
 use AppBundle\Entity\Presentation;
 use AppBundle\Entity\PresentationSettings\Slideshow;
 use AppBundle\Entity\Slides\ImageSlide;
-use AppBundle\Entity\User;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -83,27 +82,6 @@ class SlideshowEditorController extends AbstractPresentationEditor
         $em->flush();
 
         return new Response('', 204);
-    }
-
-    /**
-     * @Route(
-     *     "/manage/presentations/editor/slideshow/{presentationId}/fileTree",
-     *     name="presentation-editor-slideshow-filetree",
-     *     requirements={"presentationId": "[0-9]+"}
-     * )
-     */
-    public function fileTreeAction()
-    {
-        /** @var User $user */
-        $user = $this->get('security.token_storage')->getToken()->getUser();
-
-        $filePool = $this->get('app.filepool');
-        $fileTreeBuilder = $this->get('app.jstree.builder');
-
-        $fileTreeBuilder->addNewRoot($filePool->getPathForUser($user), 'me');
-
-        $serializer = $this->get('jms_serializer');
-        return new Response($serializer->serialize($fileTreeBuilder->getTree(), 'json'));
     }
 
     /**
