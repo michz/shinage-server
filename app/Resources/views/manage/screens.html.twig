@@ -32,18 +32,20 @@
 
         <div class="ui bottom attached segment">
             <form action="{{ path('management-connect-screen') }}" method="post" class="form-inline">
-                <label class="" for="inlineFormInput">Verbindungskennung:</label>
-                <input type="text" class="form-control mb-0 mr-sm-4 mb-sm-2" id="inlineFormInput" placeholder="12345678" name="connect_code" maxlength="8">
+                <label for="inlineFormInput">Verbindungskennung:</label>
+                <div class="ui input">
+                    <input type="text" id="inlineFormInput" placeholder="12345678" name="connect_code" maxlength="8">
+                </div>
 
-                <label class="mr-sm-4" for="who">Verbinden mit: </label>
-                <select class="custom-select mb-2 mr-sm-2 mb-sm-0" id="who" name="who">
+                <label for="who">&nbsp;&nbsp;&nbsp;Verbinden mit: </label>
+                <select class="ui dropdown" id="who" name="who">
                     <option value="me">meinem Konto</option>
                     {% for orga in organizations %}
                         <option value="{{ orga.getId() }}">{{ "Organization"|trans }}: {{ orga.getName() }}</option>
                     {% endfor %}
                 </select>
 
-                <button type="submit" class="btn btn-primary">{{ "Connect"|trans }}</button>
+                <button class="ui default button" type="submit" class="btn btn-primary">{{ "Connect"|trans }}</button>
             </form>
         </div>
 

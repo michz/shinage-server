@@ -195,7 +195,7 @@ code { background: #F5F5F5; max-width: 100px; padding: 2px 6px; word-wrap: break
 
 /* scheduler */
 #sched-screen-list {}
-#sched-screen-list .item { display:inline-block; width:160px;
+#sched-screen-list .item { display:inline-block; width:225px;
     margin:5px; padding:2px 0; border: 1px solid #92AAB0; overflow:hidden;
     font-size:12px; line-height:14px; background-color: #EDEEFE;
     color: #556666; }
