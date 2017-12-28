@@ -39,7 +39,7 @@
                 <p style="margin-top:15px; font-weight:bold; ">{{ 'AddMember'|trans }}:</p>
                 <form action="{{ path('account-orga-add-user') }}" method="post">
                     <input type="hidden" name="organization" value="{{ orga.getId() }}">
-                    <div class="ui action labeled input">
+                    <div class="ui fluid action labeled input">
                         <label for="email" class="ui label">{{ 'Email'|trans }}</label>
                         <input type="text" id="email" name="email" data-cip-id="email">
                         <button class="ui blue right labeled icon button" type="submit">
@@ -57,18 +57,37 @@
         {% endfor %}
     </div>
 
+    <div class="ui modal" id="leaveDialog">
+        <i class="close icon"></i>
+        <div class="header">
+            {{ 'LeaveThisOrga'|trans }}
+        </div>
+        <div class="content">
+            <strong>
+                {{ "Are you sure you want to leave the organization?"|trans }}
+            </strong>
+            <br>
+            {{ "This cannot be undone!"|trans }}
+        </div>
+        <div class="actions">
+            <div class="ui cancel button">{{ 'No (cancel)'|trans }}</div>
+            <div class="ui approve button">{{ 'Yes'|trans }}</div>
+        </div>
+    </div>
+
 {% endblock %}
 
 {% block scripts %}
     <script>
         $(document).ready(function() {
             $('.leave').on('click', function(e) {
-                var c = confirm("Soll die Organisation \"" + $(this).data('name') + "\" wirklich verlassen werden?");
-                if (!c) {
-                    e.preventDefault();
-                    return false;
-                }
-                return true;
+                $('#leaveDialog').modal({
+                    onApprove : function() {
+                        // @TODO make call / redirect
+                    }
+                }).modal('show');
+                e.preventDefault();
+                return false;
             });
             $('.remove-user').on('click', function(e) {
                 var c = confirm("Soll der Benutzer \"" + $(this).data('user') +
