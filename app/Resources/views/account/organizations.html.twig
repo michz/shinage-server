@@ -20,14 +20,22 @@
                 {# TODO{s:0}: Anzeigen: FileManager Quota #}
                 {# TODO{s:0}: Orga-Bearbeiten: Form-Handling verbessern #}
 
-                <p style="margin-top:15px; font-weight:bold; ">{{ 'Members'|trans }}:</p>
-                {% for user in orgaManager.getUsers(orga) %}
-                    <p>
-                        <a href="{{ path('account-orga-remove', { 'user_id':user.getId(), 'orga_id':orga.getId() }) }}">
-                            <img class="remove-user" data-user="{{ user.getEmail() }}" data-orga="{{ orga.getName() }}" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAABmJLR0QA/wD/AP+gvaeTAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAB3RJTUUH4QEHCR87wvuvuwAAAIRJREFUOMutU0EOwCAIa3byNSY+wv8f/YHPWHeYLtjhZcyEKNTGAgKSmIskpq9xxfXOdDqA4hHGXgD0hWjABoDDqvNSNXh7cPMyxbJRkB38VmKk0bE0zMOKqqhy4dyc1xSlSHlDsLH86pQEdpIJICn5QHT9mUKoiN/bGP5I4a8cHqboOF/dHiTQQ9S7CAAAAABJRU5ErkJggg==">
-                        </a> {{ user.getEmail() }}
-                    </p>
-                {% endfor %}
+                <p>{{ 'Members'|trans }}:</p>
+                <div class="ui middle aligned divided list">
+                    {% for user in orga.users %}
+                        <div class="item">
+                            <div class="right floated content">
+                                <a class="remove-user ui red button" href="{{ path('account-orga-remove', { 'user_id':user.getId(), 'orga_id':orga.getId() }) }}" data-user="{{ user.getEmail() }}" data-orga="{{ orga.getName() }}">
+                                    {{ 'Remove'|trans }}
+                                </a>
+                            </div>
+                            {#<img class="ui avatar image" src="/images/avatar2/small/molly.png">#}
+                            <div class="content">
+                                {{ user.getEmail() }}
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
                 <p style="margin-top:15px; font-weight:bold; ">{{ 'AddMember'|trans }}:</p>
                 <form action="{{ path('account-orga-add-user') }}" method="post">
                     <input type="hidden" name="organization" value="{{ orga.getId() }}">

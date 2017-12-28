@@ -32,6 +32,9 @@ class User extends BaseUser
     /** @var ArrayCollection */
     private $organizations;
 
+    /** @var ArrayCollection */
+    private $users;
+
     /**
      * @RollerworksPassword\PasswordRequirements(requireLetters=true, requireNumbers=true)
      */
@@ -47,6 +50,7 @@ class User extends BaseUser
     {
         parent::__construct();
         $this->organizations = new ArrayCollection();
+        $this->users = new ArrayCollection();
     }
 
     public function setEmail($email)
@@ -204,5 +208,47 @@ class User extends BaseUser
     public function getName()
     {
         return $this->name;
+    }
+
+    /**
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getUsers()
+    {
+        return $this->users;
+    }
+
+    /**
+     * @param \Doctrine\Common\Collections\Collection $users
+     * @return User
+     */
+    public function setUsers(\Doctrine\Common\Collections\Collection $users)
+    {
+        $this->users = $users;
+        return $this;
+    }
+
+    /**
+     * Add user
+     *
+     * @param \AppBundle\Entity\User $user
+     *
+     * @return User
+     */
+    public function addUser(\AppBundle\Entity\User $user)
+    {
+        $this->users[] = $user;
+
+        return $this;
+    }
+
+    /**
+     * Remove user
+     *
+     * @param \AppBundle\Entity\User $user
+     */
+    public function removeUser(\AppBundle\Entity\User $user)
+    {
+        $this->users->removeElement($user);
     }
 }

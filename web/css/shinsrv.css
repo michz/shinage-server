@@ -83,11 +83,13 @@ code { background: #F5F5F5; max-width: 100px; padding: 2px 6px; word-wrap: break
 }
 
 /* flash messages */
-.flash { margin:7px 3px; padding:9px; font-size:1.1em;
-    border-width:1px; border-radius:4px; border-style: solid; }
-.flash-error { border-color: #de0000; background-color:#ffeeee; color:#aa0000; }
-.flash-notice { border-color: #0000d0; background-color:#eeeeff; color:#00009a; }
-.flash-success { border-color: #00b000; background-color:#eeffee; color:#008800; }
+.notifyjs-corner {
+    max-width: 100%;
+    font-size: 18px;
+}
+.notifyjs-corner span {
+    white-space: normal;
+}
 
 /* other generic stuff */
 .dialog { display: none; }
