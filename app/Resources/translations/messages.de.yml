@@ -42,6 +42,11 @@ AddMember: Mitglied hinzufügen
 ApiKeys: API-Schlüssel
 CreateApiKeys: API-Schlüssel erstellen
 
+Yes: Ja
+No (cancel): Nein (abbrechen)
+Are you sure you want to leave the organization?: Bist du sicher, dass du die Organisation verlassen willst?
+This cannot be undone!: Dieser Vorgang kann nicht rückgängig gemacht werden!
+
 AddUser: Benutzer hinzufügen
 Email: E-Mail
 Password: Passwort
