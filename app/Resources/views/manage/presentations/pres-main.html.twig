@@ -19,7 +19,7 @@
             {% for presentation in presentationGroup %}
                 <h2 class="ui top attached block header">{{ presentation.title }}</h2>
                 <div class="ui bottom attached segment row slide">
-                    <p>{{ presentation.lastModified|date('Y-m-d') }}</p>
+                    <p>{{ 'Last modified'|trans }}: {{ presentation.lastModified|date('d.m.Y H:i') }}</p>
                     <p>{{ presentation.notes }}</p>
                     <p>
                         <a class="ui button default" href="{{ path("presentation-editor-" ~ presentation.type, { presentationId: presentation.id })  }}">
@@ -31,7 +31,6 @@
             {% endfor %}
         {% endfor %}
     </div>
-
 {% endblock %}
 
 {% block scripts %}
