@@ -31,38 +31,14 @@
     <body>
         {% include('navi/navigation.html.twig') %}
 
-        {% if app.session.flashBag.has('*') %}
-            gibt welche
-        {% endif %}
+        <div id="mainWrapper">
+            {# main content #}
+            {% block body %}{% endblock %}
 
-        {# flash messages #}
-        <div class="ui flashTop container">
-            {% for flash_message in app.session.flashBag.get('error') %}
-                <div class="alert alert-danger">
-                    {{ flash_message }}
-                </div>
-            {% endfor %}
-            {% for flash_message in app.session.flashBag.get('success') %}
-                <div class="flash flash-success">
-                    {{ flash_message }}
-                </div>
-            {% endfor %}
-            {% for flash_message in app.session.flashBag.get('notice') %}
-                <div class="flash flash-notice">
-                    {{ flash_message }}
-                </div>
-            {% endfor %}
+            <div id="ajax-loading">
+                <img src="{{ asset('img/spin.gif') }}">
+            </div>
         </div>
-
-        {# main content #}
-        {% block body %}{% endblock %}
-
-
-
-        <div id="ajax-loading">
-            <img src="{{ asset('img/spin.gif') }}">
-        </div>
-
 
 
         <script src="{{ asset('js/lib/jquery-3.1.1.min.js') }}"></script>
@@ -75,13 +51,18 @@
         <script src="{{ asset('js/lib/notify.min.js') }}"></script>
         <script src="{{ asset('js/lib/moment.min.js') }}"></script>
         <script src="{{ asset('js/shinage.js') }}"></script>
-        {#<script src="{{ asset('js/shinage-client.js') }}"></script>#}
         <script src="{{ asset('js/lib/fullcalendar.min.js') }}"></script>
         <script src="{{ asset('js/lib/fullcalendar-locale-all.js') }}"></script>
         <script src="{{ asset('js/slideshowEditor.js') }}"></script>
 
         <script>
             $.notify.defaults({ autoHideDelay: 2000, showDuration: 250 });
+
+            {% for label, messages in app.flashes %}
+                {% for message in messages %}
+                    $.notify("{{ message }}", { className: '{{ label }}', autoHideDelay: 10000 });
+                {% endfor %}
+            {% endfor %}
         </script>
 
         {% block scripts %}{% endblock %}
