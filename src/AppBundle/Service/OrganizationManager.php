@@ -25,7 +25,8 @@ class OrganizationManager
 
     public function getUsers(User $orga)
     {
-        //@TODO{s:5} Liste der User abrufen
+        #$repo = $this->em->getRepository('AppBundle:User');
+        #return $repo->findBy(['organization' => $orga]);
         return [];
     }
 }

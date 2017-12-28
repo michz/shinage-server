@@ -50,10 +50,13 @@ class PresentationsController extends Controller
         $builderChain = $this->get('app.presentation_builder_chain');
 
         $presentation = new Presentation();
+        $presentation->setType('slideshow');
         $form = $this->get('form.factory')->createNamedBuilder('form_presentation', FormType::class, $presentation)
             ->add('title', TextType::class)
-            ->add('type', ChoiceType::class, ['choices' => $this->getTypeChoices($builderChain->getTypes())])
-            #->add('password', PasswordType::class)
+            ->add('type', ChoiceType::class, [
+                'choices' => $this->getTypeChoices($builderChain->getTypes()),
+                'translation_domain' => 'PresentationTypes',
+            ])
             ->add('save', SubmitType::class, ['label' => 'Create'])
             ->getForm();
 

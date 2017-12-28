@@ -15,36 +15,64 @@
             <h3 class="ui top attached block header">
                 {{ orga.getName() }}
             </h3>
-            <div class="ui bottom attached segment">
+            <div class="ui middle attached segment">
                 {# TODO{s:0}: Anzeigen: Anzahl Bildschirme #}
                 {# TODO{s:0}: Anzeigen: FileManager Quota #}
                 {# TODO{s:0}: Orga-Bearbeiten: Form-Handling verbessern #}
 
-                <p><a class="leave" data-name="{{ orga.getName() }}" href="{{ path('account-orga-leave', {'id': orga.getId()}) }}">{{ 'LeaveThisOrga'|trans }}.</a></p>
-                <p style="margin-top:15px; font-weight:bold; ">{{ 'Members'|trans }}:</p>
-                {% for user in orgaManager.getUsers(orga) %}
-                    <p>
-                        <a href="{{ path('account-orga-remove', { 'user_id':user.getId(), 'orga_id':orga.getId() }) }}">
-                            <img class="remove-user" data-user="{{ user.getEmail() }}" data-orga="{{ orga.getName() }}" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAABmJLR0QA/wD/AP+gvaeTAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAB3RJTUUH4QEHCR87wvuvuwAAAIRJREFUOMutU0EOwCAIa3byNSY+wv8f/YHPWHeYLtjhZcyEKNTGAgKSmIskpq9xxfXOdDqA4hHGXgD0hWjABoDDqvNSNXh7cPMyxbJRkB38VmKk0bE0zMOKqqhy4dyc1xSlSHlDsLH86pQEdpIJICn5QHT9mUKoiN/bGP5I4a8cHqboOF/dHiTQQ9S7CAAAAABJRU5ErkJggg==">
-                        </a> {{ user.getEmail() }}
-                    </p>
-                {% endfor %}
-                <p style="margin-top:15px; font-weight:bold; ">{{ 'AddMember'|trans }}:</p>
-                <form action="{{ path('account-orga-add-user') }}" method="post" class="form-horizontal">
-                    <input type="hidden" name="organization" value="{{ orga.getId() }}">
-                    <div class="form-group">
-                        <label class="col-sm-2 control-label required">{{ 'Email'|trans }}</label>
-                        <div class="col-sm-10"><input type="text" name="email" required="required" class="form-control"></div>
-                    </div>
-                    <div class="form-group">
-                        <div class="col-sm-2"></div>
-                        <div class="col-sm-10">
-                            <input type="submit" value="{{ 'AddUser'|trans }}" class="btn-default btn">
+                <p>{{ 'Members'|trans }}:</p>
+                <div class="ui middle aligned divided list">
+                    {% for user in orga.users %}
+                        <div class="item">
+                            <div class="right floated content">
+                                <a class="remove-user ui red button" href="{{ path('account-orga-remove', { 'user_id':user.getId(), 'orga_id':orga.getId() }) }}" data-user="{{ user.getEmail() }}" data-orga="{{ orga.getName() }}">
+                                    {{ 'Remove'|trans }}
+                                </a>
+                            </div>
+                            {#<img class="ui avatar image" src="/images/avatar2/small/molly.png">#}
+                            <div class="content">
+                                {{ user.getEmail() }}
+                            </div>
                         </div>
+                    {% endfor %}
+                </div>
+                <p style="margin-top:15px; font-weight:bold; ">{{ 'AddMember'|trans }}:</p>
+                <form action="{{ path('account-orga-add-user') }}" method="post">
+                    <input type="hidden" name="organization" value="{{ orga.getId() }}">
+                    <div class="ui fluid action labeled input">
+                        <label for="email" class="ui label">{{ 'Email'|trans }}</label>
+                        <input type="text" id="email" name="email" data-cip-id="email">
+                        <button class="ui blue right labeled icon button" type="submit">
+                            <i class="add user icon"></i>
+                            {{ 'AddUser'|trans }}
+                        </button>
                     </div>
                 </form>
             </div>
+            <div class="ui bottom attached segment">
+                <a class="leave ui red button" data-name="{{ orga.getName() }}" href="{{ path('account-orga-leave', {'id': orga.getId()}) }}">
+                    {{ 'LeaveThisOrga'|trans }}
+                </a>
+            </div>
         {% endfor %}
+    </div>
+
+    <div class="ui modal" id="leaveDialog">
+        <i class="close icon"></i>
+        <div class="header">
+            {{ 'LeaveThisOrga'|trans }}
+        </div>
+        <div class="content">
+            <strong>
+                {{ "Are you sure you want to leave the organization?"|trans }}
+            </strong>
+            <br>
+            {{ "This cannot be undone!"|trans }}
+        </div>
+        <div class="actions">
+            <div class="ui cancel button">{{ 'No (cancel)'|trans }}</div>
+            <div class="ui approve button">{{ 'Yes'|trans }}</div>
+        </div>
     </div>
 
 {% endblock %}
@@ -53,12 +81,14 @@
     <script>
         $(document).ready(function() {
             $('.leave').on('click', function(e) {
-                var c = confirm("Soll die Organisation \"" + $(this).data('name') + "\" wirklich verlassen werden?");
-                if (!c) {
-                    e.preventDefault();
-                    return false;
-                }
-                return true;
+                var that = this;
+                $('#leaveDialog').modal({
+                    onApprove : function() {
+                        window.location = $(that).attr('href');
+                    }
+                }).modal('show');
+                e.preventDefault();
+                return false;
             });
             $('.remove-user').on('click', function(e) {
                 var c = confirm("Soll der Benutzer \"" + $(this).data('user') +

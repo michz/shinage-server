@@ -23,6 +23,9 @@ AppBundle\Entity\User:
       unique: false
       nullable: false
   manyToMany:
+    users:
+      targetEntity: AppBundle\Entity\User
+      mappedBy: organizations
     organizations:
       targetEntity: AppBundle\Entity\User
       fetch: LAZY
