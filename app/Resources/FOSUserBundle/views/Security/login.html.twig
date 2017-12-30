@@ -1,5 +1,13 @@
 {% extends "@FOSUser/layout.html.twig" %}
 
+
 {% block fos_user_content %}
-    {{ include('@FOSUser/Security/login_content.html.twig') }}
+    <h3 class="ui top attached block header">
+        Einloggen
+    </h3>
+
+    <div class="ui bottom attached segment">
+        {{ include('@FOSUser/Security/login_content.html.twig') }}
+    </div>
+</div>
 {% endblock fos_user_content %}

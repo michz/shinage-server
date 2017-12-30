@@ -8,7 +8,6 @@
 
 namespace AppBundle\Exceptions;
 
-
 interface ParameterException
 {
 }

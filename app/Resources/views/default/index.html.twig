@@ -1,25 +1,19 @@
 {% extends 'base.html.twig' %}
 
 {% block body %}
-        <div id="container">
+        <div class="ui main container">
 
             <div id="status">
                 <p>
                 </p>
             </div>
 
-            <div id="next">
-                <h2>Willkommen!</h2>
-            </div>
-
-            <p>TODO: Zwei-Faktor-Authentifizierung (z.B. via <a href="http://www.christianscheb.de/archives/302">http://www.christianscheb.de/archives/302</a>)</p>
+            <!--
+            TODO{s:0}: Zwei-Faktor-Authentifizierung (z.B. via http://www.christianscheb.de/archives/302 )
+            -->
 
         </div>
 
-        <p style="font-size:0.8em; text-align:center; ">Diese Seite nutzt Symfony {{ constant('Symfony\\Component\\HttpKernel\\Kernel::VERSION') }}
-        <br>
-        Lokaler Pfad: <code>{{ base_dir }}</code>
-        </p>
 {% endblock %}
 
 {% block stylesheets %}

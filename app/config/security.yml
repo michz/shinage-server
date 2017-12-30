@@ -3,6 +3,7 @@ security:
         FOS\UserBundle\Model\UserInterface: bcrypt
 
     role_hierarchy:
+        ROLE_USER:        ROLE_POOL_USER
         ROLE_ADMIN:       ROLE_USER
         ROLE_SUPER_ADMIN: ROLE_ADMIN
 
@@ -16,42 +17,21 @@ security:
             form_login:
                 provider: fos_userbundle
                 csrf_token_generator: security.csrf.token_manager
-
             logout:       true
             anonymous:    true
+        pool:
+            pattern: ^/pool
+            form_login:
+                provider: fos_userbundle
+                check_path: ~
+                login_path: ~
+            access_denied_handler: app.pool.access_denied_handler
 
     access_control:
         - { path: ^/login$, role: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/register, role: IS_AUTHENTICATED_ANONYMOUSLY }
 #        - { path: ^/resetting, role: IS_AUTHENTICATED_ANONYMOUSLY }
-        - { path: ^/adm/, role: ROLE_ADMIN }
-        - { path: ^/manage/, role: ROLE_USER }
-
-
-
-## To get started with security, check out the documentation:
-## http://symfony.com/doc/current/security.html
-#security:
-#
-#    # http://symfony.com/doc/current/security.html#b-configuring-how-users-are-loaded
-#    providers:
-#        in_memory:
-#            memory: ~
-#
-#    firewalls:
-#        # disables authentication for assets and the profiler, adapt it according to your needs
-#        dev:
-#            pattern: ^/(_(profiler|wdt)|css|images|js)/
-#            security: false
-#
-#        main:
-#            anonymous: ~
-#            # activate different ways to authenticate
-#
-#            # http_basic: ~
-#            # http://symfony.com/doc/current/security.html#a-configuring-how-your-users-will-authenticate
-#
-#            # form_login: ~
-#            # http://symfony.com/doc/current/cookbook/security/form_login_setup.html
-#
-#
+        - { path: ^/adm/modify_screen, role: ROLE_USER }
+        - { path: ^/adm, role: ROLE_ADMIN }
+        - { path: ^/manage, role: ROLE_USER }
+        - { path: ^/pool, role: IS_AUTHENTICATED_ANONYMOUSLY }

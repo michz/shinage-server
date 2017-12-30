@@ -1,0 +1,22 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+        <div class="ui main container">
+            <div class="ui stackable grid">
+                <div class="four wide column">
+                    {{ knp_menu_render('account') }}
+                </div>
+                <div class="twelve wide column">
+                    {% block account_main %}{% endblock %}
+                </div>
+            </div>
+        </div>
+
+
+{% endblock %}
+
+{% block stylesheets %}
+{% endblock %}
+
+{% block scripts %}
+{% endblock %}

@@ -7,6 +7,8 @@ imports:
 # http://symfony.com/doc/current/best_practices/configuration.html#application-related-configuration
 parameters:
     locale: de
+    path_pool: "%kernel.root_dir%/../data/pool/"
+    path_screenshots: "%kernel.root_dir%/../data/screenshots/"
 
 framework:
     #esi:             ~
@@ -19,7 +21,7 @@ framework:
     form:            ~
     csrf_protection: ~
     validation:      { enable_annotations: true }
-    #serializer:      { enable_annotations: true }
+    #serializer:      ~
     templating:
         engines: ['twig']
     default_locale:  "%locale%"
@@ -39,6 +41,8 @@ framework:
 twig:
     debug:            "%kernel.debug%"
     strict_variables: "%kernel.debug%"
+    form_themes:
+        - 'form/semantic-ui-form-theme.html.twig'
 
 # Doctrine Configuration
 doctrine:
@@ -62,11 +66,14 @@ doctrine:
         naming_strategy: doctrine.orm.naming_strategy.underscore
         auto_mapping: true
 
+
 fos_user:
+    from_email:
+        address:        "%mailer_from%"
+        sender_name:    "Shinage Digital Signage"
     db_driver: orm
     firewall_name: main
     user_class: AppBundle\Entity\User
-    #user_class: Acme\UserBundle\Entity\User
 
 
 # Swiftmailer Configuration
@@ -76,4 +83,27 @@ swiftmailer:
     username:  "%mailer_user%"
     password:  "%mailer_password%"
     spool:     { type: memory }
+
+knp_menu:
+    twig:
+        template: menu/menu.html.twig
+
+jms_serializer:
+
+
+shinage_player:
+  uuid: "00000000-0000-0000-0000-000000000000"
+  local:
+    enabled: false
+    path: "/mnt/usb"
+  remote:
+    enabled: true
+    host: "127.0.0.1:8001"
+    protocol: "http"
+    base_path: "/"
+    controller:
+      heartbeat: "/screen-remote/heartbeat/%s"
+      presentation: "/screen-remote/presentation/%d"
+      asset: "/screen-remote/client-file/%s"
+      screenshot: "/screen-remote/upload-screenshot"
 

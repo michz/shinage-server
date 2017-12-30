@@ -1,0 +1,35 @@
+#slideshowEditor #prototypes {
+    display: none;
+}
+
+#slideshowEditor .slide {
+    display: inline-block;
+    position: relative;
+    margin: 2px;
+    width: 160px;
+    height: 110px;
+    border: 1px solid #d5d5d5;
+    text-align: center;
+    background-color: #ececec;
+}
+
+#slideshowEditor .slide.selected {
+    border: 1px solid #2b5759;
+    background-color: #e1f3fa;
+}
+
+#slideshowEditor .slide .removeSlide {
+    display: inline-block;
+    position: absolute;
+    right: 0px;
+    top: 2px;
+    font-size: 18px;
+}
+
+#slideshowEditor .slide.Image img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: contain; /* fancy CSS3! */
+}
+

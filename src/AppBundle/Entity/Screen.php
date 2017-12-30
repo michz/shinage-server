@@ -9,51 +9,40 @@
 
 namespace AppBundle\Entity;
 
-use Doctrine\ORM\Mapping as ORM;
-
 /**
  * AppBundle\Entity\Screen
- *
- * @ORM\Entity
- * @ORM\Table(name="screens")
  */
 class Screen
 {
-    /**
-     * @ORM\Id
-     * @ORM\Column(type="string", length=36)
-     */
-    private $guid;
+    /** @var string */
+    protected $guid;
 
-    /**
-     * @ORM\Column(type="string", length=200)
-     */
-    private $name = 'unbenannte Anzeige';
+    /** @var string */
+    protected $name = 'unbenannte Anzeige';
 
-    /**
-     * @ORM\Column(type="text")
-     */
-    private $location = '';
+    /** @var string */
+    protected $location = '';
 
-    /**
-     * @ORM\Column(type="text")
-     */
-    private $notes = '';
+    /** @var string */
+    protected $notes = '';
 
-    /**
-     * @ORM\Column(type="text")
-     */
-    private $admin_c = '';
+    /** @var string */
+    protected $admin_c = '';
 
-    /**
-     * @ORM\Column(type="datetime")
-     */
-    private $first_connect;
+    /** @var \DateTime */
+    protected $first_connect;
 
-    /**
-     * @ORM\Column(type="datetime")
-     */
-    private $last_connect;
+    /** @var \DateTime */
+    protected $last_connect;
+
+    /** @var string */
+    protected $connect_code = '';
+
+    /** @var Presentation */
+    protected $default_presentation;
+
+    /** @var Presentation */
+    protected $current_presentation = null;
 
     /**
      * Set guid
@@ -221,5 +210,65 @@ class Screen
     public function getLastConnect()
     {
         return $this->last_connect;
+    }
+
+    /**
+     * Set connectCode
+     *
+     * @param string $connectCode
+     *
+     * @return Screen
+     */
+    public function setConnectCode($connectCode)
+    {
+        $this->connect_code = $connectCode;
+
+        return $this;
+    }
+
+    /**
+     * Get connectCode
+     *
+     * @return string
+     */
+    public function getConnectCode()
+    {
+        return $this->connect_code;
+    }
+
+    /**
+     * Set default presentation
+     *
+     * @param \AppBundle\Entity\Presentation $presentation
+     *
+     * @return Screen
+     */
+    public function setDefaultPresentation(\AppBundle\Entity\Presentation $presentation)
+    {
+        $this->default_presentation = $presentation;
+
+        return $this;
+    }
+
+    /**
+     * Get default presentation
+     *
+     * @return \AppBundle\Entity\Presentation
+     */
+    public function getDefaultPresentation()
+    {
+        return $this->default_presentation;
+    }
+
+
+    public function setCurrentPresentation(\AppBundle\Entity\Presentation $presentation = null)
+    {
+        $this->current_presentation = $presentation;
+        return $this;
+    }
+
+    public function getCurrentPresentation()
+    {
+        return $this->current_presentation;
     }
 }

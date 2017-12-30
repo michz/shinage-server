@@ -1,0 +1,20 @@
+filter:
+    paths:
+        - "app/"
+        - "src/"
+        - "web/"
+    excluded_paths:
+        - "web/js/jstree/"
+        - "web/js/jquery-ui/"
+        - "web/js/lib/"
+        - "web/js/elfinder/"
+        - "web/js/fullcalendar/"
+        - "web/js/jquery.datetimepicker.full.min.js"
+        - "web/semantic-ui/"
+        - "web/app*.php"
+        - "src/AppBundle/spec/"
+        - "src/AppBundle/tests/"
+
+build:
+    tests:
+        override: ['php -v']

@@ -2,11 +2,20 @@
 
 {% if is_granted("IS_AUTHENTICATED_REMEMBERED") %}
     {# {{ 'layout.logged_in_as'|trans({'%username%': app.user.username}, 'FOSUserBundle') }} | #}
-    <a class="navi-button" id="navi-login" href="{{ path('fos_user_security_logout') }}">
-        {{ 'layout.logout'|trans({}, 'FOSUserBundle') }} ({{ app.user.username }})
-    </a>
+
+    <div class="ui dropdown item">
+        Konto
+        <i class="dropdown icon"></i>
+        <div class="menu">
+            <div class="item">{{ app.user.username }}</div>
+            <a class="item" href="{{ path('account-edit') }}"><i class="edit icon"></i> {{ "Account"|trans }}</a>
+            <a class="item" href="{{ path('fos_user_security_logout') }}"><i class="globe icon"></i> {{ 'layout.logout'|trans({}, 'FOSUserBundle') }}</a>
+        </div>
+    </div>
+
 {% else %}
-    <a href="{{ path('fos_user_security_login') }}"></a>
-    <a class="navi-button" id="navi-login" href="{{ path('fos_user_security_login') }}">{{ 'layout.login'|trans({}, 'FOSUserBundle') }}</a>
+    <a class="item" href="{{ path('fos_user_security_login') }}">{{ 'layout.login'|trans({}, 'FOSUserBundle') }}</a>
+    <a class="item" href="{{ path('registration') }}">{{ 'layout.register'|trans({}, 'FOSUserBundle') }}</a>
+
 {% endif %}
 

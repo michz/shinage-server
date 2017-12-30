@@ -1,12 +1,71 @@
 {% extends 'base.html.twig' %}
 
 {% block body %}
-    {% for screen in screens %}
-        {% include 'forms/edit-screen.html.twig' %}
-    {% endfor %}
+    <div class="ui main container">
+        <div class="page-header">
+            <h1>{{ 'Screens'|trans }}</h1>
+        </div>
+
+        {# TODO{p:0} save multiple/all at once (perhaps "dirty" flag and iteration?) #}
+
+        <div class="ui cards">
+            {% for screen in screens %}
+                <div class="card">
+                    <div class="image">
+                        <img class="preview" src="{{ path('management-dashboard-preview', {'screen_guid': screen.getGuid()}) }}">
+                    </div>
+                    <div class="content">
+                        {% include 'forms/edit-screen.html.twig' %}
+                    </div>
+                    <div class="extra content">
+                        {{ 'Current'|trans }}: {{ screen.getCurrentPresentation() }}
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+        
+        <h3 class="ui top attached block header">
+            {{ 'Connect screen'|trans }}
+        </h3>
+
+        <div class="ui bottom attached segment">
+            <form action="{{ path('management-connect-screen') }}" method="post" class="form-inline">
+                <label for="inlineFormInput">{{ 'Connect code'|trans }}:</label>
+                <div class="ui input">
+                    <input type="text" id="inlineFormInput" placeholder="12345678" name="connect_code" maxlength="8">
+                </div>
+
+                <label for="who">&nbsp;&nbsp;&nbsp;{{ 'Connect with'|trans }}: </label>
+                <select class="ui dropdown" id="who" name="who">
+                    <option value="me">{{ 'to my account'|trans }}</option>
+                    {% for orga in organizations %}
+                        <option value="{{ orga.getId() }}">{{ "Organization"|trans }}: {{ orga.getName() }}</option>
+                    {% endfor %}
+                </select>
+
+                <button class="ui default button" type="submit" class="btn btn-primary">{{ "Connect"|trans }}</button>
+            </form>
+        </div>
+
+        <a name="create_virtual"></a>
+        <h3 class="ui top attached block header">
+            {{ 'Create virtual screen'|trans }}
+        </h3>
+
+        <div class="ui bottom attached segment">
+            {{ form(create_form) }}
+        </div>
+    </div>
 
 {% endblock %}
 
+{% block scripts %}
+    <script>
+        $(document).ready(function(){
+            $('[data-toggle="tooltip"]').tooltip();
+        });
+    </script>
+{% endblock %}
 
 {% block stylesheets %}
 <style>

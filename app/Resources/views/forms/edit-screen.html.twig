@@ -1,6 +1,8 @@
-<div class="screen-editor">
+<div class="ui form">
     <form action="{{ path('modify-screen') }}">
         <input type="hidden" name="hidGuid" value="{{  screen.getGuid() }}">
+        <input type="hidden" name="hidUri" value="{{ app.request.attributes.get('_route') }}">
+
         <div class="input-label">Name:</div>
         <div class="input"><input type="text" name="txtName" value="{{  screen.getName() }}"></div>
         <div class="input-label">Standort:</div>
@@ -13,6 +15,6 @@
         <div class="input">{{ screen.getFirstConnect().format('d.m.Y H:i:s') }}</div>
         <div class="input-label">Letzte Verbindung:</div>
         <div class="input">{{ screen.getLastConnect().format('d.m.Y H:i:s') }}</div>
-        <div class="input-buttons"><input type="submit" value="Speichern"></div>
+        <div class="input-buttons"><input class="ui button" type="submit" value="Speichern"></div>
     </form>
 </div>

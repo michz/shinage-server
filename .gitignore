@@ -14,7 +14,17 @@
 !var/SymfonyRequirements.php
 /vendor/
 /web/bundles/
+/web/js/elfinder/
+/web/css/elfinder/
+
+tests/_output/*
+
+/data
 
 .idea/*
 *~
+*.bak
+*.swp
+*.swo
 
+.web-server-pid

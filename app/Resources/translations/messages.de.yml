@@ -1,0 +1,78 @@
+Account: Konto
+Dashboard: Übersicht
+Files: Dateien
+Screen: Anzeige
+Screens: Anzeigen
+Schedule: Zeitplan
+Presentation: Präsentation
+Presentations: Präsentationen
+Line: Zeile
+StartTime: Beginn
+EndTime: Ende
+Organization: Organisation
+Connect: Verbinden
+Create: Erstellen
+
+Owner: Besitzer
+User: Benutzer
+Users: Benutzer
+Organizations: Organisationen
+
+ClickForPreview: Für Live-Vorschau auf das Bild klicken
+Current: Aktuell
+Connect code: Verbindungskennung
+Connect screen: Anzeige verbinden
+Connect with: Verbinden mit
+Create virtual screen: Virtuelle Anzeige erstellen
+to my account: meinem Konto
+
+Create Presentation: Präsentation erstellen
+Edit Presentation: Präsentation bearbeiten
+Title: Titel
+Type: Typ
+Last modified: Zuletzt geändert
+Url: URL
+
+Add: Einfügen
+Slide: Folie
+Image Source: Bildquelle
+Duration: Anzeigedauer
+Add Image: Bild hinzufügen
+
+Preview: Vorschau
+Please chose screen...: Bitte Anzeige wählen...
+
+CreateOrganization: Neue Organisation erstellen
+Members: Mitglieder
+LeaveThisOrga: Diese Organisation verlassen
+AddMember: Mitglied hinzufügen
+ApiKeys: API-Schlüssel
+CreateApiKeys: API-Schlüssel erstellen
+
+Yes: Ja
+No (cancel): Nein (abbrechen)
+Are you sure you want to leave the organization?: Bist du sicher, dass du die Organisation verlassen willst?
+This cannot be undone!: Dieser Vorgang kann nicht rückgängig gemacht werden!
+
+AddUser: Benutzer hinzufügen
+Email: E-Mail
+Password: Passwort
+PasswordAgain: Passwort wiederholen
+Save: Speichern
+ChangePassword: Passwort ändern
+ChangeEmail: E-Mail-Adresse ändern
+oldPassword: Bisheriges Passwort
+Name: Name
+me: Ich
+CreateNewPresentation: Neue Präsentation anlegen
+
+SubjectRegistrationMail: Deine Registrierung bei Shinage
+
+WrongOldPassword: Das bisherige Passwort ist leider falsch.
+
+Choose to add: Auswählen zum Hinzufügen
+Cancel: Abbrechen
+Add selected to slideshow: Ausgewählte zur Slideshow hinzufügen
+
+Warning: Achtung
+Files uploaded here are accessible without authentication: Dateien, die hier hochgeladen werden, sind grundsätzlich öffentlich erreichbar

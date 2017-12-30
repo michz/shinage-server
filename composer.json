@@ -1,18 +1,22 @@
 {
-    "name": "symfony/framework-standard-edition",
+    "name": "mztx/shinage-server",
     "license": "MIT",
     "type": "project",
-    "description": "The \"Symfony Standard Edition\" distribution",
+    "description": "Digital signage server component based on Symfony.",
     "autoload": {
-        "psr-4": { "": "src/" },
+        "psr-4": {
+            "AppBundle\\": "src/AppBundle/" ,
+            "shinage\\server\\behat\\": "features/bootstrap/"
+        },
         "classmap": [ "app/AppKernel.php", "app/AppCache.php" ]
     },
     "autoload-dev": {
         "psr-4": { "Tests\\": "tests/" }
     },
     "require": {
-        "php": ">=5.5.9",
-        "symfony/symfony": "3.2.*",
+        "php": ">=7.0.0",
+        "mztx/shinage-player-bundle": "dev-develop#6b75ddf7731ebbf7faf32a6b5f98ab1f0c31122b",
+        "symfony/symfony": "^3.2",
         "doctrine/orm": "^2.5",
         "doctrine/doctrine-bundle": "^1.6",
         "doctrine/doctrine-cache-bundle": "^1.2",
@@ -23,11 +27,25 @@
         "sensio/framework-extra-bundle": "^3.0.2",
         "incenteev/composer-parameter-handler": "^2.0",
         "friendsofsymfony/user-bundle": "~2.0@dev",
-        "symfony/debug": "^3.2"
+        "symfony/debug": "^3.2",
+        "studio-42/elfinder": "2.1.x@dev",
+        "rollerworks/password-strength-bundle": "^1.5",
+        "guzzlehttp/guzzle": "^6.3",
+        "roave/security-advisories": "dev-master",
+        "knplabs/knp-menu-bundle": "^2.1",
+        "jms/serializer-bundle": "^2.2"
     },
     "require-dev": {
         "sensio/generator-bundle": "^3.0",
-        "symfony/phpunit-bridge": "^3.0"
+        "symfony/phpunit-bridge": "^3.0",
+        "squizlabs/php_codesniffer": "2.*",
+        "doctrine/doctrine-fixtures-bundle": "^2.4",
+        "phpspec/phpspec": "^4.0",
+        "symfony/web-server-bundle": "^3.3",
+        "behat/behat": "^3.4",
+        "behat/mink-extension": "^2.2",
+        "behat/mink-goutte-driver": "^1.2",
+        "behat/symfony2-extension": "^2.1"
     },
     "scripts": {
         "symfony-scripts": [
@@ -36,19 +54,16 @@
             "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::clearCache",
             "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::installAssets",
             "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::installRequirementsFile",
-            "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::prepareDeploymentTarget"
+            "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::prepareDeploymentTarget",
+            "AppBundle\\Composer\\ElFinderInstallerHandler::installElFinderAssets"
         ],
         "post-install-cmd": [
-            "@symfony-scripts"
+            "@symfony-scripts",
+            "php install-git-hooks.php"
         ],
         "post-update-cmd": [
             "@symfony-scripts"
         ]
-    },
-    "config": {
-        "platform": {
-            "php": "5.5.9"
-        }
     },
     "extra": {
         "symfony-app-dir": "app",

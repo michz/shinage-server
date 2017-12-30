@@ -1,0 +1,43 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <div class="ui main container presentations">
+        <div class="page-header">
+            <h1>{{ 'Presentations'|trans }}</h1>
+        </div>
+        <div class="row">
+            <a class="ui primary button" href="{{ path("management-presentations-create") }}">
+                <i class="icon plus"></i>
+                {{ "Create Presentation"|trans }}
+            </a>
+        </div>
+        <!--
+        TODO{s:5}: Präsentationen zwischen Benutzer und Organisationen verschieben
+        -->
+
+        {% for presentationGroup in presentations %}
+            {% for presentation in presentationGroup %}
+                <h2 class="ui top attached block header">{{ presentation.title }}</h2>
+                <div class="ui bottom attached segment row slide">
+                    <p>{{ 'Last modified'|trans }}: {{ presentation.lastModified|date('d.m.Y H:i') }}</p>
+                    <p>{{ presentation.notes }}</p>
+                    <p>
+                        <a class="ui button default" href="{{ path("presentation-editor-" ~ presentation.type, { presentationId: presentation.id })  }}">
+                            <i class="icon pencil"></i>
+                            {{ "Edit Presentation"|trans }}
+                        </a>
+                    </p>
+                </div>
+            {% endfor %}
+        {% endfor %}
+    </div>
+{% endblock %}
+
+{% block scripts %}
+    <script>
+    </script>
+{% endblock %}
+
+
+{% block stylesheets %}
+{% endblock %}
