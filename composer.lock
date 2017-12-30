@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "47bb46b085c250afc98ad8988d778f80",
+    "content-hash": "50f979c81f6dd409a73660ade12ccd7d",
     "packages": [
         {
             "name": "composer/ca-bundle",
@@ -969,7 +969,7 @@
             "keywords": [
                 "User management"
             ],
-            "time": "2017-11-15T14:38:08+00:00"
+            "time": "2017-11-15 14:38:08"
         },
         {
             "name": "guzzlehttp/guzzle",
@@ -1701,16 +1701,16 @@
         },
         {
             "name": "mztx/shinage-player-bundle",
-            "version": "dev-develop",
+            "version": "v0.1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/michz/shinage-player-bundle.git",
-                "reference": "6b75ddf7731ebbf7faf32a6b5f98ab1f0c31122b"
+                "reference": "58e9253fec42fc2a884f9f500ef220ac9d7be27a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/michz/shinage-player-bundle/zipball/6b75ddf7731ebbf7faf32a6b5f98ab1f0c31122b",
-                "reference": "6b75ddf7731ebbf7faf32a6b5f98ab1f0c31122b",
+                "url": "https://api.github.com/repos/michz/shinage-player-bundle/zipball/58e9253fec42fc2a884f9f500ef220ac9d7be27a",
+                "reference": "58e9253fec42fc2a884f9f500ef220ac9d7be27a",
                 "shasum": ""
             },
             "require": {
@@ -1749,7 +1749,7 @@
             ],
             "description": "Symfony bundle for digital signage player Shinage.",
             "homepage": "https://shinage.mztx.de",
-            "time": "2017-12-26T12:04:05+00:00"
+            "time": "2017-12-27T19:20:15+00:00"
         },
         {
             "name": "paragonie/random_compat",
@@ -2686,7 +2686,7 @@
             ],
             "description": "File manager for web",
             "homepage": "http://elfinder.org",
-            "time": "2017-12-08T04:12:25+00:00"
+            "time": "2017-12-08 04:12:25"
         },
         {
             "name": "swiftmailer/swiftmailer",
@@ -4915,7 +4915,6 @@
     "aliases": [],
     "minimum-stability": "stable",
     "stability-flags": {
-        "mztx/shinage-player-bundle": 20,
         "friendsofsymfony/user-bundle": 20,
         "studio-42/elfinder": 20,
         "roave/security-advisories": 20

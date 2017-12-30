@@ -203,7 +203,6 @@ class Account extends Controller
         }
 
         $orgas = $user->getOrganizations();
-        dump($orgas[0]);
         return $this->render('account/organizations.html.twig', [
             'form_create' => $form_create->createView(),
             'organizations' => $orgas,
