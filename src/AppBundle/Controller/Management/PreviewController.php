@@ -28,8 +28,6 @@ class PreviewController extends Controller
         $assoc = $this->get('app.screenassociation'); /** @var ScreenAssociation $assoc */
         $screens = $assoc->getScreensForUser($user);
 
-        dump($screens);
-
         return $this->render('manage/preview.html.twig', [
             'screens' => $screens,
         ]);
