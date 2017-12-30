@@ -81,9 +81,10 @@
     <script>
         $(document).ready(function() {
             $('.leave').on('click', function(e) {
+                var that = this;
                 $('#leaveDialog').modal({
                     onApprove : function() {
-                        // @TODO make call / redirect
+                        window.location = $(that).attr('href');
                     }
                 }).modal('show');
                 e.preventDefault();
