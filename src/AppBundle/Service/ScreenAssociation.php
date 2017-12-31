@@ -50,22 +50,39 @@ class ScreenAssociation
 
     public function isUserAllowed(Screen $screen, User $user)
     {
+        return $this->isUserAllowedTo($screen, $user, 'author');
+    }
+
+
+    public function isUserAllowedTo(Screen $screen, User $user, string $attribute)
+    {
         $rep = $this->em->getRepository('AppBundle:ScreenAssociation');
         $assoc = $rep->findBy(array('screen' => $screen->getGuid()));
         $orgas = $user->getOrganizations();
 
         foreach ($assoc as $a) { /** @var \AppBundle\Entity\ScreenAssociation $a */
             if ($a->getUserId() == $user) {
-                return true;
+                return $this->roleGreaterOrEqual($a->getRole(), $attribute);
             }
 
-            foreach ($orgas as $o) { /** @var Organization $o */
+            foreach ($orgas as $o) { /** @var User $o */
                 if ($a->getUserId() == $o) {
-                    return true;
+                    return $this->roleGreaterOrEqual($a->getRole(), $attribute);
                 }
             }
         }
 
+        return false;
+    }
+
+    private function roleGreaterOrEqual($granted, $reference)
+    {
+        if ($granted === 'admin' || $granted === $reference) {
+            return true;
+        }
+        if ($granted === 'manage' && $reference === 'author') {
+            return true;
+        }
         return false;
     }
 
@@ -76,7 +93,6 @@ class ScreenAssociation
 
         return (count($assoc) > 0);
     }
-
     /**
      * @param Screen $screen
      * @param string $owner  (format: "user:<id>" or "orga:<id>")

@@ -74,7 +74,7 @@ class Dashboard extends Controller
         $basepath = $this->getParameter('path_screenshots');
         $file_path = $basepath . '/' . $screen->getGuid() . '.png';
         if (!is_file($file_path)) {
-            $file_path = $this->getParameter('kernel.root_dir') . '/Resources/img/no-preview.png';
+            $file_path = $this->getParameter('kernel.root_dir') . '/Resources/img/nopic-de.svg';
         }
 
         $file = new File($file_path);
