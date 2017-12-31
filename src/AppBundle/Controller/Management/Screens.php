@@ -43,7 +43,6 @@ class Screens extends Controller
 
 
         // @TODO{s:5} Standardpräsentation pro Screen einstellen
-        // @TODO{s:5} Anzeigen, welche Präsentation grad aktuell ist
 
         // "create virtual screen" form
         $createForm = $this->createForm(CreateVirtualScreenForm::class);
@@ -68,55 +67,6 @@ class Screens extends Controller
             'create_form' => $createForm->createView()
         ]);
     }
-
-
-    /**
-     * @param Request $request
-     *
-     * @return \Symfony\Component\HttpFoundation\JsonResponse|\Symfony\Component\HttpFoundation\RedirectResponse
-     *
-     * @throws \Symfony\Component\Security\Core\Exception\AccessDeniedException
-     * @throws \LogicException
-     * @throws \InvalidArgumentException
-     *
-     * @Route("/manage/modify_screen", name="management-modify-screen")
-     */
-    public function modifyAction(Request $request)
-    {
-        $guid = $request->get('hidGuid');
-        $name = $request->get('txtName');
-        $loc = $request->get('txtLocation');
-        $notes = $request->get('txtNotes');
-        $admin = $request->get('txtAdmin');
-        $ajax = ($request->get('ajax', '0') === '1');
-
-        $em = $this->getDoctrine()->getManager();
-        $screen = $em->find(Screen::class, $guid); /** @var Screen $screen */
-
-        // Check if screen may be edited by current user
-        $user = $this->get('security.token_storage')->getToken()->getUser(); /** @var User $user */
-        $assoc = $this->get('app.screenassociation'); /** @var ScreenAssociation $assoc */
-        if (!$assoc->isUserAllowed($screen, $user)) {
-            throw new AccessDeniedException();
-        }
-
-        $screen->setName($name);
-        $screen->setNotes($notes);
-        $screen->setLocation($loc);
-        $screen->setAdminC($admin);
-
-        $em->persist($screen);
-        $em->flush();
-
-        // plain old form request
-        if (!$ajax) {
-            return $this->redirectToRoute('admin-screens');
-        }
-
-        // is AJAX request
-        return $this->json(array('status' => 'ok'));
-    }
-
 
     /**
      * @Route("/manage/connect_screen", name="management-connect-screen")
