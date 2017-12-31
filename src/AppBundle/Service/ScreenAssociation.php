@@ -77,8 +77,6 @@ class ScreenAssociation
 
     private function roleGreaterOrEqual($granted, $reference)
     {
-        dump($granted);
-        dump($reference);
         if ($granted === 'admin' || $granted === $reference) {
             return true;
         }
