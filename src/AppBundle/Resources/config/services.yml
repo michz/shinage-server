@@ -105,3 +105,6 @@ services:
             $screenAssociation: '@app.screenassociation'
         tags:
             - security.voter
+
+    app.version_checker:
+        class: AppBundle\Service\VersionChecker

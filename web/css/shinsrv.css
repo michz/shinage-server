@@ -62,6 +62,16 @@ body { background: #F5F5F5; font: 16px/1.5 sans-serif; }
     font-weight: bold;
 }
 
+#footer {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    text-align: center;
+    color: #bbb;
+    border-top: 1px solid #eee;
+    font-size: 12px;
+}
 
 h1, h2 { line-height: 1.2; margin: 0 0 .5em; font-weight:bold; }
 h1 { font-size: 36px; }

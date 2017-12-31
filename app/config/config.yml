@@ -43,6 +43,8 @@ twig:
     strict_variables: "%kernel.debug%"
     form_themes:
         - 'form/semantic-ui-form-theme.html.twig'
+    globals:
+        version_checker: '@app.version_checker'
 
 # Doctrine Configuration
 doctrine:
