@@ -84,7 +84,7 @@ class SchedulerService
             'delete from AppBundle:ScheduledPresentation p where p.presentation = :presentation'
         );
         $q->setParameter('presentation', $presentation);
-        $numDeleted = $q->execute();
+        $q->execute();
         $this->em->flush();
     }
 }

@@ -18,10 +18,9 @@ class VersionChecker
     public function getVersion()
     {
         $exitCode = 0;
-        $returnString = '';
 
         // try to get exact tag
-        $r = exec('git describe --tags --abbrev=0', $returnString, $exitCode);
+        $r = exec('git describe --tags --abbrev=0', $output, $exitCode);
         if ($exitCode === 0) {
             return $r;
         }
@@ -33,8 +32,7 @@ class VersionChecker
     public function getBranch()
     {
         $exitCode = 0;
-        $returnString = '';
-        $branch = exec('git rev-parse --abbrev-ref HEAD', $returnString, $exitCode);
+        $branch = exec('git rev-parse --abbrev-ref HEAD', $output, $exitCode);
         if ($exitCode === 0) {
             return $branch;
         }
@@ -44,8 +42,7 @@ class VersionChecker
     public function getCommit()
     {
         $exitCode = 0;
-        $returnString = '';
-        $commit = exec('git rev-parse HEAD', $returnString, $exitCode);
+        $commit = exec('git rev-parse HEAD', $output, $exitCode);
         if ($exitCode === 0) {
             return $commit;
         }
