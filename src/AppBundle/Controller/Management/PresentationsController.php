@@ -10,6 +10,7 @@ namespace AppBundle\Controller\Management;
 
 use AppBundle\Entity\Presentation;
 use AppBundle\Service\PresentationBuilders\PresentationBuilderChain;
+use AppBundle\Service\SchedulerService;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
@@ -18,6 +19,7 @@ use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\HttpFoundation\Request;
 use AppBundle\Entity\User;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 class PresentationsController extends Controller
 {
@@ -74,6 +76,44 @@ class PresentationsController extends Controller
         return $this->render('manage/presentations/create.html.twig', [
             'form' => $form->createView(),
         ]);
+    }
+
+    /**
+     * @param int $presentationId
+     *
+     * @Route(
+     *     "/manage/presentations/delete/{presentationId}",
+     *     name="presentation-delete",
+     *     requirements={"presentationId": "\d+"}
+     * )
+     */
+    public function deletePresentationAction(int $presentationId)
+    {
+        $em = $this->getDoctrine()->getManager();
+        /** @var Presentation $presentation */
+        $presentation = $em->find('AppBundle:Presentation', $presentationId);
+
+        /** @var User $user */
+        $user = $this->get('security.token_storage')->getToken()->getUser();
+        if (!$user->isPresentationAllowed($presentation)) {
+            throw new AccessDeniedException('User is not allowed to access presentation.');
+        }
+
+        // delete scheduled presentations
+        /** @var SchedulerService $scheduler */
+        $scheduler = $this->get('app.scheduler');
+        $scheduler->deleteAllScheduledPresentationsForPresentation($presentation);
+
+        // delete presentation
+        $em->remove($presentation);
+        $em->flush();
+
+        $this->addFlash(
+            'success',
+            $this->get('translator')->trans('Presentation deleted').': '.$presentation->getTitle()
+        );
+
+        return $this->redirectToRoute('management-presentations');
     }
 
     public function getPresentationsForUser(User $user)

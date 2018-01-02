@@ -98,3 +98,13 @@ services:
 
     app.pool.access_denied_handler:
         class: AppBundle\Component\Event\AccessDeniedHandler
+
+    app.security.voters.screen:
+        class: AppBundle\Security\Voters\ScreenVoter
+        arguments:
+            $screenAssociation: '@app.screenassociation'
+        tags:
+            - security.voter
+
+    app.version_checker:
+        class: AppBundle\Service\VersionChecker

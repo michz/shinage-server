@@ -58,7 +58,7 @@ class ScreenController extends Controller
         // Check if screen may be edited by current user
         $user = $this->get('security.token_storage')->getToken()->getUser();
         $assoc = $this->get('app.screenassociation'); /** @var ScreenAssociation $assoc */
-        if (!$assoc->isUserAllowed($screen, $user)) {
+        if (!$assoc->isUserAllowedTo($screen, $user, 'manager')) {
             throw new AccessDeniedException();
         }
 
