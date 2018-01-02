@@ -23,7 +23,7 @@ If you don't want to care about stuff like servers and security
 
 Prerequisites
 -------------
-* A machine with a running PHP installation (5.6, 7.0 or newer)
+* A machine with a running PHP installation (7.1 or newer)
   with mysql support, libgd and terminal access.
 * MySQL-Server (local or remote).  
   (On Debian you can get a very basic system configuration by running:  
