@@ -19,6 +19,7 @@ use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\HttpFoundation\Request;
 use AppBundle\Entity\User;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 class PresentationsController extends Controller
 {
@@ -92,7 +93,11 @@ class PresentationsController extends Controller
         /** @var Presentation $presentation */
         $presentation = $em->find('AppBundle:Presentation', $presentationId);
 
-        // @TODO Check if user is allowed to delete presentation
+        /** @var User $user */
+        $user = $this->get('security.token_storage')->getToken()->getUser();
+        if (!$user->isPresentationAllowed($presentation)) {
+            throw new AccessDeniedException('User is not allowed to access presentation.');
+        }
 
         // delete scheduled presentations
         /** @var SchedulerService $scheduler */
