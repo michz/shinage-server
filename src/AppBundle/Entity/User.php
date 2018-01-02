@@ -63,6 +63,7 @@ class User extends BaseUser
 
     public function getAllowedPoolPaths()
     {
+        // @TODO Remove from here and move to own service
         $r = array();
         $r[] = 'user-' . $this->id;
 
@@ -76,6 +77,7 @@ class User extends BaseUser
 
     public function isPoolFileAllowed($path)
     {
+        // @TODO Remove from here and move to own service
         $file = ltrim($path, "/\r\n\t ");
         $base = substr($file, 0, strpos($file, '/'));
         return \in_array($base, $this->getAllowedPoolPaths(), true);
@@ -84,6 +86,8 @@ class User extends BaseUser
 
     public function isPresentationAllowed(Presentation $presentation)
     {
+        // @TODO Remove from here and move to own service
+
         if ($presentation->getOwner() === $this) {
             return true;
         }
@@ -101,6 +105,7 @@ class User extends BaseUser
 
     public function getPresentations(EntityManager $em)
     {
+        // @TODO Remove from here and move to own service
         $user = $this;
         $rep = $em->getRepository('AppBundle:Presentation');
         $pres = array();
@@ -125,6 +130,7 @@ class User extends BaseUser
 
     public static function generateToken()
     {
+        // @TODO Remove from here and move to own service
         return rtrim(strtr(base64_encode(random_bytes(32)), '+/', '-_'), '=');
     }
 
