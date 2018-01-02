@@ -8,6 +8,7 @@
 
 namespace AppBundle\Service;
 
+use AppBundle\Entity\Presentation;
 use AppBundle\Entity\ScheduledPresentation;
 use AppBundle\Entity\Screen;
 use Doctrine\ORM\EntityManager;
@@ -70,5 +71,20 @@ class SchedulerService
     public function updateScreen(Screen $screen, $fallbackDefault = true)
     {
         $screen->setCurrentPresentation($this->getCurrentPresentation($screen, $fallbackDefault));
+    }
+
+    /**
+     * Delete all scheduled entries of the given presentation.
+     *
+     * @param Presentation $presentation
+     */
+    public function deleteAllScheduledPresentationsForPresentation(Presentation $presentation)
+    {
+        $q = $this->em->createQuery(
+            'delete from AppBundle:ScheduledPresentation p where p.presentation = :presentation'
+        );
+        $q->setParameter('presentation', $presentation);
+        $numDeleted = $q->execute();
+        $this->em->flush();
     }
 }

@@ -10,6 +10,7 @@ namespace AppBundle\Controller\Management;
 
 use AppBundle\Entity\Presentation;
 use AppBundle\Service\PresentationBuilders\PresentationBuilderChain;
+use AppBundle\Service\SchedulerService;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
@@ -88,9 +89,24 @@ class PresentationsController extends Controller
     public function deletePresentationAction(int $presentationId)
     {
         $em = $this->getDoctrine()->getManager();
+        /** @var Presentation $presentation */
+        $presentation = $em->find('AppBundle:Presentation', $presentationId);
 
-        // @TODO delete scheduled presentations
-        // @TODO delete presentation
+        // @TODO Check if user is allowed to delete presentation
+
+        // delete scheduled presentations
+        /** @var SchedulerService $scheduler */
+        $scheduler = $this->get('app.scheduler');
+        $scheduler->deleteAllScheduledPresentationsForPresentation($presentation);
+
+        // delete presentation
+        $em->remove($presentation);
+        $em->flush();
+
+        $this->addFlash(
+            'success',
+            $this->get('translator')->trans('Presentation deleted').': '.$presentation->getTitle()
+        );
 
         return $this->redirectToRoute('management-presentations');
     }
