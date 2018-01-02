@@ -18,23 +18,58 @@
         {% for presentationGroup in presentations %}
             {% for presentation in presentationGroup %}
                 <h2 class="ui top attached block header">{{ presentation.title }}</h2>
-                <div class="ui bottom attached segment row slide">
+                <div class="ui middle attached segment row slide">
                     <p>{{ 'Last modified'|trans }}: {{ presentation.lastModified|date('d.m.Y H:i') }}</p>
                     <p>{{ presentation.notes }}</p>
-                    <p>
-                        <a class="ui button default" href="{{ path("presentation-editor-" ~ presentation.type, { presentationId: presentation.id })  }}">
-                            <i class="icon pencil"></i>
-                            {{ "Edit Presentation"|trans }}
-                        </a>
-                    </p>
+                </div>
+                <div class="ui bottom attached segment">
+                    <a class="ui button default" href="{{ path("presentation-editor-" ~ presentation.type, { presentationId: presentation.id })  }}">
+                        <i class="icon pencil"></i>
+                        {{ "Edit Presentation"|trans }}
+                    </a>
+                    <a class="ui button red btnDeletePresentation" href="{{ path("presentation-delete", { presentationId: presentation.id })  }}">
+                        <i class="icon trash"></i>
+                        {{ "Delete Presentation"|trans }}
+                    </a>
                 </div>
             {% endfor %}
         {% endfor %}
     </div>
+
+    <div class="ui modal" id="deletePresentationDialog">
+        <i class="close icon"></i>
+        <div class="header">
+            {{ 'Delete Presentation'|trans }}
+        </div>
+        <div class="content">
+            <strong>
+                {{ "Are you sure you want to delete the presentation?"|trans }}
+            </strong>
+            <br>
+            {{ "This cannot be undone!"|trans }}
+        </div>
+        <div class="actions">
+            <div class="ui cancel button">{{ 'No (cancel)'|trans }}</div>
+            <div class="ui approve button">{{ 'Yes'|trans }}</div>
+        </div>
+    </div>
+
 {% endblock %}
 
 {% block scripts %}
     <script>
+        $(document).ready(function() {
+            $(".btnDeletePresentation").on('click', function (e) {
+                var targetUrl = $(e.currentTarget).attr('href');
+                $('#deletePresentationDialog').modal({
+                    onApprove : function() {
+                        window.location = targetUrl;
+                    }
+                }).modal('show');
+                e.preventDefault();
+                return false;
+            });
+        });
     </script>
 {% endblock %}
 
