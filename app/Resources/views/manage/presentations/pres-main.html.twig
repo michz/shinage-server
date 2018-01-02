@@ -6,7 +6,7 @@
             <h1>{{ 'Presentations'|trans }}</h1>
         </div>
         <div class="row">
-            <a class="ui primary button" href="{{ path("management-presentations-create") }}">
+            <a class="ui labeled icon primary button" href="{{ path("management-presentations-create") }}">
                 <i class="icon plus"></i>
                 {{ "Create Presentation"|trans }}
             </a>
@@ -23,11 +23,11 @@
                     <p>{{ presentation.notes }}</p>
                 </div>
                 <div class="ui bottom attached segment">
-                    <a class="ui button default" href="{{ path("presentation-editor-" ~ presentation.type, { presentationId: presentation.id })  }}">
+                    <a class="ui labeled icon button default" href="{{ path("presentation-editor-" ~ presentation.type, { presentationId: presentation.id })  }}">
                         <i class="icon pencil"></i>
                         {{ "Edit Presentation"|trans }}
                     </a>
-                    <a class="ui button red btnDeletePresentation" href="{{ path("presentation-delete", { presentationId: presentation.id })  }}">
+                    <a class="ui labeled icon button red btnDeletePresentation" href="{{ path("presentation-delete", { presentationId: presentation.id })  }}">
                         <i class="icon trash"></i>
                         {{ "Delete Presentation"|trans }}
                     </a>
