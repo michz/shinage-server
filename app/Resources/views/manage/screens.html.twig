@@ -7,7 +7,6 @@
         </div>
 
         {# TODO{p:0} save multiple/all at once (perhaps "dirty" flag and iteration?) #}
-
         <div class="ui cards">
             {% for screen in screens %}
                 <div class="card">
@@ -16,6 +15,7 @@
                     </div>
                     <div class="content">
                         {% include 'forms/edit-screen.html.twig' %}
+                        <a href="{{ path('management-screen-data', {guid: screen.guid}) }}" class="ui button">{{ 'Settings'|trans }}</a>
                     </div>
                     <div class="extra content">
                         {{ 'Current'|trans }}: {{ screen.getCurrentPresentation() }}
