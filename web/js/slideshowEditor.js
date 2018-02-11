@@ -141,7 +141,6 @@ window.SlideshowEditor = {
     provisionVideoSlide: function (div, slide) {
         var filename = slide.src.replace(/^.*[\\\/]/, '');
         $(".videoFileName", div).text(filename);
-        console.log(filename);
         return this;
     },
     serialize: function() {

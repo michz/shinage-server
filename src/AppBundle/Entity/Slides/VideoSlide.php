@@ -36,7 +36,7 @@ class VideoSlide extends Slide
     /**
      * @param string $src
      *
-     * @return ImageSlide
+     * @return VideoSlide
      */
     public function setSrc($src)
     {
@@ -55,7 +55,7 @@ class VideoSlide extends Slide
     /**
      * @param string $type
      *
-     * @return ImageSlide
+     * @return VideoSlide
      */
     public function setType($type)
     {
