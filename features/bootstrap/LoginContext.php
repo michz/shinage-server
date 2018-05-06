@@ -39,13 +39,13 @@ class LoginContext extends \Behat\MinkExtension\Context\RawMinkContext
     public function __construct(
         EntityManagerInterface $entityManager,
         UserManagerInterface $userManager,
-        string $firewallName,
-        $session
+        $session,
+        string $firewallName
     ) {
         $this->entityManager = $entityManager;
         $this->userManager = $userManager;
-        $this->firewallName = $firewallName;
         $this->session = $session;
+        $this->firewallName = $firewallName;
     }
 
 

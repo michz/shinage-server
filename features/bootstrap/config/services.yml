@@ -1,0 +1,38 @@
+services:
+  shinage.server.behat.context.hook.purge:
+    class: shinage\server\behat\Hook\PurgeContext
+    tags: ["fob.context_service"]
+    arguments:
+      - "@__symfony_shared__.doctrine.orm.entity_manager"
+
+  shinage.server.behat.context.setup.screen:
+    class: shinage\server\behat\Setup\ScreenContext
+    tags: ["fob.context_service"]
+    arguments:
+      - "@__symfony_shared__.doctrine.orm.entity_manager"
+
+  shinage.server.behat.context.setup.user:
+    class: shinage\server\behat\Setup\UserContext
+    tags: ["fob.context_service"]
+    arguments:
+      - "@__symfony_shared__.doctrine.orm.entity_manager"
+      - "@__symfony_shared__.fos_user.user_manager"
+
+  shinage.server.behat.context.heartbeat:
+    class: shinage\server\behat\HeartbeatContext
+    tags: ["fob.context_service"]
+    arguments:
+      - "@__symfony_shared__.doctrine.orm.entity_manager"
+
+  shinage.server.behat.context.login:
+    class: shinage\server\behat\LoginContext
+    tags: ["fob.context_service"]
+    arguments:
+      - "@__symfony_shared__.doctrine.orm.entity_manager"
+      - "@__symfony_shared__.fos_user.user_manager"
+      - "@__symfony_shared__.session"
+      - "main"
+
+  shinage.server.behat.context.general_webpages:
+    class: shinage\server\behat\GeneralWebpagesContext
+    tags: ["fob.context_service"]

@@ -14,7 +14,7 @@
         "psr-4": { "Tests\\": "tests/" }
     },
     "require": {
-        "php": ">=7.0.0",
+        "php": ">=7.1.0",
         "mztx/shinage-player-bundle": "^0.1",
         "symfony/symfony": "^3.2",
         "doctrine/orm": "^2.5",
@@ -45,7 +45,9 @@
         "behat/behat": "^3.4",
         "behat/mink-extension": "^2.2",
         "behat/mink-goutte-driver": "^1.2",
-        "behat/symfony2-extension": "^2.1"
+        "friends-of-behat/symfony-extension": "^1.2",
+        "friends-of-behat/context-service-extension": "^1.2",
+        "friends-of-behat/cross-container-extension": "^1.1"
     },
     "scripts": {
         "symfony-scripts": [

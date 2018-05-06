@@ -1,40 +1,49 @@
 default:
   suites:
+    screen_remote_api_features:
+      paths:
+        - "%paths.base%/features/ScreenRemoteApi"
+      contexts_services:
+        - shinage.server.behat.context.hook.purge
+
+        - shinage.server.behat.context.setup.screen
+        - shinage.server.behat.context.heartbeat
+
     login_features:
       paths:
         - "%paths.base%/features/Login"
-      contexts:
-        - \shinage\server\behat\DefaultContext
-        - \shinage\server\behat\GeneralWebpagesContext
-        - \shinage\server\behat\LoginContext:
-            entityManager: "@doctrine.orm.entity_manager"
-            userManager: "@fos_user.user_manager"
-            session: "@session"
-            firewallName: "main"
-        - \shinage\server\behat\UserContext:
-            entityManager: "@doctrine.orm.entity_manager"
-            userManager: "@fos_user.user_manager"
+      contexts_services:
+        - shinage.server.behat.context.hook.purge
+
+        - shinage.server.behat.context.login
+        - shinage.server.behat.context.setup.user
+        - shinage.server.behat.context.general_webpages
+
     presentation_editor_features:
       paths:
         - "%paths.base%/features/PresentationEditors"
-      contexts:
-        - \shinage\server\behat\DefaultContext
-        - \shinage\server\behat\GeneralWebpagesContext
-        - \shinage\server\behat\LoginContext:
-            entityManager: "@doctrine.orm.entity_manager"
-            userManager: "@fos_user.user_manager"
-            session: "@session"
-            firewallName: "main"
-        - \shinage\server\behat\PresentationEditorsContext
-        - \shinage\server\behat\UserContext:
-            entityManager: "@doctrine.orm.entity_manager"
-            userManager: "@fos_user.user_manager"
+      contexts_services:
+        - shinage.server.behat.context.hook.purge
+
+        - shinage.server.behat.context.setup.user
+        - shinage.server.behat.context.login
+        - shinage.server.behat.context.general_webpages
+
   extensions:
     Behat\MinkExtension:
       base_url:  'http://localhost:8000/app_test.php'
       sessions:
         default:
           goutte: ~
-    Behat\Symfony2Extension:
+
+    FriendsOfBehat\SymfonyExtension:
       kernel:
-        class: '\shinage\serverApp\AppKernel'
+        bootstrap: vendor/autoload.php
+        path: app/AppKernel.php
+        class: 'shinage\serverApp\AppKernel'
+
+    FriendsOfBehat\ContextServiceExtension:
+       imports:
+           - "features/bootstrap/config/services.yml"
+
+    FriendsOfBehat\CrossContainerExtension: ~
