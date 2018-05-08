@@ -28,6 +28,9 @@ default:
         - shinage.server.behat.context.setup.user
         - shinage.server.behat.context.login
         - shinage.server.behat.context.general_webpages
+        - shinage.server.behat.context.presentation_editors
+
+        - behat.mink
 
   extensions:
     Behat\MinkExtension:

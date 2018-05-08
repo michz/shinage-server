@@ -1,4 +1,8 @@
 services:
+  behat.mink:
+    class: Behat\MinkExtension\Context\MinkContext
+    tags: ["fob.context_service"]
+
   shinage.server.behat.context.hook.purge:
     class: shinage\server\behat\Hook\PurgeContext
     tags: ["fob.context_service"]
@@ -35,4 +39,8 @@ services:
 
   shinage.server.behat.context.general_webpages:
     class: shinage\server\behat\GeneralWebpagesContext
+    tags: ["fob.context_service"]
+
+  shinage.server.behat.context.presentation_editors:
+    class: shinage\server\behat\PresentationEditorsContext
     tags: ["fob.context_service"]
