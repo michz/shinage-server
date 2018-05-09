@@ -17,4 +17,5 @@ Feature: As a player
     Then I should see that the screen is registered
 
 
+  # @TODO Test if last connect date is set correctly
 
