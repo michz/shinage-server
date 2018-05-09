@@ -1,18 +1,12 @@
 <?php
+declare(strict_types=1);
 
-namespace shinage\server\behat;
+namespace shinage\server\behat\Setup;
 
 use AppBundle\Entity\User;
 use Behat\Behat\Context\Context;
 use Doctrine\ORM\EntityManagerInterface;
 use FOS\UserBundle\Model\UserManagerInterface;
-use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
-
-/**
- * @author   :  Michael Zapf <m.zapf@mztx.de>
- * @date     :  22.11.17
- * @time     :  07:07
- */
 
 class UserContext implements Context
 {
