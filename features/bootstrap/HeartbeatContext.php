@@ -6,6 +6,9 @@ namespace shinage\server\behat;
 use Behat\Behat\Context\Context;
 use Behat\Behat\Tester\Exception\PendingException;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\BrowserKit\Client;
+use Symfony\Component\BrowserKit\Response;
+use Webmozart\Assert\Assert;
 
 class HeartbeatContext implements Context
 {
@@ -15,11 +18,14 @@ class HeartbeatContext implements Context
     private $entityManager;
 
     /**
-     * HeartbeatContext constructor.
+     * @var Client
      */
-    public function __construct(EntityManagerInterface $entityManager)
+    private $client;
+
+    public function __construct(EntityManagerInterface $entityManager, Client $client)
     {
         $this->entityManager = $entityManager;
+        $this->client = $client;
     }
 
     /**
@@ -27,8 +33,25 @@ class HeartbeatContext implements Context
      */
     public function iDoAHeartbeatWithGuid(string $guid)
     {
-        // @TODO Do API call.
-        throw new PendingException();
+        $this->client->request(
+            'GET',
+            '/screen-remote/heartbeat/' . $guid,
+            [],
+            [],
+            ['ACCEPT' => 'application/json']
+        );
+    }
+
+    /**
+     * @Then /^I should see that the screen is registered$/
+     */
+    public function iShouldSeeThatTheScreenIsRegistered()
+    {
+        /** @var Response $response */
+        $response = $this->client->getResponse();
+        $data = \json_decode($response->getContent());
+
+        $this->assertScreenState('registered', $data->screen_status);
     }
 
     /**
@@ -36,7 +59,19 @@ class HeartbeatContext implements Context
      */
     public function iShouldSeeThatTheScreenIsNotRegistered()
     {
-        // @TODO Check API call response
-        throw new PendingException();
+        /** @var Response $response */
+        $response = $this->client->getResponse();
+        $data = \json_decode($response->getContent());
+
+        $this->assertScreenState('not_registered', $data->screen_status);
+    }
+
+    private function assertScreenState(string $expected, string $actual)
+    {
+        Assert::eq(
+            $expected,
+            $actual,
+            'Wrong screen status returned: ' . $actual
+        );
     }
 }
