@@ -27,6 +27,7 @@ services:
       - ./php/php.ini:/usr/local/etc/php/conf.d/zzz-override-php.ini:delegated
     links:
       - mariadb
+      - mailhog
     depends_on:
       - mariadb
 
@@ -38,3 +39,8 @@ services:
       - MYSQL_DATABASE=${PROJECT_NAME}
     ports:
       - "${MARIADB_PORT}:3306"
+
+  mailhog:
+    image: mailhog/mailhog:latest
+    ports:
+      - "${MAILHOG_PORT}:8025"

@@ -6,8 +6,9 @@ parameters:
     database_user: root
     database_password: root
     mailer_transport: smtp
-    mailer_host: 127.0.0.1
+    mailer_host: mailhog
+    mailer_port: 1025
     mailer_user: null
     mailer_password: null
-    mailer_from: shinage-server@localhost
+    mailer_from: shinage-server@php
     secret: jgrhjkghkjdfgnbdkjfgjkdsf

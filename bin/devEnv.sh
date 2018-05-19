@@ -19,9 +19,10 @@ function prepare {
 function echo_configuration {
     echo "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
     echo "Running webserver on ports:"
-    echo "HTTP: "${HTTP_PORT}
-    echo "HTTPS: "${HTTPS_PORT}
+    echo "HTTP:    "${HTTP_PORT}
+    echo "HTTPS:   "${HTTPS_PORT}
     echo "MariaDB: "${MARIADB_PORT}
+    echo "Mailhog: "${MAILHOG_PORT}
     echo ""
     echo "PHP version: "${PHP_VERSION}
     echo "MariaDB version: "${MARIADB_VERSION}
