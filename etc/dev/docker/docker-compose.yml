@@ -1,0 +1,40 @@
+version: '3'
+
+services:
+  nginx:
+    image: nginx:1.14-alpine
+    ports:
+      - "${HTTP_PORT}:80"
+      - "${HTTPS_PORT}:443"
+    volumes:
+      - ${PROJECT_DIR}:/usr/share/nginx/html:delegated
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:delegated
+      - ./nginx/default.conf:/etc/nginx/conf.d/default.conf:delegated
+    links:
+      - php
+      - mariadb
+    depends_on:
+      - php
+
+  php:
+    build:
+      context: ./php
+      args:
+        PHP_VERSION: ${PHP_VERSION}
+    volumes:
+      - ${PROJECT_DIR}:/usr/share/nginx/html:delegated
+      - ${PROJECT_DIR}/app/config/parameters.yml.dev.docker:/usr/share/nginx/html/app/config/parameters.yml:delegated
+      - ./php/php.ini:/usr/local/etc/php/conf.d/zzz-override-php.ini:delegated
+    links:
+      - mariadb
+    depends_on:
+      - mariadb
+
+  mariadb:
+    image: mariadb:${MARIADB_VERSION}
+    environment:
+      - MYSQL_ROOT_PASSWORD=${MARIADB_ROOT_PASSWORD}
+      - MYSQL_ALLOW_EMPTY_PASSWORD=false
+      - MYSQL_DATABASE=${PROJECT_NAME}
+    ports:
+      - "${MARIADB_PORT}:3306"

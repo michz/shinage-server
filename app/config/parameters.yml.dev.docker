@@ -1,6 +1,6 @@
 # This file is auto-generated during the composer install
 parameters:
-    database_host: shinagemariadb
+    database_host: mariadb
     database_port: null
     database_name: shinage-dev
     database_user: root
