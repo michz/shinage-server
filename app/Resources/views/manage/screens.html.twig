@@ -16,6 +16,21 @@
                     <div class="content">
                         {% include 'forms/edit-screen.html.twig' %}
                         <a href="{{ path('management-screen-data', {guid: screen.guid}) }}" class="ui button">{{ 'Settings'|trans }}</a>
+                        <a class="ui open-modal olive labeled icon button"><i class="eye icon"></i>{{ 'View in online player'|trans }}</a>
+                        <div class="ui modal">
+                            <div class="header">{{ 'View in online player'|trans }}</div>
+                            <div class="content">
+                                <p>{{ 'Use the following link'|trans }}:</p>
+                                <p>
+                                    <a target="_blank" href="{{ url('shinage.online.player.view', {screenGuid: screen.guid}) }}">
+                                        {{ url('shinage.online.player.view', {screenGuid: screen.guid}) }}
+                                    </a>
+                                </p>
+                            </div>
+                            <div class="actions">
+                                <div class="ui cancel button">{{ 'Close'|trans }}</div>
+                            </div>
+                        </div>
                     </div>
                     <div class="extra content">
                         {{ 'Current'|trans }}: {{ screen.getCurrentPresentation() }}
@@ -61,6 +76,12 @@
 
 {% block scripts %}
     <script>
+        $('.ui.modal').modal({ detachable: false });
+        $('.open-modal').on('click', function () {
+            var $modal = $(this).siblings('.ui.modal');
+            $modal.modal('show');
+        });
+
         $(document).ready(function(){
             $('[data-toggle="tooltip"]').tooltip();
         });
