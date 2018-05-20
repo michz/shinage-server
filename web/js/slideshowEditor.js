@@ -62,10 +62,7 @@ window.SlideshowEditor = {
                 $("#selectFilesPane").elfinder('instance').exec('getfile');
                 for (var i = 0; i < window.selectedFiles.length; i++) {
                     var file = window.selectedFiles[i];
-                    console.log(file);
-
                     var slide = $(e.currentTarget).data('prototype');
-                    console.log(slide);
                     slide.src = file.url;
                     this.appendSlide(slide);
                     this.saveSlides();
@@ -132,10 +129,18 @@ window.SlideshowEditor = {
         if (slide.type === "Image") {
             this.provisionImageSlide(div, slide);
         }
+        if (slide.type === "Video") {
+            this.provisionVideoSlide(div, slide);
+        }
         return this;
     },
     provisionImageSlide: function (div, slide) {
         $("img", div).attr("src", slide.src);
+        return this;
+    },
+    provisionVideoSlide: function (div, slide) {
+        var filename = slide.src.replace(/^.*[\\\/]/, '');
+        $(".videoFileName", div).text(filename);
         return this;
     },
     serialize: function() {

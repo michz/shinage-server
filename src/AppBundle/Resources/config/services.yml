@@ -90,6 +90,7 @@ services:
         arguments: ["@knp_menu.factory"]
         tags:
             - { name: knp_menu.menu_builder, method: accountMenu, alias: account }
+            - { name: knp_menu.menu_builder, method: screenSettingsMenu, alias: screen-settings }
 
     app.serializer.subscriber.slides:
         class: AppBundle\Serializer\Subscriber\SlideDeserializerSubscriber

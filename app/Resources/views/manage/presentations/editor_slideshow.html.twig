@@ -7,6 +7,12 @@
                 <div class="prototype slide Image">
                     <img>
                 </div>
+                <div class="prototype slide Video">
+                    <div class="videoIcon">
+                        <i class="ui video play icon"></i>
+                    </div>
+                    <div class="videoFileName"></div>
+                </div>
             </div>
 
             <div id="slides" class="ui segment ten wide column">
@@ -22,6 +28,10 @@
                             data-prototype='{"type":"Image","duration":5000,"title":"Slide","transition":"","src":"//via.placeholder.com/500x380"}'>
                         <i class="image icon"></i> {{ "Add Image"|trans }}
                     </button>
+                    <button id="btnAddSlideVideo" class="add Video ui button"
+                            data-prototype='{"type":"Video","duration":0,"title":"Slide","transition":"","src":"//via.placeholder.com/500x380"}'>
+                        <i class="video icon"></i> {{ "Add Video"|trans }}
+                    </button>
                 </div>
                 <div id="tabSlide" class="ui bottom attached tab segment" data-tab="tabSlide">
                     <div class="settings Image">
@@ -35,6 +45,12 @@
                             <div class="ui basic label">
                                 ms
                             </div>
+                        </div>
+                    </div>
+                    <div class="settings Video">
+                        <label for="settingsVideoSrc">{{ "Video Source"|trans }}:</label>
+                        <div class="ui input fluid">
+                            <input type="text" name="src" id="settingsVideoSrc">
                         </div>
                     </div>
                     <div class="settingsButtons">
