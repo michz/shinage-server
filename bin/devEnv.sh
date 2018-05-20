@@ -53,6 +53,7 @@ function stop_container {
 
 function restart_container {
     docker_compose_cmd stop $@
+    sleep 1
     docker_compose_cmd start $@
 }
 
