@@ -1,0 +1,9 @@
+shinage.online.player.index:
+    path:     /
+    defaults: { _controller: ShinageOnlinePlayerBundle:Index:index }
+
+shinage.online.player.view:
+    path:     /view/{screenGuid}
+    requirements:
+        screenGuid: ".*"
+    defaults: { _controller: ShinageOnlinePlayerBundle:View:view }
