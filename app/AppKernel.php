@@ -2,6 +2,7 @@
 
 namespace shinage\serverApp;
 
+use mztx\ShinageOnlinePlayerBundle\ShinageOnlinePlayerBundle;
 use mztx\ShinagePlayerBundle\ShinagePlayerBundle;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpKernel\Kernel;
@@ -38,6 +39,7 @@ class AppKernel extends Kernel
 
             new \AppBundle\AppBundle(),
 
+            new ShinageOnlinePlayerBundle(),
             new ShinagePlayerBundle(),
         ];
 
