@@ -1,6 +1,11 @@
 <?php
 declare(strict_types=1);
 
+/*
+ * Copyright 2018 by Michael Zapf.
+ * Licensed under MIT. See file /LICENSE.
+ */
+
 namespace mztx\ShinageOnlinePlayerBundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -11,7 +16,7 @@ use Symfony\Component\Routing\RouterInterface;
 class ViewController extends Controller
 {
     // @TODO This is just copied from player bundle. Perhaps it should be improved a bit.
-    public function viewAction(Request $request, string $screenGuid)
+    public function viewAction(Request $request, string $screenGuid): Response
     {
         /** @var RouterInterface $router */
         $router = $this->get('router');
@@ -23,13 +28,13 @@ class ViewController extends Controller
                 '%%screen_guid%%',
                 '%%preview_mode%%',
                 '%%base_url%%',
-                '%%current_url%%'
+                '%%current_url%%',
             ],
             [
                 $screenGuid,
                 1,
                 $request->getSchemeAndHttpHost() . $request->getBasePath(),
-                $router->generate('shinage.player.current')
+                $router->generate('shinage.player.current'),
             ],
             $appContent
         );
