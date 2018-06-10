@@ -1,25 +1,27 @@
 <?php
+declare(strict_types=1);
+
+/*
+ * Copyright 2018 by Michael Zapf.
+ * Licensed under MIT. See file /LICENSE.
+ */
 
 namespace AppBundle\Exceptions;
 
 use Throwable;
 
-/**
- * @author   :  Michael Zapf <m.zapf@mztx.de>
- * @date     :  27.10.17
- * @time     :  12:15
- */
-class NoSuitablePresentationBuilderFoundException extends \Exception
+class NoSuitablePresentationBuilderFoundException extends \RuntimeException
 {
+    /** @var string */
     private $type;
 
-    public function __construct($type, $message = '', $code = 0, Throwable $previous = null)
+    public function __construct(string $type, string $message = '', int $code = 0, Throwable $previous = null)
     {
         parent::__construct($message, $code, $previous);
         $this->type = $type;
     }
 
-    public function getType()
+    public function getType(): string
     {
         return $this->type;
     }

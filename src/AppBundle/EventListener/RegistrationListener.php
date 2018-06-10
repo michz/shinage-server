@@ -1,4 +1,10 @@
 <?php
+declare(strict_types=1);
+
+/*
+ * Copyright 2018 by Michael Zapf.
+ * Licensed under MIT. See file /LICENSE.
+ */
 
 namespace AppBundle\EventListener;
 
@@ -10,27 +16,25 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 class RegistrationListener implements EventSubscriberInterface
 {
-    /**
-     * @var UrlGeneratorInterface
-     */
+    /** @var UrlGeneratorInterface */
     private $router;
 
-    /**
-     * @param UrlGeneratorInterface $router
-     */
     public function __construct(UrlGeneratorInterface $router)
     {
         $this->router = $router;
     }
 
-    public static function getSubscribedEvents()
+    /**
+     * @return string[]|array
+     */
+    public static function getSubscribedEvents(): array
     {
         return [
             FOSUserEvents::REGISTRATION_INITIALIZE => 'onRegistrationInitialize',
         ];
     }
 
-    public function onRegistrationInitialize(GetResponseUserEvent $event)
+    public function onRegistrationInitialize(GetResponseUserEvent $event): void
     {
         $url = $this->router->generate('registration');
         $response = new RedirectResponse($url);

@@ -18,7 +18,7 @@ class PresentationBuilderChain
     /** @var array */
     private $types = [];
 
-    public function addBuilder(PresentationBuilderInterface $builder)
+    public function addBuilder(PresentationBuilderInterface $builder): void
     {
         $this->builders[] = $builder;
         $this->types = array_merge($this->types, $builder->getSupportedTypes());
@@ -30,7 +30,7 @@ class PresentationBuilderChain
      * @return PresentationBuilderInterface
      * @throws NoSuitablePresentationBuilderFoundException
      */
-    public function getBuilderForPresentation(Presentation $presentation)
+    public function getBuilderForPresentation(Presentation $presentation): PresentationBuilderInterface
     {
         /** @var PresentationBuilderInterface $builder */
         foreach ($this->builders as $builder) {
@@ -42,7 +42,7 @@ class PresentationBuilderChain
         throw new NoSuitablePresentationBuilderFoundException($presentation->getType());
     }
 
-    public function getTypes()
+    public function getTypes(): array
     {
         return $this->types;
     }
