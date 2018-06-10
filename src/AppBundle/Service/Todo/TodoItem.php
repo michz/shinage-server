@@ -1,21 +1,37 @@
 <?php
-/**
- * @author   :  Michael Zapf <m.zapf@mztx.de>
- * @date     :  29.01.17
- * @time     :  11:01
+declare(strict_types=1);
+
+/*
+ * Copyright 2018 by Michael Zapf.
+ * Licensed under MIT. See file /LICENSE.
  */
+
 namespace AppBundle\Service\Todo;
 
 class TodoItem
 {
+    /** @var string */
     protected $type = 'TODO';
+
+    /** @var string */
     protected $text = '';
+
+    /** @var string */
     protected $file = '';
+
+    /** @var int */
     protected $severity = 0;
+
+    /** @var int */
     protected $line = 0;
 
-    public function __construct($text, $file = '', $line = 0, $type = 'TODO', $severity = 0)
-    {
+    public function __construct(
+        string $text,
+        string $file = '',
+        int $line = 0,
+        string $type = 'TODO',
+        int $severity = 0
+    ) {
         $this->type = $type;
         $this->text = $text;
         $this->file = $file;
@@ -23,28 +39,27 @@ class TodoItem
         $this->severity = $severity;
     }
 
-
-    public function getType()
+    public function getType(): string
     {
         return $this->type;
     }
 
-    public function getText()
+    public function getText(): string
     {
         return $this->text;
     }
 
-    public function getFile()
+    public function getFile(): string
     {
         return $this->file;
     }
 
-    public function getLine()
+    public function getLine(): int
     {
         return $this->line;
     }
 
-    public function getSeverity()
+    public function getSeverity(): int
     {
         return $this->severity;
     }

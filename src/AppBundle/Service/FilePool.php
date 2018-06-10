@@ -1,9 +1,9 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: michi
- * Date: 29.12.16
- * Time: 15:13
+declare(strict_types=1);
+
+/*
+ * Copyright 2018 by Michael Zapf.
+ * Licensed under MIT. See file /LICENSE.
  */
 
 namespace AppBundle\Service;
@@ -15,9 +15,10 @@ use Symfony\Component\Config\Definition\Exception\Exception;
 
 class FilePool
 {
+    /** @var string */
     protected $base = '';
 
-    public function __construct($basepath)
+    public function __construct(string $basepath)
     {
         $this->base = $basepath;
 
@@ -32,23 +33,26 @@ class FilePool
         }
     }
 
-    public function getUserPaths(User $user)
+    /**
+     * @return mixed[]|array
+     */
+    public function getUserPaths(User $user): array
     {
-        $paths = array();
+        $paths = [];
         $paths['me'] = $this->getPathForUser($user);
 
         $orgas = $user->getOrganizations();
-        foreach ($orgas as $o) { /** @var User $o */
-            $paths['Org: '.$o->getName()] = $this->getPathForUser($o);
+        foreach ($orgas as $o) { /* @var User $o */
+            $paths['Org: ' . $o->getName()] = $this->getPathForUser($o);
         }
 
         return $paths;
     }
 
-    public function getPathForUser(User $user)
+    public function getPathForUser(User $user): string
     {
         $realBasePath = realpath($this->base);
-        if ($realBasePath === false) {
+        if (false === $realBasePath) {
             throw new \RuntimeException('Data pool base path not found.');
         }
         $path = $realBasePath . '/user-' . $user->getId();
@@ -56,7 +60,7 @@ class FilePool
         return $path;
     }
 
-    public function getFileTree($base, $displayHidden = false)
+    public function getFileTree(string $base, bool $displayHidden = false): PoolDirectory
     {
         $filename = substr($base, strrpos($base, '/')+1);
 
@@ -66,12 +70,12 @@ class FilePool
         if ($handle = opendir($base)) {
             while (false !== ($entry = readdir($handle))) {
                 // ignore . and ..
-                if ($entry == '.' || $entry == '..') {
+                if ('.' == $entry || '..' == $entry) {
                     continue;
                 }
 
                 // ignore hidden files
-                if (!$displayHidden && substr($entry, 0, 1) == '.') {
+                if (!$displayHidden && '.' == substr($entry, 0, 1)) {
                     continue;
                 }
 
@@ -86,7 +90,7 @@ class FilePool
         return $dir;
     }
 
-    public static function createPathIfNeeded($path)
+    public static function createPathIfNeeded(string $path): void
     {
         if (!is_dir($path)) {
             mkdir($path, 0700);

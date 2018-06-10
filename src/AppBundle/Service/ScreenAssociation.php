@@ -1,35 +1,42 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: michi
- * Date: 29.12.16
- * Time: 15:13
+declare(strict_types=1);
+
+/*
+ * Copyright 2018 by Michael Zapf.
+ * Licensed under MIT. See file /LICENSE.
  */
 
 namespace AppBundle\Service;
 
-use AppBundle\Entity\User;
-use Doctrine\ORM\EntityManager;
 use AppBundle\Entity\Screen;
-use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorage;
+use AppBundle\Entity\ScreenAssociation as ScreenAssociationEntity;
+use AppBundle\Entity\User;
+use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 class ScreenAssociation
 {
+    /** @var EntityManagerInterface|null */
     protected $em = null;
+
+    /** @var TokenStorageInterface|null */
     protected $tokenStorage = null;
 
-    public function __construct(EntityManager $em, TokenStorage $tokenStorage)
+    public function __construct(EntityManagerInterface $em, TokenStorageInterface $tokenStorage)
     {
         $this->em = $em;
         $this->tokenStorage = $tokenStorage;
     }
 
-    public function getScreensForUser(User $user)
+    /**
+     * @return Screen[]|array
+     */
+    public function getScreensForUser(User $user): array
     {
-        $r = array();
+        $r = [];
 
         $rep = $this->em->getRepository('AppBundle:ScreenAssociation');
-        $assoc = $rep->findBy(array('user_id' => $user->getId()));
+        $assoc = $rep->findBy(['user_id' => $user->getId()]);
 
         foreach ($assoc as $a) {
             $r[] = $a->getScreen();
@@ -39,7 +46,7 @@ class ScreenAssociation
         $orgas = $user->getOrganizations();
 
         foreach ($orgas as $o) {
-            $assoc = $rep->findBy(array('user_id' => $o->getId()));
+            $assoc = $rep->findBy(['user_id' => $o->getId()]);
             foreach ($assoc as $a) {
                 $r[] = $a->getScreen();
             }
@@ -48,19 +55,18 @@ class ScreenAssociation
         return $r;
     }
 
-    public function isUserAllowed(Screen $screen, User $user)
+    public function isUserAllowed(Screen $screen, User $user): bool
     {
         return $this->isUserAllowedTo($screen, $user, 'author');
     }
 
-
-    public function isUserAllowedTo(Screen $screen, User $user, string $attribute)
+    public function isUserAllowedTo(Screen $screen, User $user, string $attribute): bool
     {
         $rep = $this->em->getRepository('AppBundle:ScreenAssociation');
-        $assoc = $rep->findBy(array('screen' => $screen->getGuid()));
+        $assoc = $rep->findBy(['screen' => $screen->getGuid()]);
         $orgas = $user->getOrganizations();
 
-        foreach ($assoc as $a) { /** @var \AppBundle\Entity\ScreenAssociation $a */
+        foreach ($assoc as $a) { /** @var ScreenAssociationEntity $a */
             if ($a->getUserId() == $user) {
                 return $this->roleGreaterOrEqual($a->getRole(), $attribute);
             }
@@ -75,33 +81,32 @@ class ScreenAssociation
         return false;
     }
 
-    private function roleGreaterOrEqual($granted, $reference)
+    private function roleGreaterOrEqual(string $granted, string $reference): bool
     {
-        if ($granted === 'admin' || $granted === $reference) {
+        if ('admin' === $granted || $granted === $reference) {
             return true;
         }
-        if ($granted === 'manage' && $reference === 'author') {
+        if ('manage' === $granted && 'author' === $reference) {
             return true;
         }
         return false;
     }
 
-    public function isScreenAssociated(Screen $screen)
+    public function isScreenAssociated(Screen $screen): bool
     {
         $rep = $this->em->getRepository('AppBundle:ScreenAssociation');
-        $assoc = $rep->findBy(array('screen' => $screen->getGuid()));
+        $assoc = $rep->findBy(['screen' => $screen->getGuid()]);
 
-        return (count($assoc) > 0);
+        return count($assoc) > 0;
     }
+
     /**
-     * @param Screen $screen
-     * @param string $owner  (format: "user:<id>" or "orga:<id>")
-     * @param string $role   (from ScreenRoleType-enum)
-     * @return \AppBundle\Entity\ScreenAssociation
+     * @param string $owner (format: "user:<id>" or "orga:<id>")
+     * @param string $role  (from ScreenRoleType-enum)
      */
-    public function associateByString(Screen $screen, $owner, $role)
+    public function associateByString(Screen $screen, string $owner, string $role): ScreenAssociationEntity
     {
-        $assoc = new \AppBundle\Entity\ScreenAssociation();
+        $assoc = new ScreenAssociationEntity();
         $assoc->setScreen($screen);
         $assoc->setRole($role);
 

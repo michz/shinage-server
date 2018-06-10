@@ -1,9 +1,9 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: michi
- * Date: 09.02.17
- * Time: 21:42
+declare(strict_types=1);
+
+/*
+ * Copyright 2018 by Michael Zapf.
+ * Licensed under MIT. See file /LICENSE.
  */
 
 namespace AppBundle\Service;
@@ -11,26 +11,24 @@ namespace AppBundle\Service;
 use AppBundle\Entity\Presentation;
 use AppBundle\Entity\ScheduledPresentation;
 use AppBundle\Entity\Screen;
-use Doctrine\ORM\EntityManager;
-use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorage;
+use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 class SchedulerService
 {
+    /** @var EntityManagerInterface|null */
     protected $em = null;
+
+    /** @var TokenStorageInterface|null */
     protected $tokenStorage = null;
 
-    public function __construct(EntityManager $em, TokenStorage $tokenStorage)
+    public function __construct(EntityManagerInterface $em, TokenStorageInterface $tokenStorage)
     {
         $this->em = $em;
         $this->tokenStorage = $tokenStorage;
     }
 
-    /**
-     * @param Screen $screen
-     * @param bool   $fallbackToDefault
-     * @return mixed
-     */
-    public function getCurrentPresentation(Screen $screen, $fallbackToDefault = true)
+    public function getCurrentPresentation(Screen $screen, bool $fallbackToDefault = true): ?Presentation
     {
         $em = $this->em;
 
@@ -66,19 +64,16 @@ class SchedulerService
 
     /**
      * Gets the current Presentation of the given Screen and writes it to the Entity.
-     * @param Screen $screen
      */
-    public function updateScreen(Screen $screen, $fallbackDefault = true)
+    public function updateScreen(Screen $screen, bool $fallbackDefault = true): void
     {
         $screen->setCurrentPresentation($this->getCurrentPresentation($screen, $fallbackDefault));
     }
 
     /**
      * Delete all scheduled entries of the given presentation.
-     *
-     * @param Presentation $presentation
      */
-    public function deleteAllScheduledPresentationsForPresentation(Presentation $presentation)
+    public function deleteAllScheduledPresentationsForPresentation(Presentation $presentation): void
     {
         $q = $this->em->createQuery(
             'delete from AppBundle:ScheduledPresentation p where p.presentation = :presentation'
