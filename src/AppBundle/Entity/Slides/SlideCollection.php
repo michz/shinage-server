@@ -1,49 +1,47 @@
 <?php
+declare(strict_types=1);
+
+/*
+ * Copyright 2018 by Michael Zapf.
+ * Licensed under MIT. See file /LICENSE.
+ */
 
 namespace AppBundle\Entity\Slides;
 
-use AppBundle\Entity\Slides\Slide;
-use Doctrine\Common\Collections\ArrayCollection;
 use JMS\Serializer\Annotation as JMS;
 
-/**
- * @author   :  Michael Zapf <m.zapf@mztx.de>
- * @date     :  08.11.17
- * @time     :  20:11
- */
 class SlideCollection
 {
     /**
-     * @var array<Slide>
+     * @var Slide[]|array
+     *
      * @JMS\Type("array<AppBundle\Entity\Slides\Slide>")
      */
     protected $slides = [];
 
     /**
-     * @return array
+     * @return Slide[]|array
      */
-    public function getSlides()
+    public function getSlides(): array
     {
         return $this->slides;
     }
 
     /**
-     * @param array $slides
+     * @param Slide[]|array $slides
      *
      * @return SlideCollection
      */
-    public function setSlides($slides)
+    public function setSlides(array $slides): self
     {
         $this->slides = $slides;
         return $this;
     }
 
     /**
-     * @param Slide $slide
-     *
      * @return $this
      */
-    public function addSlide(Slide $slide)
+    public function addSlide(Slide $slide): self
     {
         $this->slides[] = $slide;
         return $this;

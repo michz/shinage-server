@@ -1,211 +1,141 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: michi
- * Date: 05.01.2017
- * Time: 11:29
+declare(strict_types=1);
+
+/*
+ * Copyright 2018 by Michael Zapf.
+ * Licensed under MIT. See file /LICENSE.
  */
 
 namespace AppBundle\Entity;
 
 use JMS\Serializer\Annotation as JMS;
 
-/**
- * AppBundle\Entity\Presentation
- */
 class Presentation
 {
     /**
      * @var int
+     *
      * @JMS\Type("integer")
      */
     protected $id;
 
     /**
      * @var string
+     *
      * @JMS\Type("string")
      */
     protected $title = 'Presentation';
 
     /**
      * @var string
+     *
      * @JMS\Type("string")
      */
     protected $notes = '';
 
     /**
      * @var string
+     *
      * @JMS\Exclude()
      */
     protected $settings = '';
 
     /**
      * @var \DateTime
+     *
      * @JMS\Type("DateTime")
      */
     protected $lastModified;
 
-    /**
-     * @var User
-     */
+    /** @var User */
     protected $owner;
 
     /**
      * @var string
+     *
      * @JMS\Type("string")
      */
     protected $type;
 
-    /**
-     * Presentation constructor.
-     */
     public function __construct()
     {
         $this->lastModified = new \DateTime();
     }
 
-    /**
-     * Get id
-     *
-     * @return integer
-     */
-    public function getId()
+    public function getId(): int
     {
         return $this->id;
     }
 
-    /**
-     * Set title
-     *
-     * @param string $title
-     *
-     * @return Presentation
-     */
-    public function setTitle($title)
+    public function setTitle(string $title): self
     {
         $this->title = $title;
 
         return $this;
     }
 
-    /**
-     * Get title
-     *
-     * @return string
-     */
-    public function getTitle()
+    public function getTitle(): string
     {
         return $this->title;
     }
 
-    /**
-     * Set notes
-     *
-     * @param string $notes
-     *
-     * @return Presentation
-     */
-    public function setNotes($notes)
+    public function setNotes(string $notes): self
     {
         $this->notes = $notes;
 
         return $this;
     }
 
-    /**
-     * Get notes
-     *
-     * @return string
-     */
-    public function getNotes()
+    public function getNotes(): string
     {
         return $this->notes;
     }
 
-    /**
-     * Set settings
-     *
-     * @param string $settings
-     *
-     * @return Presentation
-     */
-    public function setSettings($settings)
+    public function setSettings(string $settings): self
     {
         $this->settings = $settings;
 
         return $this;
     }
 
-    /**
-     * Get settings
-     *
-     * @return string
-     */
-    public function getSettings()
+    public function getSettings(): string
     {
         return $this->settings;
     }
 
-    /**
-     * @return \DateTime
-     */
-    public function getLastModified()
+    public function getLastModified(): \DateTime
     {
         return $this->lastModified;
     }
 
-    /**
-     * @param \DateTime $lastModified
-     */
-    public function setLastModified($lastModified)
+    public function setLastModified(\DateTime $lastModified): void
     {
         $this->lastModified = $lastModified;
     }
 
-    /**
-     * @return string
-     */
-    public function __toString()
+    public function __toString(): string
     {
         return $this->getTitle();
     }
 
-    /**
-     * Set owner
-     *
-     * @param User $owner
-     *
-     * @return Presentation
-     */
-    public function setOwner(User $owner = null)
+    public function setOwner(User $owner = null): self
     {
         $this->owner = $owner;
 
         return $this;
     }
 
-    /**
-     * Get owner
-     *
-     * @return User
-     */
-    public function getOwner()
+    public function getOwner(): User
     {
         return $this->owner;
     }
 
-    /**
-     * @return string
-     */
-    public function getType()
+    public function getType(): string
     {
         return $this->type;
     }
 
-    /**
-     * @param string $type
-     */
-    public function setType($type)
+    public function setType(string $type): void
     {
         $this->type = $type;
     }

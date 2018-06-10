@@ -1,63 +1,51 @@
 <?php
+declare(strict_types=1);
+
+/*
+ * Copyright 2018 by Michael Zapf.
+ * Licensed under MIT. See file /LICENSE.
+ */
 
 namespace AppBundle\Entity\Slides;
 
 use JMS\Serializer\Annotation as JMS;
 
 /**
- * @author   :  Michael Zapf <m.zapf@mztx.de>
- * @date     :  08.11.17
- * @time     :  19:34
- *
  * @JMS\ExclusionPolicy("NONE")
  */
 class ImageSlide extends Slide
 {
     /**
      * @var string
+     *
      * @JMS\Type("string")
      */
     protected $src = '';
 
     /**
      * @var string
+     *
      * @JMS\Type("string")
      */
     protected $type = 'Image';
 
-    /**
-     * @return string
-     */
-    public function getSrc()
+    public function getSrc(): string
     {
         return $this->src;
     }
 
-    /**
-     * @param string $src
-     *
-     * @return ImageSlide
-     */
-    public function setSrc($src)
+    public function setSrc(string $src): self
     {
         $this->src = $src;
         return $this;
     }
 
-    /**
-     * @return string
-     */
-    public function getType()
+    public function getType(): string
     {
         return $this->type;
     }
 
-    /**
-     * @param string $type
-     *
-     * @return ImageSlide
-     */
-    public function setType($type)
+    public function setType(string $type): Slide
     {
         $this->type = $type;
         return $this;
