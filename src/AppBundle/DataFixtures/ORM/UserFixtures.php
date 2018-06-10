@@ -45,7 +45,7 @@ class UserFixtures extends Fixture
         $manager->persist($admin);
     }
 
-    private function createOrga1(ObjectManager $manager): void
+    private function createOrga1(ObjectManager $manager): User
     {
         $orga = new User();
         $orga->setUserType(UserType::USER_TYPE_ORGA);
