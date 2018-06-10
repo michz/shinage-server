@@ -12,7 +12,6 @@ use AppBundle\Entity\Screen;
 use AppBundle\Entity\User;
 use Doctrine\ORM\EntityManager;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 class ScreenRightsController extends Controller

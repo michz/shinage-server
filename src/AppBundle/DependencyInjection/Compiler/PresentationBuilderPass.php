@@ -1,19 +1,20 @@
 <?php
+declare(strict_types=1);
+
+/*
+ * Copyright 2018 by Michael Zapf.
+ * Licensed under MIT. See file /LICENSE.
+ */
 
 namespace AppBundle\DependencyInjection\Compiler;
 
-use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
+use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Reference;
 
-/**
- * @author   :  Michael Zapf <m.zapf@mztx.de>
- * @date     :  27.10.17
- * @time     :  12:03
- */
 class PresentationBuilderPass implements CompilerPassInterface
 {
-    public function process(ContainerBuilder $container)
+    public function process(ContainerBuilder $container): void
     {
         // always first check if the primary service is defined
         if (!$container->has('app.presentation_builder_chain')) {
@@ -27,7 +28,7 @@ class PresentationBuilderPass implements CompilerPassInterface
 
         foreach ($taggedServices as $id => $tags) {
             // add the transport service to the ChainTransport service
-            $definition->addMethodCall('addBuilder', array(new Reference($id)));
+            $definition->addMethodCall('addBuilder', [new Reference($id)]);
         }
     }
 }

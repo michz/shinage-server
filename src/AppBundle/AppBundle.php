@@ -1,17 +1,22 @@
 <?php
+declare(strict_types=1);
+
+/*
+ * Copyright 2018 by Michael Zapf.
+ * Licensed under MIT. See file /LICENSE.
+ */
 
 namespace AppBundle;
 
 use AppBundle\Service\ApiRoleRegistry;
-use Symfony\Component\HttpKernel\Bundle\Bundle;
 use Doctrine\DBAL\Types\Type;
+use Symfony\Component\HttpKernel\Bundle\Bundle;
 
 // @TODO{s:5} Favicon + Apple-Touch-Icon
 
 class AppBundle extends Bundle
 {
-
-    public function boot()
+    public function boot(): void
     {
         if (!Type::hasType(ScreenRoleType::ENUM_SCREENROLE)) {
             Type::addType(ScreenRoleType::ENUM_SCREENROLE, 'AppBundle\ScreenRoleType');
@@ -27,7 +32,7 @@ class AppBundle extends Bundle
         $platform->registerDoctrineTypeMapping('enum', 'string');
     }
 
-    protected function registerApiRoles()
+    protected function registerApiRoles(): void
     {
         /** @var ApiRoleRegistry $registry */
         $registry = $this->container->get('app.apiroleregistry');

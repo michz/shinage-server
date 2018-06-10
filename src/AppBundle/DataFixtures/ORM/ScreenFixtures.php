@@ -1,4 +1,9 @@
-<?php
+<?php declare(strict_types=1);
+
+/*
+ * Copyright 2018 by Michael Zapf.
+ * Licensed under MIT. See file /LICENSE.
+ */
 
 namespace AppBundle\DataFixtures\ORM;
 
@@ -8,14 +13,14 @@ use Doctrine\Common\Persistence\ObjectManager;
 
 class ScreenFixtures extends Fixture
 {
-    public function load(ObjectManager $manager)
+    public function load(ObjectManager $manager): void
     {
         $this->createScreen1($manager);
         $this->createScreen2($manager);
         $manager->flush();
     }
 
-    public function createScreen1(ObjectManager $manager)
+    public function createScreen1(ObjectManager $manager): void
     {
         $screen = new Screen();
         $screen->setName('Screen 1');
@@ -29,7 +34,7 @@ class ScreenFixtures extends Fixture
         $manager->persist($screen);
     }
 
-    public function createScreen2(ObjectManager $manager)
+    public function createScreen2(ObjectManager $manager): void
     {
         $screen = new Screen();
         $screen->setName('Screen 2');
