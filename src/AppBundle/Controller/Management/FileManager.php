@@ -20,14 +20,15 @@ use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 class FileManager extends Controller
 {
+    /**
+     * @Route("/manage/files", name="management-files")
+     */
     public function filesAction(): Response
     {
         return $this->render('file-manager/index.html.twig', []);
     }
 
     /**
-     * @throws \RuntimeException
-     *
      * @Route("/manage/files-download/{file}", name="management-files-download", requirements={"file": ".*"})
      */
     public function downloadAction(string $file): Response
@@ -82,6 +83,9 @@ class FileManager extends Controller
         return $response;
     }
 
+    /**
+     * @Route("/manage/files-connector", name="management-files-connector")
+     */
     public function connectorAction(): Response
     {
         $poolBase = realpath($this->getParameter('path_pool'));

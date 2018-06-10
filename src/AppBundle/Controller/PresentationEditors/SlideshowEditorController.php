@@ -18,8 +18,6 @@ use Symfony\Component\Routing\Annotation\Route;
 class SlideshowEditorController extends AbstractPresentationEditor
 {
     /**
-     * @param   $presentationId
-     *
      * @Route(
      *     "/manage/presentations/editor/slideshow/{presentationId}",
      *     name="presentation-editor-slideshow",
@@ -45,6 +43,13 @@ class SlideshowEditorController extends AbstractPresentationEditor
         ]);
     }
 
+    /**
+     * @Route(
+     *     "/manage/presentations/editor/slideshow/{presentationId}/update",
+     *     name="presentation-editor-slideshow-update",
+     *     requirements={"presentationId": "[0-9]+"}
+     * )
+     */
     public function updateAction(Request $request, int $presentationId): Response
     {
         $presentation = $this->getPresentation($presentationId);

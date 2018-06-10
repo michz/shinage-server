@@ -18,6 +18,9 @@ use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 class ScreenController extends Controller
 {
+    /**
+     * @Route("/adm/screens", name="admin-screens")
+     */
     public function indexAction(): Response
     {
         $rep = $this->getDoctrine()->getRepository('AppBundle:Screen');
@@ -31,10 +34,6 @@ class ScreenController extends Controller
 
     /**
      * @return \Symfony\Component\HttpFoundation\JsonResponse|\Symfony\Component\HttpFoundation\RedirectResponse
-     *
-     * @throws \Symfony\Component\Security\Core\Exception\AccessDeniedException
-     * @throws \LogicException
-     * @throws \InvalidArgumentException
      *
      * @Route("/adm/modify_screen", name="modify-screen")
      */

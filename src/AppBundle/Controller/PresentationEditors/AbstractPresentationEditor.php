@@ -11,13 +11,6 @@ namespace AppBundle\Controller\PresentationEditors;
 use AppBundle\Entity\Presentation;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 
-/**
- * @author   :  Michael Zapf <m.zapf@mztx.de>
- *
- * @date     :  19.11.17
- *
- * @time     :  10:42
- */
 abstract class AbstractPresentationEditor extends Controller
 {
     abstract public function supports(Presentation $presentation): bool;

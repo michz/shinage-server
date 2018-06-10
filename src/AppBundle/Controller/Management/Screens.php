@@ -15,13 +15,18 @@ use AppBundle\Form\CreateVirtualScreenForm;
 use AppBundle\Service\SchedulerService;
 use AppBundle\Service\ScreenAssociation;
 use Doctrine\ORM\EntityManager;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Form\Form;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 class Screens extends Controller
 {
+    /**
+     * @Route("/manage/screens", name="management-screens")
+     */
     public function indexAction(Request $request): Response
     {
         /** @var User $user user that is logged in */
@@ -57,7 +62,10 @@ class Screens extends Controller
         ]);
     }
 
-    public function connectAction(Request $request): Response
+    /**
+     * @Route("/manage/connect_screen", name="management-connect-screen")
+     */
+    public function connectAction(Request $request): RedirectResponse
     {
         $user = $this->get('security.token_storage')->getToken()->getUser();
         $em = $this->getDoctrine()->getManager();

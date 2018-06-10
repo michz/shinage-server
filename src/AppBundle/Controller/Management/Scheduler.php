@@ -21,6 +21,9 @@ use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 class Scheduler extends Controller
 {
+    /**
+     * @Route("/manage/scheduler", name="management-scheduler")
+     */
     public function schedulerAction(): Response
     {
         // user that is logged in
@@ -47,6 +50,9 @@ class Scheduler extends Controller
         ]);
     }
 
+    /**
+     * @Route("/manage/get-schedule", name="management-get-schedule")
+     */
     public function getScheduleAction(Request $request): Response
     {
         $guid = $request->get('screen');
@@ -91,6 +97,9 @@ class Scheduler extends Controller
         return new Response($serializer->serialize($sched, 'json'));
     }
 
+    /**
+     * @Route("/manage/add-scheduled", name="management-add-scheduled")
+     */
     public function addScheduledAction(Request $request): Response
     {
         $guid   = $request->get('screen');
@@ -125,6 +134,9 @@ class Scheduler extends Controller
         return $this->json(['status' => 'ok']);
     }
 
+    /**
+     * @Route("/manage/change-scheduled", name="management-change-scheduled")
+     */
     public function changeScheduledAction(Request $request): Response
     {
         $em = $this->getDoctrine()->getManager();  /** @var EntityManager $em */
@@ -157,16 +169,6 @@ class Scheduler extends Controller
     }
 
     /**
-     * @return \Symfony\Component\HttpFoundation\JsonResponse
-     *
-     * @throws \Symfony\Component\Security\Core\Exception\AccessDeniedException
-     * @throws \InvalidArgumentException
-     * @throws \LogicException
-     * @throws \Doctrine\ORM\ORMInvalidArgumentException
-     * @throws \Doctrine\ORM\ORMException
-     * @throws \Doctrine\ORM\OptimisticLockException
-     * @throws \Doctrine\ORM\TransactionRequiredException
-     *
      * @Route("/manage/delete-scheduled", name="management-delete-scheduled")
      */
     public function deleteScheduledAction(Request $request): Response

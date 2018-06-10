@@ -9,11 +9,15 @@ declare(strict_types=1);
 namespace AppBundle\Controller\Admin;
 
 use AppBundle\Service\TodoList;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Response;
 
 class AdminDashboardController extends Controller
 {
+    /**
+     * @Route("/adm", name="admin-dashboard")
+     */
     public function indexAction(): Response
     {
         $todo = $this->get('app.todolist');

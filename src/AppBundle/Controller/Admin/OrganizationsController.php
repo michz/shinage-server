@@ -8,11 +8,15 @@ declare(strict_types=1);
 
 namespace AppBundle\Controller\Admin;
 
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Response;
 
 class OrganizationsController extends Controller
 {
+    /**
+     * @Route("/adm/organizations", name="admin-organizations")
+     */
     public function indexAction(): Response
     {
         return $this->render('adm/organizations.html.twig', []);

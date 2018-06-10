@@ -32,11 +32,9 @@ use Symfony\Component\HttpFoundation\Response;
 class Account extends Controller
 {
     /**
-     * @return \Symfony\Component\HttpFoundation\RedirectResponse
-     *
      * @Route("/account", name="account")
      */
-    public function indexAction(): Response
+    public function indexAction(): RedirectResponse
     {
         return $this->redirectToRoute('account-edit');
     }
@@ -145,6 +143,9 @@ class Account extends Controller
         ]);
     }
 
+    /**
+     * @Route("/account/organizations", name="account-organizations")
+     */
     public function orgaAction(Request $request): Response
     {
         /** @var UserManager $userManager */
@@ -196,7 +197,10 @@ class Account extends Controller
         ]);
     }
 
-    public function orgaLeaveAction(int $id): Response
+    /**
+     * @Route("/account/organizations/leave/{id}", name="account-orga-leave")
+     */
+    public function orgaLeaveAction(int $id): RedirectResponse
     {
         /** @var User $user */
         $user = $this->get('security.token_storage')->getToken()->getUser();
@@ -212,13 +216,9 @@ class Account extends Controller
     }
 
     /**
-     * @return \Symfony\Component\HttpFoundation\RedirectResponse
-     *
-     * @throws \LogicException
-     *
      * @Route("/account/organizations/add-user", name="account-orga-add-user")
      */
-    public function orgaAddUserAction(Request $request): Response
+    public function orgaAddUserAction(Request $request): RedirectResponse
     {
         /** @var User $user */
         /** @var User $user_new */
@@ -259,16 +259,12 @@ class Account extends Controller
     }
 
     /**
-     * @return RedirectResponse
-     *
-     * @throws \LogicException
-     *
      * @Route("/account/organizations/remove/{orga_id}/{user_id}", name="account-orga-remove")
      */
     public function orgaRemoveAction(
         int $orga_id,
         int $user_id
-    ): Response {
+    ): RedirectResponse {
         /** @var User $user */
         $user = $this->get('security.token_storage')->getToken()->getUser();
         $em = $this->getDoctrine()->getManager();
@@ -292,20 +288,9 @@ class Account extends Controller
     }
 
     /**
-     * @param   $id
-     *
-     * @return RedirectResponse
-     *
-     * @throws \InvalidArgumentException
-     * @throws \LogicException
-     * @throws \Doctrine\ORM\ORMInvalidArgumentException
-     * @throws \Doctrine\ORM\ORMException
-     * @throws \Doctrine\ORM\OptimisticLockException
-     * @throws \Doctrine\ORM\TransactionRequiredException
-     *
      * @Route("/account/delete-api-key/{id}", name="account-delete-apikey")
      */
-    public function deleteApiKeyAction(Request $request, int $id): Response
+    public function deleteApiKeyAction(Request $request, int $id): RedirectResponse
     {
         /** @var EntityManager $em */
         $em = $this->getDoctrine()->getManager();
@@ -332,11 +317,6 @@ class Account extends Controller
 
     /**
      * Handles the create-api-key submission.
-     *
-     * @throws \InvalidArgumentException
-     * @throws \Doctrine\ORM\ORMInvalidArgumentException
-     * @throws \LogicException
-     * @throws \Doctrine\ORM\OptimisticLockException
      */
     protected function handleCreateApiToken(Request $request, Form $createApiKeyForm): void
     {
