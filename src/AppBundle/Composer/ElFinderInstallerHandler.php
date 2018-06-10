@@ -1,8 +1,9 @@
 <?php
-/**
- * @author   :  Michael Zapf <m.zapf@mztx.de>
- * @date     :  08.12.17
- * @time     :  07:12
+declare(strict_types=1);
+
+/*
+ * Copyright 2018 by Michael Zapf.
+ * Licensed under MIT. See file /LICENSE.
  */
 
 namespace AppBundle\Composer;
@@ -11,11 +12,10 @@ use Sensio\Bundle\DistributionBundle\Composer\ScriptHandler;
 
 class ElFinderInstallerHandler extends ScriptHandler
 {
-
     /**
      * Call the demo command of the Acme Demo Bundle.
      */
-    public static function installElFinderAssets()
+    public static function installElFinderAssets(): void
     {
         $currentDir = getcwd();
 
@@ -39,14 +39,14 @@ class ElFinderInstallerHandler extends ScriptHandler
         self::copyDirectory($elFinderDir . '/img', $targetImageDir);
     }
 
-    private static function copyDirectory(string $src, string $dst)
+    private static function copyDirectory(string $src, string $dst): void
     {
         $dir = opendir($src);
-        if ($dir === false) {
+        if (false === $dir) {
             throw new \RuntimeException(sprintf('Directory "%s" could not be opened.', $dst));
         }
         while (false !== ($file = readdir($dir))) {
-            if (($file !== '.') && ($file !== '..')) {
+            if (('.' !== $file) && ('..' !== $file)) {
                 if (is_dir($src . '/' . $file)) {
                     self::copyDirectory($src . '/' . $file, $dst . '/' . $file);
                 } else {

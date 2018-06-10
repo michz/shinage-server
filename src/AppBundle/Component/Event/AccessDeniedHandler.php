@@ -1,8 +1,9 @@
 <?php
-/**
- * @author   :  Michael Zapf <m.zapf@mztx.de>
- * @date     :  10.12.17
- * @time     :  19:28
+declare(strict_types=1);
+
+/*
+ * Copyright 2018 by Michael Zapf.
+ * Licensed under MIT. See file /LICENSE.
  */
 
 namespace AppBundle\Component\Event;
@@ -14,7 +15,7 @@ use Symfony\Component\Security\Http\Authorization\AccessDeniedHandlerInterface;
 
 class AccessDeniedHandler implements AccessDeniedHandlerInterface
 {
-    public function handle(Request $request, AccessDeniedException $accessDeniedException)
+    public function handle(Request $request, AccessDeniedException $accessDeniedException): Response
     {
         return new Response('', 403);
     }
