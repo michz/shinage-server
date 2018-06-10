@@ -124,9 +124,9 @@ services:
 
 
 parameters:
+    exclude_files:
+        - "*src/AppBundle/spec/*"
+
     skip_codes:
         PHP_CodeSniffer\Standards\Squiz\Sniffs\WhiteSpace\ControlStructureSpacingSniff.NoLineAfterClose:
             - "./*"
-#        SlevomatCodingStandard\Sniffs\TypeHints\TypeHintDeclarationSniff.UselessDocComment:
-#            - *tests/*
-

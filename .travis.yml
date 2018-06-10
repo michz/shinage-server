@@ -18,7 +18,8 @@ before_script:
   - php bin/console server:start 127.0.0.1:8000 --env=test
 
 script:
-  - ./vendor/bin/phpcs --standard=PSR2 --ignore="src/AppBundle/Resource/|src/*/spec/" --encoding=utf-8 app/ src/
+#  - ./vendor/bin/phpcs --standard=PSR2 --ignore="src/AppBundle/Resource/|src/*/spec/" --encoding=utf-8 app/ src/AppBundle/
+  - ./vendor/bin/ecs check src/
   - ./bin/console lint:yaml app/
   - ./bin/console lint:yaml src/
   - ./bin/console lint:twig app/
