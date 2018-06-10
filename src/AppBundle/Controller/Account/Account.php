@@ -1,9 +1,9 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: michi
- * Date: 07.01.17
- * Time: 20:31
+declare(strict_types=1);
+
+/*
+ * Copyright 2018 by Michael Zapf.
+ * Licensed under MIT. See file /LICENSE.
  */
 
 namespace AppBundle\Controller\Account;
@@ -27,6 +27,7 @@ use Symfony\Component\Form\Form;
 use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 
 class Account extends Controller
 {
@@ -35,19 +36,15 @@ class Account extends Controller
      *
      * @Route("/account", name="account")
      */
-    public function indexAction()
+    public function indexAction(): Response
     {
         return $this->redirectToRoute('account-edit');
     }
 
     /**
-     * @param Request $request
-     *
-     * @return \Symfony\Component\HttpFoundation\Response
-     *
      * @Route("/account/edit", name="account-edit")
      */
-    public function editAction(Request $request)
+    public function editAction(Request $request): Response
     {
         /** @var User $user */
         $user = $this->get('security.token_storage')->getToken()->getUser();
@@ -56,35 +53,31 @@ class Account extends Controller
 
         $form = $this->get('form.factory')->createNamedBuilder('form1name', FormType::class, $user)
             ->add('email', EmailType::class)
-            #->add('password', PasswordType::class)
-            ->add('save', SubmitType::class, array('label' => 'Save'))
+            //->add('password', PasswordType::class)
+            ->add('save', SubmitType::class, ['label' => 'Save'])
             ->getForm();
-
 
         $form_pw = $this->get('form.factory')->createNamedBuilder('form2name', FormType::class, $user)
-            ->add('old-password', PasswordType::class, array('label'=>'oldPassword', 'mapped' => false))
-            ->add('plainPassword', RepeatedType::class, array(
+            ->add('old-password', PasswordType::class, ['label'=>'oldPassword', 'mapped' => false])
+            ->add('plainPassword', RepeatedType::class, [
                 'type' => PasswordType::class,
                 'invalid_message' => 'PasswordsMustMatch',
-                'options' => array('attr' => array('class' => 'password-field')),
+                'options' => ['attr' => ['class' => 'password-field']],
                 'required' => true,
-                'first_options'  => array('label' => 'Password'),
-                'second_options' => array('label' => 'PasswordAgain'),
-            ))
-            ->add('save', SubmitType::class, array('label' => 'Save'))
+                'first_options'  => ['label' => 'Password'],
+                'second_options' => ['label' => 'PasswordAgain'],
+            ])
+            ->add('save', SubmitType::class, ['label' => 'Save'])
             ->getForm();
-
 
         // build default AccessKey
         $newApiKey = new AccessKey();
         $newApiKey->setOwner($user);
 
-
         // build AccessKey-form and handle submission
         $formApiKeyBuilder = $this->get('form.factory')->createNamedBuilder('form3name', ApiKeyForm::class, $newApiKey);
         $createApiKeyForm = $formApiKeyBuilder->getForm();
         $this->handleCreateApiToken($request, $createApiKeyForm);
-
 
         if ('POST' === $request->getMethod()) {
             if ($request->request->has('form1name')) {
@@ -97,7 +90,7 @@ class Account extends Controller
                     } else {
                         $this->addFlash(
                             'error',
-                            'Die Änderungen konnten leider nicht gespeichert werden. '.
+                            'Die Änderungen konnten leider nicht gespeichert werden. ' .
                             'Evtl. sind Eingaben nicht korrekt.'
                         );
                     }
@@ -139,11 +132,10 @@ class Account extends Controller
             }
         }
 
-
         // get API keys
         $em = $this->getDoctrine()->getManager();
         $rep = $em->getRepository('AppBundle:Api\AccessKey');
-        $apiKeys = $rep->findBy(array('owner' => $user));
+        $apiKeys = $rep->findBy(['owner' => $user]);
 
         return $this->render('account/user.html.twig', [
             'form'                  => $form->createView(),
@@ -153,13 +145,7 @@ class Account extends Controller
         ]);
     }
 
-
-    /**
-     * @throws \LogicException
-     *
-     * @Route("/account/organizations", name="account-organizations")
-     */
-    public function orgaAction(Request $request)
+    public function orgaAction(Request $request): Response
     {
         /** @var UserManager $userManager */
         $userManager = $this->get('fos_user.user_manager');
@@ -171,9 +157,9 @@ class Account extends Controller
         $orga_new->setUserType(UserType::USER_TYPE_ORGA);
 
         $form_create = $this->createFormBuilder($orga_new)
-            ->add('Name', TextType::class, array('trim' => true))
-            ->add('email', EmailType::class, array('label' => 'E-Mail'))
-            ->add('save', SubmitType::class, array('label' => 'Save'))
+            ->add('Name', TextType::class, ['trim' => true])
+            ->add('email', EmailType::class, ['label' => 'E-Mail'])
+            ->add('save', SubmitType::class, ['label' => 'Save'])
             ->getForm();
         $form_create->handleRequest($request);
         if ($form_create->isSubmitted()) {
@@ -192,7 +178,7 @@ class Account extends Controller
                 } catch (UniqueConstraintViolationException $ex) {
                     $this->addFlash(
                         'error',
-                        'Der gewählte Name oder die E-Mail-Adresse wird bereits verwendet. '.
+                        'Der gewählte Name oder die E-Mail-Adresse wird bereits verwendet. ' .
                         'Bitte probiere es mit einer anderen Kombination.'
                     );
                     $this->getDoctrine()->resetManager();
@@ -210,12 +196,7 @@ class Account extends Controller
         ]);
     }
 
-    /**
-     * @throws \LogicException
-     *
-     * @Route("/account/organizations/leave/{id}", name="account-orga-leave")
-     */
-    public function orgaLeaveAction(/** @scrutinizer ignore-unused */ Request $request, $id)
+    public function orgaLeaveAction(int $id): Response
     {
         /** @var User $user */
         $user = $this->get('security.token_storage')->getToken()->getUser();
@@ -231,22 +212,20 @@ class Account extends Controller
     }
 
     /**
-     * @param Request $request
-     *
      * @return \Symfony\Component\HttpFoundation\RedirectResponse
      *
      * @throws \LogicException
      *
      * @Route("/account/organizations/add-user", name="account-orga-add-user")
      */
-    public function orgaAddUserAction(Request $request)
+    public function orgaAddUserAction(Request $request): Response
     {
         /** @var User $user */
         /** @var User $user_new */
         $user = $this->get('security.token_storage')->getToken()->getUser();
         $em = $this->getDoctrine()->getManager();
         $rep = $em->getRepository('AppBundle:User');
-        $user_new = $rep->findOneBy(array('email' => $request->get('email')));
+        $user_new = $rep->findOneBy(['email' => $request->get('email')]);
         $orga = $em->find(User::class, $request->get('organization'));
 
         // check if user is allowed to edit organization
@@ -279,20 +258,17 @@ class Account extends Controller
         return $this->redirectToRoute('account-organizations');
     }
 
-
     /**
-     * @param Request $request
-     * @param         $orga_id
-     * @param         $user_id
-     *
      * @return RedirectResponse
      *
      * @throws \LogicException
      *
      * @Route("/account/organizations/remove/{orga_id}/{user_id}", name="account-orga-remove")
      */
-    public function orgaRemoveAction(/** @scrutinizer ignore-unused */ Request $request, $orga_id, $user_id)
-    {
+    public function orgaRemoveAction(
+        int $orga_id,
+        int $user_id
+    ): Response {
         /** @var User $user */
         $user = $this->get('security.token_storage')->getToken()->getUser();
         $em = $this->getDoctrine()->getManager();
@@ -315,10 +291,8 @@ class Account extends Controller
         return $this->redirectToRoute('account-organizations');
     }
 
-
     /**
-     * @param Request $request
-     * @param         $id
+     * @param   $id
      *
      * @return RedirectResponse
      *
@@ -331,7 +305,7 @@ class Account extends Controller
      *
      * @Route("/account/delete-api-key/{id}", name="account-delete-apikey")
      */
-    public function deleteApiKeyAction(Request $request, $id)
+    public function deleteApiKeyAction(Request $request, int $id): Response
     {
         /** @var EntityManager $em */
         $em = $this->getDoctrine()->getManager();
@@ -359,15 +333,12 @@ class Account extends Controller
     /**
      * Handles the create-api-key submission.
      *
-     * @param Request $request
-     * @param Form    $createApiKeyForm
-     *
      * @throws \InvalidArgumentException
      * @throws \Doctrine\ORM\ORMInvalidArgumentException
      * @throws \LogicException
      * @throws \Doctrine\ORM\OptimisticLockException
      */
-    protected function handleCreateApiToken(Request $request, Form $createApiKeyForm)
+    protected function handleCreateApiToken(Request $request, Form $createApiKeyForm): void
     {
         /** @var EntityManager $em */
         $em = $this->getDoctrine()->getManager();

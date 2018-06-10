@@ -1,8 +1,9 @@
 <?php
-/**
- * @author   :  Michael Zapf <m.zapf@mztx.de>
- * @date     :  19.11.17
- * @time     :  10:52
+declare(strict_types=1);
+
+/*
+ * Copyright 2018 by Michael Zapf.
+ * Licensed under MIT. See file /LICENSE.
  */
 
 namespace AppBundle\Controller\PresentationEditors;
@@ -17,12 +18,7 @@ use Symfony\Component\Routing\Annotation\Route;
 class SlideshowEditorController extends AbstractPresentationEditor
 {
     /**
-     * @param Request $request
-     * @param         $presentationId
-     *
-     * @return Response
-     *
-     * @throws \RuntimeException
+     * @param   $presentationId
      *
      * @Route(
      *     "/manage/presentations/editor/slideshow/{presentationId}",
@@ -30,7 +26,7 @@ class SlideshowEditorController extends AbstractPresentationEditor
      *     requirements={"presentationId": "[0-9]+"}
      * )
      */
-    public function editAction(/** @scrutinizer ignore-unused */ Request $request, $presentationId)
+    public function editAction(int $presentationId): Response
     {
         $presentation = $this->getPresentation($presentationId);
         if (!$this->supports($presentation)) {
@@ -49,19 +45,7 @@ class SlideshowEditorController extends AbstractPresentationEditor
         ]);
     }
 
-    /**
-     * @Route(
-     *     "/manage/presentations/editor/slideshow/{presentationId}/update",
-     *     name="presentation-editor-slideshow-update",
-     *     requirements={"presentationId": "[0-9]+"}
-     * )
-     *
-     * @throws \RuntimeException
-     * @throws \Doctrine\ORM\OptimisticLockException
-     * @throws \Doctrine\ORM\ORMInvalidArgumentException
-     * @throws \Symfony\Component\OptionsResolver\Exception\InvalidOptionsException
-     */
-    public function updateAction(Request $request, $presentationId)
+    public function updateAction(Request $request, int $presentationId): Response
     {
         $presentation = $this->getPresentation($presentationId);
         if (!$this->supports($presentation)) {
@@ -70,7 +54,7 @@ class SlideshowEditorController extends AbstractPresentationEditor
 
         $slidesJson = $request->get('slides');
         $serializer = $this->get('jms_serializer');
-        $slides = $serializer->deserialize($slidesJson, 'array<'.ImageSlide::class.'>', 'json');
+        $slides = $serializer->deserialize($slidesJson, 'array<' . ImageSlide::class . '>', 'json');
 
         /** @var Slideshow $settings */
         $settings = $this->getCurrentSettingsOrEmpty($presentation);
@@ -84,27 +68,17 @@ class SlideshowEditorController extends AbstractPresentationEditor
         return new Response('', 204);
     }
 
-    /**
-     * @param Presentation $presentation
-     *
-     * @return bool
-     */
     public function supports(Presentation $presentation): bool
     {
-        return ($presentation->getType() === 'slideshow');
+        return 'slideshow' === $presentation->getType();
     }
 
-    /**
-     * @param Presentation $presentation
-     *
-     * @return Slideshow
-     */
     protected function getCurrentSettingsOrEmpty(Presentation $presentation): Slideshow
     {
         $serializer = $this->get('jms_serializer');
         try {
             $settings = $serializer->deserialize($presentation->getSettings(), Slideshow::class, 'json');
-        } catch (\Exception $exception) {
+        } catch (\Throwable $exception) {
             $settings = new Slideshow();
         }
         return $settings;

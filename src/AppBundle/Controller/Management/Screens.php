@@ -1,9 +1,9 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: michi
- * Date: 20.12.16
- * Time: 17:12
+declare(strict_types=1);
+
+/*
+ * Copyright 2018 by Michael Zapf.
+ * Licensed under MIT. See file /LICENSE.
  */
 
 namespace AppBundle\Controller\Management;
@@ -15,32 +15,21 @@ use AppBundle\Form\CreateVirtualScreenForm;
 use AppBundle\Service\SchedulerService;
 use AppBundle\Service\ScreenAssociation;
 use Doctrine\ORM\EntityManager;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Form\Form;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\Security\Core\Exception\AccessDeniedException;
+use Symfony\Component\HttpFoundation\Response;
 
 class Screens extends Controller
 {
-    /**
-     * @throws \OutOfBoundsException
-     * @throws \LogicException
-     * @throws \InvalidArgumentException
-     * @throws \Doctrine\ORM\ORMInvalidArgumentException
-     * @throws \Doctrine\ORM\OptimisticLockException
-     *
-     * @Route("/manage/screens", name="management-screens")
-     */
-    public function indexAction(Request $request)
+    public function indexAction(Request $request): Response
     {
-        /** @var User $user   user that is logged in*/
+        /** @var User $user user that is logged in */
         $user = $this->get('security.token_storage')->getToken()->getUser();
         /** @var EntityManager $em */
         $em = $this->getDoctrine()->getManager();
         /** @var SchedulerService $scheduler */
         $scheduler = $this->get('app.scheduler');
-
 
         // @TODO{s:5} Standardpräsentation pro Screen einstellen
 
@@ -64,17 +53,11 @@ class Screens extends Controller
             'screens' => $screens,
             'screens_count' => \count($screens),
             'organizations' => $user->getOrganizations(),
-            'create_form' => $createForm->createView()
+            'create_form' => $createForm->createView(),
         ]);
     }
 
-    /**
-     * @Route("/manage/connect_screen", name="management-connect-screen")
-     * @throws \InvalidArgumentException
-     * @throws \UnexpectedValueException
-     * @throws \LogicException
-     */
-    public function connectAction(Request $request)
+    public function connectAction(Request $request): Response
     {
         $user = $this->get('security.token_storage')->getToken()->getUser();
         $em = $this->getDoctrine()->getManager();
@@ -83,13 +66,13 @@ class Screens extends Controller
         $code   = $request->get('connect_code');
         $who    = $request->get('who');
 
-        $screens = $rep->findBy(array('connect_code' => $code));
-        if (\count($screens) === 0) {
+        $screens = $rep->findBy(['connect_code' => $code]);
+        if (0 === \count($screens)) {
             $this->addFlash('error', 'Die Anzeige konnte leider nicht hinzugefügt werden.');
             return $this->redirectToRoute('management-screens');
         }
 
-        $screen = $screens[0]; /** @var Screen $screen */
+        $screen = $screens[0]; /* @var Screen $screen */
 
         $screen->setConnectCode('');
         $em->persist($screen);
@@ -98,7 +81,7 @@ class Screens extends Controller
         $assoc->setScreen($screen);
         $assoc->setRole(\AppBundle\ScreenRoleType::ROLE_ADMIN);
 
-        if ($who === 'me') {
+        if ('me' === $who) {
             $assoc->setUserId($user);
         } else {
             $orga = $em->find(User::class, $who);
@@ -112,12 +95,8 @@ class Screens extends Controller
         return $this->redirectToRoute('management-screens');
     }
 
-
     /**
      * Handles the create-form submission.
-     *
-     * @param Request $request
-     * @param Form    $createForm
      *
      * @throws \InvalidArgumentException
      * @throws \OutOfBoundsException
@@ -125,7 +104,7 @@ class Screens extends Controller
      * @throws \Doctrine\ORM\ORMInvalidArgumentException
      * @throws \Doctrine\ORM\OptimisticLockException
      */
-    protected function handleCreateVirtualScreen(Request $request, Form $createForm)
+    protected function handleCreateVirtualScreen(Request $request, Form $createForm): void
     {
         /** @var EntityManager $em */
         $em = $this->getDoctrine()->getManager();
