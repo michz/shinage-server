@@ -75,6 +75,13 @@ class PresentationsController extends Controller
         ]);
     }
 
+    /**
+     * @Route(
+     *     "/manage/presentations/delete/{presentationId}",
+     *     name="presentation-delete",
+     *     requirements={"presentationId": "\d+"}
+     * )
+     */
     public function deletePresentationAction(int $presentationId): Response
     {
         $em = $this->getDoctrine()->getManager();

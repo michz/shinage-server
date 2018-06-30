@@ -9,17 +9,20 @@ declare(strict_types=1);
 namespace AppBundle\Controller\Management\Screens;
 
 use AppBundle\Entity\Screen;
-use AppBundle\Entity\User;
 use Doctrine\ORM\EntityManager;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Response;
 
 class ScreenDataController extends Controller
 {
+    /**
+     * @Route("/manage/screen/{guid}", name="management-screen-data", requirements={"guid": "[^/]*"})
+     */
     public function indexAction(string $guid): Response
     {
-        /** @var User $user user that is logged in */
-        $user = $this->get('security.token_storage')->getToken()->getUser();
+        // TODO Check if logged in user is allowed to edit screen.
+
         /** @var EntityManager $em */
         $em = $this->getDoctrine()->getManager();
 
