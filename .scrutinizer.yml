@@ -18,3 +18,15 @@ filter:
 build:
     tests:
         override: ['php -v']
+
+coding_style:
+    php:
+        indentation:
+            general:
+                use_tabs: false
+                size: 4
+            switch:
+                indent_case: true
+        spaces:
+            around_operators:
+                concatenation: true
