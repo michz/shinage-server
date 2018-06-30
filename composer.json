@@ -39,7 +39,6 @@
     "require-dev": {
         "sensio/generator-bundle": "^3.0",
         "symfony/phpunit-bridge": "^3.0",
-        "squizlabs/php_codesniffer": "2.*",
         "doctrine/doctrine-fixtures-bundle": "^2.4",
         "phpspec/phpspec": "^4.0",
         "symfony/web-server-bundle": "^3.3",
@@ -48,7 +47,8 @@
         "behat/mink-goutte-driver": "^1.2",
         "friends-of-behat/symfony-extension": "^1.2",
         "friends-of-behat/context-service-extension": "^1.2",
-        "friends-of-behat/cross-container-extension": "^1.1"
+        "friends-of-behat/cross-container-extension": "^1.1",
+        "symplify/easy-coding-standard": "^4.3"
     },
     "scripts": {
         "symfony-scripts": [

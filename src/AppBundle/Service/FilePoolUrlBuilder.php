@@ -1,9 +1,9 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: michi
- * Date: 29.12.16
- * Time: 15:13
+declare(strict_types=1);
+
+/*
+ * Copyright 2018 by Michael Zapf.
+ * Licensed under MIT. See file /LICENSE.
  */
 
 namespace AppBundle\Service;
@@ -22,9 +22,6 @@ class FilePoolUrlBuilder
 
     /**
      * FilePoolUrlBuilder constructor.
-     *
-     * @param string          $basePath
-     * @param RouterInterface $router
      */
     public function __construct(string $basePath, RouterInterface $router)
     {
@@ -32,17 +29,11 @@ class FilePoolUrlBuilder
         $this->router = $router;
     }
 
-    /**
-     * @param string $filePath
-     * @param string $userRoot
-     *
-     * @return string
-     */
     public function getAbsolutePath(string $filePath, string $userRoot = ''): string
     {
         $relative = $this->concatPaths($userRoot, $filePath);
         $absolute = realpath($this->concatPaths($this->basePath, $relative));
-        if ($absolute === false) {
+        if (false === $absolute) {
             throw new FileNotFoundException($relative);
         }
         $absoluteBase = realpath($this->basePath);
@@ -52,14 +43,8 @@ class FilePoolUrlBuilder
         return $absolute;
     }
 
-    /**
-     * @param string $left
-     * @param string $right
-     *
-     * @return string
-     */
     private function concatPaths(string $left, string $right): string
     {
-        return rtrim($left, '/\\').DIRECTORY_SEPARATOR.ltrim($right, '/\\');
+        return rtrim($left, '/\\') . DIRECTORY_SEPARATOR . ltrim($right, '/\\');
     }
 }

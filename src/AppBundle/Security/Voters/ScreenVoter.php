@@ -1,9 +1,9 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: michi
- * Date: 31.12.17
- * Time: 12:14
+declare(strict_types=1);
+
+/*
+ * Copyright 2018 by Michael Zapf.
+ * Licensed under MIT. See file /LICENSE.
  */
 
 namespace AppBundle\Security\Voters;
@@ -19,25 +19,21 @@ class ScreenVoter extends Voter
     /** @var ScreenAssociation */
     private $screenAssociation;
 
-    /**
-     * ScreenVoter constructor.
-     * @param ScreenAssociation $screenAssociation
-     */
     public function __construct(ScreenAssociation $screenAssociation)
     {
         $this->screenAssociation = $screenAssociation;
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     protected function supports($attribute, $subject)
     {
-        return ($subject instanceof Screen);
+        return $subject instanceof Screen;
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     protected function voteOnAttribute($attribute, $subject, TokenInterface $token)
     {

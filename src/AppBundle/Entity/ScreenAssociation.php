@@ -1,18 +1,14 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: michi
- * Date: 29.12.16
- * Time: 15:21
+declare(strict_types=1);
+
+/*
+ * Copyright 2018 by Michael Zapf.
+ * Licensed under MIT. See file /LICENSE.
  */
 
 namespace AppBundle\Entity;
 
 use AppBundle\ScreenRoleType;
-
-/**
- * AppBundle\Entity\ScreenAssociation
- */
 
 class ScreenAssociation
 {
@@ -25,87 +21,46 @@ class ScreenAssociation
     /** @var User */
     protected $user_id;
 
-    /** @var ScreenRoleType */
-    protected $role;
+    /** @var string */
+    protected $role = ScreenRoleType::ROLE_ADMIN;
 
-    /**
-     * Get id
-     *
-     * @return integer
-     */
-    public function getId()
+    public function getId(): int
     {
         return $this->id;
     }
 
-    /**
-     * Set role
-     *
-     * @param ScreenRoleType $role
-     *
-     * @return ScreenAssociation
-     */
-    public function setRole($role)
+    public function setRole(string $role): self
     {
         $this->role = $role;
 
         return $this;
     }
 
-    /**
-     * Get role
-     *
-     * @return ScreenRoleType
-     */
-    public function getRole()
+    public function getRole(): string
     {
         return $this->role;
     }
 
-    /**
-     * Set screen
-     *
-     * @param \AppBundle\Entity\Screen $screen
-     *
-     * @return ScreenAssociation
-     */
-    public function setScreen(\AppBundle\Entity\Screen $screen)
+    public function setScreen(Screen $screen): self
     {
         $this->screen = $screen;
 
         return $this;
     }
 
-    /**
-     * Get screen
-     *
-     * @return \AppBundle\Entity\Screen
-     */
-    public function getScreen()
+    public function getScreen(): Screen
     {
         return $this->screen;
     }
 
-    /**
-     * Set userId
-     *
-     * @param \AppBundle\Entity\User $userId
-     *
-     * @return ScreenAssociation
-     */
-    public function setUserId(\AppBundle\Entity\User $userId = null)
+    public function setUserId(User $userId = null): self
     {
         $this->user_id = $userId;
 
         return $this;
     }
 
-    /**
-     * Get userId
-     *
-     * @return \AppBundle\Entity\User
-     */
-    public function getUserId()
+    public function getUserId(): User
     {
         return $this->user_id;
     }

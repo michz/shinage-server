@@ -1,27 +1,30 @@
 <?php
+declare(strict_types=1);
+
+/*
+ * Copyright 2018 by Michael Zapf.
+ * Licensed under MIT. See file /LICENSE.
+ */
 
 namespace AppBundle\Menu;
 
 use Knp\Menu\FactoryInterface;
+use Knp\Menu\ItemInterface;
 
-/**
- * @author   :  Michael Zapf <m.zapf@mztx.de>
- * @date     :  05.11.17
- * @time     :  17:59
- */
 class Builder
 {
+    /** @var FactoryInterface|null */
     private $factory;
 
-    /**
-     * @param FactoryInterface $factory
-     */
     public function __construct(FactoryInterface $factory)
     {
         $this->factory = $factory;
     }
 
-    public function accountMenu(/** @scrutinizer ignore-unused */ array $options)
+    /**
+     * @param mixed[]|array $options
+     */
+    public function accountMenu(/* @scrutinizer ignore-unused */ array $options): ItemInterface
     {
         $menu = $this->factory->createItem('root');
 
@@ -33,7 +36,10 @@ class Builder
         return $menu;
     }
 
-    public function screenSettingsMenu(/** @scrutinizer ignore-unused */ array $options)
+    /**
+     * @param mixed[]|array $options
+     */
+    public function screenSettingsMenu(array $options): ItemInterface
     {
         $menu = $this->factory->createItem('root');
 
@@ -41,19 +47,19 @@ class Builder
 
         $menu->addChild('Common', [
             'route' => 'management-screen-data',
-            'routeParameters' => ['guid' => $options['guid']]
+            'routeParameters' => ['guid' => $options['guid']],
         ]);
         $menu->addChild('Schedule', [
             'route' => 'management-screen-schedule',
-            'routeParameters' => ['guid' => $options['guid']]
+            'routeParameters' => ['guid' => $options['guid']],
         ]);
         $menu->addChild('Rights', [
             'route' => 'management-screen-rights',
-            'routeParameters' => ['guid' => $options['guid']]
+            'routeParameters' => ['guid' => $options['guid']],
         ]);
         $menu->addChild('Offline', [
             'route' => 'management-screen-offline',
-            'routeParameters' => ['guid' => $options['guid']]
+            'routeParameters' => ['guid' => $options['guid']],
         ]);
 
         return $menu;

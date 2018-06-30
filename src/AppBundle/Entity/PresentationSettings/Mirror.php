@@ -1,61 +1,48 @@
 <?php
+declare(strict_types=1);
+
+/*
+ * Copyright 2018 by Michael Zapf.
+ * Licensed under MIT. See file /LICENSE.
+ */
 
 namespace AppBundle\Entity\PresentationSettings;
 
 use JMS\Serializer\Annotation as JMS;
 
-/**
- * @author   :  Michael Zapf <m.zapf@mztx.de>
- * @date     :  05.11.17
- * @time     :  16:47
- */
 class Mirror
 {
     /**
      * @var string
+     *
      * @JMS\Type("string")
      */
     protected $url;
 
     /**
      * @var string
+     *
      * @JMS\Type("string")
      */
     protected $type;
 
-    /**
-     * @return string
-     */
-    public function getUrl()
+    public function getUrl(): string
     {
         return $this->url;
     }
 
-    /**
-     * @param string $url
-     *
-     * @return Mirror
-     */
-    public function setUrl($url)
+    public function setUrl(string $url): self
     {
         $this->url = $url;
         return $this;
     }
 
-    /**
-     * @return string
-     */
-    public function getType()
+    public function getType(): string
     {
         return $this->type;
     }
 
-    /**
-     * @param string $type
-     *
-     * @return Mirror
-     */
-    public function setType($type)
+    public function setType(string $type): self
     {
         $this->type = $type;
         return $this;

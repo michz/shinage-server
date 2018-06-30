@@ -1,4 +1,10 @@
 <?php
+declare(strict_types=1);
+
+/*
+ * Copyright 2018 by Michael Zapf.
+ * Licensed under MIT. See file /LICENSE.
+ */
 
 namespace AppBundle\DataFixtures\ORM;
 
@@ -8,17 +14,12 @@ use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Common\Persistence\ObjectManager;
 use FOS\UserBundle\Model\UserManagerInterface;
 
-/**
- * @author   :  Michael Zapf <m.zapf@mztx.de>
- * @date     :  27.10.17
- * @time     :  08:27
- */
 class UserFixtures extends Fixture
 {
     const USERNAME_ADMIN = 'admin@shinage.test';
     const PASSWORD_ADMIN = 'admin';
 
-    public function load(ObjectManager $manager)
+    public function load(ObjectManager $manager): void
     {
         $this->createAdmin($manager);
         $orga1 = $this->createOrga1($manager);
@@ -26,7 +27,7 @@ class UserFixtures extends Fixture
         $manager->flush();
     }
 
-    private function createAdmin(ObjectManager $manager)
+    private function createAdmin(ObjectManager $manager): void
     {
         $admin = new User();
         $admin->setUserType(UserType::USER_TYPE_USER);
@@ -44,7 +45,7 @@ class UserFixtures extends Fixture
         $manager->persist($admin);
     }
 
-    private function createOrga1($manager)
+    private function createOrga1(ObjectManager $manager): User
     {
         $orga = new User();
         $orga->setUserType(UserType::USER_TYPE_ORGA);
@@ -63,7 +64,7 @@ class UserFixtures extends Fixture
         return $orga;
     }
 
-    private function createOrgaUser1(ObjectManager $manager, User $orga)
+    private function createOrgaUser1(ObjectManager $manager, User $orga): void
     {
         $admin = new User();
         $admin->setUserType(UserType::USER_TYPE_USER);

@@ -1,9 +1,9 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: michi
- * Date: 21.12.16
- * Time: 13:46
+declare(strict_types=1);
+
+/*
+ * Copyright 2018 by Michael Zapf.
+ * Licensed under MIT. See file /LICENSE.
  */
 
 namespace AppBundle\Entity;
@@ -16,144 +16,97 @@ use JMS\Serializer\Annotation as JMS;
  *     exp="object.getScreen().getGuid()",
  *     options={@JMS\SerializedName("screen")}
  *  )
- * AppBundle\Entity\ScheduledPresentation
  */
 class ScheduledPresentation
 {
     /**
      * @var int
+     *
      * @JMS\Type("integer")
      */
     private $id;
 
     /**
      * @var Screen
+     *
      * @JMS\Exclude()
      */
     private $screen;
 
     /**
      * @var Presentation
+     *
      * @JMS\Type(Presentation::class)
      */
     private $presentation;
 
     /**
      * @var \DateTime
+     *
      * @JMS\Type("DateTime<'Y-m-d H:i:s'>")
+     *
      * @JMS\SerializedName("start")
      */
     private $scheduled_start;
 
     /**
      * @var \DateTime
+     *
      * @JMS\Type("DateTime<'Y-m-d H:i:s'>")
+     *
      * @JMS\SerializedName("end")
      */
     private $scheduled_end;
 
-    /**
-     * Get id
-     *
-     * @return integer
-     */
-    public function getId()
+    public function getId(): int
     {
         return $this->id;
     }
 
-    /**
-     * Set screen
-     *
-     * @param Screen $screen
-     *
-     * @return ScheduledPresentation
-     */
-    public function setScreen(Screen $screen = null)
+    public function setScreen(?Screen $screen = null): self
     {
         $this->screen = $screen;
 
         return $this;
     }
 
-    /**
-     * Get screen
-     *
-     * @return Screen
-     */
-    public function getScreen()
+    public function getScreen(): ?Screen
     {
         return $this->screen;
     }
 
-    /**
-     * Set scheduledStart
-     *
-     * @param \DateTime $scheduledStart
-     *
-     * @return ScheduledPresentation
-     */
-    public function setScheduledStart($scheduledStart)
+    public function setScheduledStart(\DateTime $scheduledStart): self
     {
         $this->scheduled_start = $scheduledStart;
 
         return $this;
     }
 
-    /**
-     * Get scheduledStart
-     *
-     * @return \DateTime
-     */
-    public function getScheduledStart()
+    public function getScheduledStart(): \DateTime
     {
         return $this->scheduled_start;
     }
 
-    /**
-     * Set scheduledEnd
-     *
-     * @param \DateTime $scheduledEnd
-     *
-     * @return ScheduledPresentation
-     */
-    public function setScheduledEnd($scheduledEnd)
+    public function setScheduledEnd(\DateTime $scheduledEnd): self
     {
         $this->scheduled_end = $scheduledEnd;
 
         return $this;
     }
 
-    /**
-     * Get scheduledEnd
-     *
-     * @return \DateTime
-     */
-    public function getScheduledEnd()
+    public function getScheduledEnd(): \DateTime
     {
         return $this->scheduled_end;
     }
 
-    /**
-     * Set presentation
-     *
-     * @param Presentation $presentation
-     *
-     * @return ScheduledPresentation
-     */
-    public function setPresentation(Presentation $presentation = null)
+    public function setPresentation(?Presentation $presentation = null): self
     {
         $this->presentation = $presentation;
 
         return $this;
     }
 
-    /**
-     * Get presentation
-     *
-     * @return Presentation
-     */
-    public function getPresentation()
+    public function getPresentation(): ?Presentation
     {
         return $this->presentation;
     }

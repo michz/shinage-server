@@ -1,32 +1,29 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: michi
- * Date: 22.12.16
- * Time: 09:29
+declare(strict_types=1);
+
+/*
+ * Copyright 2018 by Michael Zapf.
+ * Licensed under MIT. See file /LICENSE.
  */
 
 namespace AppBundle\Controller\Management;
 
+use AppBundle\Entity\Screen;
 use AppBundle\Entity\User;
+use AppBundle\Exceptions\NoScreenGivenException;
+use AppBundle\Service\ScreenAssociation;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
-use Swift_Mime_Message;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\File\File;
-use Symfony\Component\HttpFoundation\Request;
-use AppBundle\Exceptions\NoScreenGivenException;
-use AppBundle\Entity\Screen;
-use AppBundle\Service\ScreenAssociation;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 class Dashboard extends Controller
 {
-
     /**
-    * @Route("/manage/dashboard", name="management-dashboard")
-    */
-    public function dashboardAction()
+     * @Route("/manage/dashboard", name="management-dashboard")
+     */
+    public function dashboardAction(): Response
     {
         // user that is logged in
         $user = $this->get('security.token_storage')->getToken()->getUser();
@@ -48,13 +45,9 @@ class Dashboard extends Controller
     }
 
     /**
-     * @throws \LogicException
-     * @throws \Symfony\Component\Security\Core\Exception\AccessDeniedException
-     * @throws NoScreenGivenException
-     *
      * @Route("/manage/dashboard/preview/{screen_guid}", name="management-dashboard-preview")
      */
-    public function previewAction(/** @scrutinizer ignore-unused */ Request $request, $screen_guid)
+    public function previewAction(string $screen_guid): Response
     {
         /** @var User $user */
         $user = $this->get('security.token_storage')->getToken()->getUser();
@@ -81,7 +74,7 @@ class Dashboard extends Controller
         $file = new File($file_path);
         $response = new Response();
         $response->headers->set('Content-Type', $file->getMimeType());
-        $response->setContent(file_get_contents($file));
+        $response->setContent(file_get_contents($file->getRealPath()));
         return $response;
     }
 }

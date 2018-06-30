@@ -1,4 +1,10 @@
 <?php
+declare(strict_types=1);
+
+/*
+ * Copyright 2018 by Michael Zapf.
+ * Licensed under MIT. See file /LICENSE.
+ */
 
 namespace AppBundle\Service\PresentationBuilders;
 
@@ -8,11 +14,6 @@ use AppBundle\Entity\ScreenRemote\PlayablePresentation;
 use AppBundle\Entity\ScreenRemote\PlayablePresentationSettings;
 use JMS\Serializer\SerializerInterface;
 
-/**
- * @author   :  Michael Zapf <m.zapf@mtx.de>
- * @date     :  06.11.17
- * @time     :  20:58
- */
 class SlideshowPresentation implements PresentationBuilderInterface
 {
     const PRESENTATION_TYPE = 'slideshow';
@@ -20,27 +21,25 @@ class SlideshowPresentation implements PresentationBuilderInterface
     /** @var SerializerInterface */
     private $serializer;
 
-    /**
-     * SlideshowPresentation constructor.
-     *
-     * @param SerializerInterface $serializer
-     */
     public function __construct(SerializerInterface $serializer)
     {
         $this->serializer = $serializer;
     }
 
-    public function supports(Presentation $presentation)
+    public function supports(Presentation $presentation): bool
     {
-        return ($presentation->getType() === self::PRESENTATION_TYPE);
+        return self::PRESENTATION_TYPE === $presentation->getType();
     }
 
-    public function getSupportedTypes()
+    /**
+     * @return string[]|array
+     */
+    public function getSupportedTypes(): array
     {
         return [self::PRESENTATION_TYPE];
     }
 
-    public function buildPresentation(Presentation $presentation)
+    public function buildPresentation(Presentation $presentation): PlayablePresentation
     {
         $playable = new PlayablePresentation();
         $playable->settings = new PlayablePresentationSettings();
@@ -51,7 +50,7 @@ class SlideshowPresentation implements PresentationBuilderInterface
         return $playable;
     }
 
-    public function getLastModified(Presentation $presentation)
+    public function getLastModified(Presentation $presentation): \DateTime
     {
         return $presentation->getLastModified();
     }

@@ -1,8 +1,9 @@
 <?php
-/**
- * @author   :  Michael Zapf <m.zapf@mztx.de>
- * @date     :  10.12.17
- * @time     :  17:47
+declare(strict_types=1);
+
+/*
+ * Copyright 2018 by Michael Zapf.
+ * Licensed under MIT. See file /LICENSE.
  */
 
 namespace AppBundle\Controller;
@@ -12,26 +13,21 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\File\Exception\AccessDeniedException;
 use Symfony\Component\HttpFoundation\File\Exception\FileNotFoundException;
-use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 
 class PoolController extends Controller
 {
-
     /**
-     * @param Request $request
-     * @param string  $userRoot
-     * @param string  $path
-     *
      * @return Response|StreamedResponse
      *
      * @throws \Symfony\Component\Security\Core\Exception\AccessDeniedException
      *
      * @Route("/pool/{userRoot}/{path}", name="pool-get", requirements={"userRoot": "[^/]*", "path": ".*"})
      */
-    public function getAction(Request $request, string $userRoot, string $path)
+    public function getAction(Request $request, string $userRoot, string $path): Response
     {
         // @TODO get user that is logged in via cookie
         // @TODO                         or via api token
@@ -53,7 +49,7 @@ class PoolController extends Controller
         // @TODO    OR if belongs to organziation that user belongs to that is logged cookie
         // @TODO    OR if belongs to organziation that user belongs to that is logged in via API Token
 
-        /** @var FilePoolUrlBuilder $poolUrlBuilder */
+        /* @var FilePoolUrlBuilder $poolUrlBuilder */
 
         try {
             $poolUrlBuilder = $this->get('app.filepool.url_builder');
@@ -61,12 +57,12 @@ class PoolController extends Controller
 
             $fileInfo = new File($absolutePath);
             $response = new StreamedResponse(
-                function () use ($absolutePath) {
+                function () use ($absolutePath): void {
                     readfile($absolutePath);
                 },
                 200,
                 [
-                    'Content-Type' => $fileInfo->getMimeType()
+                    'Content-Type' => $fileInfo->getMimeType(),
                 ]
             );
             return $response;

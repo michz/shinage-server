@@ -1,46 +1,37 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: michi
- * Date: 22.12.16
- * Time: 09:29
+declare(strict_types=1);
+
+/*
+ * Copyright 2018 by Michael Zapf.
+ * Licensed under MIT. See file /LICENSE.
  */
 
 namespace AppBundle\Controller\Management;
 
+use AppBundle\Entity\User;
+use AppBundle\Service\FilePool;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\File\File;
-use Symfony\Component\HttpFoundation\Request;
-use AppBundle\Entity\User;
-use Symfony\Component\HttpFoundation\StreamedResponse;
 use Symfony\Component\HttpFoundation\Response;
-use AppBundle\Service\FilePool;
+use Symfony\Component\HttpFoundation\StreamedResponse;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 class FileManager extends Controller
 {
-
     /**
-    * @Route("/manage/files", name="management-files")
-    */
-    public function filesAction()
+     * @Route("/manage/files", name="management-files")
+     */
+    public function filesAction(): Response
     {
         return $this->render('file-manager/index.html.twig', []);
     }
 
     /**
-     * @param Request $request
-     * @param string  $file
-     *
-     * @return Response
-     *
-     * @throws \RuntimeException
-     *
      * @Route("/manage/files-download/{file}", name="management-files-download", requirements={"file": ".*"})
      */
-    public function downloadAction(/** @scrutinizer ignore-unused */ Request $request, string $file)
+    public function downloadAction(string $file): Response
     {
         // @TODO replace by PoolController
         $user = $this->get('security.token_storage')->getToken()->getUser();
@@ -53,7 +44,7 @@ class FileManager extends Controller
 
         // @TODO cleanup here and do not use getParamter() twice
         $realPathPool = realpath($this->getParameter('path_pool'));
-        if ($realPathPool === false) {
+        if (false === $realPathPool) {
             throw new \RuntimeException('Pool path not found.');
         }
         $path = $realPathPool . '/' . $file;
@@ -64,22 +55,15 @@ class FileManager extends Controller
         return $response;
     }
 
-
     /**
-     * @param Request $request
-     * @param string  $base
-     * @param string  $file
-     *
-     * @return Response
-     *
      * @Route("/manage/files-el-thumbnail/{base}/{file}", name="management-files-el-thumbnail",
      *     requirements={"base": ".*", "file": ".*"})
      */
-    public function elThumbnailAction(/** @scrutinizer ignore-unused */ Request $request, string $base, string $file)
+    public function elThumbnailAction(string $base, string $file): Response
     {
         // @TODO Refactor: Make method "getPoolPath" or so to avoid code duplication
         $realPoolPath = realpath($this->getParameter('path_pool'));
-        if ($realPoolPath === false) {
+        if (false === $realPoolPath) {
             throw new \LogicException('Pool path not found.');
         }
         $path = $realPoolPath . '/.el-thumbnails/' . $base . '/' . $file;
@@ -102,10 +86,10 @@ class FileManager extends Controller
     /**
      * @Route("/manage/files-connector", name="management-files-connector")
      */
-    public function connectorAction()
+    public function connectorAction(): Response
     {
         $poolBase = realpath($this->getParameter('path_pool'));
-        if ($poolBase === false) {
+        if (false === $poolBase) {
             throw new \RuntimeException('Pool path not found.');
         }
         $thumbBase = $poolBase . '/.el-thumbnails/';
@@ -114,9 +98,8 @@ class FileManager extends Controller
         }
 
         $response = new StreamedResponse();
-        $response->setCallback(function () {
+        $response->setCallback(function (): void {
             $pool = $this->get('app.filepool'); /** @var FilePool $pool */
-
             $user = $this->get('security.token_storage')->getToken()->getUser();
 
             // get root directories
@@ -132,31 +115,28 @@ class FileManager extends Controller
                     'driver'        => 'LocalFileSystem',
                     'alias'         => $name,
                     'path'          => $path,
-                    'URL'           =>
-                    $this->generateUrl(
+                    'URL'           => $this->generateUrl(
                         'pool-get',
                         ['userRoot' => $basename, 'path' => ''],
                         UrlGeneratorInterface::ABSOLUTE_URL
                     ),
                     'tmbPath'       => $tmb_path,
-                    'tmbURL'        =>
-                    $this->generateUrl(
+                    'tmbURL'        => $this->generateUrl(
                         'management-files-el-thumbnail',
                         ['base' => $basename, 'file' => '']
                     ),
                     'uploadDeny'    => ['all'],            // all mime not allowed to upload
                     'uploadAllow'   => ['image'],          // mime `image` allowed
                     'uploadOrder'   => ['deny', 'allow'],  // allowed specified mime only
-                    'accessControl' => 'access'                 // disable and hide dot starting files
+                    'accessControl' => 'access',                 // disable and hide dot starting files
                 ];
             }
-
 
             // Documentation for connector options:
             // https://github.com/Studio-42/elFinder/wiki/Connector-configuration-options
             $opts = [
                 // 'debug' => true,
-                'roots' => $roots
+                'roots' => $roots,
             ];
 
             // run elFinder

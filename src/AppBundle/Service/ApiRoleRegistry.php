@@ -1,30 +1,30 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: michi
- * Date: 04.02.2017
- * Time: 11:13
+declare(strict_types=1);
+
+/*
+ * Copyright 2018 by Michael Zapf.
+ * Licensed under MIT. See file /LICENSE.
  */
 
 namespace AppBundle\Service;
 
 class ApiRoleRegistry
 {
+    /** @var string[]|array */
     protected $roles = [];
 
-    public function __construct()
-    {
-    }
-
-    public function getRoles()
+    /**
+     * @return string[]|array
+     */
+    public function getRoles(): array
     {
         return $this->roles;
     }
 
-    public function registerRole($role)
+    public function registerRole(string $role): self
     {
         if (array_key_exists($role, $this->roles)) {
-            throw new \Exception('Role ' . $role . ' already registered.');
+            throw new \RuntimeException('Role ' . $role . ' already registered.');
         }
         $this->roles[$role] = $role;
         return $this;

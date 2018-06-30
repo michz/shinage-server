@@ -1,34 +1,28 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: michi
- * Date: 25.06.2017
- * Time: 11:01
+declare(strict_types=1);
+
+/*
+ * Copyright 2018 by Michael Zapf.
+ * Licensed under MIT. See file /LICENSE.
  */
 
 namespace AppBundle\Service\Remote;
 
 use AppBundle\Entity\Presentation;
 use AppBundle\Entity\ScreenRemote\PlayablePresentation;
-use AppBundle\Entity\Slide;
-use Symfony\Component\Routing\Router;
+use Symfony\Component\Routing\RouterInterface;
 
 class PlayableBuilder
 {
-    /** @var Router */
+    /** @var RouterInterface */
     protected $router;
 
-    /**
-     * PlayableBuilder constructor.
-     *
-     * @param Router $router
-     */
-    public function __construct(Router $router)
+    public function __construct(RouterInterface $router)
     {
         $this->router = $router;
     }
 
-    public function build(Presentation $presentation, $hostScheme)
+    public function build(Presentation $presentation, string $hostScheme): PlayablePresentation
     {
         $playable = new PlayablePresentation();
         $playable->lastModified = $presentation->getLastModified();
@@ -36,7 +30,7 @@ class PlayableBuilder
         return $playable;
     }
 
-    public function getPlayerSlideType($internalType)
+    public function getPlayerSlideType(string $internalType): string
     {
         return ucwords($internalType);
     }

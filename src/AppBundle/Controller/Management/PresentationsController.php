@@ -1,16 +1,16 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: michi
- * Date: 05.01.17
- * Time: 09:21
+declare(strict_types=1);
+
+/*
+ * Copyright 2018 by Michael Zapf.
+ * Licensed under MIT. See file /LICENSE.
  */
 
 namespace AppBundle\Controller\Management;
 
 use AppBundle\Entity\Presentation;
+use AppBundle\Entity\User;
 use AppBundle\Service\PresentationBuilders\PresentationBuilderChain;
-use AppBundle\Service\SchedulerService;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
@@ -18,16 +18,15 @@ use Symfony\Component\Form\Extension\Core\Type\FormType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\HttpFoundation\Request;
-use AppBundle\Entity\User;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 class PresentationsController extends Controller
 {
-
     /**
      * @Route("/manage/presentations", name="management-presentations")
      */
-    public function managePresentationsAction()
+    public function managePresentationsAction(): Response
     {
         // @TODO Security
         $user = $this->get('security.token_storage')->getToken()->getUser();
@@ -41,10 +40,8 @@ class PresentationsController extends Controller
 
     /**
      * @Route("/manage/presentations/create", name="management-presentations-create")
-     *
-     * @throws \Symfony\Component\OptionsResolver\Exception\InvalidOptionsException
      */
-    public function createPresentationAction(Request $request)
+    public function createPresentationAction(Request $request): Response
     {
         $user = $this->get('security.token_storage')->getToken()->getUser();
 
@@ -79,15 +76,13 @@ class PresentationsController extends Controller
     }
 
     /**
-     * @param int $presentationId
-     *
      * @Route(
      *     "/manage/presentations/delete/{presentationId}",
      *     name="presentation-delete",
      *     requirements={"presentationId": "\d+"}
      * )
      */
-    public function deletePresentationAction(int $presentationId)
+    public function deletePresentationAction(int $presentationId): Response
     {
         $em = $this->getDoctrine()->getManager();
         /** @var Presentation $presentation */
@@ -110,19 +105,27 @@ class PresentationsController extends Controller
 
         $this->addFlash(
             'success',
-            $this->get('translator')->trans('Presentation deleted').': '.$presentation->getTitle()
+            $this->get('translator')->trans('Presentation deleted') . ': ' . $presentation->getTitle()
         );
 
         return $this->redirectToRoute('management-presentations');
     }
 
-    public function getPresentationsForUser(User $user)
+    /**
+     * @return array|Presentation[]
+     */
+    public function getPresentationsForUser(User $user): array
     {
         $em = $this->getDoctrine()->getManager();
         return $user->getPresentations($em);
     }
 
-    protected function getTypeChoices($types)
+    /**
+     * @param array|string[] $types
+     *
+     * @return array|string[]
+     */
+    protected function getTypeChoices(array $types): array
     {
         $ret = [];
         foreach ($types as $type) {

@@ -1,8 +1,9 @@
 <?php
-/**
- * @author   :  Michael Zapf <m.zapf@mztx.de>
- * @date     :  25.06.17
- * @time     :  09:16
+declare(strict_types=1);
+
+/*
+ * Copyright 2018 by Michael Zapf.
+ * Licensed under MIT. See file /LICENSE.
  */
 
 namespace AppBundle\Entity\ScreenRemote;
@@ -12,15 +13,12 @@ class PlayablePresentation
     /** @var PlayablePresentationSettings */
     public $settings;
 
-    /** @var PlayablePresentationSlide[]  */
+    /** @var PlayablePresentationSlide[]|array */
     public $slides = [];
 
     /** @var int */
     public $lastModified = 0;
 
-    /**
-     * PlayablePresentation constructor.
-     */
     public function __construct()
     {
         $this->settings = new PlayablePresentationSettings();

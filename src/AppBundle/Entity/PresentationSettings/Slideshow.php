@@ -1,36 +1,37 @@
 <?php
+declare(strict_types=1);
+
+/*
+ * Copyright 2018 by Michael Zapf.
+ * Licensed under MIT. See file /LICENSE.
+ */
 
 namespace AppBundle\Entity\PresentationSettings;
 
+use AppBundle\Entity\Slides\Slide;
 use JMS\Serializer\Annotation as JMS;
 
-/**
- * @author   :  Michael Zapf <m.zapf@mztx.de>
- * @date     :  05.11.17
- * @time     :  16:47
- */
 class Slideshow
 {
     /**
-     * @var array
+     * @var Slide[]|array
+     *
      * @JMS\Type("array<AppBundle\Entity\Slides\Slide>")
      */
     protected $slides = [];
 
     /**
-     * @return array
+     * @return Slide[]|array
      */
-    public function getSlides()
+    public function getSlides(): array
     {
         return $this->slides;
     }
 
     /**
-     * @param array $slides
-     *
-     * @return Slideshow
+     * @param Slide[]|array $slides
      */
-    public function setSlides($slides)
+    public function setSlides(array $slides): self
     {
         $this->slides = $slides;
         return $this;

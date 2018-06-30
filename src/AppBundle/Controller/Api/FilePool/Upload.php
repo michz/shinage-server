@@ -1,4 +1,10 @@
 <?php
+declare(strict_types=1);
+
+/*
+ * Copyright 2018 by Michael Zapf.
+ * Licensed under MIT. See file /LICENSE.
+ */
 
 namespace AppBundle\Controller\Api\FilePool;
 
@@ -9,13 +15,10 @@ use Symfony\Component\HttpFoundation\Request;
 
 class Upload extends Controller
 {
-
     /**
-     * @param Request $request
-     *
      * @Route("/api/v1/filepool/upload", name="api-filepool-upload")
      */
-    public function uploadAction(Request $request)
+    public function uploadAction(Request $request): void
     {
         $request->setRequestFormat('json');
 
@@ -38,11 +41,6 @@ class Upload extends Controller
         exit;
     }
 
-    /**
-     * @param string $ownerString
-     *
-     * @return string
-     */
     protected function getOwnerBase(string $ownerString): string
     {
         $base = $tmb_path = realpath($this->container->getParameter('path_pool')) . '/' .
@@ -50,17 +48,10 @@ class Upload extends Controller
         return $base;
     }
 
-    /**
-     * @param string $folder
-     * @param string $filename
-     * @param string $content
-     *
-     * @return bool
-     */
     protected function saveFile(string $folder, string $filename, string $content): bool
     {
         FilePool::createPathIfNeeded($folder);
 
-        return (bool)file_put_contents($folder . '/' . $filename, $content);
+        return (bool) file_put_contents($folder . '/' . $filename, $content);
     }
 }

@@ -1,30 +1,30 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: michi
- * Date: 20.12.16
- * Time: 17:12
+declare(strict_types=1);
+
+/*
+ * Copyright 2018 by Michael Zapf.
+ * Licensed under MIT. See file /LICENSE.
  */
 
 namespace AppBundle\Controller\Admin;
 
+use AppBundle\Entity\Screen;
+use AppBundle\Service\ScreenAssociation;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
-use AppBundle\Service\ScreenAssociation;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
-use AppBundle\Entity\Screen;
 
 class ScreenController extends Controller
 {
     /**
      * @Route("/adm/screens", name="admin-screens")
      */
-    public function indexAction()
+    public function indexAction(): Response
     {
         $rep = $this->getDoctrine()->getRepository('AppBundle:Screen');
         $screens = $rep->findAll();
-
 
         // replace this example code with whatever you need
         return $this->render('adm/screens.html.twig', [
@@ -33,24 +33,18 @@ class ScreenController extends Controller
     }
 
     /**
-     * @param Request $request
-     *
      * @return \Symfony\Component\HttpFoundation\JsonResponse|\Symfony\Component\HttpFoundation\RedirectResponse
-     *
-     * @throws \Symfony\Component\Security\Core\Exception\AccessDeniedException
-     * @throws \LogicException
-     * @throws \InvalidArgumentException
      *
      * @Route("/adm/modify_screen", name="modify-screen")
      */
-    public function modifyAction(Request $request)
+    public function modifyAction(Request $request): Response
     {
         $guid = $request->get('hidGuid');
         $name = $request->get('txtName');
         $loc = $request->get('txtLocation');
         $notes = $request->get('txtNotes');
         $admin = $request->get('txtAdmin');
-        $ajax = ($request->get('ajax', '0') === '1');
+        $ajax = ('1' === $request->get('ajax', '0'));
 
         $em = $this->getDoctrine()->getManager();
         $screen = $em->find(Screen::class, $guid);
@@ -76,6 +70,6 @@ class ScreenController extends Controller
         }
 
         // is AJAX request
-        return $this->json(array('status' => 'ok'));
+        return $this->json(['status' => 'ok']);
     }
 }

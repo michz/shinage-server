@@ -1,14 +1,21 @@
 <?php
+declare(strict_types=1);
+
+/*
+ * Copyright 2018 by Michael Zapf.
+ * Licensed under MIT. See file /LICENSE.
+ */
+
 namespace AppBundle\Form\Type;
 
 use AppBundle\Entity\User;
 use Doctrine\ORM\EntityManager;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorage;
 
 // @TODO I think this can be refactored and simplified.
@@ -17,8 +24,10 @@ class OwnerType extends AbstractType
     /** @var EntityManager|null $em */
     protected $em;
 
+    /** @var TokenStorage|null */
     protected $tokenStorage;
 
+    /** @var mixed */
     protected $entity;
 
     public function __construct(EntityManager $em, TokenStorage $tokenStorage)
@@ -27,18 +36,21 @@ class OwnerType extends AbstractType
         $this->tokenStorage = $tokenStorage;
     }
 
-    public function buildForm(FormBuilderInterface $builder, array $options)
+    /**
+     * @param mixed[]|array $options
+     */
+    public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         parent::buildForm($builder, $options);
 
         // save entity that should be owned
         $this->entity = $options['ownable'];
 
-        if ($this->entity !== null) {
+        if (null !== $this->entity) {
             // Event: While building set default value
             $builder->addEventListener(
                 FormEvents::PRE_SET_DATA,
-                function (FormEvent $event) {
+                function (FormEvent $event): void {
                     $event->setData($this->entity->getOwner()->getId());
                 }
             );
@@ -46,7 +58,7 @@ class OwnerType extends AbstractType
             // Event: After submission, modify entity
             $builder->addEventListener(
                 FormEvents::SUBMIT,
-                function (FormEvent $event) {
+                function (FormEvent $event): void {
                     $entity = $this->entity;
                     $owner = $event->getData();
 
@@ -66,7 +78,7 @@ class OwnerType extends AbstractType
         }
     }
 
-    public function configureOptions(OptionsResolver $resolver)
+    public function configureOptions(OptionsResolver $resolver): void
     {
         // TODO{s:0} Unterscheiden ob Admin oder normaler Nutzer
         // normal user
@@ -77,17 +89,20 @@ class OwnerType extends AbstractType
 
         /** @var User $orga */
         foreach ($user->getOrganizations() as $orga) {
-            $choices['Organisation: ' . $orga->getName()] = 'orga:'.$orga->getId();
+            $choices['Organisation: ' . $orga->getName()] = 'orga:' . $orga->getId();
         }
 
         $resolver->setRequired('ownable');
 
-        $resolver->setDefaults(array(
+        $resolver->setDefaults([
             'choices'   => $choices,
-            'mapped'    => false
-        ));
+            'mapped'    => false,
+        ]);
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function getParent()
     {
         return ChoiceType::class;

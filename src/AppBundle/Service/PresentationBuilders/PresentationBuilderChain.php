@@ -1,36 +1,31 @@
 <?php
+declare(strict_types=1);
+
+/*
+ * Copyright 2018 by Michael Zapf.
+ * Licensed under MIT. See file /LICENSE.
+ */
 
 namespace AppBundle\Service\PresentationBuilders;
 
 use AppBundle\Entity\Presentation;
 use AppBundle\Exceptions\NoSuitablePresentationBuilderFoundException;
 
-/**
- * @author   :  Michael Zapf <m.zapf@mztx.de>
- * @date     :  27.10.17
- * @time     :  12:04
- */
 class PresentationBuilderChain
 {
-    /** @var array */
+    /** @var PresentationBuilderInterface[]|array */
     private $builders = [];
 
-    /** @var array */
+    /** @var string[]|array */
     private $types = [];
 
-    public function addBuilder(PresentationBuilderInterface $builder)
+    public function addBuilder(PresentationBuilderInterface $builder): void
     {
         $this->builders[] = $builder;
         $this->types = array_merge($this->types, $builder->getSupportedTypes());
     }
 
-    /**
-     * @param Presentation $presentation
-     *
-     * @return PresentationBuilderInterface
-     * @throws NoSuitablePresentationBuilderFoundException
-     */
-    public function getBuilderForPresentation(Presentation $presentation)
+    public function getBuilderForPresentation(Presentation $presentation): PresentationBuilderInterface
     {
         /** @var PresentationBuilderInterface $builder */
         foreach ($this->builders as $builder) {
@@ -42,7 +37,10 @@ class PresentationBuilderChain
         throw new NoSuitablePresentationBuilderFoundException($presentation->getType());
     }
 
-    public function getTypes()
+    /**
+     * @return string[]|array
+     */
+    public function getTypes(): array
     {
         return $this->types;
     }

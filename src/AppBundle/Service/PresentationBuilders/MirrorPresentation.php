@@ -1,42 +1,49 @@
 <?php
+declare(strict_types=1);
+
+/*
+ * Copyright 2018 by Michael Zapf.
+ * Licensed under MIT. See file /LICENSE.
+ */
 
 namespace AppBundle\Service\PresentationBuilders;
 
 use AppBundle\Entity\Presentation;
 
-/**
- * @author   :  Michael Zapf <m.zapf@mtx.de>
- * @date     :  27.10.17
- * @time     :  10:46
- */
 class MirrorPresentation implements PresentationBuilderInterface
 {
     const PRESENTATION_TYPE = 'mirror';
 
-    public function supports(Presentation $presentation)
+    public function supports(Presentation $presentation): bool
     {
-        return ($presentation->getType() === self::PRESENTATION_TYPE);
+        return self::PRESENTATION_TYPE === $presentation->getType();
     }
 
-    public function getSupportedTypes()
+    /**
+     * @return string[]|array
+     */
+    public function getSupportedTypes(): array
     {
         return [self::PRESENTATION_TYPE];
     }
 
+    /**
+     * @return \AppBundle\Entity\ScreenRemote\PlayablePresentation|bool|string
+     */
     public function buildPresentation(Presentation $presentation)
     {
         $settings = json_decode($presentation->getSettings());
         $this->checkValid($presentation);
 
         $url = $settings->url;
-        if (isset($settings->type) && $settings->type === 'jsonp') {
+        if (isset($settings->type) && 'jsonp' === $settings->type) {
             $url .= '?callback=REPLACE_JSONP_CALLBACK_DUMMY';
         }
 
         return file_get_contents($url);
     }
 
-    public function getLastModified(Presentation $presentation)
+    public function getLastModified(Presentation $presentation): \DateTime
     {
         $settings = json_decode($presentation->getSettings());
         $this->checkValid($presentation);
@@ -50,7 +57,7 @@ class MirrorPresentation implements PresentationBuilderInterface
         return new \DateTime($lastModifiedRaw[0]);
     }
 
-    protected function checkValid(Presentation $presentation)
+    protected function checkValid(Presentation $presentation): void
     {
         $settings = json_decode($presentation->getSettings());
         if (!isset($settings->url)) {

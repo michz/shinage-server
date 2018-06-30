@@ -1,9 +1,9 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: michi
- * Date: 11.02.18
- * Time: 12:51
+declare(strict_types=1);
+
+/*
+ * Copyright 2018 by Michael Zapf.
+ * Licensed under MIT. See file /LICENSE.
  */
 
 namespace AppBundle\Controller\Management\Screens;
@@ -13,16 +13,16 @@ use AppBundle\Entity\User;
 use Doctrine\ORM\EntityManager;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 
 class ScreenOfflineController extends Controller
 {
     /**
      * @Route("/manage/screen/{guid}/offline", name="management-screen-offline", requirements={"guid": "[^/]*"})
      */
-    public function indexAction(/** @scrutinizer ignore-unused */ Request $request, string $guid)
+    public function indexAction(string $guid): Response
     {
-        /** @var User $user   user that is logged in*/
+        /** @var User $user user that is logged in */
         $user = $this->get('security.token_storage')->getToken()->getUser();
         /** @var EntityManager $em */
         $em = $this->getDoctrine()->getManager();
@@ -30,7 +30,7 @@ class ScreenOfflineController extends Controller
         $screen = $em->find(Screen::class, $guid);
 
         return $this->render('manage/screens/data.html.twig', [
-            'screen' => $screen
+            'screen' => $screen,
         ]);
     }
 }

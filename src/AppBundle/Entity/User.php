@@ -1,23 +1,20 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: michi
- * Date: 28.12.16
- * Time: 19:37
- */
+declare(strict_types=1);
 
+/*
+ * Copyright 2018 by Michael Zapf.
+ * Licensed under MIT. See file /LICENSE.
+ */
 
 namespace AppBundle\Entity;
 
 use AppBundle\UserType;
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\EntityManager;
 use FOS\UserBundle\Model\User as BaseUser;
 use Rollerworks\Bundle\PasswordStrengthBundle\Validator\Constraints as RollerworksPassword;
 
-/**
- * AppBundle\Entity\User
- */
 class User extends BaseUser
 {
     /** @var int */
@@ -36,15 +33,18 @@ class User extends BaseUser
     private $users;
 
     /**
+     * @var string
+     *
      * @RollerworksPassword\PasswordRequirements(requireLetters=true, requireNumbers=true)
      */
     protected $password;
 
     /**
+     * @var string
+     *
      * @RollerworksPassword\PasswordRequirements(requireLetters=true, requireNumbers=true)
      */
     protected $plainPassword;
-
 
     public function __construct()
     {
@@ -53,6 +53,9 @@ class User extends BaseUser
         $this->users = new ArrayCollection();
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function setEmail($email)
     {
         parent::setUsername($email);
@@ -60,22 +63,24 @@ class User extends BaseUser
         return parent::setEmail($email);
     }
 
-
-    public function getAllowedPoolPaths()
+    /**
+     * @return string[]|array
+     */
+    public function getAllowedPoolPaths(): array
     {
         // @TODO Remove from here and move to own service
-        $r = array();
+        $r = [];
         $r[] = 'user-' . $this->id;
 
         $orgas = $this->getOrganizations();
-        foreach ($orgas as $orga) { /** @var User $orga */
+        foreach ($orgas as $orga) { /* @var User $orga */
             $r[] = 'orga-' . $orga->getId();
         }
 
         return $r;
     }
 
-    public function isPoolFileAllowed($path)
+    public function isPoolFileAllowed(string $path): bool
     {
         // @TODO Remove from here and move to own service
         $file = ltrim($path, "/\r\n\t ");
@@ -83,8 +88,7 @@ class User extends BaseUser
         return \in_array($base, $this->getAllowedPoolPaths(), true);
     }
 
-
-    public function isPresentationAllowed(Presentation $presentation)
+    public function isPresentationAllowed(Presentation $presentation): bool
     {
         // @TODO Remove from here and move to own service
 
@@ -102,15 +106,17 @@ class User extends BaseUser
         return false;
     }
 
-
-    public function getPresentations(EntityManager $em)
+    /**
+     * @return Presentation[]|array
+     */
+    public function getPresentations(EntityManager $em): array
     {
         // @TODO Remove from here and move to own service
         $user = $this;
         $rep = $em->getRepository('AppBundle:Presentation');
-        $pres = array();
+        $pres = [];
 
-        $pres_user = $rep->findBy(array('owner' => $user));
+        $pres_user = $rep->findBy(['owner' => $user]);
 
         foreach ($pres_user as $p) {
             $pres['me'][] = $p;
@@ -118,7 +124,7 @@ class User extends BaseUser
 
         $orgas = $user->getOrganizations();
         foreach ($orgas as $orga) { /** @var User $orga */
-            $pres_orga = $rep->findBy(array('owner' => $orga));
+            $pres_orga = $rep->findBy(['owner' => $orga]);
             foreach ($pres_orga as $p) {
                 $pres[$orga->getName()][] = $p;
             }
@@ -127,133 +133,72 @@ class User extends BaseUser
         return $pres;
     }
 
-
-    public static function generateToken()
+    public static function generateToken(): string
     {
         // @TODO Remove from here and move to own service
         return rtrim(strtr(base64_encode(random_bytes(32)), '+/', '-_'), '=');
     }
 
-    /**
-     * Set userType
-     *
-     * @param enumusertype $userType
-     *
-     * @return User
-     */
-    public function setUserType($userType)
+    public function setUserType(string $userType): self
     {
         $this->userType = $userType;
 
         return $this;
     }
 
-    /**
-     * Get userType
-     *
-     * @return enumusertype
-     */
-    public function getUserType()
+    public function getUserType(): string
     {
         return $this->userType;
     }
 
-    /**
-     * Add organization
-     *
-     * @param \AppBundle\Entity\User $organization
-     *
-     * @return User
-     */
-    public function addOrganization(\AppBundle\Entity\User $organization)
+    public function addOrganization(self $organization): self
     {
         $this->organizations[] = $organization;
 
         return $this;
     }
 
-    /**
-     * Remove organization
-     *
-     * @param \AppBundle\Entity\User $organization
-     */
-    public function removeOrganization(\AppBundle\Entity\User $organization)
+    public function removeOrganization(self $organization): void
     {
         $this->organizations->removeElement($organization);
     }
 
-    /**
-     * Get organizations
-     *
-     * @return \Doctrine\Common\Collections\Collection
-     */
-    public function getOrganizations()
+    public function getOrganizations(): Collection
     {
         return $this->organizations;
     }
 
-    /**
-     * Set name
-     *
-     * @param string $name
-     *
-     * @return User
-     */
-    public function setName($name)
+    public function setName(string $name): self
     {
         $this->name = $name;
 
         return $this;
     }
 
-    /**
-     * Get name
-     *
-     * @return string
-     */
-    public function getName()
+    public function getName(): string
     {
         return $this->name;
     }
 
-    /**
-     * @return \Doctrine\Common\Collections\Collection
-     */
-    public function getUsers()
+    public function getUsers(): Collection
     {
         return $this->users;
     }
 
-    /**
-     * @param \Doctrine\Common\Collections\Collection $users
-     * @return User
-     */
-    public function setUsers(\Doctrine\Common\Collections\Collection $users)
+    public function setUsers(Collection $users): self
     {
         $this->users = $users;
         return $this;
     }
 
-    /**
-     * Add user
-     *
-     * @param \AppBundle\Entity\User $user
-     *
-     * @return User
-     */
-    public function addUser(\AppBundle\Entity\User $user)
+    public function addUser(self $user): self
     {
         $this->users[] = $user;
 
         return $this;
     }
 
-    /**
-     * Remove user
-     *
-     * @param \AppBundle\Entity\User $user
-     */
-    public function removeUser(\AppBundle\Entity\User $user)
+    public function removeUser(self $user): void
     {
         $this->users->removeElement($user);
     }

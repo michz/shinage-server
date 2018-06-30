@@ -1,17 +1,15 @@
 <?php
-/**
- * @author   :  Michael Zapf <m.zapf@mztx.de>
- * @date     :  02.02.17
- * @time     :  19:45
+declare(strict_types=1);
+
+/*
+ * Copyright 2018 by Michael Zapf.
+ * Licensed under MIT. See file /LICENSE.
  */
 
 namespace AppBundle\Entity\Api;
 
 use AppBundle\Entity\User;
 
-/**
- * AppBundle\Entity\Api\AccessKey
- */
 class AccessKey
 {
     /** @var int */
@@ -26,129 +24,82 @@ class AccessKey
     /** @var \DateTime */
     protected $last_use;
 
-    /** @var array */
+    /** @var string[]|array */
     protected $roles;
 
     /** @var User */
     protected $owner;
 
-
     /**
      * Generates a new code and sets it.
-     * @return AccessKey
      */
-    public function generateAndSetCode()
+    public function generateAndSetCode(): self
     {
         $code = sprintf(
             '%04x%04x%04x%04x%04x%04x%04x%04x',
-            mt_rand(0, 0xffff),
-            mt_rand(0, 0xffff),
-            mt_rand(0, 0xffff),
-            mt_rand(0, 0xffff),
-            mt_rand(0, 0xffff),
-            mt_rand(0, 0xffff),
-            mt_rand(0, 0xffff),
-            mt_rand(0, 0xffff)
+            random_int(0, 0xffff),
+            random_int(0, 0xffff),
+            random_int(0, 0xffff),
+            random_int(0, 0xffff),
+            random_int(0, 0xffff),
+            random_int(0, 0xffff),
+            random_int(0, 0xffff),
+            random_int(0, 0xffff)
         );
         $this->setCode($code);
         return $this;
     }
 
-    public function getRolesReadable()
+    public function getRolesReadable(): string
     {
         return implode(', ', $this->getRoles());
     }
 
-    /**
-     * Get id
-     *
-     * @return integer
-     */
-    public function getId()
+    public function getId(): int
     {
         return $this->id;
     }
 
-    /**
-     * Set code
-     *
-     * @param string $code
-     *
-     * @return AccessKey
-     */
-    public function setCode($code)
+    public function setCode(string $code): self
     {
         $this->code = $code;
 
         return $this;
     }
 
-    /**
-     * Get code
-     *
-     * @return string
-     */
-    public function getCode()
+    public function getCode(): string
     {
         return $this->code;
     }
 
-    /**
-     * Set name
-     *
-     * @param string $name
-     *
-     * @return AccessKey
-     */
-    public function setName($name)
+    public function setName(string $name): self
     {
         $this->name = $name;
 
         return $this;
     }
 
-    /**
-     * Get name
-     *
-     * @return string
-     */
-    public function getName()
+    public function getName(): string
     {
         return $this->name;
     }
 
-    /**
-     * Set lastUse
-     *
-     * @param \DateTime $lastUse
-     *
-     * @return AccessKey
-     */
-    public function setLastUse($lastUse)
+    public function setLastUse(\DateTime $lastUse): self
     {
         $this->last_use = $lastUse;
 
         return $this;
     }
 
-    /**
-     * Get lastUse
-     *
-     * @return \DateTime
-     */
-    public function getLastUse()
+    public function getLastUse(): \DateTime
     {
         return $this->last_use;
     }
 
     /**
-     * Set roles
-     *
-     * @param array $roles
-     *
-     * @return AccessKey
+     * @param string[]|array $roles
      */
-    public function setRoles($roles)
+    public function setRoles(array $roles): self
     {
         $this->roles = $roles;
 
@@ -156,36 +107,21 @@ class AccessKey
     }
 
     /**
-     * Get roles
-     *
-     * @return array
+     * @return string[]|array
      */
-    public function getRoles()
+    public function getRoles(): array
     {
         return $this->roles;
     }
 
-
-    /**
-     * Set owner
-     *
-     * @param \AppBundle\Entity\User $owner
-     *
-     * @return AccessKey
-     */
-    public function setOwner(\AppBundle\Entity\User $owner = null)
+    public function setOwner(User $owner = null): self
     {
         $this->owner = $owner;
 
         return $this;
     }
 
-    /**
-     * Get owner
-     *
-     * @return \AppBundle\Entity\User
-     */
-    public function getOwner()
+    public function getOwner(): User
     {
         return $this->owner;
     }

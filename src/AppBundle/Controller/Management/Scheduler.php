@@ -1,31 +1,30 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: michi
- * Date: 22.12.16
- * Time: 09:29
+declare(strict_types=1);
+
+/*
+ * Copyright 2018 by Michael Zapf.
+ * Licensed under MIT. See file /LICENSE.
  */
 
 namespace AppBundle\Controller\Management;
 
+use AppBundle\Entity\Presentation;
 use AppBundle\Entity\ScheduledPresentation;
+use AppBundle\Entity\Screen;
+use AppBundle\Service\ScreenAssociation;
 use Doctrine\ORM\EntityManager;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
-use AppBundle\Service\ScreenAssociation;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
-use AppBundle\Entity\Screen;
-use AppBundle\Entity\Presentation;
 
 class Scheduler extends Controller
 {
-
     /**
      * @Route("/manage/scheduler", name="management-scheduler")
      */
-    public function schedulerAction()
+    public function schedulerAction(): Response
     {
         // user that is logged in
         $user = $this->get('security.token_storage')->getToken()->getUser();
@@ -52,13 +51,9 @@ class Scheduler extends Controller
     }
 
     /**
-     * @throws \InvalidArgumentException
-     * @throws \LogicException
-     * @throws \Symfony\Component\Security\Core\Exception\AccessDeniedException
-     *
      * @Route("/manage/get-schedule", name="management-get-schedule")
      */
-    public function getScheduleAction(Request $request)
+    public function getScheduleAction(Request $request): Response
     {
         $guid = $request->get('screen');
         $em = $this->getDoctrine()->getManager();
@@ -103,15 +98,9 @@ class Scheduler extends Controller
     }
 
     /**
-     * @throws \Doctrine\ORM\ORMInvalidArgumentException
-     * @throws \InvalidArgumentException
-     * @throws \Symfony\Component\Security\Core\Exception\AccessDeniedException
-     * @throws \LogicException
-     * @throws \Doctrine\ORM\OptimisticLockException
-     *
      * @Route("/manage/add-scheduled", name="management-add-scheduled")
      */
-    public function addScheduledAction(Request $request)
+    public function addScheduledAction(Request $request): Response
     {
         $guid   = $request->get('screen');
         $em     = $this->getDoctrine()->getManager();
@@ -146,20 +135,11 @@ class Scheduler extends Controller
     }
 
     /**
-     * @throws \Symfony\Component\Security\Core\Exception\AccessDeniedException
-     * @throws \Doctrine\ORM\TransactionRequiredException
-     * @throws \Doctrine\ORM\ORMInvalidArgumentException
-     * @throws \Doctrine\ORM\OptimisticLockException
-     * @throws \Doctrine\ORM\ORMException
-     * @throws \LogicException
-     * @throws \InvalidArgumentException
-     *
      * @Route("/manage/change-scheduled", name="management-change-scheduled")
      */
-    public function changeScheduledAction(Request $request)
+    public function changeScheduledAction(Request $request): Response
     {
-        $em = $this->getDoctrine()->getManager();  /** @var EntityManager  $em */
-
+        $em = $this->getDoctrine()->getManager(); /** @var EntityManager $em */
         $id = $request->get('id');
 
         $start  = new \DateTime($request->get('start'), new \DateTimeZone('UTC'));
@@ -185,28 +165,16 @@ class Scheduler extends Controller
         $this->handleCollisions($s);
         $em->flush();
 
-
         return $this->json(['status' => 'ok']);
     }
 
     /**
-     * @param Request $request
-     *
-     * @return \Symfony\Component\HttpFoundation\JsonResponse
-     * @throws \Symfony\Component\Security\Core\Exception\AccessDeniedException
-     * @throws \InvalidArgumentException
-     * @throws \LogicException
-     * @throws \Doctrine\ORM\ORMInvalidArgumentException
-     * @throws \Doctrine\ORM\ORMException
-     * @throws \Doctrine\ORM\OptimisticLockException
-     * @throws \Doctrine\ORM\TransactionRequiredException
-     *
      * @Route("/manage/delete-scheduled", name="management-delete-scheduled")
      */
-    public function deleteScheduledAction(Request $request)
+    public function deleteScheduledAction(Request $request): Response
     {
         $id = $request->get('id');
-        $em = $this->getDoctrine()->getManager();  /** @var EntityManager  $em */
+        $em = $this->getDoctrine()->getManager(); /** @var EntityManager $em */
 
         /** @var ScheduledPresentation $s */
         $s = $em->find(ScheduledPresentation::class, $id);
@@ -225,19 +193,10 @@ class Scheduler extends Controller
         return $this->json(['status' => 'ok']);
     }
 
-    /**
-     * @param ScheduledPresentation $s
-     *
-     * @throws \InvalidArgumentException
-     * @throws \LogicException
-     * @throws \Doctrine\ORM\ORMInvalidArgumentException
-     * @throws \Doctrine\ORM\OptimisticLockException
-     *
-     * @TODO{p:6} Move this to own service and WRITE TESTS!
-     */
-    protected function handleCollisions(ScheduledPresentation $s)
+    // @TODO Move this to own service.
+    protected function handleCollisions(ScheduledPresentation $s): void
     {
-        $em = $this->getDoctrine()->getManager();  /** @var EntityManager  $em */
+        $em = $this->getDoctrine()->getManager(); /** @var EntityManager $em */
         $start = $s->getScheduledStart();
         $end = $s->getScheduledEnd();
 
@@ -260,7 +219,7 @@ class Scheduler extends Controller
             ->setParameter('screen', $s->getScreen());
 
         $overlaps = $query->getResult();
-        foreach ($overlaps as $o) { /** @var ScheduledPresentation $o */
+        foreach ($overlaps as $o) { /* @var ScheduledPresentation $o */
             // remove all that are fully enclosed
             $em->remove($o);
         }
@@ -301,7 +260,6 @@ class Scheduler extends Controller
         }
         $em->flush();
 
-
         // check if scheduled presentation overlaps same/other schedule on same screen
         $query = $em->createQuery(
             'SELECT p
@@ -318,7 +276,7 @@ class Scheduler extends Controller
             ->setParameter('screen', $s->getScreen());
 
         $overlaps = $query->getResult();
-        foreach ($overlaps as $o) { /** @var ScheduledPresentation $o */
+        foreach ($overlaps as $o) { /* @var ScheduledPresentation $o */
             $o->setScheduledEnd($s->getScheduledStart());
             $em->persist($o);
         }
@@ -341,13 +299,11 @@ class Scheduler extends Controller
             ->setParameter('screen', $s->getScreen());
 
         $overlaps = $query->getResult();
-        foreach ($overlaps as $o) { /** @var ScheduledPresentation $o */
+        foreach ($overlaps as $o) { /* @var ScheduledPresentation $o */
             $o->setScheduledStart($s->getScheduledEnd());
             $em->persist($o);
         }
         $em->flush();
-
-
 
         // check if scheduled presentation overlaps same presentation on same screen at start
         $query = $em->createQuery(
@@ -370,7 +326,7 @@ class Scheduler extends Controller
             ->setParameter('screen', $s->getScreen());
 
         $overlaps = $query->getResult();
-        foreach ($overlaps as $o) { /** @var ScheduledPresentation $o */
+        foreach ($overlaps as $o) { /* @var ScheduledPresentation $o */
             $s->setScheduledStart($o->getScheduledStart());
             $em->persist($s);
             $em->remove($o);
@@ -398,7 +354,7 @@ class Scheduler extends Controller
             ->setParameter('screen', $s->getScreen());
 
         $overlaps = $query->getResult();
-        foreach ($overlaps as $o) { /** @var ScheduledPresentation $o */
+        foreach ($overlaps as $o) { /* @var ScheduledPresentation $o */
             $s->setScheduledEnd($o->getScheduledEnd());
             $em->persist($s);
             $em->remove($o);

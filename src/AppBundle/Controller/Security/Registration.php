@@ -1,9 +1,9 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: michi
- * Date: 07.01.17
- * Time: 20:31
+declare(strict_types=1);
+
+/*
+ * Copyright 2018 by Michael Zapf.
+ * Licensed under MIT. See file /LICENSE.
  */
 
 namespace AppBundle\Controller\Security;
@@ -22,15 +22,9 @@ use Symfony\Component\HttpFoundation\Request;
 class Registration extends Controller
 {
     /**
-     * @param Request $request
-     *
-     * @return \Symfony\Component\HttpFoundation\Response
-     *
-     * @throws \LogicException
-     *
      * @Route("/registration", name="registration")
      */
-    public function indexAction(Request $request)
+    public function indexAction(Request $request): \Symfony\Component\HttpFoundation\Response
     {
         //$rep = $this->getDoctrine()->getRepository('AppBundle:Screen');
         $user = new User();
@@ -39,15 +33,15 @@ class Registration extends Controller
 
         $form = $this->createFormBuilder($user)
             ->add('email', EmailType::class)
-            ->add('password', RepeatedType::class, array(
+            ->add('password', RepeatedType::class, [
                 'type' => PasswordType::class,
                 'invalid_message' => 'PasswordsMustMatch',
-                'options' => array('attr' => array('class' => 'password-field')),
+                'options' => ['attr' => ['class' => 'password-field']],
                 'required' => true,
-                'first_options'  => array('label' => 'Password'),
-                'second_options' => array('label' => 'PasswordAgain'),
-            ))
-            ->add('save', SubmitType::class, array('label' => 'Save'))
+                'first_options'  => ['label' => 'Password'],
+                'second_options' => ['label' => 'PasswordAgain'],
+            ])
+            ->add('save', SubmitType::class, ['label' => 'Save'])
             ->getForm();
 
         $form->handleRequest($request);
@@ -56,7 +50,7 @@ class Registration extends Controller
             if ($form->isValid()) {
                 // check if there is already a user with same email
                 $oldUser = $userManager->findUserByEmail($user->getEmail());
-                if ($oldUser !== null) {
+                if (null !== $oldUser) {
                     $this->addFlash(
                         'error',
                         'Die genannte E-Mail-Adresse wird leider bereits genutzt.'
@@ -83,27 +77,20 @@ class Registration extends Controller
         }
 
         return $this->render('security/registration.html.twig', [
-            'form' => $form->createView()
+            'form' => $form->createView(),
         ]);
     }
 
     /**
-     * @param Request $request
-     * @param string  $confirmationToken
-     *
-     * @return \Symfony\Component\HttpFoundation\RedirectResponse
-     *
-     * @throws \LogicException
-     *
      * @Route("/registration/confirm/{confirmationToken}", name="registration-confirm")
      */
-    public function confirmAction(/** @scrutinizer ignore-unused */ Request $request, string $confirmationToken)
+    public function confirmAction(string $confirmationToken): \Symfony\Component\HttpFoundation\RedirectResponse
     {
         /** @var UserManager $userManager */
         $userManager = $this->get('fos_user.user_manager');
         $user = $userManager->findUserByConfirmationToken($confirmationToken);
 
-        if ($user === null) {
+        if (null === $user) {
             $this->addFlash(
                 'error',
                 'Zu dem Bestätigungscode konnte leider kein Benutzer gefunden werden.'
@@ -120,10 +107,7 @@ class Registration extends Controller
         return $this->redirectToRoute('fos_user_security_login');
     }
 
-    /**
-     * @param UserInterface $user
-     */
-    public function sendRegistrationMail(UserInterface $user)
+    public function sendRegistrationMail(UserInterface $user): void
     {
         $message = \Swift_Message::newInstance()
             ->setSubject($this->get('translator')->trans('SubjectRegistrationMail'))
@@ -132,14 +116,14 @@ class Registration extends Controller
             ->setBody(
                 $this->renderView(
                     'mail/de/registration.html.twig',
-                    array('user' => $user)
+                    ['user' => $user]
                 ),
                 'text/html'
             )
             ->addPart(
                 $this->renderView(
                     'mail/de/registration.txt.twig',
-                    array('user' => $user)
+                    ['user' => $user]
                 ),
                 'text/plain'
             );

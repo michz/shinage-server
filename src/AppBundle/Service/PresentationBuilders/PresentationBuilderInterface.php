@@ -1,41 +1,29 @@
 <?php
+declare(strict_types=1);
+
+/*
+ * Copyright 2018 by Michael Zapf.
+ * Licensed under MIT. See file /LICENSE.
+ */
 
 namespace AppBundle\Service\PresentationBuilders;
 
 use AppBundle\Entity\Presentation;
 use AppBundle\Entity\ScreenRemote\PlayablePresentation;
 
-/**
- * @author   :  Michael Zapf <m.zapf@mztx.de>
- * @date     :  27.10.17
- * @time     :  11:49
- */
 interface PresentationBuilderInterface
 {
+    public function supports(Presentation $presentation): bool;
 
     /**
-     * @param Presentation $presentation
-     *
-     * @return bool
-     */
-    public function supports(Presentation $presentation);
-
-    /**
-     * @param Presentation $presentation
-     *
      * @return PlayablePresentation|string
      */
     public function buildPresentation(Presentation $presentation);
 
-    /**
-     * @param Presentation $presentation
-     *
-     * @return \DateTime
-     */
-    public function getLastModified(Presentation $presentation);
+    public function getLastModified(Presentation $presentation): \DateTime;
 
     /**
-     * @return array
+     * @return string[]|array
      */
-    public function getSupportedTypes();
+    public function getSupportedTypes(): array;
 }

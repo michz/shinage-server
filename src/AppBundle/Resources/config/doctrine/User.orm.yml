@@ -12,8 +12,8 @@ AppBundle\Entity\User:
         strategy: IDENTITY
   fields:
     userType:
-      type: enumusertype
-      length: null
+      type: string
+      length: 32
       unique: false
       nullable: false
       column: user_type

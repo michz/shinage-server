@@ -1,13 +1,13 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: michi
- * Date: 21.12.16
- * Time: 10:45
+declare(strict_types=1);
+
+/*
+ * Copyright 2018 by Michael Zapf.
+ * Licensed under MIT. See file /LICENSE.
  */
 
 namespace AppBundle\Exceptions;
 
-class NoScreenGivenException extends \Exception implements ParameterException
+class NoScreenGivenException extends \RuntimeException implements ParameterException
 {
 }
