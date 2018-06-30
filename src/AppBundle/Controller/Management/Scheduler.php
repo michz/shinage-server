@@ -139,7 +139,7 @@ class Scheduler extends Controller
      */
     public function changeScheduledAction(Request $request): Response
     {
-        $em = $this->getDoctrine()->getManager();  /** @var EntityManager $em */
+        $em = $this->getDoctrine()->getManager(); /** @var EntityManager $em */
         $id = $request->get('id');
 
         $start  = new \DateTime($request->get('start'), new \DateTimeZone('UTC'));
@@ -174,7 +174,7 @@ class Scheduler extends Controller
     public function deleteScheduledAction(Request $request): Response
     {
         $id = $request->get('id');
-        $em = $this->getDoctrine()->getManager();  /** @var EntityManager $em */
+        $em = $this->getDoctrine()->getManager(); /** @var EntityManager $em */
 
         /** @var ScheduledPresentation $s */
         $s = $em->find(ScheduledPresentation::class, $id);
@@ -196,7 +196,7 @@ class Scheduler extends Controller
     // @TODO Move this to own service.
     protected function handleCollisions(ScheduledPresentation $s): void
     {
-        $em = $this->getDoctrine()->getManager();  /** @var EntityManager $em */
+        $em = $this->getDoctrine()->getManager(); /** @var EntityManager $em */
         $start = $s->getScheduledStart();
         $end = $s->getScheduledEnd();
 

@@ -62,7 +62,7 @@ class FilePool
 
     public function getFileTree(string $base, bool $displayHidden = false): PoolDirectory
     {
-        $filename = substr($base, strrpos($base, '/')+1);
+        $filename = substr($base, strrpos($base, '/') + 1);
 
         $dir = new PoolDirectory($filename, $base);
         $files = &$dir->getContents();

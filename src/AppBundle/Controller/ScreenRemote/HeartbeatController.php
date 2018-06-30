@@ -200,7 +200,7 @@ class HeartbeatController extends Controller
         $code = '';
 
         for ($i = 0; $i < $len; ++$i) {
-            $code .= $chars[random_int(0, $chars_n-1)];
+            $code .= $chars[random_int(0, $chars_n - 1)];
         }
 
         return $code;
