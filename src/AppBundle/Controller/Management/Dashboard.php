@@ -74,7 +74,7 @@ class Dashboard extends Controller
         $file = new File($file_path);
         $response = new Response();
         $response->headers->set('Content-Type', $file->getMimeType());
-        $response->setContent(file_get_contents($file));
+        $response->setContent(file_get_contents($file->getRealPath()));
         return $response;
     }
 }
