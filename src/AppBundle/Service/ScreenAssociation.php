@@ -67,12 +67,12 @@ class ScreenAssociation
         $orgas = $user->getOrganizations();
 
         foreach ($assoc as $a) { /** @var ScreenAssociationEntity $a */
-            if ($a->getUserId() == $user) {
+            if ($user === $a->getUserId()) {
                 return $this->roleGreaterOrEqual($a->getRole(), $attribute);
             }
 
             foreach ($orgas as $o) { /** @var User $o */
-                if ($a->getUserId() == $o) {
+                if ($o === $a->getUserId()) {
                     return $this->roleGreaterOrEqual($a->getRole(), $attribute);
                 }
             }

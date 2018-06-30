@@ -139,14 +139,14 @@ class User extends BaseUser
         return rtrim(strtr(base64_encode(random_bytes(32)), '+/', '-_'), '=');
     }
 
-    public function setUserType(enumusertype $userType): self
+    public function setUserType(string $userType): self
     {
         $this->userType = $userType;
 
         return $this;
     }
 
-    public function getUserType(): enumusertype
+    public function getUserType(): string
     {
         return $this->userType;
     }

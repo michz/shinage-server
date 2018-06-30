@@ -10,8 +10,10 @@ namespace AppBundle\Controller\Management;
 
 use AppBundle\Entity\Guid;
 use AppBundle\Entity\Screen;
+use AppBundle\Entity\ScreenAssociation as ScreenAssociationEntity;
 use AppBundle\Entity\User;
 use AppBundle\Form\CreateVirtualScreenForm;
+use AppBundle\ScreenRoleType;
 use AppBundle\Service\SchedulerService;
 use AppBundle\Service\ScreenAssociation;
 use Doctrine\ORM\EntityManager;
@@ -85,9 +87,9 @@ class Screens extends Controller
         $screen->setConnectCode('');
         $em->persist($screen);
 
-        $assoc = new \AppBundle\Entity\ScreenAssociation();
+        $assoc = new ScreenAssociationEntity();
         $assoc->setScreen($screen);
-        $assoc->setRole(\AppBundle\ScreenRoleType::ROLE_ADMIN);
+        $assoc->setRole(ScreenRoleType::ROLE_ADMIN);
 
         if ('me' === $who) {
             $assoc->setUserId($user);
@@ -141,7 +143,7 @@ class Screens extends Controller
         $assoc->associateByString(
             $virtualScreen,
             $createForm->get('owner')->getData(),
-            \AppBundle\ScreenRoleType::ROLE_ADMIN
+            ScreenRoleType::ROLE_ADMIN
         );
 
         $this->addFlash('success', 'Die virtuelle Anzeige wurde erstellt.');

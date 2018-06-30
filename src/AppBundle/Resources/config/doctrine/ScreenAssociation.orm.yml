@@ -12,8 +12,8 @@ AppBundle\Entity\ScreenAssociation:
         strategy: IDENTITY
   fields:
     role:
-      type: enumscreenrole
-      length: null
+      type: string
+      length: 32
       unique: false
       nullable: false
   manyToOne:

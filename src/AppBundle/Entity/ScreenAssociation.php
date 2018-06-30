@@ -21,22 +21,22 @@ class ScreenAssociation
     /** @var User */
     protected $user_id;
 
-    /** @var ScreenRoleType */
-    protected $role;
+    /** @var string */
+    protected $role = ScreenRoleType::ROLE_ADMIN;
 
     public function getId(): int
     {
         return $this->id;
     }
 
-    public function setRole(ScreenRoleType $role): self
+    public function setRole(string $role): self
     {
         $this->role = $role;
 
         return $this;
     }
 
-    public function getRole(): ScreenRoleType
+    public function getRole(): string
     {
         return $this->role;
     }
