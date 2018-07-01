@@ -22,8 +22,10 @@ class PlayableBuilder
         $this->router = $router;
     }
 
-    public function build(Presentation $presentation, string $hostScheme): PlayablePresentation
-    {
+    public function build(
+        Presentation $presentation,
+        /* @scrutinizer ignore-unused */ string $hostScheme
+    ): PlayablePresentation {
         $playable = new PlayablePresentation();
         $playable->lastModified = $presentation->getLastModified();
 

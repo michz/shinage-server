@@ -21,10 +21,10 @@ use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorage;
 // @TODO I think this can be refactored and simplified.
 class OwnerType extends AbstractType
 {
-    /** @var EntityManager|null $em */
+    /** @var EntityManager */
     protected $em;
 
-    /** @var TokenStorage|null */
+    /** @var TokenStorage */
     protected $tokenStorage;
 
     /** @var mixed */
