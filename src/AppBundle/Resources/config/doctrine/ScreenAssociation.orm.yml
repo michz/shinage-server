@@ -27,7 +27,7 @@ AppBundle\Entity\ScreenAssociation:
           referencedColumnName: guid
           nullable: false
       orphanRemoval: false
-    user_id:
+    user:
       targetEntity: AppBundle\Entity\User
       fetch: LAZY
       mappedBy: null

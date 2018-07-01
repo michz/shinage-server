@@ -25,7 +25,7 @@
                     {% for user in orga.users %}
                         <div class="item">
                             <div class="right floated content">
-                                <a class="remove-user ui red button" href="{{ path('account-orga-remove', { 'user_id':user.getId(), 'orga_id':orga.getId() }) }}" data-user="{{ user.getEmail() }}" data-orga="{{ orga.getName() }}">
+                                <a class="remove-user ui red button" href="{{ path('account-orga-remove', { 'user':user.getId(), 'orga_id':orga.getId() }) }}" data-user="{{ user.getEmail() }}" data-orga="{{ orga.getName() }}">
                                     {{ 'Remove'|trans }}
                                 </a>
                             </div>
