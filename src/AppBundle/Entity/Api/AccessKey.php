@@ -12,22 +12,22 @@ use AppBundle\Entity\User;
 
 class AccessKey
 {
-    /** @var int */
+    /** @var null|int */
     protected $id;
 
     /** @var string */
-    protected $code;
+    protected $code = '';
 
     /** @var string */
-    protected $name;
+    protected $name = '';
 
-    /** @var \DateTime */
+    /** @var null|\DateTime */
     protected $last_use;
 
     /** @var string[]|array */
-    protected $roles;
+    protected $roles = [];
 
-    /** @var User */
+    /** @var null|User */
     protected $owner;
 
     /**
@@ -55,7 +55,7 @@ class AccessKey
         return implode(', ', $this->getRoles());
     }
 
-    public function getId(): int
+    public function getId(): ?int
     {
         return $this->id;
     }
@@ -84,14 +84,14 @@ class AccessKey
         return $this->name;
     }
 
-    public function setLastUse(\DateTime $lastUse): self
+    public function setLastUse(?\DateTime $lastUse): self
     {
         $this->last_use = $lastUse;
 
         return $this;
     }
 
-    public function getLastUse(): \DateTime
+    public function getLastUse(): ?\DateTime
     {
         return $this->last_use;
     }
@@ -114,14 +114,14 @@ class AccessKey
         return $this->roles;
     }
 
-    public function setOwner(User $owner = null): self
+    public function setOwner(?User $owner = null): self
     {
         $this->owner = $owner;
 
         return $this;
     }
 
-    public function getOwner(): User
+    public function getOwner(): ?User
     {
         return $this->owner;
     }
