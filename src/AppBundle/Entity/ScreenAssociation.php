@@ -19,7 +19,7 @@ class ScreenAssociation
     protected $screen;
 
     /** @var User */
-    protected $user_id;
+    protected $user;
 
     /** @var string */
     protected $role = ScreenRoleType::ROLE_ADMIN;
@@ -53,15 +53,15 @@ class ScreenAssociation
         return $this->screen;
     }
 
-    public function setUserId(User $userId = null): self
+    public function setUser(User $userId = null): self
     {
-        $this->user_id = $userId;
+        $this->user = $userId;
 
         return $this;
     }
 
-    public function getUserId(): User
+    public function getUser(): User
     {
-        return $this->user_id;
+        return $this->user;
     }
 }

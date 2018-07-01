@@ -28,33 +28,6 @@ class ScreenAssociation
         $this->tokenStorage = $tokenStorage;
     }
 
-    /**
-     * @return Screen[]|array
-     */
-    public function getScreensForUser(User $user): array
-    {
-        $r = [];
-
-        $rep = $this->em->getRepository('AppBundle:ScreenAssociation');
-        $assoc = $rep->findBy(['user_id' => $user->getId()]);
-
-        foreach ($assoc as $a) {
-            $r[] = $a->getScreen();
-        }
-
-        // get organizations for user
-        $orgas = $user->getOrganizations();
-
-        foreach ($orgas as $o) {
-            $assoc = $rep->findBy(['user_id' => $o->getId()]);
-            foreach ($assoc as $a) {
-                $r[] = $a->getScreen();
-            }
-        }
-
-        return $r;
-    }
-
     public function isUserAllowed(Screen $screen, User $user): bool
     {
         return $this->isUserAllowedTo($screen, $user, 'author');
@@ -67,12 +40,12 @@ class ScreenAssociation
         $orgas = $user->getOrganizations();
 
         foreach ($assoc as $a) { /** @var ScreenAssociationEntity $a */
-            if ($user === $a->getUserId()) {
+            if ($user === $a->getUser()) {
                 return $this->roleGreaterOrEqual($a->getRole(), $attribute);
             }
 
             foreach ($orgas as $o) { /** @var User $o */
-                if ($o === $a->getUserId()) {
+                if ($o === $a->getUser()) {
                     return $this->roleGreaterOrEqual($a->getRole(), $attribute);
                 }
             }
@@ -114,13 +87,13 @@ class ScreenAssociation
         switch ($aOwner[0]) {
             case 'user':
             case 'orga':
-                $assoc->setUserId($this->em->find('AppBundle:User', $aOwner[1]));
+                $assoc->setUser($this->em->find('AppBundle:User', $aOwner[1]));
                 break;
             default:
                 // Error above. Use current user as default.
                 // TODO{s:0} Throw error?
                 $user = $this->tokenStorage->getToken()->getUser();
-                $assoc->setUserId($user);
+                $assoc->setUser($user);
                 break;
         }
 

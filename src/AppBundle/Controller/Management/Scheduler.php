@@ -11,6 +11,7 @@ namespace AppBundle\Controller\Management;
 use AppBundle\Entity\Presentation;
 use AppBundle\Entity\ScheduledPresentation;
 use AppBundle\Entity\Screen;
+use AppBundle\Repository\ScreenRepository;
 use AppBundle\Service\ScreenAssociation;
 use Doctrine\ORM\EntityManager;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -31,9 +32,9 @@ class Scheduler extends Controller
         $em = $this->getDoctrine()->getManager();
 
         // screens that are associated to the user or to its organizations
-        $assoc = $this->get('app.screenassociation');
-        /** @var ScreenAssociation $assoc */
-        $screens = $assoc->getScreensForUser($user);
+        /** @var ScreenRepository $screenRepository */
+        $screenRepository = $this->get('app.repository.screen');
+        $screens = $screenRepository->getScreensForUser($user);
 
         $count = count($screens);
 

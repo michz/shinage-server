@@ -52,7 +52,7 @@ class ScreenContext implements Context
 
         $association = new ScreenAssociation();
         $association->setRole('admin');
-        $association->setUserId($user);
+        $association->setUser($user);
         $association->setScreen($screen);
         $this->entityManager->persist($association);
 

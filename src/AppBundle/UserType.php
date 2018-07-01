@@ -14,7 +14,6 @@ class UserType
      * ENUM('user', 'organization')
      */
 
-    const ENUM_USER_TYPE    = 'enumusertype';
     const USER_TYPE_USER    = 'user';
     const USER_TYPE_ORGA    = 'organization';
 }

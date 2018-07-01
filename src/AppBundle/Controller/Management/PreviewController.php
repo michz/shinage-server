@@ -9,7 +9,7 @@ declare(strict_types=1);
 namespace AppBundle\Controller\Management;
 
 use AppBundle\Entity\User;
-use AppBundle\Service\ScreenAssociation;
+use AppBundle\Repository\ScreenRepository;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Response;
@@ -25,9 +25,9 @@ class PreviewController extends Controller
         $user = $this->get('security.token_storage')->getToken()->getUser();
 
         // screens that are associated to the user or to its organizations
-        // (should be last call, so that newly created screens are recognized)
-        $assoc = $this->get('app.screenassociation'); /** @var ScreenAssociation $assoc */
-        $screens = $assoc->getScreensForUser($user);
+        /** @var ScreenRepository $screenRepository */
+        $screenRepository = $this->get('app.repository.screen');
+        $screens = $screenRepository->getScreensForUser($user);
 
         return $this->render('manage/preview.html.twig', [
             'screens' => $screens,
