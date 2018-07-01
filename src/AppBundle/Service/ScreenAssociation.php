@@ -28,35 +28,6 @@ class ScreenAssociation
         $this->tokenStorage = $tokenStorage;
     }
 
-    /**
-     * @deprecated Use ScreenRepository instead. Will be removed immediately.
-     *
-     * @return Screen[]|array
-     */
-    public function getScreensForUser(User $user): array
-    {
-        $r = [];
-
-        $rep = $this->em->getRepository('AppBundle:ScreenAssociation');
-        $assoc = $rep->findBy(['user' => $user->getId()]);
-
-        foreach ($assoc as $a) {
-            $r[] = $a->getScreen();
-        }
-
-        // get organizations for user
-        $orgas = $user->getOrganizations();
-
-        foreach ($orgas as $o) {
-            $assoc = $rep->findBy(['user' => $o->getId()]);
-            foreach ($assoc as $a) {
-                $r[] = $a->getScreen();
-            }
-        }
-
-        return $r;
-    }
-
     public function isUserAllowed(Screen $screen, User $user): bool
     {
         return $this->isUserAllowedTo($screen, $user, 'author');

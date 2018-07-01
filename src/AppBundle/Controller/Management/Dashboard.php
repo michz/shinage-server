@@ -11,6 +11,7 @@ namespace AppBundle\Controller\Management;
 use AppBundle\Entity\Screen;
 use AppBundle\Entity\User;
 use AppBundle\Exceptions\NoScreenGivenException;
+use AppBundle\Repository\ScreenRepository;
 use AppBundle\Service\ScreenAssociation;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -29,8 +30,9 @@ class Dashboard extends Controller
         $user = $this->get('security.token_storage')->getToken()->getUser();
 
         // screens that are associated to the user or to its organizations
-        $assoc = $this->get('app.screenassociation'); /** @var ScreenAssociation $assoc */
-        $screens = $assoc->getScreensForUser($user);
+        /** @var ScreenRepository $screenRepository */
+        $screenRepository = $this->get('app.repository.screen');
+        $screens = $screenRepository->getScreensForUser($user);
 
         $countScreens = \count($screens);
 
