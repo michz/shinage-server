@@ -193,7 +193,6 @@ class Account extends Controller
         return $this->render('account/organizations.html.twig', [
             'form_create' => $form_create->createView(),
             'organizations' => $orgas,
-            'orgaManager' => $this->get('app.orgamanager'),
         ]);
     }
 

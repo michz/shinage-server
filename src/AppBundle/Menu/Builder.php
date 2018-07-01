@@ -13,7 +13,7 @@ use Knp\Menu\ItemInterface;
 
 class Builder
 {
-    /** @var FactoryInterface|null */
+    /** @var FactoryInterface */
     private $factory;
 
     public function __construct(FactoryInterface $factory)

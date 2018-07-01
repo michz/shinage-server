@@ -16,11 +16,11 @@ use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInt
 
 class SchedulerService
 {
-    /** @var EntityManagerInterface|null */
-    protected $em = null;
+    /** @var EntityManagerInterface */
+    protected $em;
 
-    /** @var TokenStorageInterface|null */
-    protected $tokenStorage = null;
+    /** @var TokenStorageInterface */
+    protected $tokenStorage;
 
     public function __construct(EntityManagerInterface $em, TokenStorageInterface $tokenStorage)
     {

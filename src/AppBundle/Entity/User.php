@@ -26,10 +26,10 @@ class User extends BaseUser
     /** @var string */
     protected $name = '';
 
-    /** @var ArrayCollection */
+    /** @var Collection */
     private $organizations;
 
-    /** @var ArrayCollection */
+    /** @var Collection */
     private $users;
 
     /**

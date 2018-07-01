@@ -12,7 +12,7 @@ use AppBundle\Entity\User;
 
 class FilePoolPermissionChecker
 {
-    public function __construct(FilePool $filePool)
+    public function __construct(/* @scrutinizer ignore-unused */ FilePool $filePool)
     {
     }
 
