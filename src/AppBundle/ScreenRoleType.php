@@ -14,7 +14,6 @@ class ScreenRoleType
      * ENUM('admin', 'manager', 'author')
      */
 
-    const ENUM_SCREENROLE   = 'enumscreenrole';
     const ROLE_ADMIN        = 'admin';
     const ROLE_MANAGER      = 'manager';
     const ROLE_AUTHOR       = 'author';
