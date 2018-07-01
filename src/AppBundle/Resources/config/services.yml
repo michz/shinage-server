@@ -1,4 +1,9 @@
 services:
+    app.repository.screen:
+        class: AppBundle\Repository\ScreenRepository
+        arguments:
+            $em: "@doctrine.orm.entity_manager"
+
     app.screenassociation:
         class: AppBundle\Service\ScreenAssociation
         arguments:

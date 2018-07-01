@@ -13,6 +13,7 @@ use AppBundle\Entity\Screen;
 use AppBundle\Entity\ScreenAssociation as ScreenAssociationEntity;
 use AppBundle\Entity\User;
 use AppBundle\Form\CreateVirtualScreenForm;
+use AppBundle\Repository\ScreenRepository;
 use AppBundle\ScreenRoleType;
 use AppBundle\Service\SchedulerService;
 use AppBundle\Service\ScreenAssociation;
@@ -47,10 +48,9 @@ class Screens extends Controller
         // make sure former changes to database are visible to getScreensForUser()
         $em->flush();
 
-        // screens that are associated to the user or to its organizations
-        // (should be last call, so that newly created screens are recognized)
-        $assoc = $this->get('app.screenassociation'); /** @var ScreenAssociation $assoc */
-        $screens = $assoc->getScreensForUser($user);
+        /** @var ScreenRepository $screenRepository */
+        $screenRepository = $this->get('app.repository.screen');
+        $screens = $screenRepository->getScreensForUser($user);
 
         foreach ($screens as $screen) {
             $scheduler->updateScreen($screen);
@@ -92,10 +92,10 @@ class Screens extends Controller
         $assoc->setRole(ScreenRoleType::ROLE_ADMIN);
 
         if ('me' === $who) {
-            $assoc->setUserId($user);
+            $assoc->setUser($user);
         } else {
             $orga = $em->find(User::class, $who);
-            $assoc->setUserId($orga);
+            $assoc->setUser($orga);
         }
 
         $em->persist($assoc);
