@@ -51,6 +51,9 @@ class AppKernel extends Kernel
             $bundles[] = new \Sensio\Bundle\GeneratorBundle\SensioGeneratorBundle();
             $bundles[] = new \Doctrine\Bundle\FixturesBundle\DoctrineFixturesBundle();
         }
+        if ('dev' === $this->getEnvironment()) {
+            $bundles[] = new \Onurb\Bundle\YumlBundle\OnurbYumlBundle();
+        }
 
         return $bundles;
     }

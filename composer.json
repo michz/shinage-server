@@ -48,7 +48,8 @@
         "friends-of-behat/symfony-extension": "^1.2",
         "friends-of-behat/context-service-extension": "^1.2",
         "friends-of-behat/cross-container-extension": "^1.1",
-        "symplify/easy-coding-standard": "^4.3"
+        "symplify/easy-coding-standard": "^4.3",
+        "onurb/doctrine-yuml-bundle": "^1.1"
     },
     "scripts": {
         "symfony-scripts": [
