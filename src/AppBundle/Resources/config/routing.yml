@@ -21,3 +21,8 @@ presentation-delete:
   controller: AppBundle\Controller\Management\PresentationsController::createPresentationAction
   requirements:
     presentationId: '\d+'
+
+
+management-preview:
+  path: /preview
+  controller: AppBundle\Controller\Management\PreviewController::previewAction
