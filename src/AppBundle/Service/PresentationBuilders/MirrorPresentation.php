@@ -10,6 +10,9 @@ namespace AppBundle\Service\PresentationBuilders;
 
 use AppBundle\Entity\Presentation;
 
+/**
+ * @deprecated
+ */
 class MirrorPresentation implements PresentationBuilderInterface
 {
     const PRESENTATION_TYPE = 'mirror';

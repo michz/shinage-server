@@ -11,6 +11,9 @@ namespace AppBundle\Service\PresentationBuilders;
 use AppBundle\Entity\Presentation;
 use AppBundle\Entity\ScreenRemote\PlayablePresentation;
 
+/**
+ * @deprecated
+ */
 interface PresentationBuilderInterface
 {
     public function supports(Presentation $presentation): bool;

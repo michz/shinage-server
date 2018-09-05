@@ -9,17 +9,15 @@ declare(strict_types=1);
 namespace AppBundle\Service\PresentationBuilders;
 
 use AppBundle\Entity\Presentation;
-use AppBundle\Entity\PresentationSettings\Slideshow;
 use AppBundle\Entity\ScreenRemote\PlayablePresentation;
-use AppBundle\Entity\ScreenRemote\PlayablePresentationSettings;
 use JMS\Serializer\SerializerInterface;
 
 /**
  * @deprecated
  */
-class SlideshowPresentation implements PresentationBuilderInterface
+class MultiPanePresentation implements PresentationBuilderInterface
 {
-    const PRESENTATION_TYPE = 'slideshow';
+    const PRESENTATION_TYPE = 'multipane';
 
     /** @var SerializerInterface */
     private $serializer;
@@ -44,13 +42,8 @@ class SlideshowPresentation implements PresentationBuilderInterface
 
     public function buildPresentation(Presentation $presentation): PlayablePresentation
     {
-        $playable = new PlayablePresentation();
-        $playable->settings = new PlayablePresentationSettings();
-        $playable->settings->backgroundColor = '#000';
-        /** @var Slideshow $settings */
-        $settings = $this->serializer->deserialize($presentation->getSettings(), Slideshow::class, 'json');
-        $playable->slides = $settings->getSlides();
-        return $playable;
+        // @TODO
+        return new PlayablePresentation();
     }
 
     public function getLastModified(Presentation $presentation): \DateTime
