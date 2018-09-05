@@ -12,3 +12,7 @@ _errors:
 
 _main:
     resource: routing.yml
+
+doctrine_yuml:
+    resource: "@OnurbYumlBundle/Resources/config/routing.yml"
+    prefix:   /_yuml/
