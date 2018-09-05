@@ -6,7 +6,7 @@ management-dashboard-preview:
   path: /dashboard/preview/{screen_guid}
   controller: AppBundle\Controller\Management\DashboardController::previewAction
   requirements:
-    screen_guid: '*+'  # TODO
+    screen_guid: '.+'  # TODO
 
 management-presentations:
   path: /presentations
