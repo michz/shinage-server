@@ -23,9 +23,6 @@ use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 class PresentationsController extends Controller
 {
-    /**
-     * @Route("/manage/presentations", name="management-presentations")
-     */
     public function managePresentationsAction(): Response
     {
         // @TODO Security
@@ -38,9 +35,6 @@ class PresentationsController extends Controller
         ]);
     }
 
-    /**
-     * @Route("/manage/presentations/create", name="management-presentations-create")
-     */
     public function createPresentationAction(Request $request): Response
     {
         $user = $this->get('security.token_storage')->getToken()->getUser();
@@ -75,13 +69,6 @@ class PresentationsController extends Controller
         ]);
     }
 
-    /**
-     * @Route(
-     *     "/manage/presentations/delete/{presentationId}",
-     *     name="presentation-delete",
-     *     requirements={"presentationId": "\d+"}
-     * )
-     */
     public function deletePresentationAction(int $presentationId): Response
     {
         $em = $this->getDoctrine()->getManager();

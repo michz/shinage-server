@@ -7,3 +7,17 @@ management-dashboard-preview:
   controller: AppBundle\Controller\Management\DashboardController::previewAction
   requirements:
     screen_guid: '*+'  # TODO
+
+management-presentations:
+  path: /presentations
+  controller: AppBundle\Controller\Management\PresentationsController::managePresentationsAction
+
+management-presentations-create:
+  path: /presentations/create
+  controller: AppBundle\Controller\Management\PresentationsController::createPresentationAction
+
+presentation-delete:
+  path: /presentations/delete/{presentationId}
+  controller: AppBundle\Controller\Management\PresentationsController::createPresentationAction
+  requirements:
+    presentationId: '\d+'
