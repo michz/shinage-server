@@ -26,3 +26,24 @@ presentation-delete:
 management-preview:
   path: /preview
   controller: AppBundle\Controller\Management\PreviewController::previewAction
+
+
+management-scheduler:
+  path: /scheduler
+  controller: AppBundle\Controller\Management\SchedulerController::schedulerAction
+
+management-get-schedule:
+  path: /get-schedule
+  controller: AppBundle\Controller\Management\SchedulerController::getScheduleAction
+
+management-add-scheduled:
+  path: /add-scheduled
+  controller: AppBundle\Controller\Management\SchedulerController::addScheduledAction
+
+management-change-scheduled:
+  path: /change-scheduled
+  controller: AppBundle\Controller\Management\SchedulerController::changeScheduledAction
+
+management-delete-scheduled:
+  path: /delete-scheduled
+  controller: AppBundle\Controller\Management\SchedulerController::deleteScheduledAction
