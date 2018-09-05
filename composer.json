@@ -6,7 +6,8 @@
     "autoload": {
         "psr-4": {
             "AppBundle\\": "src/AppBundle/" ,
-            "mztx\\ShinageOnlinePlayerBundle\\": "src/ShinageOnlinePlayerBundle/" ,
+            "mztx\\ShinageOnlinePlayerBundle\\": "src/ShinageOnlinePlayerBundle/",
+            "mztx\\TodoBundle\\": "src/TodoBundle/",
             "shinage\\server\\behat\\": "features/bootstrap/"
         },
         "classmap": [ "app/AppKernel.php", "app/AppCache.php" ]

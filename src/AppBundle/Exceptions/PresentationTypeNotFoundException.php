@@ -10,7 +10,7 @@ namespace AppBundle\Exceptions;
 
 use Throwable;
 
-class NoSuitablePresentationBuilderFoundException extends \RuntimeException
+class PresentationTypeNotFoundException extends \RuntimeException
 {
     /** @var string */
     private $type;

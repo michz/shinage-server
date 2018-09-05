@@ -6,9 +6,9 @@ declare(strict_types=1);
  * Licensed under MIT. See file /LICENSE.
  */
 
-namespace AppBundle\Service;
+namespace mztx\TodoBundle\Service;
 
-use AppBundle\Service\Todo\TodoItem;
+use mztx\TodoBundle\Entity\TodoItem;
 use Symfony\Component\Cache\Adapter\AdapterInterface;
 
 class TodoList

@@ -1,0 +1,7 @@
+services:
+  app.security.voters.screen:
+    class: AppBundle\Security\Voters\ScreenVoter
+    arguments:
+      $screenAssociation: '@app.screenassociation'
+    tags:
+    - security.voter

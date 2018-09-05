@@ -1,0 +1,10 @@
+services:
+  app.menu_builder:
+    class: AppBundle\Menu\Builder
+    arguments: ["@knp_menu.factory"]
+    tags:
+    - { name: knp_menu.menu_builder, method: accountMenu, alias: account }
+    - { name: knp_menu.menu_builder, method: screenSettingsMenu, alias: screen-settings }
+
+# @TODO
+#    - { name: knp_menu.menu_builder, method: mainMenu, alias: account }

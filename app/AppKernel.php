@@ -1,13 +1,12 @@
 <?php
+declare(strict_types=1);
 
 namespace shinage\serverApp;
 
 use mztx\ShinageOnlinePlayerBundle\ShinageOnlinePlayerBundle;
 use mztx\ShinagePlayerBundle\ShinagePlayerBundle;
-use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpKernel\Kernel;
 use Symfony\Component\Config\Loader\LoaderInterface;
-use AppBundle\DependencyInjection\Compiler\PresentationBuilderPass;
 
 class AppKernel extends Kernel
 {
@@ -53,6 +52,7 @@ class AppKernel extends Kernel
         }
         if ('dev' === $this->getEnvironment()) {
             $bundles[] = new \Onurb\Bundle\YumlBundle\OnurbYumlBundle();
+            $bundles[] = new \mztx\TodoBundle\TodoBundle();
         }
 
         return $bundles;
@@ -76,10 +76,5 @@ class AppKernel extends Kernel
     public function registerContainerConfiguration(LoaderInterface $loader)
     {
         $loader->load($this->getRootDir() . '/config/config_' . $this->getEnvironment() . '.yml');
-    }
-
-    public function build(ContainerBuilder $container)
-    {
-        $container->addCompilerPass(new PresentationBuilderPass());
     }
 }

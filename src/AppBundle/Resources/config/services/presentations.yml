@@ -1,0 +1,29 @@
+services:
+  app.presentation.presentation_type_registry:
+    class: AppBundle\Presentation\PresentationTypeRegistry
+
+#  app.presentation.type.slideshow:
+#    class:
+#     tags:
+#     - app.presentation_type
+
+
+
+#    app.presentation.type.mirror:
+#        class: AppBundle\Service\PresentationBuilders\MirrorPresentation
+#        tags:
+#            - app.presentation_type
+#
+#    app.presentation.type.slideshow:
+#        class: AppBundle\Service\PresentationBuilders\SlideshowPresentation
+#        tags:
+#            - app.presentation_type
+#        arguments:
+#            $serializer: '@jms_serializer'
+
+#    app.presentation.type.multipane:
+#        class: AppBundle\Service\PresentationBuilders\MultiPanePresentation
+#        tags:
+#            - app.presentation_type
+#        arguments:
+#            $serializer: '@jms_serializer'

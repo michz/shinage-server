@@ -6,7 +6,7 @@ declare(strict_types=1);
  * Licensed under MIT. See file /LICENSE.
  */
 
-namespace AppBundle\Service\Todo;
+namespace mztx\TodoBundle\Entity;
 
 class TodoItem
 {

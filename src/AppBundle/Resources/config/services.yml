@@ -1,3 +1,8 @@
+imports:
+    - { resource: services/menus.yml }
+    - { resource: services/presentations.yml }
+    - { resource: services/security.yml }
+
 services:
     app.repository.screen:
         class: AppBundle\Repository\ScreenRepository
@@ -40,12 +45,6 @@ services:
         arguments:
             $router: "@router"
 
-    app.todolist:
-        class: AppBundle\Service\TodoList
-        arguments:
-            $basepath: "%kernel.root_dir%"
-            $cache: "@cache.app"
-
     app.registration.listener:
         class: AppBundle\EventListener\RegistrationListener
         arguments:
@@ -69,28 +68,6 @@ services:
         tags:
             - { name: form.type }
 
-    app.presentation_builder_chain:
-        class: AppBundle\Service\PresentationBuilders\PresentationBuilderChain
-
-    app.presentations.mirror:
-        class: AppBundle\Service\PresentationBuilders\MirrorPresentation
-        tags:
-            - app.presentation_builder
-
-    app.presentations.slideshow:
-        class: AppBundle\Service\PresentationBuilders\SlideshowPresentation
-        tags:
-            - app.presentation_builder
-        arguments:
-            $serializer: '@jms_serializer'
-
-    app.menu_builder:
-        class: AppBundle\Menu\Builder
-        arguments: ["@knp_menu.factory"]
-        tags:
-            - { name: knp_menu.menu_builder, method: accountMenu, alias: account }
-            - { name: knp_menu.menu_builder, method: screenSettingsMenu, alias: screen-settings }
-
     app.serializer.subscriber.slides:
         class: AppBundle\Serializer\Subscriber\SlideDeserializerSubscriber
         tags:
@@ -98,13 +75,6 @@ services:
 
     app.pool.access_denied_handler:
         class: AppBundle\Component\Event\AccessDeniedHandler
-
-    app.security.voters.screen:
-        class: AppBundle\Security\Voters\ScreenVoter
-        arguments:
-            $screenAssociation: '@app.screenassociation'
-        tags:
-            - security.voter
 
     app.version_checker:
         class: AppBundle\Service\VersionChecker

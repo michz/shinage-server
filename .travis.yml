@@ -23,6 +23,6 @@ script:
   - ./bin/console lint:yaml src/
   - ./bin/console lint:twig app/
   - ./bin/console lint:twig src/
-  - ./vendor/bin/phpspec run
+  - ./vendor/bin/phpspec run --no-code-generation
   - ./vendor/bin/behat --strict -n --tags="~@todo"
 

@@ -8,7 +8,7 @@ declare(strict_types=1);
 
 namespace AppBundle\Controller\Admin;
 
-use AppBundle\Service\TodoList;
+use mztx\TodoBundle\Service\TodoList;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Response;
@@ -20,7 +20,10 @@ class AdminDashboardController extends Controller
      */
     public function indexAction(): Response
     {
-        $todo = $this->get('app.todolist');
+        // @TODO Do this only in devenv!
+
+        // @TODO Inject this service via constructor, do not use DI container
+        $todo = $this->get('mztx.todo.todolist');
         /** @var TodoList $todo */
         $todos = $todo->getTodoList();
 

@@ -1,0 +1,7 @@
+services:
+  mztx.todo.todolist:
+    class: mztx\TodoBundle\Service\TodoList
+    arguments:
+      $basepath: "%kernel.root_dir%"
+      $cache: "@cache.app"
+# @TODO instead of hardcoding path in TodoList, define here which paths to spider
