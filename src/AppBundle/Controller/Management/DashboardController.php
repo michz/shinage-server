@@ -13,17 +13,13 @@ use AppBundle\Entity\User;
 use AppBundle\Exceptions\NoScreenGivenException;
 use AppBundle\Repository\ScreenRepository;
 use AppBundle\Service\ScreenAssociation;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
-class Dashboard extends Controller
+class DashboardController extends Controller
 {
-    /**
-     * @Route("/manage/dashboard", name="management-dashboard")
-     */
     public function dashboardAction(): Response
     {
         // user that is logged in
@@ -46,9 +42,6 @@ class Dashboard extends Controller
         ]);
     }
 
-    /**
-     * @Route("/manage/dashboard/preview/{screen_guid}", name="management-dashboard-preview")
-     */
     public function previewAction(string $screen_guid): Response
     {
         /** @var User $user */

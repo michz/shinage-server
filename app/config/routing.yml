@@ -5,6 +5,10 @@ app:
 fos_user:
     resource: "@FOSUserBundle/Resources/config/routing/all.xml"
 
+shinage_management:
+    prefix: "manage"
+    resource: "@AppBundle/Resources/config/routing.yml"
+
 shinage_player:
     prefix: "virtual_player"
     resource: "@ShinagePlayerBundle/Resources/config/routing.yml"

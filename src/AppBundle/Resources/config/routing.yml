@@ -1,0 +1,9 @@
+management-dashboard:
+  path: /dashboard
+  controller: AppBundle\Controller\Management\DashboardController::dashboardAction
+
+management-dashboard-preview:
+  path: /dashboard/preview/{screen_guid}
+  controller: AppBundle\Controller\Management\DashboardController::previewAction
+  requirements:
+    screen_guid: '*+'  # TODO

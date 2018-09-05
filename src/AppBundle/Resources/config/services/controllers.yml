@@ -1,0 +1,3 @@
+services:
+#  AppBundle\Controller\:
+#    resource: ../../../Controller
