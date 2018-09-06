@@ -1,3 +1,19 @@
 admin-dashboard:
   path: /
   controller: AppBundle\Controller\Admin\AdminDashboardController::indexAction
+
+admin-users:
+  path: /users
+  controller: AppBundle\Controller\Admin\UsersController::indexAction
+
+admin-screens:
+  path: /screens
+  controller: AppBundle\Controller\Admin\ScreenController::indexAction
+
+modify-screen:
+  path: /modify_screen
+  controller: AppBundle\Controller\Admin\ScreenController::modifyAction
+
+admin-organizations:
+  path: /organizations
+  controller: AppBundle\Controller\Admin\OrganizationsController::indexAction

@@ -10,7 +10,6 @@ namespace AppBundle\Controller\Admin;
 
 use AppBundle\Entity\Screen;
 use AppBundle\Service\ScreenAssociation;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -18,9 +17,6 @@ use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 class ScreenController extends Controller
 {
-    /**
-     * @Route("/adm/screens", name="admin-screens")
-     */
     public function indexAction(): Response
     {
         $rep = $this->getDoctrine()->getRepository('AppBundle:Screen');
@@ -34,8 +30,6 @@ class ScreenController extends Controller
 
     /**
      * @return \Symfony\Component\HttpFoundation\JsonResponse|\Symfony\Component\HttpFoundation\RedirectResponse
-     *
-     * @Route("/adm/modify_screen", name="modify-screen")
      */
     public function modifyAction(Request $request): Response
     {
