@@ -45,6 +45,8 @@ management-preview:
   controller: AppBundle\Controller\Management\PreviewController::previewAction
 
 
+# @TODO Move scheduler routes into own namespace
+
 management-scheduler:
   path: /scheduler
   controller: AppBundle\Controller\Management\SchedulerController::schedulerAction
@@ -64,3 +66,11 @@ management-change-scheduled:
 management-delete-scheduled:
   path: /delete-scheduled
   controller: AppBundle\Controller\Management\SchedulerController::deleteScheduledAction
+
+
+pool-get:
+  path: /pool/{userRoot}/{path}
+  controller: AppBundle\Controller\PoolController::getAction
+  requirements:
+    userRoot: "[^/]*"
+    path: .+

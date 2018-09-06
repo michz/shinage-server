@@ -9,7 +9,6 @@ declare(strict_types=1);
 namespace AppBundle\Controller;
 
 use AppBundle\Service\FilePoolUrlBuilder;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\File\Exception\AccessDeniedException;
 use Symfony\Component\HttpFoundation\File\Exception\FileNotFoundException;
@@ -24,8 +23,6 @@ class PoolController extends Controller
      * @return Response|StreamedResponse
      *
      * @throws \Symfony\Component\Security\Core\Exception\AccessDeniedException
-     *
-     * @Route("/pool/{userRoot}/{path}", name="pool-get", requirements={"userRoot": "[^/]*", "path": ".*"})
      */
     public function getAction(Request $request, string $userRoot, string $path): Response
     {
