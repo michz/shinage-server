@@ -11,10 +11,8 @@ namespace AppBundle\Controller\ScreenRemote;
 use AppBundle\Entity\Presentation;
 use AppBundle\Entity\Screen;
 use AppBundle\Exceptions\NoScreenGivenException;
-use AppBundle\Service\PresentationBuilders\PresentationBuilderChain;
 use AppBundle\Service\ScreenAssociation;
 use JMS\Serializer\SerializerInterface;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\File\Exception\AccessDeniedException;
 use Symfony\Component\HttpFoundation\File\File;
@@ -25,11 +23,6 @@ class HeartbeatController extends Controller
 {
     const JSONP_DUMMY = 'REPLACE_JSONP_CALLBACK_DUMMY';
 
-    /**
-     * TODO screen-guid-requirement genauer angeben
-     *
-     * @Route("/screen-remote/heartbeat/{screenId}", name="screen-remote-heartbeat", requirements={"screenId": ".*"})
-     */
     public function heartbeatAction(Request $request, string $screenId): Response
     {
         if (!$screenId) {
@@ -88,9 +81,6 @@ class HeartbeatController extends Controller
         ]);
     }
 
-    /**
-     * @Route("/screen-remote/presentation/{id}", name="screen-remote-presentation", requirements={"id": "\d+"})
-     */
     public function presentationAction(Request $request, int $id): Response
     {
         // @TODO Sicherheit
@@ -129,9 +119,6 @@ class HeartbeatController extends Controller
         ]);
     }
 
-    /**
-     * @Route("/screen-remote/client-file/{file}", name="screen-remote-client-file", requirements={"file": ".*"})
-     */
     public function clientFileAction(string $file): Response
     {
         // @TODO check somehow security
@@ -149,9 +136,6 @@ class HeartbeatController extends Controller
         return $response;
     }
 
-    /**
-     * @Route("/screen-remote/upload-screenshot", name="screen-remote-screenshot")
-     */
     public function uploadScreenshotAction(Request $request): Response
     {
         // Which screen?
