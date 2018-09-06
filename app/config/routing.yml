@@ -9,6 +9,10 @@ shinage_management:
     prefix: "manage"
     resource: "@AppBundle/Resources/config/routing.yml"
 
+shinage_api_v1:
+    prefix: "/api/v1"
+    resource: "@AppBundle/Resources/config/routing/api_v1.yml"
+
 shinage_player:
     prefix: "virtual_player"
     resource: "@ShinagePlayerBundle/Resources/config/routing.yml"

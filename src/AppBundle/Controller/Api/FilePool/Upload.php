@@ -9,15 +9,11 @@ declare(strict_types=1);
 namespace AppBundle\Controller\Api\FilePool;
 
 use AppBundle\Service\FilePool;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 
 class Upload extends Controller
 {
-    /**
-     * @Route("/api/v1/filepool/upload", name="api-filepool-upload")
-     */
     public function uploadAction(Request $request): void
     {
         $request->setRequestFormat('json');

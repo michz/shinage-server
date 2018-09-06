@@ -1,0 +1,3 @@
+api-filepool-upload:
+  path: /filepool/upload
+  controller: AppBundle\Controller\Api\FilePool\Upload::uploadAction
