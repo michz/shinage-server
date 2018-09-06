@@ -30,7 +30,7 @@ AppBundle\Entity\User:
       targetEntity: AppBundle\Entity\User
       fetch: LAZY
       mappedBy: null
-      inversedBy: null
+      inversedBy: users
       joinTable:
         name: users_orgas
         schema: null
