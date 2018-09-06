@@ -1,0 +1,23 @@
+management-screen-data:
+  path: /{guid}
+  controller: AppBundle\Controller\Management\Screens\ScreenDataController:indexAction
+  requirements:
+    guid: "[^/]*"
+
+management-screen-offline:
+  path: /{guid}/offline
+  controller: AppBundle\Controller\Management\Screens\ScreenOfflineController:indexAction
+  requirements:
+    guid: "[^/]*"
+
+management-screen-rights:
+  path: /{guid}/rights
+  controller: AppBundle\Controller\Management\Screens\ScreenRightsController:indexAction
+  requirements:
+    guid: "[^/]*"
+
+management-screen-schedule:
+  path: /{guid}/schedule
+  controller: AppBundle\Controller\Management\Screens\ScreenScheduleController:indexAction
+  requirements:
+    guid: "[^/]*"

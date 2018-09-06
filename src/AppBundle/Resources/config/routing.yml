@@ -6,6 +6,10 @@ _admin:
   prefix: /adm
   resource: ./routing/admin.yml
 
+_screen:
+  prefix: /screen
+  resource: ./routing/screen.yml
+
 
 management-dashboard:
   path: /dashboard

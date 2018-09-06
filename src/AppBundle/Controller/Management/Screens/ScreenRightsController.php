@@ -11,15 +11,11 @@ namespace AppBundle\Controller\Management\Screens;
 use AppBundle\Entity\Screen;
 use AppBundle\Entity\User;
 use Doctrine\ORM\EntityManager;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Response;
 
 class ScreenRightsController extends Controller
 {
-    /**
-     * @Route("/manage/screen/{guid}/rights", name="management-screen-rights", requirements={"guid": "[^/]*"})
-     */
     public function indexAction(string $guid): Response
     {
         /** @var User $user user that is logged in */
