@@ -10,7 +10,6 @@ namespace AppBundle\Controller\Management;
 
 use AppBundle\Entity\User;
 use AppBundle\Service\FilePool;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\HttpFoundation\Response;
@@ -20,17 +19,11 @@ use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 class FileManager extends Controller
 {
-    /**
-     * @Route("/manage/files", name="management-files")
-     */
     public function filesAction(): Response
     {
         return $this->render('file-manager/index.html.twig', []);
     }
 
-    /**
-     * @Route("/manage/files-download/{file}", name="management-files-download", requirements={"file": ".*"})
-     */
     public function downloadAction(string $file): Response
     {
         // @TODO replace by PoolController
@@ -55,10 +48,6 @@ class FileManager extends Controller
         return $response;
     }
 
-    /**
-     * @Route("/manage/files-el-thumbnail/{base}/{file}", name="management-files-el-thumbnail",
-     *     requirements={"base": ".*", "file": ".*"})
-     */
     public function elThumbnailAction(string $base, string $file): Response
     {
         // @TODO Refactor: Make method "getPoolPath" or so to avoid code duplication
@@ -83,9 +72,6 @@ class FileManager extends Controller
         return $response;
     }
 
-    /**
-     * @Route("/manage/files-connector", name="management-files-connector")
-     */
     public function connectorAction(): Response
     {
         $poolBase = realpath($this->getParameter('path_pool'));
