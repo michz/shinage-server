@@ -15,7 +15,6 @@ use AppBundle\UserType;
 use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
 use Doctrine\ORM\EntityManager;
 use FOS\UserBundle\Doctrine\UserManager;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\Extension\Core\Type\FormType;
@@ -29,19 +28,13 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
-class Account extends Controller
+class AccountController extends Controller
 {
-    /**
-     * @Route("/account", name="account")
-     */
     public function indexAction(): RedirectResponse
     {
         return $this->redirectToRoute('account-edit');
     }
 
-    /**
-     * @Route("/account/edit", name="account-edit")
-     */
     public function editAction(Request $request): Response
     {
         /** @var User $user */
@@ -143,9 +136,6 @@ class Account extends Controller
         ]);
     }
 
-    /**
-     * @Route("/account/organizations", name="account-organizations")
-     */
     public function orgaAction(Request $request): Response
     {
         /** @var UserManager $userManager */
@@ -196,9 +186,6 @@ class Account extends Controller
         ]);
     }
 
-    /**
-     * @Route("/account/organizations/leave/{id}", name="account-orga-leave")
-     */
     public function orgaLeaveAction(int $id): RedirectResponse
     {
         /** @var User $user */
@@ -214,9 +201,6 @@ class Account extends Controller
         return $this->redirectToRoute('account-organizations');
     }
 
-    /**
-     * @Route("/account/organizations/add-user", name="account-orga-add-user")
-     */
     public function orgaAddUserAction(Request $request): RedirectResponse
     {
         /** @var User $user */
@@ -257,9 +241,6 @@ class Account extends Controller
         return $this->redirectToRoute('account-organizations');
     }
 
-    /**
-     * @Route("/account/organizations/remove/{orga_id}/{user_id}", name="account-orga-remove")
-     */
     public function orgaRemoveAction(
         int $orga_id,
         int $user_id
@@ -286,9 +267,6 @@ class Account extends Controller
         return $this->redirectToRoute('account-organizations');
     }
 
-    /**
-     * @Route("/account/delete-api-key/{id}", name="account-delete-apikey")
-     */
     public function deleteApiKeyAction(Request $request, int $id): RedirectResponse
     {
         /** @var EntityManager $em */

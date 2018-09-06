@@ -1,0 +1,34 @@
+account:
+  path: /
+  controller: AppBundle\Controller\Account\AccountController::indexAction
+
+account-edit:
+  path: /edit
+  controller: AppBundle\Controller\Account\AccountController::editAction
+
+account-organizations:
+  path: /organizations
+  controller: AppBundle\Controller\Account\AccountController::orgaAction
+
+account-orga-leave:
+  path: /organizations/leave/{id}
+  controller: AppBundle\Controller\Account\AccountController::orgaLeaveAction
+  requirements:
+    id: \d+
+
+account-orga-add-user:
+  path: /organizations/add-user
+  controller: AppBundle\Controller\Account\AccountController::orgaAddUserAction
+
+account-orga-remove:
+  path: /organizations/remove/{orga_id}/{user_id}
+  controller: AppBundle\Controller\Account\AccountController::orgaRemoveAction
+  requirements:
+    orga_id: \d+
+    user_id: \d+
+
+account-delete-apikey:
+  path: /delete-api-key/{id}
+  controller: AppBundle\Controller\Account\AccountController::deleteApiKeyAction
+  requirements:
+    id: .+
