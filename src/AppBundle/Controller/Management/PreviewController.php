@@ -10,7 +10,6 @@ namespace AppBundle\Controller\Management;
 
 use AppBundle\Entity\User;
 use AppBundle\Repository\ScreenRepository;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Response;
 
