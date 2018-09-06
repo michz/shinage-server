@@ -13,6 +13,10 @@ shinage_api_v1:
   prefix: "/api/v1"
   resource: "@AppBundle/Resources/config/routing/api_v1.yml"
 
+shinage_register:
+  prefix: "/"
+  resource: "@AppBundle/Resources/config/routing/register.yml"
+
 homepage:
   path: "/"
   controller: AppBundle\Controller\DefaultController::indexAction

@@ -1,0 +1,8 @@
+registration:
+  path: /
+  controller: AppBundle\Controller\Security\RegistrationController:indexAction
+
+
+registration-confirm:
+  path: /confirm/{confirmationToken}
+  controller: AppBundle\Controller\Security\RegistrationController:confirmAction

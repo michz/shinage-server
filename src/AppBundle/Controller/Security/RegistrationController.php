@@ -11,7 +11,6 @@ namespace AppBundle\Controller\Security;
 use AppBundle\Entity\User;
 use FOS\UserBundle\Doctrine\UserManager;
 use FOS\UserBundle\Model\UserInterface;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
@@ -19,11 +18,8 @@ use Symfony\Component\Form\Extension\Core\Type\RepeatedType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\HttpFoundation\Request;
 
-class Registration extends Controller
+class RegistrationController extends Controller
 {
-    /**
-     * @Route("/registration", name="registration")
-     */
     public function indexAction(Request $request): \Symfony\Component\HttpFoundation\Response
     {
         //$rep = $this->getDoctrine()->getRepository('AppBundle:Screen');
@@ -81,9 +77,6 @@ class Registration extends Controller
         ]);
     }
 
-    /**
-     * @Route("/registration/confirm/{confirmationToken}", name="registration-confirm")
-     */
     public function confirmAction(string $confirmationToken): \Symfony\Component\HttpFoundation\RedirectResponse
     {
         /** @var UserManager $userManager */
