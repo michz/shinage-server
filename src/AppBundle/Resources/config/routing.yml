@@ -2,6 +2,10 @@ _account:
   prefix: /account
   resource: ./routing/account.yml
 
+_admin:
+  prefix: /adm
+  resource: ./routing/admin.yml
+
 
 management-dashboard:
   path: /dashboard

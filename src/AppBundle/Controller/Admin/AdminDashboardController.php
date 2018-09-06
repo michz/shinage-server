@@ -9,15 +9,11 @@ declare(strict_types=1);
 namespace AppBundle\Controller\Admin;
 
 use mztx\TodoBundle\Service\TodoList;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Response;
 
 class AdminDashboardController extends Controller
 {
-    /**
-     * @Route("/adm", name="admin-dashboard")
-     */
     public function indexAction(): Response
     {
         // @TODO Do this only in devenv!
