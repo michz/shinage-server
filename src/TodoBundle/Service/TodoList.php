@@ -154,7 +154,7 @@ class TodoList
             $text[0] = strip_tags($text[0]);
             $text[0] = str_replace(['#}', '{#'], '', $text[0]);
 
-            $todos[] = new Todo\TodoItem($text[0], $path, $line_number, strtolower($type[0]), $severity);
+            $todos[] = new TodoItem($text[0], $path, $line_number, strtolower($type[0]), $severity);
         }
 
         return $r;
