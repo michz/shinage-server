@@ -1,3 +1,11 @@
+management-screens:
+  path: /
+  controller: AppBundle\Controller\Management\ScreensController::indexAction
+
+management-connect-screen:
+  path: /connect
+  controller: AppBundle\Controller\Management\ScreensController::connectAction
+
 management-screen-data:
   path: /{guid}
   controller: AppBundle\Controller\Management\Screens\ScreenDataController:indexAction
