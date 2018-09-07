@@ -39,7 +39,7 @@ management-presentations-create:
 
 presentation-delete:
   path: /presentations/delete/{presentationId}
-  controller: AppBundle\Controller\Management\PresentationsController::createPresentationAction
+  controller: AppBundle\Controller\Management\PresentationsController::deletePresentationAction
   requirements:
     presentationId: '\d+'
 

@@ -10,7 +10,8 @@ namespace AppBundle\Controller\Management;
 
 use AppBundle\Entity\Presentation;
 use AppBundle\Entity\User;
-use AppBundle\Service\PresentationBuilders\PresentationBuilderChain;
+use AppBundle\Presentation\PresentationTypeRegistryInterface;
+use AppBundle\Service\SchedulerService;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\FormType;
@@ -22,6 +23,20 @@ use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 class PresentationsController extends Controller
 {
+    /** @var PresentationTypeRegistryInterface */
+    private $presentationTypeRegistry;
+
+    /** @var SchedulerService */
+    private $scheduler;
+
+    public function __construct(
+        PresentationTypeRegistryInterface $presentationTypeRegistry,
+        SchedulerService $scheduler
+    ) {
+        $this->presentationTypeRegistry = $presentationTypeRegistry;
+        $this->scheduler = $scheduler;
+    }
+
     public function managePresentationsAction(): Response
     {
         // @TODO Security
@@ -38,15 +53,12 @@ class PresentationsController extends Controller
     {
         $user = $this->get('security.token_storage')->getToken()->getUser();
 
-        /** @var PresentationBuilderChain $builderChain */
-        $builderChain = $this->get('app.presentation_builder_chain');
-
         $presentation = new Presentation();
         $presentation->setType('slideshow');
         $form = $this->get('form.factory')->createNamedBuilder('form_presentation', FormType::class, $presentation)
             ->add('title', TextType::class)
             ->add('type', ChoiceType::class, [
-                'choices' => $this->getTypeChoices($builderChain->getTypes()),
+                'choices' => $this->getTypeChoices($this->presentationTypeRegistry->getPresentationTypes()),
                 'translation_domain' => 'PresentationTypes',
             ])
             ->add('save', SubmitType::class, ['label' => 'Create'])
@@ -81,9 +93,7 @@ class PresentationsController extends Controller
         }
 
         // delete scheduled presentations
-        /** @var SchedulerService $scheduler */
-        $scheduler = $this->get('app.scheduler');
-        $scheduler->deleteAllScheduledPresentationsForPresentation($presentation);
+        $this->scheduler->deleteAllScheduledPresentationsForPresentation($presentation);
 
         // delete presentation
         $em->remove($presentation);
@@ -114,7 +124,7 @@ class PresentationsController extends Controller
     protected function getTypeChoices(array $types): array
     {
         $ret = [];
-        foreach ($types as $type) {
+        foreach (array_keys($types) as $type) {
             $ret[$type] = $type;
         }
         return $ret;
