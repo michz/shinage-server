@@ -98,3 +98,20 @@ management-files-connector:
   path: /files-connector
   controller: AppBundle\Controller\Management\FileManager::connectorAction
 
+presentation-editor-slideshow:
+  path: /presentations/editor/slideshow/{presentationId}
+  controller: AppBundle\Controller\PresentationEditors\SlideshowEditorController::editAction
+  requirements:
+    presentationId: "[0-9]+"
+
+presentation-editor-slideshow-update:
+  path: /presentations/editor/slideshow/{presentationId}/update
+  controller: AppBundle\Controller\PresentationEditors\SlideshowEditorController::updateAction
+  requirements:
+    presentationId: "[0-9]+"
+
+presentation-editor-mirror:
+  path: /presentations/editor/mirror/{presentationId}
+  controller: AppBundle\Controller\PresentationEditors::editAction
+  requirements:
+    presentationId: "[0-9]+"

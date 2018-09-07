@@ -13,17 +13,9 @@ use AppBundle\Entity\PresentationSettings\Slideshow;
 use AppBundle\Entity\Slides\ImageSlide;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Routing\Annotation\Route;
 
 class SlideshowEditorController extends AbstractPresentationEditor
 {
-    /**
-     * @Route(
-     *     "/manage/presentations/editor/slideshow/{presentationId}",
-     *     name="presentation-editor-slideshow",
-     *     requirements={"presentationId": "[0-9]+"}
-     * )
-     */
     public function editAction(int $presentationId): Response
     {
         $presentation = $this->getPresentation($presentationId);
@@ -43,13 +35,6 @@ class SlideshowEditorController extends AbstractPresentationEditor
         ]);
     }
 
-    /**
-     * @Route(
-     *     "/manage/presentations/editor/slideshow/{presentationId}/update",
-     *     name="presentation-editor-slideshow-update",
-     *     requirements={"presentationId": "[0-9]+"}
-     * )
-     */
     public function updateAction(Request $request, int $presentationId): Response
     {
         $presentation = $this->getPresentation($presentationId);
