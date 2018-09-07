@@ -134,9 +134,9 @@ class TodoList
         $r = [];
 
         foreach ($matches as $match) {
-            $opt  = (isset($match['opt'])) ? $match['opt'] : [''];
-            $type = (isset($match['type'])) ? $match['type'] : [''];
-            $text = (isset($match['text'])) ? $match['text'] : [''];
+            $opt  = isset($match['opt']) ? $match['opt'] : [''];
+            $type = isset($match['type']) ? $match['type'] : [''];
+            $text = isset($match['text']) ? $match['text'] : [''];
 
             $options = explode(',', $opt[0]);
             $severity = 0;

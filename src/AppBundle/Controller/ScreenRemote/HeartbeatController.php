@@ -76,14 +76,11 @@ class HeartbeatController extends Controller
             'status'        => 'ok',
             'screen_status' => $is_assoc ? 'registered' : 'not_registered',
             'connect_code'  => $screen->getConnectCode(),
-            'presentation'  => (null !== $presentation) ? $presentation->getId() : null,
+            'presentation'  => null !== $presentation ? $presentation->getId() : null,
             'last_modified' => $lastModified ? $lastModified->format('Y-m-d H:i:s') : '0000-00-00 00:00:00',
         ]);
     }
 
-    /**
-     * @deprecated
-     */
     public function presentationAction(Request $request, int $id): Response
     {
         // @TODO Sicherheit

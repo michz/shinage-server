@@ -39,9 +39,8 @@ class Upload extends Controller
 
     protected function getOwnerBase(string $ownerString): string
     {
-        $base = $tmb_path = realpath($this->container->getParameter('path_pool')) . '/' .
+        return  realpath($this->container->getParameter('path_pool')) . '/' .
             str_replace(':', '-', $ownerString);
-        return $base;
     }
 
     protected function saveFile(string $folder, string $filename, string $content): bool

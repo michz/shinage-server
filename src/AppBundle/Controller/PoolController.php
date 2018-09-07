@@ -53,7 +53,7 @@ class PoolController extends Controller
             $absolutePath = $poolUrlBuilder->getAbsolutePath($path, $userRoot);
 
             $fileInfo = new File($absolutePath);
-            $response = new StreamedResponse(
+            return new StreamedResponse(
                 function () use ($absolutePath): void {
                     readfile($absolutePath);
                 },
@@ -62,7 +62,6 @@ class PoolController extends Controller
                     'Content-Type' => $fileInfo->getMimeType(),
                 ]
             );
-            return $response;
         } catch (FileNotFoundException $oException) {
             return new Response('', 404);
         } catch (AccessDeniedException $oException) {
