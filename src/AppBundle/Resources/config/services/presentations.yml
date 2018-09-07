@@ -6,6 +6,7 @@ services:
   app.presentation.presentation_type_registry:
     class: AppBundle\Presentation\PresentationTypeRegistry
 
+
   app.presentation.type.website:
     class: AppBundle\Presentation\GenericPresentationType
     arguments:
@@ -19,12 +20,31 @@ services:
     arguments:
       - '@app.presentation.type.website.settings_reader'
 
-  # TODO Verallgemeinern?
   app.presentation.type.website.settings_reader:
     class: AppBundle\Presentation\GenericSettingsReader
     arguments:
       - '@jms_serializer.serializer'
       - 'AppBundle\Presentation\Website\Settings'
+
+
+  app.presentation.type.slideshow:
+    class: AppBundle\Presentation\GenericPresentationType
+    arguments:
+      - 'slideshow'
+      - '@app.presentation.type.slideshow.renderer'
+    tags:
+      - app.presentation_type
+
+  app.presentation.type.slideshow.renderer:
+    class: AppBundle\Presentation\Slideshow\Renderer
+    arguments:
+      - '@app.presentation.type.slideshow.settings_reader'
+
+  app.presentation.type.slideshow.settings_reader:
+    class: AppBundle\Presentation\GenericSettingsReader
+    arguments:
+      - '@jms_serializer.serializer'
+      - 'AppBundle\Presentation\Slideshow\Settings'
 
 #  app.presentation.type.slideshow:
 #    class:

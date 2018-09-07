@@ -6,22 +6,16 @@ declare(strict_types=1);
  * Licensed under MIT. See file /LICENSE.
  */
 
-namespace AppBundle\Entity\PresentationSettings;
+namespace AppBundle\Presentation\Slideshow\Slides;
 
-use AppBundle\Entity\Slides\Slide;
 use JMS\Serializer\Annotation as JMS;
 
-/**
- * @deprecated
- *
- * @TODO Remove
- */
-class Slideshow
+class SlideCollection
 {
     /**
      * @var Slide[]|array
      *
-     * @JMS\Type("array<AppBundle\Entity\Slides\Slide>")
+     * @JMS\Type("array<AppBundle\Presentation\Slideshow\Slides\Slide>")
      */
     protected $slides = [];
 
@@ -35,10 +29,21 @@ class Slideshow
 
     /**
      * @param Slide[]|array $slides
+     *
+     * @return SlideCollection
      */
     public function setSlides(array $slides): self
     {
         $this->slides = $slides;
+        return $this;
+    }
+
+    /**
+     * @return $this
+     */
+    public function addSlide(Slide $slide): self
+    {
+        $this->slides[] = $slide;
         return $this;
     }
 }

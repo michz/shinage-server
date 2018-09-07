@@ -6,14 +6,14 @@ declare(strict_types=1);
  * Licensed under MIT. See file /LICENSE.
  */
 
-namespace AppBundle\Entity\Slides;
+namespace AppBundle\Presentation\Slideshow\Slides;
 
 use JMS\Serializer\Annotation as JMS;
 
 /**
  * @JMS\ExclusionPolicy("NONE")
  */
-class ImageSlide extends Slide
+class VideoSlide extends Slide
 {
     /**
      * @var string
@@ -27,7 +27,7 @@ class ImageSlide extends Slide
      *
      * @JMS\Type("string")
      */
-    protected $type = 'Image';
+    protected $type = 'Video';
 
     public function getSrc(): string
     {
@@ -45,7 +45,7 @@ class ImageSlide extends Slide
         return $this->type;
     }
 
-    public function setType(string $type): Slide
+    public function setType(string $type): self
     {
         $this->type = $type;
         return $this;

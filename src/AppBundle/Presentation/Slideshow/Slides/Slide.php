@@ -6,7 +6,7 @@ declare(strict_types=1);
  * Licensed under MIT. See file /LICENSE.
  */
 
-namespace AppBundle\Entity\Slides;
+namespace AppBundle\Presentation\Slideshow\Slides;
 
 use JMS\Serializer\Annotation as JMS;
 

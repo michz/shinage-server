@@ -10,6 +10,11 @@ namespace AppBundle\Entity\PresentationSettings;
 
 use JMS\Serializer\Annotation as JMS;
 
+/**
+ * @deprecated
+ *
+ * @TODO Remove
+ */
 class Mirror
 {
     /**

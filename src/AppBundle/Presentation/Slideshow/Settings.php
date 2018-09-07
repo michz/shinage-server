@@ -6,11 +6,11 @@ declare(strict_types=1);
  * Licensed under MIT. See file /LICENSE.
  */
 
-namespace AppBundle\Entity\Slides;
+namespace AppBundle\Presentation\Slideshow;
 
 use JMS\Serializer\Annotation as JMS;
 
-class SlideCollection
+class Settings
 {
     /**
      * @var Slide[]|array
@@ -29,21 +29,10 @@ class SlideCollection
 
     /**
      * @param Slide[]|array $slides
-     *
-     * @return SlideCollection
      */
     public function setSlides(array $slides): self
     {
         $this->slides = $slides;
-        return $this;
-    }
-
-    /**
-     * @return $this
-     */
-    public function addSlide(Slide $slide): self
-    {
-        $this->slides[] = $slide;
         return $this;
     }
 }
