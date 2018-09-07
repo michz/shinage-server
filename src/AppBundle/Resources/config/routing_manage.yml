@@ -10,6 +10,10 @@ _screen:
   prefix: /screen
   resource: ./routing/screen.yml
 
+_presentation_editors:
+  prefix: /presentations/
+  resource: ./routing/presentation.yml
+
 _screen_remote_api:
   prefix: /screen-remote
   resource: ./routing/screen_remote.yml

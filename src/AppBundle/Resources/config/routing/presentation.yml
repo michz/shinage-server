@@ -1,0 +1,5 @@
+presentation-editor-website:
+  path: /presentations/edit/website/{presentationId}
+  controller: AppBundle\Controller\PresentationEditors\WebsiteEditorController::editAction
+  requirements:
+    presentationId: '\d+'
