@@ -11,11 +11,27 @@ namespace AppBundle\Controller\PresentationEditors;
 use AppBundle\Entity\Presentation;
 use AppBundle\Presentation\Slideshow\Settings;
 use AppBundle\Presentation\Slideshow\Slides\ImageSlide;
+use Doctrine\ORM\EntityManagerInterface;
+use JMS\Serializer\SerializerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 class SlideshowEditorController extends AbstractPresentationEditor
 {
+    /** @var EntityManagerInterface */
+    private $entityManager;
+
+    /** @var SerializerInterface */
+    private $serializer;
+
+    public function __construct(
+        EntityManagerInterface $entityManager,
+        SerializerInterface $serializer
+    ) {
+        $this->entityManager = $entityManager;
+        $this->serializer = $serializer;
+    }
+
     public function editAction(int $presentationId): Response
     {
         $presentation = $this->getPresentation($presentationId);
@@ -23,11 +39,10 @@ class SlideshowEditorController extends AbstractPresentationEditor
             throw new \RuntimeException('Presentation type not supported.');
         }
 
-        $serializer = $this->get('jms_serializer');
         $settings = $this->getCurrentSettingsOrEmpty($presentation);
 
         $slides = $settings->getSlides();
-        $slidesJson = $serializer->serialize($slides, 'json');
+        $slidesJson = $this->serializer->serialize($slides, 'json');
 
         return $this->render('manage/presentations/editor_slideshow.html.twig', [
             'presentation' => $presentation,
@@ -43,17 +58,15 @@ class SlideshowEditorController extends AbstractPresentationEditor
         }
 
         $slidesJson = $request->get('slides');
-        $serializer = $this->get('jms_serializer');
-        $slides = $serializer->deserialize($slidesJson, 'array<' . ImageSlide::class . '>', 'json');
+        $slides = $this->serializer->deserialize($slidesJson, 'array<' . ImageSlide::class . '>', 'json');
 
         /** @var Settings $settings */
         $settings = $this->getCurrentSettingsOrEmpty($presentation);
         $settings->setSlides($slides);
-        $presentation->setSettings($serializer->serialize($settings, 'json'));
+        $presentation->setSettings($this->serializer->serialize($settings, 'json'));
 
-        $em = $this->get('doctrine.orm.entity_manager');
-        $em->persist($presentation);
-        $em->flush();
+        $this->entityManager->persist($presentation);
+        $this->entityManager->flush();
 
         return new Response('', 204);
     }
@@ -65,9 +78,8 @@ class SlideshowEditorController extends AbstractPresentationEditor
 
     protected function getCurrentSettingsOrEmpty(Presentation $presentation): Settings
     {
-        $serializer = $this->get('jms_serializer');
         try {
-            $settings = $serializer->deserialize($presentation->getSettings(), Settings::class, 'json');
+            $settings = $this->serializer->deserialize($presentation->getSettings(), Settings::class, 'json');
         } catch (\Throwable $exception) {
             $settings = new Settings();
         }
