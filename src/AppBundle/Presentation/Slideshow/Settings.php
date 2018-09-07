@@ -8,6 +8,7 @@ declare(strict_types=1);
 
 namespace AppBundle\Presentation\Slideshow;
 
+use AppBundle\Presentation\Slideshow\Slides\Slide;
 use JMS\Serializer\Annotation as JMS;
 
 class Settings
@@ -15,7 +16,7 @@ class Settings
     /**
      * @var Slide[]|array
      *
-     * @JMS\Type("array<AppBundle\Entity\Slides\Slide>")
+     * @JMS\Type("array<AppBundle\Presentation\Slideshow\Slides\Slide>")
      */
     protected $slides = [];
 

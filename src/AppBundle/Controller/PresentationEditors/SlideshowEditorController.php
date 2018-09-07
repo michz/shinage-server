@@ -9,8 +9,8 @@ declare(strict_types=1);
 namespace AppBundle\Controller\PresentationEditors;
 
 use AppBundle\Entity\Presentation;
-use AppBundle\Entity\PresentationSettings\Slideshow;
-use AppBundle\Entity\Slides\ImageSlide;
+use AppBundle\Presentation\Slideshow\Settings;
+use AppBundle\Presentation\Slideshow\Slides\ImageSlide;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -46,7 +46,7 @@ class SlideshowEditorController extends AbstractPresentationEditor
         $serializer = $this->get('jms_serializer');
         $slides = $serializer->deserialize($slidesJson, 'array<' . ImageSlide::class . '>', 'json');
 
-        /** @var Slideshow $settings */
+        /** @var Settings $settings */
         $settings = $this->getCurrentSettingsOrEmpty($presentation);
         $settings->setSlides($slides);
         $presentation->setSettings($serializer->serialize($settings, 'json'));
@@ -63,13 +63,13 @@ class SlideshowEditorController extends AbstractPresentationEditor
         return 'slideshow' === $presentation->getType();
     }
 
-    protected function getCurrentSettingsOrEmpty(Presentation $presentation): Slideshow
+    protected function getCurrentSettingsOrEmpty(Presentation $presentation): Settings
     {
         $serializer = $this->get('jms_serializer');
         try {
-            $settings = $serializer->deserialize($presentation->getSettings(), Slideshow::class, 'json');
+            $settings = $serializer->deserialize($presentation->getSettings(), Settings::class, 'json');
         } catch (\Throwable $exception) {
-            $settings = new Slideshow();
+            $settings = new Settings();
         }
         return $settings;
     }

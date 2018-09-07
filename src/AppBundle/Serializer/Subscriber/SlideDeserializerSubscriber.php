@@ -8,7 +8,7 @@ declare(strict_types=1);
 
 namespace AppBundle\Serializer\Subscriber;
 
-use AppBundle\Entity\Slides\Slide;
+use AppBundle\Presentation\Slideshow\Slides\Slide;
 use JMS\Serializer\EventDispatcher\EventSubscriberInterface;
 use JMS\Serializer\EventDispatcher\PreDeserializeEvent;
 
@@ -32,7 +32,7 @@ class SlideDeserializerSubscriber implements EventSubscriberInterface
     {
         $data = $event->getData();
         $type = $data['type'];
-        $slideClass = '\\AppBundle\\Entity\\Slides\\' . $type . 'Slide';
+        $slideClass = '\\AppBundle\\Presentation\\Slideshow\\Slides\\' . $type . 'Slide';
 
         if (!class_exists($slideClass)) {
             throw new \RuntimeException('Slide type not found: ' . $type);
