@@ -12,14 +12,18 @@ use AppBundle\Entity\Presentation;
 use AppBundle\Entity\User;
 use AppBundle\Presentation\PresentationTypeRegistryInterface;
 use AppBundle\Service\SchedulerService;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\FormType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
+use Symfony\Component\Translation\TranslatorInterface;
 
 class PresentationsController extends Controller
 {
@@ -29,18 +33,38 @@ class PresentationsController extends Controller
     /** @var SchedulerService */
     private $scheduler;
 
+    /** @var TokenStorageInterface */
+    private $tokenStorage;
+
+    /** @var TranslatorInterface */
+    private $translator;
+
+    /** @var EntityManagerInterface */
+    private $entityManager;
+
+    /** @var FormFactoryInterface */
+    private $formFactory;
+
     public function __construct(
         PresentationTypeRegistryInterface $presentationTypeRegistry,
-        SchedulerService $scheduler
+        SchedulerService $scheduler,
+        TokenStorageInterface $tokenStorage,
+        TranslatorInterface $translator,
+        EntityManagerInterface $entityManager,
+        FormFactoryInterface $formFactory
     ) {
         $this->presentationTypeRegistry = $presentationTypeRegistry;
         $this->scheduler = $scheduler;
+        $this->tokenStorage = $tokenStorage;
+        $this->translator = $translator;
+        $this->entityManager = $entityManager;
+        $this->formFactory = $formFactory;
     }
 
     public function managePresentationsAction(): Response
     {
         // @TODO Security
-        $user = $this->get('security.token_storage')->getToken()->getUser();
+        $user = $this->tokenStorage->getToken()->getUser();
 
         $pres = $this->getPresentationsForUser($user);
 
@@ -51,11 +75,11 @@ class PresentationsController extends Controller
 
     public function createPresentationAction(Request $request): Response
     {
-        $user = $this->get('security.token_storage')->getToken()->getUser();
+        $user = $this->tokenStorage->getToken()->getUser();
 
         $presentation = new Presentation();
         $presentation->setType('slideshow');
-        $form = $this->get('form.factory')->createNamedBuilder('form_presentation', FormType::class, $presentation)
+        $form = $this->formFactory->createNamedBuilder('form_presentation', FormType::class, $presentation)
             ->add('title', TextType::class)
             ->add('type', ChoiceType::class, [
                 'choices' => $this->getTypeChoices($this->presentationTypeRegistry->getPresentationTypes()),
@@ -69,9 +93,8 @@ class PresentationsController extends Controller
             // @TODO make owner chosable
             $presentation->setOwner($user);
 
-            $em = $this->getDoctrine()->getManager();
-            $em->persist($presentation);
-            $em->flush();
+            $this->entityManager->persist($presentation);
+            $this->entityManager->flush();
             return $this->redirectToRoute('management-presentations');
         }
 
@@ -82,12 +105,11 @@ class PresentationsController extends Controller
 
     public function deletePresentationAction(int $presentationId): Response
     {
-        $em = $this->getDoctrine()->getManager();
         /** @var Presentation $presentation */
-        $presentation = $em->find('AppBundle:Presentation', $presentationId);
+        $presentation = $this->entityManager->find('AppBundle:Presentation', $presentationId);
 
         /** @var User $user */
-        $user = $this->get('security.token_storage')->getToken()->getUser();
+        $user = $this->tokenStorage->getToken()->getUser();
         if (!$user->isPresentationAllowed($presentation)) {
             throw new AccessDeniedException('User is not allowed to access presentation.');
         }
@@ -96,12 +118,12 @@ class PresentationsController extends Controller
         $this->scheduler->deleteAllScheduledPresentationsForPresentation($presentation);
 
         // delete presentation
-        $em->remove($presentation);
-        $em->flush();
+        $this->entityManager->remove($presentation);
+        $this->entityManager->flush();
 
         $this->addFlash(
             'success',
-            $this->get('translator')->trans('Presentation deleted') . ': ' . $presentation->getTitle()
+            $this->translator->trans('Presentation deleted') . ': ' . $presentation->getTitle()
         );
 
         return $this->redirectToRoute('management-presentations');
@@ -112,8 +134,7 @@ class PresentationsController extends Controller
      */
     public function getPresentationsForUser(User $user): array
     {
-        $em = $this->getDoctrine()->getManager();
-        return $user->getPresentations($em);
+        return $user->getPresentations($this->entityManager);
     }
 
     /**

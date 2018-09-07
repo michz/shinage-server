@@ -11,7 +11,7 @@ namespace AppBundle\Entity;
 use AppBundle\UserType;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
-use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\EntityManagerInterface;
 use FOS\UserBundle\Model\User as BaseUser;
 use Rollerworks\Bundle\PasswordStrengthBundle\Validator\Constraints as RollerworksPassword;
 
@@ -108,8 +108,12 @@ class User extends BaseUser
 
     /**
      * @return Presentation[]|array
+     *
+     * @deprecated
+     *
+     * @TODO Move this to own service. Entity should be thin.
      */
-    public function getPresentations(EntityManager $em): array
+    public function getPresentations(EntityManagerInterface $em): array
     {
         // @TODO Remove from here and move to own service
         $user = $this;
