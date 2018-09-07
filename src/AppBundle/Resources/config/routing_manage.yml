@@ -77,7 +77,7 @@ pool-get:
   controller: AppBundle\Controller\PoolController::getAction
   requirements:
     userRoot: "[^/]*"
-    path: .+
+    path: .*
 
 
 management-files:
@@ -95,8 +95,8 @@ management-files-el-thumbnail:
   path: /files-el-thumbnail/{base}/{file}
   controller: AppBundle\Controller\Management\FileManager::elThumbnailAction
   requirements:
-    base: .+
-    file: .+
+    base: .*
+    file: .*
 
 management-files-connector:
   path: /files-connector
