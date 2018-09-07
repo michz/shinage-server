@@ -3,7 +3,11 @@ fos_user:
 
 shinage_management:
   prefix: "manage"
-  resource: "@AppBundle/Resources/config/routing.yml"
+  resource: "@AppBundle/Resources/config/routing_manage.yml"
+
+shinage_presentations:
+  prefix: "presentations"
+  resource: "@AppBundle/Resources/config/routing_presentations.yml"
 
 shinage_api_v1:
   prefix: "/api/v1"

@@ -26,8 +26,8 @@ class PresentationTypeCompilerPass implements CompilerPassInterface
         $definition = $container->findDefinition(self::SERVICE_ID_REGISTRY);
         $taggedServices = $container->findTaggedServiceIds(self::SERVICE_TAG);
 
-        foreach ($taggedServices as $id => $tags) {
-            $definition->addMethodCall('addType', [new Reference($id)]);
+        foreach (array_keys($taggedServices) as $id) {
+            $definition->addMethodCall('addPresentationType', [new Reference($id)]);
         }
     }
 }

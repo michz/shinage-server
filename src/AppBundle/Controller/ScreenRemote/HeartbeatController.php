@@ -81,6 +81,9 @@ class HeartbeatController extends Controller
         ]);
     }
 
+    /**
+     * @deprecated
+     */
     public function presentationAction(Request $request, int $id): Response
     {
         // @TODO Sicherheit

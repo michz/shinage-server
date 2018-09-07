@@ -8,9 +8,10 @@ declare(strict_types=1);
 
 namespace AppBundle\Presentation;
 
-interface PresentationTypeInterface
+interface SettingsReaderInterface
 {
-    public function getSlug(): string;
-
-    public function getRenderer(): PresentationRendererInterface;
+    /**
+     * @return object|mixed
+     */
+    public function get(string $serializedSettings);
 }

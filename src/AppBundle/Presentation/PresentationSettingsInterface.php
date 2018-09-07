@@ -8,9 +8,6 @@ declare(strict_types=1);
 
 namespace AppBundle\Presentation;
 
-interface PresentationTypeInterface
+interface PresentationSettingsInterface
 {
-    public function getSlug(): string;
-
-    public function getRenderer(): PresentationRendererInterface;
 }

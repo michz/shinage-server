@@ -1,3 +1,7 @@
 services:
   AppBundle\Controller\:
     resource: ../../../Controller
+    autowire: true
+    autoconfigure: false
+    public: true
+    tags: ['controller.service_arguments']

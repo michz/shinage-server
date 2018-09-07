@@ -8,9 +8,9 @@ declare(strict_types=1);
 
 namespace AppBundle\Presentation;
 
-interface PresentationTypeInterface
-{
-    public function getSlug(): string;
+use AppBundle\Entity\Presentation;
 
-    public function getRenderer(): PresentationRendererInterface;
+interface PresentationRendererInterface
+{
+    public function render(Presentation $presentation): string;
 }
