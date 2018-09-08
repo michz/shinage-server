@@ -37,6 +37,7 @@ class Renderer implements PresentationRendererInterface
         $parsedSettings = $this->settingsReader->get($presentation->getSettings());
         $count = count($parsedSettings->getSlides());
 
+        $jqueryUrl = $this->assetPackages->getUrl('js/lib/jquery-3.1.1.min.js');
         $revealCssUrl = $this->assetPackages->getUrl('bundles/app/lib/reveal.js-3.7.0/css/reveal.css');
         $revealThemeUrl = $this->assetPackages->getUrl('bundles/app/css/reveal_theme_very_black.css');
         $revealHeadUrl = $this->assetPackages->getUrl('bundles/app/lib/reveal.js-3.7.0/lib/js/head.min.js');
@@ -61,17 +62,13 @@ class Renderer implements PresentationRendererInterface
                 $uniqueId = 'video-' . random_int(1, 10000); // @TODO better unique id (counter)
                 $slides .= "
                     <section 
-                        <!--data-autoslide='3000' 
+                        id='{$uniqueId}'
                         data-background-video='{$slide->getSrc()}'
-                        data-background-size='contain' -->
+                        data-background-size='contain'
                         >
-                        <video id='{$uniqueId}' src='{$slide->getSrc()}' autoplay></video>
-                        <script>
-                             var video = document.getElementById('{$uniqueId}');
-                             video.onended = function () {
-                                  Reveal.next();
-                             }
-                        </script>
+                        <!--
+                        <video id='{$uniqueId}' src='{$slide->getSrc()}'></video>
+                        -->
                     </section>
                 ";
             }
@@ -86,38 +83,51 @@ class Renderer implements PresentationRendererInterface
         <meta name='viewport' content='width=device-width, initial-scale=1, user-scalable=no'>
         <title></title>
         <style>
-          ::-webkit-scrollbar {
-              display: none;
-          }
-          
-          html, body {
-              margin: 0;
-              padding: 0;
-              overflow: hidden;
-              height: 100%;
-          }
-          
-          body {
-              max-height: 100%;
-              float: left;
-              width: 100%;
-          }
-          
-          #container {
-              display: block;
-              margin: 0;
-              padding: 0;
-              width: 100%;
-              min-width: 100%;
-              max-width: 100%;
-              height: 100%;
-              min-height: 100%;
-              max-height: 100%;
-              overflow: hidden;
-          }
-        
-          /* TODO */
+            ::-webkit-scrollbar {
+                display: none;
+            }
+            
+            html, body {
+                margin: 0;
+                padding: 0;
+                overflow: hidden;
+                height: 100%;
+            }
+            
+            body {
+                max-height: 100%;
+                float: left;
+                width: 100%;
+            }
+            
+            #container {
+                display: block;
+                margin: 0;
+                padding: 0;
+                width: 100%;
+                min-width: 100%;
+                max-width: 100%;
+                height: 100%;
+                min-height: 100%;
+                max-height: 100%;
+                overflow: hidden;
+            }
+            
+            #container .reveal section img,
+            #container .reveal section video {
+                display: block;
+                margin: 0;
+                padding: 0;
+                object-fit: cover;
+                width: 100%;
+                height: 100%;
+                max-width: 100%;
+                max-height: 100%;
+            }
+            
+            /* TODO */
         </style>
+        <script src='$jqueryUrl' type='text/javascript'></script>
         <link rel='stylesheet' href='$revealCssUrl' id='theme'>      
         <link rel='stylesheet' href='$revealThemeUrl' id='theme'>      
         <script src='$revealHeadUrl' type='text/javascript'></script>
@@ -164,7 +174,7 @@ class Renderer implements PresentationRendererInterface
                 previewLinks: false,
                 transition: 'none', // none/fade/slide/convex/concave/zoom
                 transitionSpeed: 'default', // default/fast/slow
-                backgroundTransition: 'fade', // none/fade/slide/convex/concave/zoom
+                backgroundTransition: 'none', // none/fade/slide/convex/concave/zoom
                 viewDistance: 3,
                 parallaxBackgroundImage: '',
                 parallaxBackgroundSize: '',
@@ -172,7 +182,11 @@ class Renderer implements PresentationRendererInterface
                 parallaxBackgroundVertical: null,
                 display: 'block'
 			});
-		</script>
+			
+			document.addEventListener('ended', function() {
+                Reveal.next();
+            }, true);
+        </script>
     </body>
 </html>
         ";
