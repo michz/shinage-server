@@ -13,7 +13,7 @@ use AppBundle\Entity\User;
 use AppBundle\Form\ApiKeyForm;
 use AppBundle\UserType;
 use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
-use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\EntityManagerInterface;
 use FOS\UserBundle\Doctrine\UserManager;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
@@ -24,12 +24,50 @@ use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Form;
 use Symfony\Component\Form\FormError;
+use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
+use Symfony\Component\Security\Core\Encoder\EncoderFactoryInterface;
+use Symfony\Component\Translation\TranslatorInterface;
 
 class AccountController extends Controller
 {
+    /** @var EntityManagerInterface */
+    private $entityManager;
+
+    /** @var TokenStorageInterface */
+    private $tokenStorage;
+
+    /** @var UserManager */
+    private $userManager;
+
+    /** @var TranslatorInterface */
+    private $translator;
+
+    /** @var FormFactoryInterface */
+    private $formFactory;
+
+    /** @var EncoderFactoryInterface */
+    private $encoderFactory;
+
+    public function __construct(
+        EntityManagerInterface $entityManager,
+        TokenStorageInterface $tokenStorage,
+        UserManager $userManager,
+        TranslatorInterface $translator,
+        FormFactoryInterface $formFactory,
+        EncoderFactoryInterface $encoderFactory
+    ) {
+        $this->entityManager = $entityManager;
+        $this->tokenStorage = $tokenStorage;
+        $this->userManager = $userManager;
+        $this->translator = $translator;
+        $this->formFactory = $formFactory;
+        $this->encoderFactory = $encoderFactory;
+    }
+
     public function indexAction(): RedirectResponse
     {
         return $this->redirectToRoute('account-edit');
@@ -38,17 +76,15 @@ class AccountController extends Controller
     public function editAction(Request $request): Response
     {
         /** @var User $user */
-        $user = $this->get('security.token_storage')->getToken()->getUser();
-        $userManager = $this->get('fos_user.user_manager');
-        $i18n = $this->get('translator');
+        $user = $this->tokenStorage->getToken()->getUser();
 
-        $form = $this->get('form.factory')->createNamedBuilder('form1name', FormType::class, $user)
+        $form = $this->formFactory->createNamedBuilder('form1name', FormType::class, $user)
             ->add('email', EmailType::class)
             //->add('password', PasswordType::class)
             ->add('save', SubmitType::class, ['label' => 'Save'])
             ->getForm();
 
-        $form_pw = $this->get('form.factory')->createNamedBuilder('form2name', FormType::class, $user)
+        $form_pw = $this->formFactory->createNamedBuilder('form2name', FormType::class, $user)
             ->add('old-password', PasswordType::class, ['label'=>'oldPassword', 'mapped' => false])
             ->add('plainPassword', RepeatedType::class, [
                 'type' => PasswordType::class,
@@ -66,7 +102,7 @@ class AccountController extends Controller
         $newApiKey->setOwner($user);
 
         // build AccessKey-form and handle submission
-        $formApiKeyBuilder = $this->get('form.factory')->createNamedBuilder('form3name', ApiKeyForm::class, $newApiKey);
+        $formApiKeyBuilder = $this->formFactory->createNamedBuilder('form3name', ApiKeyForm::class, $newApiKey);
         $createApiKeyForm = $formApiKeyBuilder->getForm();
         $this->handleCreateApiToken($request, $createApiKeyForm);
 
@@ -76,7 +112,7 @@ class AccountController extends Controller
 
                 if ($form->isSubmitted()) {
                     if ($form->isValid()) {
-                        $userManager->updateUser($user, true);
+                        $this->userManager->updateUser($user, true);
                         $this->addFlash('success', 'Die Änderungen wurden gespeichert.');
                     } else {
                         $this->addFlash(
@@ -92,8 +128,7 @@ class AccountController extends Controller
                 $form_pw->handleRequest($request);
 
                 if ($form_pw->isSubmitted()) {
-                    $encoderFactory = $this->get('security.encoder_factory');
-                    $encoder = $encoderFactory->getEncoder($user);
+                    $encoder = $this->encoderFactory->getEncoder($user);
 
                     if (!$encoder->isPasswordValid(
                         $user->getPassword(),
@@ -102,7 +137,7 @@ class AccountController extends Controller
                     )) {
                         // wrong old password
                         $form_pw->get('old-password')->addError(
-                            new FormError($i18n->trans('WrongOldPassword'))
+                            new FormError($this->translator->trans('WrongOldPassword'))
                         );
                     } else {
                         if ($form_pw->isValid()) {
@@ -114,7 +149,7 @@ class AccountController extends Controller
                                 // everythin seems ok, now set password and save
                                 $user->setPlainPassword($pw);
 
-                                $userManager->updateUser($user, true);
+                                $this->userManager->updateUser($user, true);
                                 $this->addFlash('success', 'Das Passwort wurde erfolgreich geändert.');
                             }
                         }
@@ -124,8 +159,7 @@ class AccountController extends Controller
         }
 
         // get API keys
-        $em = $this->getDoctrine()->getManager();
-        $rep = $em->getRepository('AppBundle:Api\AccessKey');
+        $rep = $this->entityManager->getRepository('AppBundle:Api\AccessKey');
         $apiKeys = $rep->findBy(['owner' => $user]);
 
         return $this->render('account/user.html.twig', [
@@ -138,11 +172,8 @@ class AccountController extends Controller
 
     public function orgaAction(Request $request): Response
     {
-        /** @var UserManager $userManager */
-        $userManager = $this->get('fos_user.user_manager');
         /** @var User $user */
-        $user = $this->get('security.token_storage')->getToken()->getUser();
-        $em = $this->getDoctrine()->getManager();
+        $user = $this->tokenStorage->getToken()->getUser();
 
         $orga_new = new User();
         $orga_new->setUserType(UserType::USER_TYPE_ORGA);
@@ -159,12 +190,12 @@ class AccountController extends Controller
                 $orga_new->setPassword('');
                 $orga_new->setPlainPassword('');
                 try {
-                    $userManager->updateUser($orga_new, true);
-                    $em->flush();
+                    $this->userManager->updateUser($orga_new, true);
+                    $this->entityManager->flush();
                     $user->addOrganization($orga_new);
-                    $userManager->updateUser($user);
-                    $em->flush();
-                    $em->refresh($orga_new); // needed to notify $user that he is in a new organization
+                    $this->userManager->updateUser($user);
+                    $this->entityManager->flush();
+                    $this->entityManager->refresh($orga_new); // needed to notify $user that he is in a new organization
                     $this->addFlash('success', 'Die neue Organisation wurde gespeichert.');
                 } catch (UniqueConstraintViolationException $ex) {
                     $this->addFlash(
@@ -189,13 +220,12 @@ class AccountController extends Controller
     public function orgaLeaveAction(int $id): RedirectResponse
     {
         /** @var User $user */
-        $user = $this->get('security.token_storage')->getToken()->getUser();
-        $em = $this->getDoctrine()->getManager();
+        $user = $this->tokenStorage->getToken()->getUser();
 
-        $organization = $em->find(User::class, $id);
+        $organization = $this->entityManager->find(User::class, $id);
         $user->removeOrganization($organization);
-        $em->persist($user);
-        $em->flush();
+        $this->entityManager->persist($user);
+        $this->entityManager->flush();
 
         $this->addFlash('success', 'Die Organisation wurde verlassen.');
         return $this->redirectToRoute('account-organizations');
@@ -205,11 +235,10 @@ class AccountController extends Controller
     {
         /** @var User $user */
         /** @var User $user_new */
-        $user = $this->get('security.token_storage')->getToken()->getUser();
-        $em = $this->getDoctrine()->getManager();
-        $rep = $em->getRepository('AppBundle:User');
+        $user = $this->tokenStorage->getToken()->getUser();
+        $rep = $this->entityManager->getRepository('AppBundle:User');
         $user_new = $rep->findOneBy(['email' => $request->get('email')]);
-        $orga = $em->find(User::class, $request->get('organization'));
+        $orga = $this->entityManager->find(User::class, $request->get('organization'));
 
         // check if user is allowed to edit organization
         if (!$user->getOrganizations()->contains($orga)) {
@@ -230,8 +259,8 @@ class AccountController extends Controller
 
         $user_new->addOrganization($orga);
 
-        $em->persist($user_new);
-        $em->flush();
+        $this->entityManager->persist($user_new);
+        $this->entityManager->flush();
 
         $this->addFlash(
             'success',
@@ -246,11 +275,10 @@ class AccountController extends Controller
         int $user_id
     ): RedirectResponse {
         /** @var User $user */
-        $user = $this->get('security.token_storage')->getToken()->getUser();
-        $em = $this->getDoctrine()->getManager();
+        $user = $this->tokenStorage->getToken()->getUser();
 
-        $organization = $em->find(User::class, $orga_id);
-        $user_other = $em->find(User::class, $user_id);
+        $organization = $this->entityManager->find(User::class, $orga_id);
+        $user_other = $this->entityManager->find(User::class, $user_id);
 
         // check if user is allowed to edit organization
         if (!$user->getOrganizations()->contains($organization)) {
@@ -259,8 +287,8 @@ class AccountController extends Controller
         }
 
         $user_other->removeOrganization($organization);
-        $em->persist($user_other);
-        $em->flush();
+        $this->entityManager->persist($user_other);
+        $$this->entityManagerem->flush();
 
         $this->addFlash('success', 'Die Benutzer (' . $user_other->getEmail() .
             ') wurde aus der Organisation (' . $organization->getName() . ') entfernt.');
@@ -269,15 +297,13 @@ class AccountController extends Controller
 
     public function deleteApiKeyAction(Request $request, int $id): RedirectResponse
     {
-        /** @var EntityManager $em */
-        $em = $this->getDoctrine()->getManager();
         /** @var User $user */
-        $user = $this->get('security.token_storage')->getToken()->getUser();
+        $user = $this->tokenStorage->getToken()->getUser();
 
-        $key = $em->find('AppBundle:Api\AccessKey', $id);
+        $key = $this->entityManager->find('AppBundle:Api\AccessKey', $id);
         if ($key->getOwner() === $user || $user->getOrganizations()->contains($key->getOwner())) {
-            $em->remove($key);
-            $em->flush();
+            $this->entityManager->remove($key);
+            $this->entityManager->flush();
 
             $this->addFlash('success', 'Der Schlüssel (' . $key->getCode() . ') wurde gelöscht.');
         } else {
@@ -297,9 +323,6 @@ class AccountController extends Controller
      */
     protected function handleCreateApiToken(Request $request, Form $createApiKeyForm): void
     {
-        /** @var EntityManager $em */
-        $em = $this->getDoctrine()->getManager();
-
         if ('POST' !== $request->getMethod() || !$request->request->has($createApiKeyForm->getName())) {
             return;
         }
@@ -317,7 +340,7 @@ class AccountController extends Controller
         // @TODO Debug: Standardrollen entfernen und konfigurierbar machen
         $apiKey->setRoles(['FILE_UPLOAD']);
 
-        $em->persist($apiKey);
-        $em->flush();
+        $this->entityManager->persist($apiKey);
+        $this->entityManager->flush();
     }
 }

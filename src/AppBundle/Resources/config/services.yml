@@ -41,11 +41,6 @@ services:
     app.apiroleregistry:
         class: AppBundle\Service\ApiRoleRegistry
 
-    app.remote.playable_builder:
-        class: AppBundle\Service\Remote\PlayableBuilder
-        arguments:
-            $router: "@router"
-
     app.registration.listener:
         class: AppBundle\EventListener\RegistrationListener
         arguments:

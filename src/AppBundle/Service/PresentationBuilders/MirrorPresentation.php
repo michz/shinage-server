@@ -13,7 +13,7 @@ use AppBundle\Entity\Presentation;
 /**
  * @deprecated
  */
-class MirrorPresentation implements PresentationBuilderInterface
+class MirrorPresentation
 {
     const PRESENTATION_TYPE = 'mirror';
 

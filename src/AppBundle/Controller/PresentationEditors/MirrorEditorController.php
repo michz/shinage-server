@@ -9,15 +9,37 @@ declare(strict_types=1);
 namespace AppBundle\Controller\PresentationEditors;
 
 use AppBundle\Entity\Presentation;
-use AppBundle\Entity\PresentationSettings\Mirror;
+use AppBundle\Presentation\Mirror\Settings;
+use Doctrine\ORM\EntityManagerInterface;
+use JMS\Serializer\SerializerInterface;
 use Symfony\Component\Form\Extension\Core\Type\FormType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 class MirrorEditorController extends AbstractPresentationEditor
 {
+    /** @var EntityManagerInterface */
+    private $entityManager;
+
+    /** @var SerializerInterface */
+    private $serializer;
+
+    /** @var FormFactoryInterface */
+    private $formFactory;
+
+    public function __construct(
+        EntityManagerInterface $entityManager,
+        SerializerInterface $serializer,
+        FormFactoryInterface $formFactory
+    ) {
+        $this->entityManager = $entityManager;
+        $this->serializer = $serializer;
+        $this->formFactory = $formFactory;
+    }
+
     public function editAction(Request $request, int $presentationId): Response
     {
         $presentation = $this->getPresentation($presentationId);
@@ -25,14 +47,13 @@ class MirrorEditorController extends AbstractPresentationEditor
             throw new \RuntimeException('Presentation type not supported.');
         }
 
-        $serializer = $this->get('jms_serializer');
         try {
-            $setttings = $serializer->deserialize($presentation->getSettings(), Mirror::class, 'json');
+            $setttings = $this->serializer->deserialize($presentation->getSettings(), Settings::class, 'json');
         } catch (\Throwable $ex) {
-            $setttings = new Mirror();
+            $setttings = new Settings();
         }
 
-        $form = $this->get('form.factory')
+        $form = $this->formFactory
             ->createNamedBuilder('form_presentation', FormType::class, $setttings)
             ->add('url', TextType::class)
             ->add('type', TextType::class)
@@ -42,11 +63,10 @@ class MirrorEditorController extends AbstractPresentationEditor
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $em = $this->get('doctrine.orm.entity_manager');
-            $presentation->setSettings($serializer->serialize($setttings, 'json'));
+            $presentation->setSettings($this->serializer->serialize($setttings, 'json'));
             $presentation->setLastModified(new \DateTime('now'));
-            $em->persist($presentation);
-            $em->flush();
+            $this->entityManager->persist($presentation);
+            $this->entityManager->flush();
 
             // @TODO Flash Message that save was successfull
         }

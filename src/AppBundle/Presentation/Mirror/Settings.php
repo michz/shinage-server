@@ -6,16 +6,11 @@ declare(strict_types=1);
  * Licensed under MIT. See file /LICENSE.
  */
 
-namespace AppBundle\Entity\PresentationSettings;
+namespace AppBundle\Presentation\Mirror;
 
 use JMS\Serializer\Annotation as JMS;
 
-/**
- * @deprecated
- *
- * @TODO Remove
- */
-class Mirror
+class Settings
 {
     /**
      * @var string
