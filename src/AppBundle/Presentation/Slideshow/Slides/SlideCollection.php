@@ -29,21 +29,14 @@ class SlideCollection
 
     /**
      * @param Slide[]|array $slides
-     *
-     * @return SlideCollection
      */
-    public function setSlides(array $slides): self
+    public function setSlides(array $slides): void
     {
         $this->slides = $slides;
-        return $this;
     }
 
-    /**
-     * @return $this
-     */
-    public function addSlide(Slide $slide): self
+    public function addSlide(Slide $slide): void
     {
         $this->slides[] = $slide;
-        return $this;
     }
 }

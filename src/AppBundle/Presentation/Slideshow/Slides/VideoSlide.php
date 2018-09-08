@@ -12,6 +12,8 @@ use JMS\Serializer\Annotation as JMS;
 
 /**
  * @JMS\ExclusionPolicy("NONE")
+ *
+ * @TODO Can Type be removed?
  */
 class VideoSlide extends Slide
 {
@@ -34,10 +36,9 @@ class VideoSlide extends Slide
         return $this->src;
     }
 
-    public function setSrc(string $src): self
+    public function setSrc(string $src): void
     {
         $this->src = $src;
-        return $this;
     }
 
     public function getType(): string
@@ -45,9 +46,8 @@ class VideoSlide extends Slide
         return $this->type;
     }
 
-    public function setType(string $type): self
+    public function setType(string $type): void
     {
         $this->type = $type;
-        return $this;
     }
 }

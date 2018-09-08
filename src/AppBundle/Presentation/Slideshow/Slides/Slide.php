@@ -48,10 +48,9 @@ class Slide
         return $this->duration;
     }
 
-    public function setDuration(int $duration): self
+    public function setDuration(int $duration): void
     {
         $this->duration = $duration;
-        return $this;
     }
 
     public function getTitle(): string
@@ -59,10 +58,9 @@ class Slide
         return $this->title;
     }
 
-    public function setTitle(string $title): self
+    public function setTitle(string $title): void
     {
         $this->title = $title;
-        return $this;
     }
 
     public function getTransition(): string
@@ -70,10 +68,9 @@ class Slide
         return $this->transition;
     }
 
-    public function setTransition(string $transition): self
+    public function setTransition(string $transition): void
     {
         $this->transition = $transition;
-        return $this;
     }
 
     public function getType(): string
@@ -81,9 +78,8 @@ class Slide
         return $this->type;
     }
 
-    public function setType(string $type): self
+    public function setType(string $type): void
     {
         $this->type = $type;
-        return $this;
     }
 }

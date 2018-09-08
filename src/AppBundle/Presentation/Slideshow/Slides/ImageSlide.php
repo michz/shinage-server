@@ -34,10 +34,9 @@ class ImageSlide extends Slide
         return $this->src;
     }
 
-    public function setSrc(string $src): self
+    public function setSrc(string $src): void
     {
         $this->src = $src;
-        return $this;
     }
 
     public function getType(): string
@@ -45,9 +44,8 @@ class ImageSlide extends Slide
         return $this->type;
     }
 
-    public function setType(string $type): Slide
+    public function setType(string $type): void
     {
         $this->type = $type;
-        return $this;
     }
 }

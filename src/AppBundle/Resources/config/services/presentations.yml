@@ -39,6 +39,7 @@ services:
     class: AppBundle\Presentation\Slideshow\Renderer
     arguments:
       - '@app.presentation.type.slideshow.settings_reader'
+      - '@assets.packages'
 
   app.presentation.type.slideshow.settings_reader:
     class: AppBundle\Presentation\GenericSettingsReader
