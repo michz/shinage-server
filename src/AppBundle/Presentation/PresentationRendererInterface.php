@@ -13,4 +13,6 @@ use AppBundle\Entity\Presentation;
 interface PresentationRendererInterface
 {
     public function render(Presentation $presentation): string;
+
+    public function getLastModified(Presentation $presentation): \DateTime;
 }

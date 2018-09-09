@@ -124,8 +124,6 @@ class Renderer implements PresentationRendererInterface
                 max-width: 100%;
                 max-height: 100%;
             }
-            
-            /* TODO */
         </style>
         <script src='$jqueryUrl' type='text/javascript'></script>
         <link rel='stylesheet' href='$revealCssUrl' id='theme'>      
@@ -190,5 +188,10 @@ class Renderer implements PresentationRendererInterface
     </body>
 </html>
         ";
+    }
+
+    public function getLastModified(Presentation $presentation): \DateTime
+    {
+        return $presentation->getLastModified();
     }
 }

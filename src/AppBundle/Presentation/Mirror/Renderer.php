@@ -78,4 +78,10 @@ class Renderer implements PresentationRendererInterface
 </html>
         ";
     }
+
+    public function getLastModified(Presentation $presentation): \DateTime
+    {
+        // @TODO Get remote last modified
+        return $presentation->getLastModified();
+    }
 }

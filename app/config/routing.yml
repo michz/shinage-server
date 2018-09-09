@@ -13,6 +13,10 @@ shinage_api_v1:
   prefix: "/api/v1"
   resource: "@AppBundle/Resources/config/routing/api_v1.yml"
 
+_screen_remote_api:
+  prefix: /screen-remote
+  resource: "@AppBundle/Resources/config/routing/screen_remote.yml"
+
 shinage_register:
   prefix: "/register"
   resource: "@AppBundle/Resources/config/routing/register.yml"

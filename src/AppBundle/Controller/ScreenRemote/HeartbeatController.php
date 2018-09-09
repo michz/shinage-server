@@ -11,17 +11,41 @@ namespace AppBundle\Controller\ScreenRemote;
 use AppBundle\Entity\Presentation;
 use AppBundle\Entity\Screen;
 use AppBundle\Exceptions\NoScreenGivenException;
+use AppBundle\Presentation\PresentationTypeRegistryInterface;
 use AppBundle\Service\ScreenAssociation;
-use JMS\Serializer\SerializerInterface;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Symfony\Component\HttpFoundation\File\Exception\AccessDeniedException;
-use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Routing\RouterInterface;
 
 class HeartbeatController extends Controller
 {
     const JSONP_DUMMY = 'REPLACE_JSONP_CALLBACK_DUMMY';
+
+    /** @var EntityManagerInterface */
+    private $entityManager;
+
+    /** @var PresentationTypeRegistryInterface */
+    private $presentationTypeRegistry;
+
+    /** @var ScreenAssociation */
+    private $screenAssociationHelper;
+
+    /** @var RouterInterface */
+    private $router;
+
+    public function __construct(
+        EntityManagerInterface $entityManager,
+        PresentationTypeRegistryInterface $presentationTypeRegistry,
+        ScreenAssociation $screenAssociationHelper,
+        RouterInterface $router
+    ) {
+        $this->entityManager = $entityManager;
+        $this->presentationTypeRegistry = $presentationTypeRegistry;
+        $this->screenAssociationHelper = $screenAssociationHelper;
+        $this->router = $router;
+    }
 
     public function heartbeatAction(Request $request, string $screenId): Response
     {
@@ -33,8 +57,7 @@ class HeartbeatController extends Controller
             ], 500);
         }
 
-        $em = $this->getDoctrine()->getManager();
-        $screen = $em->find(Screen::class, $screenId);
+        $screen = $this->entityManager->find(Screen::class, $screenId);
         if (null === $screen) {
             $screen = new Screen();
             $screen->setGuid($screenId);
@@ -48,15 +71,13 @@ class HeartbeatController extends Controller
         }
 
         // check if screen is associated
-        $assoc = $this->get('app.screenassociation');
-        /** @var ScreenAssociation $assoc */
-        $is_assoc = $assoc->isScreenAssociated($screen);
+        $is_assoc = $this->screenAssociationHelper->isScreenAssociated($screen);
         if (!$is_assoc) {
             $screen->setConnectCode($this->generateUniqueConnectcode());
         }
 
-        $em->persist($screen);
-        $em->flush();
+        $this->entityManager->persist($screen);
+        $this->entityManager->flush();
 
         $presentation = null;
         /** @var Presentation $current */
@@ -64,76 +85,28 @@ class HeartbeatController extends Controller
         if (null !== $current) {
             $presentation = $current;
 
-            /** @var PresentationBuilderChain $playableBuilderChain */
-            $playableBuilderChain = $this->get('app.presentation_builder_chain');
-            $playableBuilder = $playableBuilderChain->getBuilderForPresentation($current);
-            $lastModified = $playableBuilder->getLastModified($current);
+            $presentationType = $this->presentationTypeRegistry->getPresentationType($presentation->getType());
+            $renderer = $presentationType->getRenderer();
+            $lastModified = $renderer->getLastModified($current);
         } else {
             $lastModified = new \DateTime('now');
         }
 
+        $presentationId = null;
+        $presentationUrl = null;
+        if (null !== $presentation) {
+            $presentationId = $presentation->getId();
+            $presentationUrl = $request->getScheme() . '://' . $request->getHttpHost() .
+                $this->router->generate('presentation', ['id' => $presentationId]);
+        }
         return $this->json([
-            'status'        => 'ok',
-            'screen_status' => $is_assoc ? 'registered' : 'not_registered',
-            'connect_code'  => $screen->getConnectCode(),
-            'presentation'  => null !== $presentation ? $presentation->getId() : null,
-            'last_modified' => $lastModified ? $lastModified->format('Y-m-d H:i:s') : '0000-00-00 00:00:00',
+            'status'           => 'ok',
+            'screen_status'    => $is_assoc ? 'registered' : 'not_registered',
+            'connect_code'     => $screen->getConnectCode(),
+            'presentation'     => $presentationId,
+            'presentationUrl'  => $presentationUrl,
+            'last_modified'    => $lastModified ? $lastModified->format('Y-m-d H:i:s') : '0000-00-00 00:00:00',
         ]);
-    }
-
-    public function presentationAction(Request $request, int $id): Response
-    {
-        // @TODO Sicherheit
-
-        $em = $this->getDoctrine()->getManager();
-        $presentation = $em->find(Presentation::class, $id);
-        if (!$presentation) {
-            // @TODO better error handling/output
-            throw new \RuntimeException('Presentation not found.');
-        }
-
-        /** @var PresentationBuilderChain $playableBuilderChain */
-        $playableBuilderChain = $this->get('app.presentation_builder_chain');
-        $playableBuilder = $playableBuilderChain->getBuilderForPresentation($presentation);
-        $playable = $playableBuilder->buildPresentation($presentation);
-
-        /** @var SerializerInterface $serializer */
-        $serializer = $this->get('jms_serializer');
-        if (\is_string($playable)) {
-            $output = $playable;
-        } else {
-            $output = $serializer->serialize($playable, 'json');
-        }
-
-        $callback = $request->get('callback');
-        if (null !== $callback) {
-            if (0 === strpos($output, self::JSONP_DUMMY)) {
-                $output = substr_replace($output, $callback, 0, \strlen(self::JSONP_DUMMY));
-            } else {
-                $output = $callback . '(' . $output . ')';
-            }
-        }
-
-        return new Response($output, 200, [
-            'Content-Type' => 'application/json',
-        ]);
-    }
-
-    public function clientFileAction(string $file): Response
-    {
-        // @TODO check somehow security
-
-        $pool_base = realpath($this->getParameter('path_pool'));
-        $path = realpath($pool_base . '/' . $file);
-        if (0 !== strpos($path, $pool_base)) {
-            throw new AccessDeniedException();
-        }
-
-        $file = new File($path);
-        $response = new Response();
-        $response->headers->set('Content-Type', $file->getMimeType());
-        $response->setContent(file_get_contents($path));
-        return $response;
     }
 
     public function uploadScreenshotAction(Request $request): Response
@@ -159,8 +132,8 @@ class HeartbeatController extends Controller
 
     protected function generateUniqueConnectcode(): string
     {
-        $em = $this->getDoctrine()->getManager();
-        $rep = $em->getRepository('AppBundle:Screen');
+        $this->entityManager = $this->getDoctrine()->getManager();
+        $rep = $this->entityManager->getRepository('AppBundle:Screen');
 
         $code = '';
         $unique = false;
