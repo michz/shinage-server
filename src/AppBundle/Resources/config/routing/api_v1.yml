@@ -1,3 +1,25 @@
+api-v1-files-get:
+  path: /files/{path}
+  controller: AppBundle\Controller\Api\v1\FilesController:getAction
+  methods: [ GET ]
+  requirements:
+    path: ".+"
+
+api-v1-files-put:
+  path: /files/{path}
+  controller: AppBundle\Controller\Api\v1\FilesController:putAction
+  methods: [ PUT ]
+  requirements:
+    path: ".+"
+
+api-v1-files-delete:
+  path: /files/{path}
+  controller: AppBundle\Controller\Api\v1\FilesController:deleteAction
+  methods: [ DELETE ]
+  requirements:
+    path: ".+"
+
+# Old @deprecated  @TODO remove
 api-filepool-upload:
   path: /filepool/upload
   controller: AppBundle\Controller\Api\FilePool\Upload::uploadAction

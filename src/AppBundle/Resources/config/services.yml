@@ -29,8 +29,6 @@ services:
 
     app.filepool.permission_checker:
         class: AppBundle\Service\FilePoolPermissionChecker
-        arguments:
-            $filePool: "@app.filepool"
 
     app.filepool.url_builder:
         class: AppBundle\Service\FilePoolUrlBuilder

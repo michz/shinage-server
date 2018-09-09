@@ -10,12 +10,8 @@ namespace AppBundle\Service;
 
 use AppBundle\Entity\User;
 
-class FilePoolPermissionChecker
+class FilePoolPermissionChecker implements FilePoolPermissionCheckerInterface
 {
-    public function __construct(/* @scrutinizer ignore-unused */ FilePool $filePool)
-    {
-    }
-
     public function mayUserAccessRoot(User $user, string $root): bool
     {
         if ($root === 'user-' . $user->getId()) {
@@ -29,5 +25,11 @@ class FilePoolPermissionChecker
         }
 
         return false;
+    }
+
+    public function mayUserAccessPath(User $user, string $path): bool
+    {
+        $splittedPath = explode('/', $path, 2);
+        return $this->mayUserAccessRoot($user, $splittedPath[0]);
     }
 }
