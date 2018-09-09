@@ -10,7 +10,7 @@ namespace AppBundle\Presentation;
 
 use AppBundle\Entity\Presentation;
 
-class AnyPresentationRenderer
+class AnyPresentationRenderer implements AnyPresentationRendererInterface
 {
     /** @var PresentationTypeRegistryInterface */
     private $presentationTypeRegistry;

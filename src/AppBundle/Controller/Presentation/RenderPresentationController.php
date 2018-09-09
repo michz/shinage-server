@@ -9,7 +9,7 @@ declare(strict_types=1);
 namespace AppBundle\Controller\Presentation;
 
 use AppBundle\Entity\Presentation;
-use AppBundle\Presentation\AnyPresentationRenderer;
+use AppBundle\Presentation\AnyPresentationRendererInterface;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Response;
@@ -19,12 +19,12 @@ class RenderPresentationController extends Controller
     /** @var EntityManagerInterface */
     private $entityManager;
 
-    /** @var AnyPresentationRenderer */
+    /** @var AnyPresentationRendererInterface */
     private $anyPresentationRenderer;
 
     public function __construct(
         EntityManagerInterface $entityManager,
-        AnyPresentationRenderer $anyPresentationRenderer
+        AnyPresentationRendererInterface $anyPresentationRenderer
     ) {
         $this->entityManager = $entityManager;
         $this->anyPresentationRenderer = $anyPresentationRenderer;
