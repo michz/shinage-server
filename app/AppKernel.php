@@ -3,8 +3,11 @@ declare(strict_types=1);
 
 namespace shinage\serverApp;
 
+use AppBundle\Security\Factory\ApiTokenFactory;
 use mztx\ShinageOnlinePlayerBundle\ShinageOnlinePlayerBundle;
 use mztx\ShinagePlayerBundle\ShinagePlayerBundle;
+use Symfony\Bundle\SecurityBundle\DependencyInjection\SecurityExtension;
+use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpKernel\Kernel;
 use Symfony\Component\Config\Loader\LoaderInterface;
 
@@ -14,6 +17,14 @@ class AppKernel extends Kernel
     {
         parent::__construct($environment, $debug);
         date_default_timezone_set("Europe/Berlin");
+    }
+
+    protected function build(ContainerBuilder $container)
+    {
+        parent::build($container);
+        /** @var SecurityExtension $extension */
+        $extension = $container->getExtension('security');
+        $extension->addSecurityListenerFactory(new ApiTokenFactory());
     }
 
 

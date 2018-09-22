@@ -12,6 +12,10 @@ security:
             id: fos_user.user_provider.username_email
 
     firewalls:
+        apitoken_secured:
+            pattern: ^/api/v1
+            stateless: true
+            apitoken: true
         main:
             pattern: ^/
             form_login:

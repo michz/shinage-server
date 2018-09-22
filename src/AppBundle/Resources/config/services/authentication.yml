@@ -1,0 +1,16 @@
+services:
+  app.repository.api_access_key:
+    class: Doctrine\ORM\EntityRepository
+    factory: ['@doctrine.orm.default_entity_manager', getRepository]
+    arguments:
+      - AppBundle\Entity\Api\AccessKey
+
+  AppBundle\Security\Authentication\Provider\ApiTokenProvider:
+    public: false
+
+  AppBundle\Security\Firewall\ApiUserListener:
+    arguments:
+      $tokenStorage: '@security.token_storage'
+      $authenticationManager: '@security.authentication.manager'
+      $apiTokenRepository: '@app.repository.api_access_key'
+    public: false
