@@ -37,6 +37,7 @@ class Renderer implements PresentationRendererInterface
         $parsedSettings = $this->settingsReader->get($presentation->getSettings());
         $count = count($parsedSettings->getSlides());
 
+        // @TODO diese Dateien sind schon weitgehend per Gulp vorbereitet
         $jqueryUrl = $this->assetPackages->getUrl('js/lib/jquery-3.1.1.min.js');
         $revealCssUrl = $this->assetPackages->getUrl('bundles/app/lib/reveal.js-3.7.0/css/reveal.css');
         $revealThemeUrl = $this->assetPackages->getUrl('bundles/app/css/reveal_theme_very_black.css');

@@ -22,6 +22,8 @@ var paths = {
         'node_modules/fullcalendar/dist/fullcalendar.js',
         'node_modules/fullcalendar/dist/locale-all.js',
         'vendor/studio-42/elfinder/js/elfinder.full.js',
+        'src/AppBundle/Resources/private/js/lib/**',
+        'src/AppBundle/Resources/private/js/include/**',
     ],
     css: [
         'node_modules/reset-css/reset.css',
@@ -32,6 +34,18 @@ var paths = {
         'vendor/studio-42/elfinder/css/elfinder.full.css',
         'vendor/studio-42/elfinder/css/theme.css',
         'src/AppBundle/Resources/private/css/**',
+    ],
+    less: [
+    ],
+};
+var playerPaths = {
+    js: [
+        'node_modules/jquery/dist/jquery.js',
+        'shinage-client.js',
+    ],
+    css: [
+        'node_modules/reset-css/reset.css',
+        'src/AppBundle/Resources/private/player_css/**',
     ],
     less: [
     ],
@@ -68,7 +82,25 @@ gulp.task('js', ['clean'], function() {
         .pipe(gulp.dest(distPath));
 });
 
-gulp.task('default', ['copy', 'css', 'js']);
+gulp.task('player-css', ['clean'], function() {
+    return gulp.src(playerPaths.css)
+        .pipe(development(sourcemaps.init()))
+        .pipe(clean_css())
+        .pipe(concat('player.min.css'))
+        .pipe(development(sourcemaps.write()))
+        .pipe(gulp.dest(distPath));
+});
+
+gulp.task('player-js', ['clean'], function() {
+    return gulp.src(playerPaths.js)
+        .pipe(development(sourcemaps.init()))
+        .pipe(uglify())
+        .pipe(concat('player.min.js'))
+        .pipe(development(sourcemaps.write()))
+        .pipe(gulp.dest(distPath));
+});
+
+gulp.task('default', ['copy', 'css', 'js', 'player-css', 'player-js']);
 
 
 /*

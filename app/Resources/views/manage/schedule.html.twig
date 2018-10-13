@@ -71,8 +71,6 @@
 
 {# Styles for placement in <head> tag #}
 {% block stylesheets %}
-    <link rel="stylesheet" href="{{ asset('css/jquery.datetimepicker.css') }}">
-
     <style>
         #calendar {
             width:100%;
@@ -88,9 +86,6 @@
         var uri_change_scheduled = '{{ path('management-change-scheduled') }}';
         var uri_delete_scheduled = '{{ path('management-delete-scheduled') }}';
     </script>
-
-    <script src="{{ asset('js/jquery.datetimepicker.full.min.js') }}"></script>
-    <script src="{{ asset('js/scheduler.js') }}"></script>
 
     <script>
         var showCreateDialog = function(start, stop, success) {

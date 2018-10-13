@@ -17,6 +17,7 @@
     },
     "require": {
         "php": ">=7.1.0",
+        "ext-json": "*",
         "mztx/shinage-player-bundle": "~0.1",
         "symfony/symfony": "^3.2",
         "doctrine/orm": "^2.5",
@@ -59,8 +60,7 @@
             "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::clearCache",
             "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::installAssets",
             "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::installRequirementsFile",
-            "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::prepareDeploymentTarget",
-            "AppBundle\\Composer\\ElFinderInstallerHandler::installElFinderAssets"
+            "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::prepareDeploymentTarget"
         ],
         "post-install-cmd": [
             "@symfony-scripts",

@@ -3,52 +3,30 @@
 <head>
     <meta charset="UTF-8" />
     <title>Shinage Presentation</title>
-    <link rel="stylesheet" type="text/css" href="{{ asset('bundles/app/css/reset.css') }}" />
-
-    <link rel="stylesheet" type="text/css" href="{{ asset('bundles/app/css/shinclient.css') }}" />
+    <link rel="stylesheet" type="text/css" href="{{ asset('assets/player.min.css') }}" />
 
     {% block stylesheets %}{% endblock %}
-
-    {#<link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}" />#}
 </head>
 <body>
 
-{#
-    {% for slide in presentation.getSlides() %}
-        {{ dump(slide) }}
-    {% endfor %}
-#}
-
-    {# main content #}
-    {#
-    {% block body %}{% endblock %}
-    #}
-
-
-
-<div id="ajax-loading">
-    <img src="{{ asset('img/spin.gif') }}">
-</div>
-
-
+    <div id="ajax-loading">
+        <img src="{{ asset('img/spin.gif') }}">
+    </div>
 
     <script>
         var img_base = "{{ path('screen-remote-client-file', {'file': ''}) }}";
         var slides = {{ slides_json|raw }};
     </script>
 
-<script src="{{ asset('js/lib/jquery-3.1.1.min.js') }}"></script>
-<script src="{{ asset('js/shinage-client.js') }}"></script>
+    <script src="{{ asset('assets/player.min.js') }}"></script>
 
-{% block scripts %}{% endblock %}
+    {% block scripts %}{% endblock %}
 
-
-
-<script>
-    $(function() {
-        ajaxLoadHide();
-    });
-</script>
+    <script>
+        $(function() {
+            ajaxLoadHide();
+        });
+    </script>
 
 </body>
 </html>
