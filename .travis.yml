@@ -30,7 +30,7 @@ script:
 
 before_deploy:
   - mkdir ./build
-  - tar --exclude="./build" --exclude="./var/cache/dev" --exclude="./var/cache/*/" --exclude="./var/logs/*.log" --exclude="./var/sessions/dev" --exclude="./var/sessions/test" --transform 's,^,shinage-server/,' -czf ./build/shinage-server-release.tar.gz .
+  - tar --exclude="./build" --exclude="./var/cache/dev" --exclude="./var/cache/*/" --exclude="./var/logs/*.log" --exclude="./var/sessions/dev" --exclude="./var/sessions/test" --transform 's,^\./,,' -czf ./build/shinage-server-release.tar.gz .
 
 deploy:
   provider: releases
