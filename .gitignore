@@ -13,9 +13,14 @@
 !var/sessions/.gitkeep
 !var/SymfonyRequirements.php
 /vendor/
+/web/assets/
+/web/semantic-ui-css/
 /web/bundles/
 /web/js/elfinder/
 /web/css/elfinder/
+/web/jquery-ui-dist/
+/web/vendor/
+/node_modules/
 
 tests/_output/*
 

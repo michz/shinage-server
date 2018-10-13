@@ -10,6 +10,8 @@ before_script:
   - mysql -e 'CREATE DATABASE shinage_test;'
   - cp app/config/parameters.yml.travis app/config/parameters.yml
   - composer install #--prefer-source
+  - npm install
+  - NODE_ENV=production ./node_modules/.bin/gulp
   - php bin/console assets:install --env=test
   - php bin/console doctrine:database:create --env=test
   - php bin/console doctrine:schema:create --env=test
@@ -26,3 +28,4 @@ script:
   - ./vendor/bin/phpspec run --no-code-generation
   - ./vendor/bin/behat --strict -n --tags="~@todo"
 
+# @TODO deployment

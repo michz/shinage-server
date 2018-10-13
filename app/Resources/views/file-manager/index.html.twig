@@ -14,11 +14,6 @@
 {% endblock %}
 
 {% block scripts %}
-
-    <script src="{{ asset('js/jquery-ui/jquery-ui.min.js') }}"></script>
-    <script src="{{ asset('js/elfinder/elfinder.min.js') }}"></script>
-    <script src="{{ asset('js/elfinder/elfinder.de.js') }}"></script>
-
     <script>
         var options = {
             url  : '{{ path('management-files-connector') }}',
@@ -83,9 +78,4 @@
         };
         $('#elfinder').elfinder(options);
     </script>
-{% endblock %}
-
-{% block stylesheets %}
-    <link rel="stylesheet" type="text/css" href="{{ asset('js/jquery-ui/jquery-ui.min.css') }}">
-    <link rel="stylesheet" type="text/css" href="{{ asset('css/elfinder/css/elfinder.min.css') }}">
 {% endblock %}

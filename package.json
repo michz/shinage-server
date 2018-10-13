@@ -1,0 +1,17 @@
+{
+  "dependencies": {
+    "del": "^3.0.0",
+    "fullcalendar": "^3.9.0",
+    "gulp": "^3.9.1",
+    "gulp-clean-css": "^3.10.0",
+    "gulp-concat": "^2.6.1",
+    "gulp-environments": "^0.1.2",
+    "gulp-sourcemaps": "^2.6.4",
+    "gulp-uglify": "^3.0.1",
+    "jquery": "^3.3.1",
+    "jquery-ui-dist": "^1.12.1",
+    "moment": "^2.22.2",
+    "reset-css": "^4.0.1",
+    "semantic-ui-css": "^2.4.0"
+  }
+}

@@ -71,19 +71,10 @@
 
 {# Styles for placement in <head> tag #}
 {% block stylesheets %}
-    <link rel="stylesheet" href="{{ asset('js/fullcalendar/fullcalendar.min.css') }}" media="all">
-    <link rel="stylesheet" href="{{ asset('js/fullcalendar/fullcalendar.print.min.css') }}" media="print">
-
     <link rel="stylesheet" href="{{ asset('css/jquery.datetimepicker.css') }}">
-
-    <link rel="stylesheet" type="text/css" href="{{ asset('js/jquery-ui/jquery-ui.min.css') }}">
 
     <style>
         #calendar {
-            /*
-            max-width: 900px;
-            margin: 0 auto;
-             */
             width:100%;
         }
     </style>
@@ -97,10 +88,6 @@
         var uri_change_scheduled = '{{ path('management-change-scheduled') }}';
         var uri_delete_scheduled = '{{ path('management-delete-scheduled') }}';
     </script>
-    <script src="{{ asset('js/lib/moment.min.js') }}"></script>
-    <script src="{{ asset('js/lib/fullcalendar.min.js') }}"></script>
-    <script src="{{ asset('js/lib/fullcalendar-locale-all.js') }}"></script>
-    <script src="{{ asset('js/jquery-ui/jquery-ui.min.js') }}"></script>
 
     <script src="{{ asset('js/jquery.datetimepicker.full.min.js') }}"></script>
     <script src="{{ asset('js/scheduler.js') }}"></script>

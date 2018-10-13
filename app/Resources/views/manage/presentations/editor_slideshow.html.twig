@@ -80,10 +80,6 @@
 
 
 {% block scripts %}
-    <script src="{{ asset('js/jquery-ui/jquery-ui.min.js') }}"></script>
-    <script src="{{ asset('js/elfinder/elfinder.min.js') }}"></script>
-    <script src="{{ asset('js/elfinder/elfinder.de.js') }}"></script>
-
     <script>
         document.addEventListener(
             'DOMContentLoaded',
@@ -167,9 +163,4 @@
             false
         );
     </script>
-{% endblock %}
-
-{% block stylesheets %}
-    <link rel="stylesheet" type="text/css" href="{{ asset('js/jquery-ui/jquery-ui.min.css') }}">
-    <link rel="stylesheet" type="text/css" href="{{ asset('css/elfinder/css/elfinder.min.css') }}">
 {% endblock %}
