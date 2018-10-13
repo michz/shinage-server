@@ -28,4 +28,15 @@ script:
   - ./vendor/bin/phpspec run --no-code-generation
   - ./vendor/bin/behat --strict -n --tags="~@todo"
 
-# @TODO deployment
+before_deploy:
+  - mkdir ./build
+  - tar --exclude="./build" --exclude="./var/cache/dev" --exclude="./var/cache/*/" --exclude="./var/logs/*.log" --exclude="./var/sessions/dev" --exclude="./var/sessions/test" --transform 's,^,/shinage-server/,' -czf ./build/shinage-server-release.tar.gz .
+
+deploy:
+  provider: releases
+  api_key:
+    secure: "RWMR90jWRYx2Bezal5+T/pQaXUQhHG7+pHSwV+uKjlLOEVtmWKQRCdmPl0LHc2TcOpDor/ql9fjE9PocoKp+xsZSBWhA8mgfp6RLC5yM9bUBQgvawibuRdyxfxA8D0K8aju3bt5+qvuER8OQrvle4knHwPu2LQC5Q0ZKz5wxH4xAdcuBoWKG2iEhupCKienvnapXKBvFFrvrbjff4Fi+/HQsbon+RndlQgoj1pQ5Q1mxq4EiQQYvRBseyf0BFfPUt51AUtCQIzwrf4w+2rlE+45RDrkCqa6M5exRpSu2haB+h7/nRNErstyUP+V+0Jw6ftSOBxt1xcBiHkklBKpaIfzFsNax+erxv35oOFs2xhTigZNhwJCLsvv/UL6mqCnAUmmVrj6mD4rOXKdVVdI4WBOq5F4y6bpqfOLvboVbXpWoyCRD/zwnd6EQdIEX/2/dtIRFZJIv2lxl8C6baifpIZCkwyVoaN5cxQrxs1sTe4/z3Bkt+cG5TaYI+nr9Aeve5NtAxo5SrRHA/UtBeAJxdHSjYbwXvYp6rTodUz9sAO7KinDbiMAiTPzZEOmxbKD0fBSXxv1ZeC7R5Qsb4fTlHTlRaK3Xu5zSePJRYtBfXXGS/1IzHhhAZzoDklBXzSBQ1HllAkY9IBCZ42nBVklP1zEYBMoyuaBHGSai4Hpc9kM="
+  file: "./build/shinage-server-release.tar.gz"
+  skip_cleanup: true
+  on:
+    tags: true
