@@ -93,6 +93,13 @@ knp_menu:
 
 jms_serializer:
 
+doctrine_migrations:
+    dir_name: '%kernel.project_dir%/src/Migrations'
+    namespace: DoctrineMigrations
+    table_name: 'migration_versions'
+    name: 'Application Migrations'
+    organize_migrations: BY_YEAR_AND_MONTH
+    custom_template: ~
 
 shinage_player:
   uuid: "00000000-0000-0000-0000-000000000000"

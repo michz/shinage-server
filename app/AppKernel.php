@@ -46,6 +46,7 @@ class AppKernel extends Kernel
             new \Rollerworks\Bundle\PasswordStrengthBundle\RollerworksPasswordStrengthBundle(),
             new \Knp\Bundle\MenuBundle\KnpMenuBundle(),
             new \JMS\SerializerBundle\JMSSerializerBundle(),
+            new \Doctrine\Bundle\MigrationsBundle\DoctrineMigrationsBundle(),
 
             new \AppBundle\AppBundle(),
 
