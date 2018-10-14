@@ -30,10 +30,11 @@ script:
 
 before_deploy:
   - mkdir ./build
-  - rm -f .scrutinizer.yml .travis.yml package* behat.yml codeception.yml install-git-hooks.php phpspec.yml
+  - rm -f .scrutinizer.yml .travis.yml .gitignore .web-server-pid
+  - rm -f easy-coding-standard.yml package* behat.yml codeception.yml install-git-hooks.php phpspec.yml gulpfile.js
   - rm -rf node_modules/  var/cache/dev/ var/cache/test/ var/session/dev/ var/session/test/ .git/ etc/ features/ git-hooks/
-  - tar --exclude="./build" --exclude="./var/logs/*.log" --transform 's,^\./,,' -czf ./build/shinage-server-release.tar.gz .
   - echo "${TRAVIS_BRANCH}" > REVISION
+  - tar --exclude="./build" --exclude="./var/logs/*.log" --transform 's,^\./,,' -czf ./build/shinage-server-release.tar.gz .
 
 deploy:
   provider: releases
