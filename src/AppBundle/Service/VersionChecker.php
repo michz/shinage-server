@@ -10,11 +10,24 @@ namespace AppBundle\Service;
 
 class VersionChecker
 {
+    /** @var string */
+    private $rootPath;
+
+    public function __construct(string $rootPath)
+    {
+        $this->rootPath = $rootPath;
+    }
+
     /**
      * Returns the current installed version.
      */
     public function getVersion(): string
     {
+        $filename = $this->rootPath . '/REVISION';
+        if (file_exists($filename)) {
+            return trim(file_get_contents($filename));
+        }
+
         $exitCode = 0;
 
         // try to get exact tag

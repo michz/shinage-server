@@ -73,3 +73,5 @@ services:
 
     app.version_checker:
         class: AppBundle\Service\VersionChecker
+        arguments:
+            $rootPath: "%kernel.root_dir%/../"
