@@ -5,3 +5,6 @@ services:
       $screenAssociation: '@app.screenassociation'
     tags:
     - security.voter
+
+  app.security.path_checker:
+    class: AppBundle\Security\PathChecker
