@@ -8,6 +8,9 @@ declare(strict_types=1);
 
 namespace AppBundle\Service;
 
+/**
+ * @deprecated Replace by 'API scopes'
+ */
 class ApiRoleRegistry
 {
     /** @var string[]|array */
