@@ -32,6 +32,17 @@ default:
 
         - behat.mink
 
+    api_v1_features:
+      paths:
+        - "%paths.base%/features/Api/v1"
+      contexts_services:
+        - shinage.server.behat.context.hook.purge
+
+        - shinage.server.behat.context.api.v1.file_pool
+        - shinage.server.behat.context.setup.file_pool
+        - shinage.server.behat.context.setup.user
+        - shinage.server.behat.context.general_webpages
+
   extensions:
     Behat\MinkExtension:
       base_url:  'http://localhost:8000/app_test.php'
