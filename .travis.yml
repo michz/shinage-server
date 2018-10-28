@@ -14,8 +14,7 @@ before_script:
   - NODE_ENV=production ./node_modules/.bin/gulp
   - php bin/console assets:install --env=test
   - php bin/console doctrine:database:create --env=test
-  - php bin/console doctrine:schema:create --env=test
-  - php bin/console doctrine:schema:update --force --env=test
+  - php bin/console doctrine:migrations:migrate --env=test
   - php bin/console doctrine:fixtures:load -n --env=test
   - php bin/console server:start 127.0.0.1:8000 --env=test
 
