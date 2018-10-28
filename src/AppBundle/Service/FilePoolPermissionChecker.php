@@ -9,9 +9,19 @@ declare(strict_types=1);
 namespace AppBundle\Service;
 
 use AppBundle\Entity\User;
+use AppBundle\Security\PathCheckerInterface;
 
 class FilePoolPermissionChecker implements FilePoolPermissionCheckerInterface
 {
+    /** @var PathCheckerInterface */
+    private $pathChecker;
+
+    public function __construct(
+        PathCheckerInterface $pathChecker
+    ) {
+        $this->pathChecker = $pathChecker;
+    }
+
     public function mayUserAccessRoot(User $user, string $root): bool
     {
         if ($root === 'user-' . $user->getId()) {
@@ -30,6 +40,33 @@ class FilePoolPermissionChecker implements FilePoolPermissionCheckerInterface
     public function mayUserAccessPath(User $user, string $path): bool
     {
         $splittedPath = explode('/', $path, 2);
-        return $this->mayUserAccessRoot($user, $splittedPath[0]);
+        $root = $splittedPath[0];
+        if (false === $this->mayUserAccessRoot($user, $root)) {
+            return false;
+        }
+
+        if ('/' === $path[0]) {
+            $path = substr($path, 1);
+        }
+
+        return $this->pathChecker->inAllowedBasePaths(
+            $path,
+            $this->getAllowedRoots($user)
+        );
+    }
+
+    /**
+     * @return array|string[]
+     */
+    private function getAllowedRoots(User $user): array
+    {
+        $roots = [];
+        $roots[] = 'user-' . $user->getId() . '/';
+
+        foreach ($user->getOrganizations() as $organization) {
+            $roots[] = 'orga-' . $organization->getId() . '/';
+        }
+
+        return $roots;
     }
 }

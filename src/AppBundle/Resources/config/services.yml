@@ -30,6 +30,8 @@ services:
 
     app.filepool.permission_checker:
         class: AppBundle\Service\FilePoolPermissionChecker
+        arguments:
+            $pathChecker: '@app.security.path_checker'
 
     app.filepool.url_builder:
         class: AppBundle\Service\FilePoolUrlBuilder
