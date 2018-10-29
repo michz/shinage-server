@@ -18,6 +18,7 @@ use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 class FilesController extends Controller
@@ -119,9 +120,25 @@ class FilesController extends Controller
 
     public function deleteAction(string $path): Response
     {
+        $path = $this->virtualPathResolver->replaceVirtualBasePath($path);
         $this->checkPathPermissions($path);
-        // @TODO if path is file, delete
-        // @TODO if path is directory, delete it recursively
+        $fullPath = $this->getFullPath($path);
+
+        if (\is_dir($fullPath)) {
+            $deleted = @rmdir($fullPath);
+            if (false === $deleted) {
+                throw new BadRequestHttpException('Directory not empty.');
+            }
+        } elseif (\is_file($fullPath)) {
+            $deleted = @unlink($fullPath);
+            if (false === $deleted) {
+                throw new BadRequestHttpException('File could not be deleted.');
+            }
+        } else {
+            throw new NotFoundHttpException('File could not be deleted. Not found or not a regular file.');
+        }
+
+        return Response::create('', Response::HTTP_NO_CONTENT);
     }
 
     private function checkPathPermissions(string $path): void

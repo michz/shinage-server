@@ -21,17 +21,17 @@ Feature: In order to manage files remotely
   Scenario: I cannot get a list of files and directories of another user's directory
     Given I use the api key "testapikey"
     When I get the file pool contents of "/user:othertester@shinage.test"
-    Then I get an Access Denied response
+    Then I should get an Access Denied response
 
   Scenario: I cannot get a list of files and directories in root directory
     Given I use the api key "testapikey"
     When I get the file pool contents of "/"
-    Then I get an Not Found response
+    Then I should get a Not Found response
 
   Scenario: I cannot get a list of files and directories from a non existing user
     Given I use the api key "testapikey"
     When I get the file pool contents of "/user:you-dont-get-me@nowhere.test"
-    Then I get an Access Denied response
+    Then I should get an Access Denied response
 
   Scenario: I can upload a file
     Given I use the api key "testapikey"
@@ -39,7 +39,7 @@ Feature: In order to manage files remotely
       """
       Content of the file.
       """
-    Then I get an No Content response
+    Then I should get a No Content response
 
   Scenario: I can upload and see a file
     Given I use the api key "testapikey"
@@ -84,7 +84,7 @@ Feature: In order to manage files remotely
       """
       Content of the file.
       """
-    Then I get an Bad Request response
+    Then I should get a Bad Request response
 
   Scenario: I cannot upload a file named like an existing directory
     Given I use the api key "testapikey"
@@ -96,4 +96,33 @@ Feature: In order to manage files remotely
       """
       Content of the file.
       """
-    Then I get an Bad Request response
+    Then I should get a Bad Request response
+
+  Scenario: I can delete a file
+    Given I use the api key "testapikey"
+    When I delete at "/user:apitester@shinage.test/dir1/file1"
+    And I get the file pool contents of "/user:apitester@shinage.test/dir1/"
+    Then I can see that the api response does not contain file "file.txt"
+
+  Scenario: I cannot delete a non existing file
+    Given I use the api key "testapikey"
+    When I delete at "/user:apitester@shinage.test/dir5/file8"
+    Then I should get a Not Found response
+
+  Scenario: I can delete an empty directory
+    Given I use the api key "testapikey"
+    When I delete at "/user:apitester@shinage.test/dir1/file1"
+    Then I should get a No Content response
+    When I delete at "/user:apitester@shinage.test/dir1"
+    Then I should get a No Content response
+
+  Scenario: I cannot delete a non empty directory
+    Given I use the api key "testapikey"
+    When I delete at "/user:apitester@shinage.test/dir1"
+    Then I should get a Bad Request response
+
+  Scenario: I cannot delete a file above my root
+    Given I use the api key "testapikey"
+    When I delete at "/user:apitester@shinage.test/dir5/..%2F..%2F..%2F..%2Fetc/passwd"
+    Then I should get an Access Denied response
+

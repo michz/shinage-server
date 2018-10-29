@@ -88,32 +88,25 @@ class FilePoolContext implements Context
     }
 
     /**
-     * @Then /^I can see that the api request was successfull$/
+     * @Then /^I can see that the api response does not contain (file|directory) "([^"]*)"$/
      */
-    public function iCanSeeThatTheApiRequestWasSuccessfull()
+    public function iCanSeeThatTheApiResponseDoesNotContainFile(string $type, string $content)
     {
-        Assert::notNull($this->response);
-        Assert::eq($this->response->getStatusCode(), 200);
-    }
+        if ($this->responseStatusCode < 200 || $this->responseStatusCode > 299) {
+            throw new \Exception('Invalid API response: ' . $this->rawResponse);
+        }
 
-    /**
-     * @Then /^I get an Access Denied response$/
-     */
-    public function iGetAnAccessDeniedResponse()
-    {
-        Assert::notNull($this->response);
-        Assert::eq($this->responseStatusCode, 403);
-    }
+        if ('directory' === $type && '/' !== substr($content, -1)) {
+            $content .= '/';
+        }
 
-    /**
-     * @Then /^I get an Not Found response$/
-     */
-    public function iGetAnInvalidArgumentExceptionResponse()
-    {
-        Assert::notNull($this->response);
-        Assert::eq($this->responseStatusCode, 404);
-        $json = \json_decode($this->rawResponse, true);
-        Assert::eq($json['type'], 'Symfony\\Component\\HttpKernel\\Exception\\NotFoundHttpException');
+        $json = \json_decode($this->rawResponse);
+        if (true === \in_array($content, $json)) {
+            throw new \Exception(
+                'Directory listing content found. Expected NOT to find "' . $content .
+                '", but found it: ' . \var_export($json, true)
+            );
+        }
     }
 
     /**
@@ -121,7 +114,6 @@ class FilePoolContext implements Context
      */
     public function iPutAFileToWithContents(string $path, PyStringNode $content)
     {
-
         $client = new Client();
         $this->response = $client->request(
             'put',
@@ -140,21 +132,71 @@ class FilePoolContext implements Context
     }
 
     /**
-     * @Then /^I get an No Content response$/
+     * @When /^I delete at "([^"]*)"$/
      */
-    public function iGetAnNoContentResponse()
+    public function iDeleteAt(string $path)
+    {
+        $client = new Client();
+        $this->response = $client->request(
+            'delete',
+            $this->baseUrl . '/api/v1/files' . $path,
+            [
+                'headers' => [
+                    'x-api-token' => $this->apiKey,
+                ],
+                'http_errors' => false,
+            ]
+        );
+
+        $this->responseStatusCode = $this->response->getStatusCode();
+        $this->rawResponse = $this->response->getBody()->getContents();
+    }
+
+    /**
+     * @Then /^I can see that the api request was successfull$/
+     */
+    public function iCanSeeThatTheApiRequestWasSuccessfull()
+    {
+        Assert::notNull($this->response);
+        Assert::eq($this->response->getStatusCode(), 200);
+    }
+
+    /**
+     * @Then /^I should get a No Content response$/
+     */
+    public function iShouldGetANoContentResponse()
     {
         Assert::notNull($this->response);
         Assert::eq($this->responseStatusCode, 204);
     }
 
     /**
-     * @Then /^I get an Bad Request response$/
+     * @Then /^I should get a Bad Request response$/
      */
-    public function iGetAnBadRequestResponse()
+    public function iShouldGetABadRequestResponse()
     {
         Assert::notNull($this->response);
         Assert::eq($this->responseStatusCode, 400);
+    }
+
+    /**
+     * @Then /^I should get an Access Denied response$/
+     */
+    public function iShouldGetAnAccessDeniedResponse()
+    {
+        Assert::notNull($this->response);
+        Assert::eq($this->responseStatusCode, 403);
+    }
+
+    /**
+     * @Then /^I should get a Not Found response$/
+     */
+    public function iShouldGetANotFoundResponse()
+    {
+        Assert::notNull($this->response);
+        Assert::eq($this->responseStatusCode, 404);
+        $json = \json_decode($this->rawResponse, true);
+        Assert::eq($json['type'], 'Symfony\\Component\\HttpKernel\\Exception\\NotFoundHttpException');
     }
 
     /**
