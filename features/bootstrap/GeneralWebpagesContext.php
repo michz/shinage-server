@@ -10,7 +10,6 @@ namespace shinage\server\behat;
 
 class GeneralWebpagesContext extends \Behat\MinkExtension\Context\RawMinkContext
 {
-
     /**
      * @Given /^I see a headline "([^"]*)"$/
      */

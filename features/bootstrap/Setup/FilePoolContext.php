@@ -8,23 +8,39 @@ declare(strict_types=1);
 
 namespace shinage\server\behat\Setup;
 
+use AppBundle\Entity\User;
 use Behat\Behat\Context\Context;
+use Doctrine\ORM\EntityManagerInterface;
 
 class FilePoolContext implements Context
 {
+    /** @var EntityManagerInterface */
+    private $entityManager;
+
     /** @var string */
     private $basePath;
 
-    public function __construct(string $basePath)
-    {
+    public function __construct(
+        EntityManagerInterface $entityManager,
+        string $basePath
+    ) {
+        $this->entityManager = $entityManager;
         $this->basePath = $basePath;
     }
 
     /**
-     * @Given /^In the pool there is a file "([^"]*)" with content "([^"]*)"$/
+     * @Given /^In the pool the user "([^"]*)" has a file "([^"]*)" with content "([^"]*)"$/
      */
-    public function inThePoolThereIsAFileWithContent(string $name, string $content)
+    public function inThePoolTheUserHasAFileWithContent(string $userName, string $name, string $content)
     {
+        $user = $this->entityManager->getRepository(User::class)->findOneBy(['username' => $userName]);
+        $id = $user->getId();
 
+        $fullPath = $this->basePath . '/user-' . $id  . '/' . $name;
+        $path = dirname($fullPath);
+        if (false === is_dir($path)) {
+            mkdir($path, 0777, true);
+        }
+        file_put_contents($fullPath, $content);
     }
 }
