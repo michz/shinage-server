@@ -2,6 +2,7 @@ imports:
     - { resource: services/authentication.yml }
     - { resource: services/controllers.yml }
     - { resource: services/menus.yml }
+    - { resource: services/pool.yml }
     - { resource: services/presentations.yml }
     - { resource: services/security.yml }
 

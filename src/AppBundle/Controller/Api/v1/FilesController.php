@@ -11,6 +11,7 @@ namespace AppBundle\Controller\Api\v1;
 use AppBundle\Controller\Api\Exception\AccessDeniedException;
 use AppBundle\Entity\User;
 use AppBundle\Service\FilePoolPermissionCheckerInterface;
+use AppBundle\Service\Pool\VirtualPathResolverInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\File\Exception\FileNotFoundException;
 use Symfony\Component\HttpFoundation\File\File;
@@ -25,6 +26,9 @@ class FilesController extends Controller
     /** @var TokenStorageInterface */
     private $tokenStorage;
 
+    /** @var VirtualPathResolverInterface */
+    private $virtualPathResolver;
+
     /** @var string */
     private $filePoolBasePath;
 
@@ -33,15 +37,19 @@ class FilesController extends Controller
     public function __construct(
         FilePoolPermissionCheckerInterface $filePoolPermissionChecker,
         TokenStorageInterface $tokenStorage,
+        VirtualPathResolverInterface $virtualPathResolver,
         string $filePoolBasePath
     ) {
         $this->filePoolPermissionChecker = $filePoolPermissionChecker;
         $this->tokenStorage = $tokenStorage;
+        $this->virtualPathResolver = $virtualPathResolver;
         $this->filePoolBasePath = $filePoolBasePath;
     }
 
     public function getAction(string $path): Response
     {
+        $path = $this->virtualPathResolver->replaceVirtualBasePath($path);
+
         $this->checkPathPermissions($path);
 
         $fullPath = $this->getFullPath($path);
@@ -49,7 +57,7 @@ class FilesController extends Controller
         // @TODO Handle If-Modified-Since Header if set
         // @TODO Handle If-Unmodified-Since Header if set
 
-        if (is_dir($fullPath)) {
+        if (\is_dir($fullPath)) {
             $directoryIterator = new \DirectoryIterator($fullPath);
             $files = [];
             foreach ($directoryIterator as $file) {
@@ -60,7 +68,7 @@ class FilesController extends Controller
                 }
             }
             return new Response(
-                json_encode($files),
+                \json_encode($files),
                 200,
                 [
                     'Content-Type' => 'text/json',
@@ -69,12 +77,12 @@ class FilesController extends Controller
         } elseif (is_file($fullPath)) {
             $file = new File($fullPath);
             return new Response(
-                file_get_contents($fullPath),
+                \file_get_contents($fullPath),
                 200,
                 [
                     'Content-Type' => $file->getMimeType(),
                     'Content-Length' => $file->getSize(),
-                    'Last-Modified' => gmdate('D, d M Y G:i:s T', $file->getMTime()),
+                    'Last-Modified' => \gmdate('D, d M Y G:i:s T', $file->getMTime()),
                 ]
             );
         }

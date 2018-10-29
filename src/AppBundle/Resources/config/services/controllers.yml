@@ -10,5 +10,6 @@ services:
     arguments:
       $filePoolPermissionChecker: '@app.filepool.permission_checker'
       $tokenStorage: '@security.token_storage'
+      $virtualPathResolver: '@app.service.pool.virtual_path_resolver'
       $filePoolBasePath: '%path_pool%'
 
