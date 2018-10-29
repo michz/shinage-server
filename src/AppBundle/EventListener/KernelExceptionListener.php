@@ -11,6 +11,7 @@ namespace AppBundle\EventListener;
 use AppBundle\Controller\Api\Exception\AccessDeniedException;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Event\GetResponseForExceptionEvent;
+use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class KernelExceptionListener
@@ -42,6 +43,8 @@ class KernelExceptionListener
                 return Response::HTTP_FORBIDDEN;
             case NotFoundHttpException::class:
                 return Response::HTTP_NOT_FOUND;
+            case BadRequestHttpException::class:
+                return Response::HTTP_BAD_REQUEST;
         }
         return Response::HTTP_INTERNAL_SERVER_ERROR;
     }

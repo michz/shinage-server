@@ -33,3 +33,67 @@ Feature: In order to manage files remotely
     When I get the file pool contents of "/user:you-dont-get-me@nowhere.test"
     Then I get an Access Denied response
 
+  Scenario: I can upload a file
+    Given I use the api key "testapikey"
+    When I put a file to "/user:apitester@shinage.test/folder/file.txt" with contents:
+      """
+      Content of the file.
+      """
+    Then I get an No Content response
+
+  Scenario: I can upload and see a file
+    Given I use the api key "testapikey"
+    When I put a file to "/user:apitester@shinage.test/folder/file.txt" with contents:
+      """
+      Content of the file.
+      """
+    And I get the file pool contents of "/user:apitester@shinage.test/folder/"
+    Then I can see that the api response contains file "file.txt"
+
+  Scenario: I can upload a file and retrieve its contents later
+    Given I use the api key "testapikey"
+    When I put a file to "/user:apitester@shinage.test/folder/file.txt" with contents:
+      """
+      Content of the file.
+      """
+    And I get the file pool contents of "/user:apitester@shinage.test/folder/file.txt"
+    Then I can see that the returned file contains
+      """
+      Content of the file.
+      """
+
+  Scenario: I can upload a file and overwrite it and retrieve its contents later
+    Given I use the api key "testapikey"
+    When I put a file to "/user:apitester@shinage.test/folder/file.txt" with contents:
+      """
+      Content of the file.
+      """
+    And I put a file to "/user:apitester@shinage.test/folder/file.txt" with contents:
+      """
+      Content of the new file.
+      """
+    And I get the file pool contents of "/user:apitester@shinage.test/folder/file.txt"
+    Then I can see that the returned file contains
+      """
+      Content of the new file.
+      """
+
+  Scenario: I cannot upload a file named as a directory
+    Given I use the api key "testapikey"
+    When I put a file to "/user:apitester@shinage.test/folder/" with contents:
+      """
+      Content of the file.
+      """
+    Then I get an Bad Request response
+
+  Scenario: I cannot upload a file named like an existing directory
+    Given I use the api key "testapikey"
+    When I put a file to "/user:apitester@shinage.test/folder/file.txt" with contents:
+      """
+      Content of the file.
+      """
+    And I put a file to "/user:apitester@shinage.test/folder" with contents:
+      """
+      Content of the file.
+      """
+    Then I get an Bad Request response

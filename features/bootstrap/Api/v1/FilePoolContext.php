@@ -9,6 +9,7 @@ declare(strict_types=1);
 namespace shinage\server\behat\Api\v1;
 
 use Behat\Behat\Context\Context;
+use Behat\Gherkin\Node\PyStringNode;
 use GuzzleHttp\Client;
 use GuzzleHttp\Psr7\Response;
 use Webmozart\Assert\Assert;
@@ -113,5 +114,54 @@ class FilePoolContext implements Context
         Assert::eq($this->responseStatusCode, 404);
         $json = \json_decode($this->rawResponse, true);
         Assert::eq($json['type'], 'Symfony\\Component\\HttpKernel\\Exception\\NotFoundHttpException');
+    }
+
+    /**
+     * @When /^I put a file to "([^"]*)" with contents:$/
+     */
+    public function iPutAFileToWithContents(string $path, PyStringNode $content)
+    {
+
+        $client = new Client();
+        $this->response = $client->request(
+            'put',
+            $this->baseUrl . '/api/v1/files' . $path,
+            [
+                'headers' => [
+                    'x-api-token' => $this->apiKey,
+                ],
+                'http_errors' => false,
+                'body' => $content->getRaw(),
+            ]
+        );
+
+        $this->responseStatusCode = $this->response->getStatusCode();
+        $this->rawResponse = $this->response->getBody()->getContents();
+    }
+
+    /**
+     * @Then /^I get an No Content response$/
+     */
+    public function iGetAnNoContentResponse()
+    {
+        Assert::notNull($this->response);
+        Assert::eq($this->responseStatusCode, 204);
+    }
+
+    /**
+     * @Then /^I get an Bad Request response$/
+     */
+    public function iGetAnBadRequestResponse()
+    {
+        Assert::notNull($this->response);
+        Assert::eq($this->responseStatusCode, 400);
+    }
+
+    /**
+     * @Then /^I can see that the returned file contains$/
+     */
+    public function iCanSeeThatTheReturnedFileContains(PyStringNode $string)
+    {
+        Assert::contains($this->rawResponse, $string->getRaw());
     }
 }

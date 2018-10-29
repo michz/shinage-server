@@ -15,7 +15,9 @@ use AppBundle\Service\Pool\VirtualPathResolverInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\File\Exception\FileNotFoundException;
 use Symfony\Component\HttpFoundation\File\File;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 class FilesController extends Controller
@@ -90,11 +92,29 @@ class FilesController extends Controller
         throw new FileNotFoundException($path);
     }
 
-    public function putAction(string $path): Response
+    public function putAction(Request $request, string $path): Response
     {
+        if ('/' === substr($path, -1)) {
+            throw new BadRequestHttpException('File name looks like a directory.');
+        }
+
+        $path = $this->virtualPathResolver->replaceVirtualBasePath($path);
         $this->checkPathPermissions($path);
-        // @TODO if path end with slash => Exception
-        // @TODO if path already exists and is directory => Exception
+        $fullPath = $this->getFullPath($path);
+
+        if (\is_dir($fullPath)) {
+            throw new BadRequestHttpException('A directory with the same name already exists.');
+        }
+
+        $folder = \dirname($fullPath);
+        if (false === \is_dir($folder)) {
+            \mkdir($folder, 0777, true);
+        }
+
+        $body = $request->getContent();
+        \file_put_contents($fullPath, $body);
+
+        return Response::create('', Response::HTTP_NO_CONTENT);
     }
 
     public function deleteAction(string $path): Response
