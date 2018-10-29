@@ -49,6 +49,12 @@ services:
         tags:
             - { name: kernel.event_subscriber }
 
+    app.event_listener.kernel_exception:
+        class: AppBundle\EventListener\KernelExceptionListener
+        tags:
+            - { name: kernel.event_listener, event: kernel.exception, priority: 999 }
+
+
     app.form.type.owner:
         class: AppBundle\Form\Type\OwnerType
         arguments:
