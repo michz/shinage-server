@@ -1,3 +1,8 @@
+imports:
+  - "services/services.yml"
+  - "services/setup.yml"
+  - "services/transform.yml"
+
 services:
   behat.mink:
     class: Behat\MinkExtension\Context\MinkContext
@@ -9,18 +14,11 @@ services:
     arguments:
       - "@__symfony_shared__.doctrine.orm.entity_manager"
 
-  shinage.server.behat.context.setup.screen:
-    class: shinage\server\behat\Setup\ScreenContext
+  shinage.server.behat.context.api.v1.file_pool:
+    class: shinage\server\behat\Api\v1\FilePoolContext
     tags: ["fob.context_service"]
     arguments:
-      - "@__symfony_shared__.doctrine.orm.entity_manager"
-
-  shinage.server.behat.context.setup.user:
-    class: shinage\server\behat\Setup\UserContext
-    tags: ["fob.context_service"]
-    arguments:
-      - "@__symfony_shared__.doctrine.orm.entity_manager"
-      - "@__symfony_shared__.fos_user.user_manager"
+      - "%__behat__.mink.base_url%"
 
   shinage.server.behat.context.heartbeat:
     class: shinage\server\behat\HeartbeatContext

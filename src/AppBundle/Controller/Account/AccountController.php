@@ -110,6 +110,7 @@ class AccountController extends Controller
             if ($request->request->has('form1name')) {
                 $form->handleRequest($request);
 
+                // @TODO Localize Flash messages
                 if ($form->isSubmitted()) {
                     if ($form->isValid()) {
                         $this->userManager->updateUser($user, true);

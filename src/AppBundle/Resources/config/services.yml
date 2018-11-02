@@ -2,6 +2,7 @@ imports:
     - { resource: services/authentication.yml }
     - { resource: services/controllers.yml }
     - { resource: services/menus.yml }
+    - { resource: services/pool.yml }
     - { resource: services/presentations.yml }
     - { resource: services/security.yml }
 
@@ -30,6 +31,8 @@ services:
 
     app.filepool.permission_checker:
         class: AppBundle\Service\FilePoolPermissionChecker
+        arguments:
+            $pathChecker: '@app.security.path_checker'
 
     app.filepool.url_builder:
         class: AppBundle\Service\FilePoolUrlBuilder
@@ -46,6 +49,12 @@ services:
             $router: "@router.default"
         tags:
             - { name: kernel.event_subscriber }
+
+    app.event_listener.kernel_exception:
+        class: AppBundle\EventListener\KernelExceptionListener
+        tags:
+            - { name: kernel.event_listener, event: kernel.exception, priority: 999 }
+
 
     app.form.type.owner:
         class: AppBundle\Form\Type\OwnerType

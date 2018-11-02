@@ -59,7 +59,7 @@ class TodoList
      */
     protected function sortBySeverity(array &$arr): void
     {
-        usort($arr, [$this, 'sortHelper']);
+        \usort($arr, [$this, 'sortHelper']);
     }
 
     protected function sortHelper(TodoItem $a, TodoItem $b): int
@@ -72,28 +72,28 @@ class TodoList
      */
     protected function traverseTodoList(string $dir, array &$todos): void
     {
-        if ($handle = opendir($this->basepath . '/' . $dir)) {
-            while (false !== ($entry = readdir($handle))) {
+        if ($handle = \opendir($this->basepath . '/' . $dir)) {
+            while (false !== ($entry = \readdir($handle))) {
                 // ignore . and ..
                 if ('.' == $entry || '..' == $entry) {
                     continue;
                 }
 
                 // get extension
-                $i = pathinfo($this->basepath . '/' . $dir . '/' . $entry);
+                $i = \pathinfo($this->basepath . '/' . $dir . '/' . $entry);
 
-                if (is_dir($this->basepath . '/' . $dir . '/' . $entry)) {
+                if (\is_dir($this->basepath . '/' . $dir . '/' . $entry)) {
                     $this->traverseTodoList($dir . '/' . $entry, $todos);
-                } elseif (is_file($dir . '/' . $entry)) {
+                } elseif (\is_file($dir . '/' . $entry)) {
                     // ignore all extensions except php, htm, html, twig, ...
-                    if (!in_array($i['extension'], $this->extensions)) {
+                    if (false === isset($i['extension']) || false === \in_array($i['extension'], $this->extensions)) {
                         continue;
                     }
 
                     $this->parseFile($dir . '/' . $entry, $todos);
                 }
             }
-            closedir($handle);
+            \closedir($handle);
         }
     }
 
@@ -102,10 +102,10 @@ class TodoList
      */
     protected function parseFile(string $path, array &$todos): void
     {
-        $file = file_get_contents($this->basepath . '/' . $path);
+        $file = \file_get_contents($this->basepath . '/' . $path);
 
         $matches = [];
-        preg_match_all(
+        \preg_match_all(
             '/(?P<type>TODO|FIXME)\{(?P<opt>[a-zA-Z0-9,:]*)\}[\s:]+(?P<text>.*)$/um',
             $file,
             $matches,
@@ -114,7 +114,7 @@ class TodoList
         $this->processMatches($matches, $todos, $file, $path);
 
         $matches = [];
-        preg_match_all(
+        \preg_match_all(
             '/(?P<type>TODO|FIXME)[\s:]+(?P<text>.*)$/um',
             $file,
             $matches,
@@ -138,23 +138,23 @@ class TodoList
             $type = isset($match['type']) ? $match['type'] : [''];
             $text = isset($match['text']) ? $match['text'] : [''];
 
-            $options = explode(',', $opt[0]);
+            $options = \explode(',', $opt[0]);
             $severity = 0;
             foreach ($options as $option) {
-                $a = explode(':', $option);
+                $a = \explode(':', $option);
                 if ('s' == $a[0]) {
-                    $severity = intval($a[1]);
+                    $severity = \intval($a[1]);
                 }
             }
 
             $off = $text[1];
-            list($before) = str_split($file, $off); // fetches all the text before the match
-            $line_number = strlen($before) - strlen(str_replace("\n", '', $before)) + 1;
+            list($before) = \str_split($file, $off); // fetches all the text before the match
+            $line_number = \strlen($before) - \strlen(\str_replace("\n", '', $before)) + 1;
 
-            $text[0] = strip_tags($text[0]);
-            $text[0] = str_replace(['#}', '{#'], '', $text[0]);
+            $text[0] = \strip_tags($text[0]);
+            $text[0] = \str_replace(['#}', '{#'], '', $text[0]);
 
-            $todos[] = new TodoItem($text[0], $path, $line_number, strtolower($type[0]), $severity);
+            $todos[] = new TodoItem($text[0], $path, $line_number, \strtolower($type[0]), $severity);
         }
 
         return $r;

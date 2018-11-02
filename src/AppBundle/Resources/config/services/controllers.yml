@@ -5,3 +5,11 @@ services:
     autoconfigure: false
     public: true
     tags: ['controller.service_arguments']
+
+  AppBundle\Controller\Api\v1\FilesController:
+    arguments:
+      $filePoolPermissionChecker: '@app.filepool.permission_checker'
+      $tokenStorage: '@security.token_storage'
+      $virtualPathResolver: '@app.service.pool.virtual_path_resolver'
+      $filePoolBasePath: '%path_pool%'
+

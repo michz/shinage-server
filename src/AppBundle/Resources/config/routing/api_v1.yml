@@ -18,8 +18,3 @@ api-v1-files-delete:
   methods: [ DELETE ]
   requirements:
     path: ".+"
-
-# Old @deprecated  @TODO remove
-api-filepool-upload:
-  path: /filepool/upload
-  controller: AppBundle\Controller\Api\FilePool\Upload::uploadAction

@@ -1,0 +1,5 @@
+services:
+  app.service.pool.virtual_path_resolver:
+    class: AppBundle\Service\Pool\VirtualPathResolver
+    arguments:
+      $entityManager: '@doctrine.orm.default_entity_manager'

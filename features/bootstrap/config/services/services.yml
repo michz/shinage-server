@@ -1,0 +1,3 @@
+services:
+  shinage.server.behat.service.shared_storage:
+    class: shinage\server\behat\Service\SharedStorage
