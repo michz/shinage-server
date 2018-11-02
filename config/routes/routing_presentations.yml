@@ -1,0 +1,5 @@
+presentation:
+  path: /{id}
+  controller: App\Controller\Presentation\RenderPresentationController::getAction
+  requirements:
+    id: \d+

@@ -1,0 +1,5 @@
+framework:
+    test: true
+    csrf_protection: ~
+    session:
+        storage_id: session.storage.mock_file

@@ -1,0 +1,47 @@
+App\Entity\Presentation:
+  type: entity
+  table: presentations
+  id:
+    id:
+      type: integer
+      length: null
+      unique: false
+      nullable: false
+      id: true
+      generator:
+        strategy: IDENTITY
+  fields:
+    title:
+      type: string
+      length: 200
+      unique: false
+      nullable: false
+    notes:
+      type: text
+      unique: false
+      nullable: false
+    settings:
+      type: text
+      unique: false
+      nullable: false
+    lastModified:
+      type: datetime
+      unique: false
+      nullable: true
+      column: last_modified
+    type:
+      type: string
+      length: 200
+      unique: false
+      nullable: false
+  manyToOne:
+    owner:
+      targetEntity: App\Entity\User
+      fetch: LAZY
+      mappedBy: null
+      inversedBy: null
+      joinColumns:
+        user_id:
+          referencedColumnName: id
+      orphanRemoval: false
+  lifecycleCallbacks: {  }

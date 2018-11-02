@@ -1,0 +1,20 @@
+api-v1-files-get:
+  path: /files/{path}
+  controller: App\Controller\Api\v1\FilesController:getAction
+  methods: [ GET ]
+  requirements:
+    path: ".+"
+
+api-v1-files-put:
+  path: /files/{path}
+  controller: App\Controller\Api\v1\FilesController:putAction
+  methods: [ PUT ]
+  requirements:
+    path: ".+"
+
+api-v1-files-delete:
+  path: /files/{path}
+  controller: App\Controller\Api\v1\FilesController:deleteAction
+  methods: [ DELETE ]
+  requirements:
+    path: ".+"

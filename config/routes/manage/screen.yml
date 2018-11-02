@@ -1,0 +1,31 @@
+management-screens:
+  path: /
+  controller: App\Controller\Management\ScreensController::indexAction
+
+management-connect-screen:
+  path: /connect
+  controller: App\Controller\Management\ScreensController::connectAction
+
+management-screen-data:
+  path: /{guid}
+  controller: App\Controller\Management\Screens\ScreenDataController:indexAction
+  requirements:
+    guid: "[^/]*"
+
+management-screen-offline:
+  path: /{guid}/offline
+  controller: App\Controller\Management\Screens\ScreenOfflineController:indexAction
+  requirements:
+    guid: "[^/]*"
+
+management-screen-rights:
+  path: /{guid}/rights
+  controller: App\Controller\Management\Screens\ScreenRightsController:indexAction
+  requirements:
+    guid: "[^/]*"
+
+management-screen-schedule:
+  path: /{guid}/schedule
+  controller: App\Controller\Management\Screens\ScreenScheduleController:indexAction
+  requirements:
+    guid: "[^/]*"

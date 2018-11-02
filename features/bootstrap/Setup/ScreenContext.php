@@ -2,9 +2,9 @@
 
 namespace shinage\server\behat\Setup;
 
-use AppBundle\Entity\Screen;
-use AppBundle\Entity\ScreenAssociation;
-use AppBundle\Entity\User;
+use App\Entity\Screen;
+use App\Entity\ScreenAssociation;
+use App\Entity\User;
 use Behat\Behat\Context\Context;
 use Doctrine\ORM\EntityManagerInterface;
 

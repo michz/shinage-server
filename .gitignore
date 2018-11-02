@@ -13,14 +13,21 @@
 !var/sessions/.gitkeep
 !var/SymfonyRequirements.php
 /vendor/
-/web/assets/
-/web/semantic-ui-css/
-/web/bundles/
-/web/js/elfinder/
-/web/css/elfinder/
-/web/jquery-ui-dist/
-/web/vendor/
+/public/assets/
+/public/semantic-ui-css/
+/public/bundles/
+/public/js/elfinder/
+/public/css/elfinder/
+/public/jquery-ui-dist/
+/public/vendor/
 /node_modules/
+/bin/
+!/bin/console
+!/bin/devEnv.sh
+!/bin/runInDev.sh
+
+# Legacy
+/web/
 
 tests/_output/*
 
@@ -33,3 +40,29 @@ tests/_output/*
 *.swo
 
 .web-server-pid
+
+###> symfony/framework-bundle ###
+/.env
+/public/bundles/
+/var/
+/vendor/
+###< symfony/framework-bundle ###
+
+###> symfony/web-server-bundle ###
+/.web-server-pid
+###< symfony/web-server-bundle ###
+
+###> friendsofphp/php-cs-fixer ###
+/.php_cs
+/.php_cs.cache
+###< friendsofphp/php-cs-fixer ###
+
+###> symfony/phpunit-bridge ###
+.phpunit
+/phpunit.xml
+###< symfony/phpunit-bridge ###
+
+###> squizlabs/php_codesniffer ###
+/.phpcs-cache
+/phpcs.xml
+###< squizlabs/php_codesniffer ###

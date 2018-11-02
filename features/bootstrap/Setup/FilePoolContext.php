@@ -8,7 +8,7 @@ declare(strict_types=1);
 
 namespace shinage\server\behat\Setup;
 
-use AppBundle\Entity\User;
+use App\Entity\User;
 use Behat\Behat\Context\Context;
 use Doctrine\ORM\EntityManagerInterface;
 use shinage\server\behat\Helper\StringInflector;

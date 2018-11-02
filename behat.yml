@@ -47,16 +47,16 @@ default:
 
   extensions:
     Behat\MinkExtension:
-      base_url:  'http://localhost:8000/app_test.php'
+      base_url:  'http://localhost:8000'
       sessions:
         default:
           goutte: ~
 
     FriendsOfBehat\SymfonyExtension:
       kernel:
-        bootstrap: vendor/autoload.php
-        path: app/AppKernel.php
-        class: 'shinage\serverApp\AppKernel'
+        bootstrap: features/bootstrap/bootstrap.php
+        path: src/Kernel.php
+        class: 'App\Kernel'
 
     FriendsOfBehat\ContextServiceExtension:
        imports:

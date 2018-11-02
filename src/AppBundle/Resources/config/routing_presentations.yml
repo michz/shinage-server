@@ -1,5 +1,0 @@
-presentation:
-  path: /{id}
-  controller: AppBundle\Controller\Presentation\RenderPresentationController::getAction
-  requirements:
-    id: \d+

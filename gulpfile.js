@@ -9,10 +9,10 @@ var del = require('del');
 var development = environments.development;
 //var production = environments.production;
 
-var distPath = 'web/assets/';
-var elfinderDistPath = 'web/vendor/studio-42/elfinder';
-var semanticDistPath = 'web/semantic-ui-css';
-var jqueryUiDistPath = 'web/jquery-ui-dist';
+var distPath = 'public/assets/';
+var elfinderDistPath = 'public/vendor/studio-42/elfinder';
+var semanticDistPath = 'public/semantic-ui-css';
+var jqueryUiDistPath = 'public/jquery-ui-dist';
 var paths = {
     js: [
         'node_modules/jquery/dist/jquery.js',
@@ -22,8 +22,8 @@ var paths = {
         'node_modules/fullcalendar/dist/fullcalendar.js',
         'node_modules/fullcalendar/dist/locale-all.js',
         'vendor/studio-42/elfinder/js/elfinder.full.js',
-        'src/AppBundle/Resources/private/js/lib/**',
-        'src/AppBundle/Resources/private/js/include/**',
+        'src/Resources/private/js/lib/**',
+        'src/Resources/private/js/include/**',
     ],
     css: [
         'node_modules/reset-css/reset.css',
@@ -33,7 +33,7 @@ var paths = {
         'node_modules/fullcalendar/dist/fullcalendar.css',
         'vendor/studio-42/elfinder/css/elfinder.full.css',
         'vendor/studio-42/elfinder/css/theme.css',
-        'src/AppBundle/Resources/private/css/**',
+        'src/Resources/private/css/**',
     ],
     less: [
     ],
@@ -45,7 +45,7 @@ var playerPaths = {
     ],
     css: [
         'node_modules/reset-css/reset.css',
-        'src/AppBundle/Resources/private/player_css/**',
+        'src/Resources/private/player_css/**',
     ],
     less: [
     ],
