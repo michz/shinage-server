@@ -58,7 +58,6 @@ class FilesController extends Controller
         $fullPath = $this->getFullPath($path);
 
         // @TODO Handle If-Modified-Since Header if set
-        // @TODO Handle If-Unmodified-Since Header if set
 
         if (\is_dir($fullPath)) {
             $directoryIterator = new \DirectoryIterator($fullPath);
