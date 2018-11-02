@@ -49,7 +49,7 @@ class FilesController extends Controller
         $this->filePoolBasePath = $filePoolBasePath;
     }
 
-    public function getAction(string $path): Response
+    public function getAction(Request $request, string $path): Response
     {
         $path = $this->virtualPathResolver->replaceVirtualBasePath($path);
 
@@ -76,8 +76,25 @@ class FilesController extends Controller
                     'Content-Type' => 'text/json',
                 ]
             );
-        } elseif (is_file($fullPath)) {
+        } elseif (\is_file($fullPath)) {
             $file = new File($fullPath);
+
+            $expectedLastModifiedDate = $request->headers->get('if-modified-since');
+            if (null !== $expectedLastModifiedDate) {
+                $lastModifiedDate = $file->getMTime();
+                $expectedLastModifiedTimestamp = \strtotime($expectedLastModifiedDate);
+                if ($lastModifiedDate < $expectedLastModifiedTimestamp) {
+                    return new Response(
+                        \file_get_contents($fullPath),
+                        304,
+                        [
+                            'Content-Length' => 0,
+                            'Last-Modified' => \gmdate('D, d M Y G:i:s T', $lastModifiedDate),
+                        ]
+                    );
+                }
+            }
+
             return new Response(
                 \file_get_contents($fullPath),
                 200,
