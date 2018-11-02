@@ -12,6 +12,7 @@ use AppBundle\Entity\User;
 use Behat\Behat\Context\Context;
 use Doctrine\ORM\EntityManagerInterface;
 use shinage\server\behat\Helper\StringInflector;
+use shinage\server\behat\Hook\PurgeContext;
 use shinage\server\behat\Service\SharedStorage;
 
 class FilePoolContext implements Context
@@ -22,16 +23,21 @@ class FilePoolContext implements Context
     /** @var SharedStorage */
     private $sharedStorage;
 
+    /** @var PurgeContext */
+    private $purgeContext;
+
     /** @var string */
     private $basePath;
 
     public function __construct(
         EntityManagerInterface $entityManager,
         SharedStorage $sharedStorage,
+        PurgeContext $purgeContext,
         string $basePath
     ) {
         $this->entityManager = $entityManager;
         $this->sharedStorage = $sharedStorage;
+        $this->purgeContext = $purgeContext;
         $this->basePath = $basePath;
     }
 
@@ -45,12 +51,11 @@ class FilePoolContext implements Context
 
         $fullPath = $this->basePath . '/user-' . $id  . '/' . $name;
         $path = dirname($fullPath);
-        if (false === is_dir($path)) {
-            mkdir($path, 0777, true);
-        }
+        $this->createFolderRecursively($path);
 
         file_put_contents($fullPath, $content);
         $this->sharedStorage->set(StringInflector::nameToCode('pool-file'), $fullPath);
+        $this->purgeContext->addPurgablePoolFile($fullPath);
     }
 
     /**
@@ -59,5 +64,20 @@ class FilePoolContext implements Context
     public function thisFileHasTheLastModifiedTimestamp(string $poolFile, string $date)
     {
         touch($poolFile, strtotime($date));
+    }
+
+    private function createFolderRecursively(string $folderPath): void
+    {
+        if (\is_dir($folderPath)) {
+            return;
+        }
+
+        $parent = dirname($folderPath);
+
+        // create parent folder
+        $this->createFolderRecursively($parent);
+
+        mkdir($folderPath, 0777, false);
+        $this->purgeContext->addPurgablePoolFile($folderPath);
     }
 }

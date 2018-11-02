@@ -18,4 +18,5 @@ services:
     arguments:
     - "@__symfony_shared__.doctrine.orm.entity_manager"
     - "@shinage.server.behat.service.shared_storage"
+    - "@shinage.server.behat.context.hook.purge"
     - "%__symfony__.path_pool%"
