@@ -1,14 +1,6 @@
 version: '3'
 
 services:
-  lb:
-    image: jwilder/nginx-proxy:alpine
-    ports:
-      - "80:80"
-      - "443:443"
-    volumes:
-      - /var/run/docker.sock:/tmp/docker.sock:ro
-
   nginx:
     image: nginx:1.14-alpine
     environment:
