@@ -67,6 +67,28 @@ class FilePoolContext implements Context
     }
 
     /**
+     * @When /^I get the file pool contents of "([^"]*)" if modfied since "([^"]*)"$/
+     */
+    public function iGetTheFilePoolContentsOfIfModfiedSince(string $path, string $date)
+    {
+        $client = new Client();
+        $this->response = $client->request(
+            'get',
+            $this->baseUrl . '/api/v1/files' . $path,
+            [
+                'headers' => [
+                    'x-api-token' => $this->apiKey,
+                    'if-modified-since' => gmdate('D, d M Y G:i:s T', strtotime($date)),
+                ],
+                'http_errors' => false,
+            ]
+        );
+
+        $this->responseStatusCode = $this->response->getStatusCode();
+        $this->rawResponse = $this->response->getBody()->getContents();
+    }
+
+    /**
      * @Then /^I can see that the api response contains (file|directory) "([^"]*)"$/
      */
     public function iCanSeeThatTheApiResponseContainsDirectory(string $type, string $content)
@@ -168,6 +190,15 @@ class FilePoolContext implements Context
     {
         Assert::notNull($this->response);
         Assert::eq($this->responseStatusCode, 204);
+    }
+
+    /**
+     * @Then /^I should get a Not Modified response$/
+     */
+    public function iShouldGetANotModifiedResponse()
+    {
+        Assert::notNull($this->response);
+        Assert::eq($this->responseStatusCode, 304);
     }
 
     /**

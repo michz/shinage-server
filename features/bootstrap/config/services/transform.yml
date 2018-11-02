@@ -1,0 +1,6 @@
+services:
+  shinage.server.behat.context.transform.shared_storage:
+    class: shinage\server\behat\Transform\SharedStorageContext
+    tags: ["fob.context_service"]
+    arguments:
+      - "@shinage.server.behat.service.shared_storage"

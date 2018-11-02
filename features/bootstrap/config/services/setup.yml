@@ -1,0 +1,21 @@
+services:
+  shinage.server.behat.context.setup.screen:
+    class: shinage\server\behat\Setup\ScreenContext
+    tags: ["fob.context_service"]
+    arguments:
+    - "@__symfony_shared__.doctrine.orm.entity_manager"
+
+  shinage.server.behat.context.setup.user:
+    class: shinage\server\behat\Setup\UserContext
+    tags: ["fob.context_service"]
+    arguments:
+    - "@__symfony_shared__.doctrine.orm.entity_manager"
+    - "@__symfony_shared__.fos_user.user_manager"
+
+  shinage.server.behat.context.setup.file_pool:
+    class: shinage\server\behat\Setup\FilePoolContext
+    tags: ["fob.context_service"]
+    arguments:
+    - "@__symfony_shared__.doctrine.orm.entity_manager"
+    - "@shinage.server.behat.service.shared_storage"
+    - "%__symfony__.path_pool%"
