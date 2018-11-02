@@ -126,7 +126,6 @@ Feature: In order to manage files remotely
     When I delete at "/user:apitester@shinage.test/dir5/..%2F..%2F..%2F..%2Fetc/passwd"
     Then I should get an Access Denied response
 
-  @tmp
   Scenario: I can get a 304 for a cached files
     Given I use the api key "testapikey"
     And In the pool the user "apitester@shinage.test" has a file "/dir1/cached1" with content "testcontent1"
@@ -134,7 +133,6 @@ Feature: In order to manage files remotely
     When I get the file pool contents of "/user:apitester@shinage.test/dir1/cached1" if modfied since "2018-06-01 00:00:00"
     Then I should get a Not Modified response
 
-  @tmp
   Scenario: I can get a 200 for a cached but modified files
     Given I use the api key "testapikey"
     And In the pool the user "apitester@shinage.test" has a file "/dir1/cached1" with content "testcontent1"
