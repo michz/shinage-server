@@ -13,6 +13,7 @@ var distPath = 'public/assets/';
 var elfinderDistPath = 'public/vendor/studio-42/elfinder';
 var semanticDistPath = 'public/semantic-ui-css';
 var jqueryUiDistPath = 'public/jquery-ui-dist';
+var revealDistPath = 'public/reveal.js';
 var paths = {
     js: [
         'node_modules/jquery/dist/jquery.js',
@@ -62,6 +63,8 @@ gulp.task('copy', function() {
         .pipe(gulp.dest(elfinderDistPath + '/img/'));
     gulp.src('node_modules/jquery-ui-dist/images/**')
         .pipe(gulp.dest(jqueryUiDistPath + '/images/'));
+    gulp.src('node_modules/reveal.js/**')
+        .pipe(gulp.dest(revealDistPath + '/'));
 });
 
 gulp.task('css', ['clean'], function() {

@@ -39,10 +39,10 @@ class Renderer implements PresentationRendererInterface
 
         // @TODO diese Dateien sind schon weitgehend per Gulp vorbereitet
         $jqueryUrl = $this->assetPackages->getUrl('js/lib/jquery-3.1.1.min.js');
-        $revealCssUrl = $this->assetPackages->getUrl('bundles/app/lib/reveal.js-3.7.0/css/reveal.css');
-        $revealThemeUrl = $this->assetPackages->getUrl('bundles/app/css/reveal_theme_very_black.css');
-        $revealHeadUrl = $this->assetPackages->getUrl('bundles/app/lib/reveal.js-3.7.0/lib/js/head.min.js');
-        $revealUrl = $this->assetPackages->getUrl('bundles/app/lib/reveal.js-3.7.0/js/reveal.js');
+        $revealCssUrl = $this->assetPackages->getUrl('reveal.js/css/reveal.css');
+        $revealThemeUrl = $this->assetPackages->getUrl('css/reveal_theme_very_black.css');
+        $revealHeadUrl = $this->assetPackages->getUrl('reveal.js/lib/js/head.min.js');
+        $revealUrl = $this->assetPackages->getUrl('reveal.js/js/reveal.js');
 
         $slides = '';
 
