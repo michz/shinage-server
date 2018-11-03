@@ -140,7 +140,7 @@ class LoginContext extends \Behat\MinkExtension\Context\RawMinkContext
         $user = $this->userManager->findUserBy(['username' => $username]);
         /** @var \FOS\UserBundle\Model\UserInterface $user */
         $token = new UsernamePasswordToken($user, null, $firewall, $user->getRoles());
-        $this->session->set('_security_'.$firewall, serialize($token));
+        $this->session->set('_security_' . $firewall, serialize($token));
         $this->session->save();
 
         $cookie = new Cookie($this->session->getName(), $this->session->getId());

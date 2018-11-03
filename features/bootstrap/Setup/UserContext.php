@@ -3,8 +3,8 @@ declare(strict_types=1);
 
 namespace shinage\server\behat\Setup;
 
-use AppBundle\Entity\Api\AccessKey;
-use AppBundle\Entity\User;
+use App\Entity\Api\AccessKey;
+use App\Entity\User;
 use Behat\Behat\Context\Context;
 use Doctrine\ORM\EntityManagerInterface;
 use FOS\UserBundle\Model\UserManagerInterface;
@@ -38,6 +38,7 @@ class UserContext implements Context
         $user->setUsername($userName);
         $user->setEmail($userName);
         $user->setPlainPassword($password);
+        $user->setEnabled(true);
 
         $this->userManager->updatePassword($user);
         $this->userManager->updateCanonicalFields($user);

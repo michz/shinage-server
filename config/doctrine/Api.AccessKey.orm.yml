@@ -1,0 +1,44 @@
+App\Entity\Api\AccessKey:
+  type: entity
+  table: api_access_keys
+  id:
+    id:
+      type: integer
+      length: null
+      unique: false
+      nullable: false
+      id: true
+      generator:
+        strategy: IDENTITY
+  fields:
+    code:
+      type: string
+      length: 32
+      unique: true
+      nullable: false
+    name:
+      type: string
+      length: 255
+      unique: false
+      nullable: false
+    last_use:
+      type: datetime
+      length: null
+      unique: false
+      nullable: true
+    roles:
+      type: simple_array
+      length: null
+      unique: false
+      nullable: false
+  manyToOne:
+    owner:
+      targetEntity: App\Entity\User
+      fetch: LAZY
+      mappedBy: null
+      inversedBy: null
+      joinColumns:
+        user_id:
+          referencedColumnName: id
+      orphanRemoval: false
+  lifecycleCallbacks: {  }

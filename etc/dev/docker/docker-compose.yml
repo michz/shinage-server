@@ -25,7 +25,7 @@ services:
         PHP_VERSION: ${PHP_VERSION}
     volumes:
       - ${PROJECT_DIR}:/usr/share/nginx/html:delegated
-      - ${PROJECT_DIR}/app/config/parameters.yml.dev.docker:/usr/share/nginx/html/app/config/parameters.yml:delegated
+      - ${PROJECT_DIR}/.env.dev-docker:/usr/share/nginx/html/.env:delegated
       - ./php/php.ini:/usr/local/etc/php/conf.d/zzz-override-php.ini:delegated
     links:
       - mariadb

@@ -1,0 +1,186 @@
+# This file is the entry point to configure your own services.
+# Files in the packages/ subdirectory configure your dependencies.
+
+# Put parameters here that don't need to change on each machine where the app is deployed
+# https://symfony.com/doc/current/best_practices/configuration.html#application-related-configuration
+parameters:
+  locale: 'de'
+  path_screenshots: '%kernel.root_dir%/../data/screenshots/'
+  path_pool: '%kernel.root_dir%/../data/pool/'
+
+services:
+  # default configuration for services in *this* file
+  _defaults:
+    autowire: true      # Automatically injects dependencies in your services.
+    autoconfigure: true # Automatically registers your services as commands, event subscribers, etc.
+    public: false       # Allows optimizing the container by removing unused services; this also means
+    # fetching services directly from the container via $container->get() won't work.
+    # The best practice is to be explicit about your dependencies anyway.
+
+  # makes classes in src/ available to be used as services
+  # this creates a service per class whose id is the fully-qualified class name
+  App\:
+    resource: '../src/*'
+    exclude: '../src/{DependencyInjection,Entity,Migrations,Tests,Kernel.php}'
+
+  # controllers are imported separately to make sure services can be injected
+  # as action arguments even if you don't extend any base controller class
+  App\Controller\:
+    resource: '../src/Controller'
+    tags: ['controller.service_arguments']
+
+  # add more service definitions when explicit configuration is needed
+  # please note that last definitions always *replace* previous ones
+
+  App\Controller\Api\v1\FilesController:
+    arguments:
+      $filePoolPermissionChecker: '@App\Service\FilePoolPermissionChecker'
+      $tokenStorage: '@security.token_storage'
+      $virtualPathResolver: '@App\Service\Pool\VirtualPathResolver'
+      $filePoolBasePath: '%path_pool%'
+
+  App\Controller\Management\FileManager:
+    arguments:
+      $tokenStorage: '@security.token_storage'
+      $filePool: '@App\Service\FilePool'
+      $poolPath: '%path_pool%'
+
+  # @TODO own file?
+  App\Security\Authentication\Provider\ApiTokenProvider:
+    public: false
+  #        arguments:
+  #            $cachePool: '@cache.app'
+
+  App\Security\Firewall\ApiUserListener:
+    public: false
+    arguments:
+      - '@security.token_storage'
+      - '@security.authentication.manager'
+      - '@app.repository.api_access_key'
+
+  app.repository.api_access_key:
+    class: Doctrine\ORM\EntityRepository
+    factory: ['@doctrine.orm.entity_manager', getRepository]
+    arguments:
+      - 'App\Entity\Api\AccessKey'
+
+
+  App\Menu\Builder:
+    arguments: ['@knp_menu.factory']
+    tags:
+      - { name: knp_menu.menu_builder, method: accountMenu, alias: account }
+      - { name: knp_menu.menu_builder, method: screenSettingsMenu, alias: screen-settings }
+
+
+  ###### Presentations ######
+  app.presentation.type.website:
+    class: App\Presentation\GenericPresentationType
+    arguments:
+      - 'website'
+      - '@App\Presentation\Website\Renderer'
+    tags:
+      - app.presentation_type
+
+  App\Presentation\Website\Renderer:
+    arguments:
+      - '@app.presentation.type.website.settings_reader'
+
+  app.presentation.type.website.settings_reader:
+    class: App\Presentation\GenericSettingsReader
+    arguments:
+      - '@jms_serializer.serializer'
+      - 'App\Presentation\Website\Settings'
+
+  app.presentation.type.slideshow:
+    class: App\Presentation\GenericPresentationType
+    arguments:
+      - 'slideshow'
+      - '@App\Presentation\Slideshow\Renderer'
+    tags:
+      - app.presentation_type
+
+  App\Presentation\Slideshow\Renderer:
+    arguments:
+      - '@app.presentation.type.slideshow.settings_reader'
+      - '@assets.packages'
+
+  app.presentation.type.slideshow.settings_reader:
+    class: App\Presentation\GenericSettingsReader
+    arguments:
+      - '@jms_serializer.serializer'
+      - 'App\Presentation\Slideshow\Settings'
+
+  app.presentation.type.mirror:
+    class: App\Presentation\GenericPresentationType
+    arguments:
+      - 'mirror'
+      - '@App\Presentation\Mirror\Renderer'
+    tags:
+      - app.presentation_type
+
+  App\Presentation\Mirror\Renderer:
+    arguments:
+      - '@app.presentation.type.mirror.settings_reader'
+
+  app.presentation.type.mirror.settings_reader:
+    class: App\Presentation\GenericSettingsReader
+    arguments:
+      - '@jms_serializer.serializer'
+      - 'App\Presentation\Mirror\Settings'
+
+
+  ###### Voters ######
+  app.security.voters.screen:
+    class: App\Security\Voters\ScreenVoter
+    arguments:
+      $screenAssociation: '@App\Service\ScreenAssociation'
+    tags:
+      - security.voter
+
+  app.security.path_checker:
+    class: App\Security\PathChecker
+
+
+  # SHINAGE LEGACY FOLLOWING
+  App\Service\FilePool:
+    arguments:
+      $basepath: "%path_pool%"
+
+  App\Service\FilePoolUrlBuilder:
+    arguments:
+      $basePath: "%path_pool%"
+      $router: "@router"
+
+  App\EventListener\RegistrationListener:
+    arguments:
+      $router: "@router.default"
+    tags:
+      - { name: kernel.event_subscriber }
+
+  App\EventListener\KernelExceptionListener:
+    tags:
+      - { name: kernel.event_listener, event: kernel.exception, priority: 999 }
+
+
+  App\Form\Type\OwnerType:
+    arguments:
+      $em: "@doctrine.orm.default_entity_manager"
+      $tokenStorage: "@security.token_storage"
+    tags:
+      - { name: form.type }
+
+  App\Form\ApiKeyForm:
+    arguments:
+      $em: "@doctrine.orm.default_entity_manager"
+      $tokenStorage: "@security.token_storage"
+    tags:
+      - { name: form.type }
+
+
+  App\Serializer\Subscriber\SlideDeserializerSubscriber:
+    tags:
+      - jms_serializer.event_subscriber
+
+  App\Service\VersionChecker:
+    arguments:
+      $rootPath: "%kernel.root_dir%/../"

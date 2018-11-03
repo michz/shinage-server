@@ -1,0 +1,34 @@
+fos_user:
+  resource: "@FOSUserBundle/Resources/config/routing/all.xml"
+
+shinage_management:
+  prefix: "manage"
+  resource: "routes/routing_manage.yml"
+
+shinage_presentations:
+  prefix: "presentations"
+  resource: "routes/routing_presentations.yml"
+
+shinage_api_v1:
+  prefix: "/api/v1"
+  resource: "routes/api_v1.yml"
+
+_screen_remote_api:
+  prefix: "/screen-remote"
+  resource: "routes/screen_remote.yml"
+
+shinage_register:
+  prefix: "/register"
+  resource: "routes/register.yml"
+
+homepage:
+  path: "/"
+  controller: App\Controller\DefaultController::indexAction
+
+shinage_player:
+  prefix: "virtual_player"
+  resource: "@ShinagePlayerBundle/Resources/config/routing.yml"
+
+shinage_online_player:
+  prefix: "online_player"
+  resource: "@ShinageOnlinePlayerBundle/Resources/config/routing.yml"

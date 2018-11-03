@@ -1,7 +1,7 @@
 formatter.name: pretty
 suites:
   shinage_server_suite:
-    namespace: AppBundle
-    psr4_prefix: AppBundle
-    #src_path: %paths.config%/src/AppBundle
-    spec_path: %paths.config%/src/AppBundle
+    namespace: App
+    psr4_prefix: App
+    src_path: '%paths.config%/src/'
+    spec_path: '%paths.config%/'
