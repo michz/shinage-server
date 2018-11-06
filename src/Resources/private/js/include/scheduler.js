@@ -1,7 +1,4 @@
-/**
- * Created by michi on 30.12.16.
- */
-
+;
 
 var screen_colors = [
     {
@@ -40,11 +37,11 @@ var global_evt_src = 1;
 
 // @TODO Full status display showing if ajax transactions are running
 
-var placePresentationBySelection = function(start, end) {
-    showCreateDialog(
+var placePresentationBySelection = function (start, end) {
+    window.showCreateDialog(
         start,
         end,
-        function() {
+        function () {
             $('#calendar').fullCalendar('refetchEvents');
         }
     );
@@ -52,9 +49,9 @@ var placePresentationBySelection = function(start, end) {
 
 var saveChanged = function (event, revertFunc) {
     /** global: uri_change_scheduled */
-    ajaxLoadShow();
+    window.ajaxLoadShow();
     $.ajax({
-        url: uri_change_scheduled,
+        url: window.uri_change_scheduled,
         method: 'POST',
         data: {
             'id':           event.id,
@@ -64,15 +61,17 @@ var saveChanged = function (event, revertFunc) {
             'end':          event.end.format('YYYY-MM-DD HH:mm:ss')
         }
     }).fail(function() {
-        if (revertFunc != undefined) { revertFunc(); }
+        if (revertFunc != undefined) {
+            revertFunc();
+        }
         $.notify("Leider ist beim Ändern des Eintrags ein Fehler aufgetreten.", "error");
     }).done(function() {
         $('#calendar').fullCalendar('refetchEventSources', event.source);
         $.notify("Änderung gespeichert.", "success");
     }).always(function () {
-        ajaxLoadHide();
+        window.ajaxLoadHide();
     });
-}
+};
 
 var resizePresentation = function(event, delta, revertFunc) {
     saveChanged(event, revertFunc);
@@ -80,7 +79,7 @@ var resizePresentation = function(event, delta, revertFunc) {
 
 var movePresentation = function(event, delta, revertFunc) {
     saveChanged(event, revertFunc);
-}
+};
 
 var deletePresentation = function(event) {
     var r = confirm("Soll die Präsentation  \"" + event.presentation.title + "\" (" +
@@ -91,9 +90,9 @@ var deletePresentation = function(event) {
     }
 
     /** global: uri_delete_scheduled */
-    ajaxLoadShow();
+    window.ajaxLoadShow();
     $.ajax({
-        url: uri_delete_scheduled,
+        url: window.uri_delete_scheduled,
         method: 'POST',
         data: {
             'id':  event.id
@@ -102,7 +101,7 @@ var deletePresentation = function(event) {
         $('#calendar').fullCalendar('refetchEventSources', event.source);
         $.notify("Präsentation entfernt.", "success");
     }).always(function () {
-        ajaxLoadHide();
+        window.ajaxLoadHide();
     });
 };
 
@@ -114,7 +113,7 @@ var addEventSource = function(screen, id) {
     $('#calendar').fullCalendar('addEventSource',
         {
             id:         id,
-            url:        uri_get_schedule,
+            url:        window.uri_get_schedule,
             type:       'POST',
             data: {
                 screen:  $(screen).data('guid'),
@@ -128,11 +127,11 @@ var addEventSource = function(screen, id) {
             // TODO colors übernehmen
         }
     );
-}
+};
 
 var getSelectedScreen = function() {
     return $('#sched-screen-list .selected').get(0);
-}
+};
 
 var setScreenColor = function(screen) {
     var col = screen_colors[$(screen).data('color-set')];
@@ -140,12 +139,11 @@ var setScreenColor = function(screen) {
         $(screen).css('background-color', col.dark);
         $(screen).css('color', col.light);
         $(screen).children('.selector').css('background-color', col.normal);
-    }
-    else {
+    } else {
         $(screen).css('background-color', col.light);
         $(screen).css('color', col.normal);
     }
-}
+};
 
 $(document).ready(function() {
 

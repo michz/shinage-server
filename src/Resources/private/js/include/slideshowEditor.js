@@ -82,13 +82,13 @@ window.SlideshowEditor = {
         // Write properties in slide settings pane
         for (var property in slide) {
             if (slide.hasOwnProperty(property)) {
-                $("#tabSlide .settings input[name="+property+"]", this.container).val(slide[property]);
+                $("#tabSlide .settings input[name=" + property + "]", this.container).val(slide[property]);
             }
         }
 
         // this is the SlideshowEditor object; e.currentTarget the event handler's element
         $("#tabSlide .settings", this.container).hide();
-        $("#tabSlide .settings."+slide.type, this.container).show();
+        $("#tabSlide .settings." + slide.type, this.container).show();
 
         this.selectedSlide = slide;
         $('.tabular.menu .item').tab('change tab', 'tabSlide');
@@ -108,7 +108,7 @@ window.SlideshowEditor = {
         this.saveSlides();
     },
     appendSlide: function (slide) {
-        var slideDiv = $("#prototypes .prototype.slide."+slide.type, this.container).clone();
+        var slideDiv = $("#prototypes .prototype.slide." + slide.type, this.container).clone();
         slideDiv.removeClass("prototype");
         slideDiv.attr('data-slide', JSON.stringify(slide));
         this.provisionSlide(slideDiv, slide);
@@ -167,9 +167,10 @@ window.SlideshowEditor = {
             }
         }).done(function () {
             // do nothing by now
-        }).fail(function (e) {
-            console.log("Error saving slides: ");
-            console.log(e);
+        }).fail(function () {
+            // @TODO handle save error
+            // console.log("Error saving slides: ");
+            // console.log(e);
         });
     }
 };

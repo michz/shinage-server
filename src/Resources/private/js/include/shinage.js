@@ -3,11 +3,11 @@
  */
 
 
-var ajaxLoadShow = function() {
+window.ajaxLoadShow = function() {
     $('#ajax-loading').fadeIn(200);
 };
 
-var ajaxLoadHide = function() {
+window.ajaxLoadHide = function() {
     $('#ajax-loading').fadeOut(200);
 };
 
