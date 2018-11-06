@@ -106,10 +106,10 @@ gulp.task('player-js', ['clean'], function() {
 gulp.task('default', ['copy', 'css', 'js', 'player-css', 'player-js']);
 
 
-/*
+
 // Rerun the task when a file changes
 gulp.task('watch', function() {
-  gulp.watch(paths.scripts, ['scripts']);
-  gulp.watch(paths.images, ['images']);
+  gulp.watch(paths.js, ['js']);
+  gulp.watch(paths.css, ['css']);
 });
-*/
+
