@@ -4,6 +4,7 @@ var uglify = require('gulp-uglify');
 var clean_css = require('gulp-clean-css');
 var environments = require('gulp-environments');
 var sourcemaps = require('gulp-sourcemaps');
+var eslint = require('gulp-eslint');
 var del = require('del');
 
 var development = environments.development;
@@ -14,6 +15,9 @@ var elfinderDistPath = 'public/vendor/studio-42/elfinder';
 var semanticDistPath = 'public/semantic-ui-css';
 var jqueryUiDistPath = 'public/jquery-ui-dist';
 var revealDistPath = 'public/reveal.js';
+var esLintPaths = [
+    'src/Resources/private/js/include/**',
+];
 var paths = {
     js: [
         'node_modules/jquery/dist/jquery.js',
@@ -105,11 +109,16 @@ gulp.task('player-js', ['clean'], function() {
 
 gulp.task('default', ['copy', 'css', 'js', 'player-css', 'player-js']);
 
+gulp.task('eslint', () => {
+    return gulp.src(esLintPaths)
+        .pipe(eslint())
+        .pipe(eslint.format())
+        .pipe(eslint.failAfterError());
+});
 
-/*
 // Rerun the task when a file changes
 gulp.task('watch', function() {
-  gulp.watch(paths.scripts, ['scripts']);
-  gulp.watch(paths.images, ['images']);
+  gulp.watch(paths.js, ['js']);
+  gulp.watch(paths.css, ['css']);
 });
-*/
+

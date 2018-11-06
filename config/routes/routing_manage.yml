@@ -38,6 +38,16 @@ presentation-delete:
   requirements:
     presentationId: '\d+'
 
+presentation-save-title:
+  path: /presentations/save-title/
+  controller: App\Controller\Management\PresentationsController::savePresentationTitle
+  methods: [ post ]
+
+presentation-save-notes:
+  path: /presentations/save-notes/
+  controller: App\Controller\Management\PresentationsController::savePresentationNotes
+  methods: [ post ]
+
 
 management-preview:
   path: /preview

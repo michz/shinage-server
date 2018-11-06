@@ -81,14 +81,14 @@
 {# Scripts for placement at the end of <body> tag #}
 {% block scripts %}
     <script>
-        var uri_get_schedule = '{{ path('management-get-schedule') }}';
-        var uri_add_scheduled = '{{ path('management-add-scheduled') }}';
-        var uri_change_scheduled = '{{ path('management-change-scheduled') }}';
-        var uri_delete_scheduled = '{{ path('management-delete-scheduled') }}';
+        window.uri_get_schedule = '{{ path('management-get-schedule') }}';
+        window.uri_add_scheduled = '{{ path('management-add-scheduled') }}';
+        window.uri_change_scheduled = '{{ path('management-change-scheduled') }}';
+        window.uri_delete_scheduled = '{{ path('management-delete-scheduled') }}';
     </script>
 
     <script>
-        var showCreateDialog = function(start, stop, success) {
+        window.showCreateDialog = function(start, stop, success) {
             $('#diag-place').find('#date-start').val(start.format('DD-MM-YYYY HH:mm'));
             $('#diag-place').find('#date-end').val(stop.format('DD-MM-YYYY HH:mm'));
             $('#diag-place').dialog('option', 'successCallback', success);

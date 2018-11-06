@@ -19,6 +19,7 @@ before_script:
 
 script:
   - ./vendor/bin/ecs check src/
+  - ./node_modules/.bin/gulp eslint
   - ./bin/console lint:yaml config/
   - ./bin/console lint:yaml src/
   - ./bin/console lint:twig config/
