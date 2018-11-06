@@ -18,6 +18,7 @@
         {% for presentationGroup in presentations %}
             {% for presentation in presentationGroup %}
                 <h2
+                        id="title-{{ presentation.id }}"
                         class="ui top attached block header"
                         data-content-editable="true"
                         data-content-editable-save-callback="{{ path('presentation-save-title') }}"

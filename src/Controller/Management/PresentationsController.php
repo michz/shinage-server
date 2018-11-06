@@ -95,7 +95,10 @@ class PresentationsController extends Controller
 
             $this->entityManager->persist($presentation);
             $this->entityManager->flush();
-            return $this->redirectToRoute('management-presentations');
+            return $this->redirectToRoute(
+                'management-presentations',
+                ['_fragment' => 'title-' . $presentation->getId()]
+            );
         }
 
         return $this->render('manage/presentations/create.html.twig', [
