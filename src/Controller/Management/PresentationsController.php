@@ -129,6 +129,48 @@ class PresentationsController extends Controller
         return $this->redirectToRoute('management-presentations');
     }
 
+    public function savePresentationTitle(Request $request): Response
+    {
+        $user = $this->tokenStorage->getToken()->getUser();
+        $presentationId = $request->get('subject');
+        $newTitle = $request->get('value');
+
+        $presentation = $this->entityManager->find(Presentation::class, $presentationId);
+        if (null === $presentation) {
+            return new Response('Presentation not found.', 400);
+        }
+
+        if ($user !== $presentation->getOwner()) {
+            return new Response('Only owner can edit title.', 403);
+        }
+
+        $presentation->setTitle(trim($newTitle));
+        $this->entityManager->flush();
+
+        return new Response('', 204);
+    }
+
+    public function savePresentationNotes(Request $request): Response
+    {
+        $user = $this->tokenStorage->getToken()->getUser();
+        $presentationId = $request->get('subject');
+        $newDescription = $request->get('value');
+
+        $presentation = $this->entityManager->find(Presentation::class, $presentationId);
+        if (null === $presentation) {
+            return new Response('Presentation not found.', 400);
+        }
+
+        if ($user !== $presentation->getOwner()) {
+            return new Response('Only owner can edit title.', 403);
+        }
+
+        $presentation->setNotes($newDescription);
+        $this->entityManager->flush();
+
+        return new Response('', 204);
+    }
+
     /**
      * @return array|Presentation[]
      */
