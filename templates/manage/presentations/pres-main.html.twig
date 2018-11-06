@@ -33,8 +33,13 @@
                             data-content-editable-allow-newline="true"
                     >{{ presentation.notes }}</p>
                 </div>
-                <div class="ui middle attached segment row slide">
-                    <p>{{ 'Last modified'|trans }}: {{ presentation.lastModified|date('d.m.Y H:i') }}</p>
+                <div class="ui middle attached segment row horizontal segments">
+                    <div class="ui middle attached segment row slide">
+                        <p>{{ presentation.type|trans([], 'PresentationTypes') }}</p>
+                    </div>
+                    <div class="ui middle attached segment row slide">
+                        <p>{{ 'Last modified'|trans }}: {{ presentation.lastModified|date('d.m.Y H:i') }}</p>
+                    </div>
                 </div>
                 <div class="ui bottom attached segment">
                     <a class="ui labeled icon button default" href="{{ path("presentation-editor-" ~ presentation.type, { presentationId: presentation.id })  }}">
