@@ -19,6 +19,15 @@ use Symfony\Component\HttpFoundation\StreamedResponse;
 
 class PoolController extends Controller
 {
+    /** @var FilePoolUrlBuilder */
+    private $filePoolUrlBuilder;
+
+    public function __construct(
+        FilePoolUrlBuilder $filePoolUrlBuilder
+    ) {
+        $this->filePoolUrlBuilder = $filePoolUrlBuilder;
+    }
+
     /**
      * @return Response|StreamedResponse
      *
@@ -46,11 +55,8 @@ class PoolController extends Controller
         // @TODO    OR if belongs to organziation that user belongs to that is logged cookie
         // @TODO    OR if belongs to organziation that user belongs to that is logged in via API Token
 
-        /* @var FilePoolUrlBuilder $poolUrlBuilder */
-
         try {
-            $poolUrlBuilder = $this->get('app.filepool.url_builder');
-            $absolutePath = $poolUrlBuilder->getAbsolutePath($path, $userRoot);
+            $absolutePath = $this->filePoolUrlBuilder->getAbsolutePath($path, $userRoot);
 
             $fileInfo = new File($absolutePath);
             return new StreamedResponse(
