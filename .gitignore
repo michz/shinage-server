@@ -42,6 +42,8 @@ tests/_output/*
 
 .web-server-pid
 
+/etc/dev/docker/nginx/server.*
+
 ###> symfony/framework-bundle ###
 /.env
 /public/bundles/

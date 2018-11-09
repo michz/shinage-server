@@ -12,6 +12,8 @@ services:
       - ${PROJECT_DIR}:/usr/share/nginx/html:delegated
       - ./nginx/nginx.conf:/etc/nginx/nginx.conf:delegated
       - ./nginx/default.conf:/etc/nginx/conf.d/default.conf:delegated
+      - ./nginx/server.crt:/opt/server.crt:delegated
+      - ./nginx/server.key:/opt/server.key:delegated
     links:
       - php
       - mariadb

@@ -4,16 +4,19 @@ PROJECT_DIR="$( cd "$( dirname $( dirname "${BASH_SOURCE[0]}") )" && pwd )"
 PROJECT_NAME="$( basename ${PROJECT_DIR} )"
 DOCKER_COMPOSE_YAML=${PROJECT_DIR}"/etc/dev/docker/docker-compose.yml"
 
-#function prepare {
-#    if [ ! -f ${PROJECT_DIR}/etc/dev/docker/nginx/server.crt ] || [ ! -f ${PROJECT_DIR}/etc/dev/docker/nginx/server.key ]; then
-#        echo "TLS certificate for HTTPS does not exist yet, creating..."
-#        ${PROJECT_DIR}/bin/generateDevCertificate.sh
-#        echo "TLS certificate created."
-#    fi
-#}
-
 function prepare {
-    echo "TODO prepare"
+    if [ ! -f ${PROJECT_DIR}/etc/dev/docker/nginx/server.crt ] || [ ! -f ${PROJECT_DIR}/etc/dev/docker/nginx/server.key ]; then
+        echo "TLS certificate for HTTPS does not exist yet, creating..."
+        openssl req -x509 \
+            -nodes \
+            -newkey rsa:4096 \
+            -keyout ${PROJECT_DIR}/etc/dev/docker/nginx/server.key \
+            -out ${PROJECT_DIR}/etc/dev/docker/nginx/server.crt \
+            -days 365 \
+            -subj '/CN=localhost' \
+            -sha256
+        echo "TLS certificate created."
+    fi
 }
 
 function echo_configuration {
