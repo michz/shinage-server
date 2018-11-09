@@ -8,54 +8,21 @@ declare(strict_types=1);
 
 namespace App\Entity;
 
-use JMS\Serializer\Annotation as JMS;
-
-/**
- * @JMS\VirtualProperty(
- *     "screen",
- *     exp="object.getScreen().getGuid()",
- *     options={@JMS\SerializedName("screen")}
- *  )
- */
 class ScheduledPresentation
 {
-    /**
-     * @var int
-     *
-     * @JMS\Type("integer")
-     */
+    /** @var int */
     private $id;
 
-    /**
-     * @var Screen
-     *
-     * @JMS\Exclude()
-     */
+    /** @var Screen */
     private $screen;
 
-    /**
-     * @var Presentation
-     *
-     * @JMS\Type(Presentation::class)
-     */
+    /** @var Presentation */
     private $presentation;
 
-    /**
-     * @var \DateTime
-     *
-     * @JMS\Type("DateTime<'Y-m-d H:i:s'>")
-     *
-     * @JMS\SerializedName("start")
-     */
+    /** @var \DateTime */
     private $scheduled_start;
 
-    /**
-     * @var \DateTime
-     *
-     * @JMS\Type("DateTime<'Y-m-d H:i:s'>")
-     *
-     * @JMS\SerializedName("end")
-     */
+    /** @var \DateTime */
     private $scheduled_end;
 
     public function getId(): int
