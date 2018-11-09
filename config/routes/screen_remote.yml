@@ -6,6 +6,12 @@ screen-remote-heartbeat:
   requirements:
     screenId: .+
 
+current-for:
+  path: /current-for/{guid}
+  controller: App\Controller\ScreenRemote\CurrentForController::indexAction
+  requirements:
+    guid: .+
+
 screen-remote-presentation:
   path: /presentation/{id}
   controller: App\Controller\ScreenRemote\HeartbeatController::presentationAction
