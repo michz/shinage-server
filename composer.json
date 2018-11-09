@@ -30,7 +30,6 @@
     "doctrine/doctrine-cache-bundle": "^1.2",
     "friendsofsymfony/user-bundle": "~2.0",
     "studio-42/elfinder": "2.1.x@dev",
-    "rollerworks/password-strength-bundle": "^2.0",
     "guzzlehttp/guzzle": "^6.3",
     "roave/security-advisories": "dev-master",
     "knplabs/knp-menu-bundle": "^2.1",

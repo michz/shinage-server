@@ -260,12 +260,6 @@
     "roave/security-advisories": {
         "version": "dev-master"
     },
-    "rollerworks/password-strength-bundle": {
-        "version": "v2.0.2"
-    },
-    "rollerworks/password-strength-validator": {
-        "version": "v1.1.4"
-    },
     "sebastian/comparator": {
         "version": "3.0.2"
     },
