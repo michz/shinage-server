@@ -77,14 +77,6 @@ management-delete-scheduled:
   controller: App\Controller\Management\SchedulerController::deleteScheduledAction
 
 
-pool-get:
-  path: /pool/{userRoot}/{path}
-  controller: App\Controller\PoolController::getAction
-  requirements:
-    userRoot: "[^/]*"
-    path: .*
-
-
 management-files:
   path: /files
   controller: App\Controller\Management\FileManager::filesAction

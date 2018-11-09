@@ -37,5 +37,5 @@ security:
     #- { path: ^/resetting, role: IS_AUTHENTICATED_ANONYMOUSLY }
     - { path: ^/adm/modify_screen, role: ROLE_USER }
     - { path: ^/adm, role: ROLE_ADMIN }
-    - { path: ^/manage/pool, role: IS_AUTHENTICATED_ANONYMOUSLY, methods: [GET] }
     - { path: ^/manage, role: ROLE_USER }
+    - { path: ^/pool, role: IS_AUTHENTICATED_ANONYMOUSLY, methods: [GET] }
