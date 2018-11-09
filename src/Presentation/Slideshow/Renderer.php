@@ -35,14 +35,10 @@ class Renderer implements PresentationRendererInterface
     {
         /** @var Settings $parsedSettings */
         $parsedSettings = $this->settingsReader->get($presentation->getSettings());
-        $count = count($parsedSettings->getSlides());
+        $count = \count($parsedSettings->getSlides());
 
-        // @TODO diese Dateien sind schon weitgehend per Gulp vorbereitet
-        $jqueryUrl = $this->assetPackages->getUrl('js/lib/jquery-3.1.1.min.js');
-        $revealCssUrl = $this->assetPackages->getUrl('reveal.js/css/reveal.css');
-        $revealThemeUrl = $this->assetPackages->getUrl('css/reveal_theme_very_black.css');
-        $revealHeadUrl = $this->assetPackages->getUrl('reveal.js/lib/js/head.min.js');
-        $revealUrl = $this->assetPackages->getUrl('reveal.js/js/reveal.js');
+        $playerUrl = $this->assetPackages->getUrl('assets/player.min.js');
+        $playerCssUrl = $this->assetPackages->getUrl('assets/player.min.css');
 
         $slides = '';
 
@@ -60,7 +56,7 @@ class Renderer implements PresentationRendererInterface
                 ";
             } elseif ('Video' === $slide->getType()) {
                 /* @var $slide VideoSlide */
-                $uniqueId = 'video-' . random_int(1, 10000); // @TODO better unique id (counter)
+                $uniqueId = 'video-' . \random_int(1, 10000); // @TODO better unique id (counter)
                 $slides .= "
                     <section 
                         id='{$uniqueId}'
@@ -126,11 +122,8 @@ class Renderer implements PresentationRendererInterface
                 max-height: 100%;
             }
         </style>
-        <script src='$jqueryUrl' type='text/javascript'></script>
-        <link rel='stylesheet' href='$revealCssUrl' id='theme'>      
-        <link rel='stylesheet' href='$revealThemeUrl' id='theme'>      
-        <script src='$revealHeadUrl' type='text/javascript'></script>
-        <script src='$revealUrl' type='text/javascript'></script>
+        <script src='$playerUrl' type='text/javascript'></script>
+        <link rel='stylesheet' href='$playerCssUrl' id='theme'>      
     </head>
     <body>
         <div id='container'>
@@ -141,20 +134,20 @@ class Renderer implements PresentationRendererInterface
                 </div>
             </div>
         </div>
-		<script>
-			Reveal.initialize({
-			    width: 1280,
-			    height: 720,
-			    controls: false,
-			    controlsTutorial: false,
-			    progress: false,
-			    slideNumber: false,
-            	history: false,
-            	keyboard: false,
-            	overview: false,
-            	touch: false,
-            	loop: true,
-            	rtl: false,
+        <script>
+            Reveal.initialize({
+                width: 1280,
+                height: 720,
+                controls: false,
+                controlsTutorial: false,
+                progress: false,
+                slideNumber: false,
+                history: false,
+                keyboard: false,
+                overview: false,
+                touch: false,
+                loop: true,
+                rtl: false,
                 shuffle: false,
                 fragments: false,
                 fragmentInURL: false,
@@ -180,9 +173,9 @@ class Renderer implements PresentationRendererInterface
                 parallaxBackgroundHorizontal: null,
                 parallaxBackgroundVertical: null,
                 display: 'block'
-			});
-			
-			document.addEventListener('ended', function() {
+            });
+            
+            document.addEventListener('ended', function() {
                 Reveal.next();
             }, true);
         </script>
