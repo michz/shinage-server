@@ -13,7 +13,6 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\EntityManagerInterface;
 use FOS\UserBundle\Model\User as BaseUser;
-use Rollerworks\Bundle\PasswordStrengthBundle\Validator\Constraints as RollerworksPassword;
 
 class User extends BaseUser
 {
@@ -32,18 +31,10 @@ class User extends BaseUser
     /** @var Collection */
     private $users;
 
-    /**
-     * @var string
-     *
-     * @RollerworksPassword\PasswordRequirements(requireLetters=true, requireNumbers=true)
-     */
+    /** @var string */
     protected $password;
 
-    /**
-     * @var string
-     *
-     * @RollerworksPassword\PasswordRequirements(requireLetters=true, requireNumbers=true)
-     */
+    /** @var string */
     protected $plainPassword;
 
     public function __construct()
