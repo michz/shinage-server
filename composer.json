@@ -47,7 +47,8 @@
     "symfony/validator": "^4.1",
     "symfony/dotenv": "^4.1",
     "symfony/orm-pack": "^1.0",
-    "symfony/asset": "^4.1"
+    "symfony/asset": "^4.1",
+    "symfony/expression-language": "^4.1"
   },
   "require-dev": {
     "symfony/phpunit-bridge": "^3.0",
