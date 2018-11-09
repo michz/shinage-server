@@ -1,0 +1,21 @@
+App\Entity\ScheduledPresentation:
+  exclusion_policy: ALL
+  properties:
+    id:
+      type: integer
+      expose: true
+    presentation:
+      expose: true
+    scheduled_start:
+      serialized_name: start
+      type: "DateTime<'Y-m-d H:i:s'>"
+      expose: true
+    scheduled_end:
+      serialized_name: end
+      type: "DateTime<'Y-m-d H:i:s'>"
+      expose: true
+  virtual_properties:
+    screen_prop:
+      serialized_name: screen
+      exp: object.getScreen().getGuid()
+
