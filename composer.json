@@ -47,7 +47,8 @@
     "symfony/dotenv": "^4.1",
     "symfony/orm-pack": "^1.0",
     "symfony/asset": "^4.1",
-    "symfony/expression-language": "^4.1"
+    "symfony/expression-language": "^4.1",
+    "sensio/framework-extra-bundle": "^5.2"
   },
   "require-dev": {
     "symfony/phpunit-bridge": "^3.0",
