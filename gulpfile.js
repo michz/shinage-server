@@ -78,7 +78,7 @@ gulp.task('copy', function() {
 gulp.task('css', ['clean'], function() {
     return gulp.src(paths.css)
         .pipe(development(sourcemaps.init()))
-        .pipe(clean_css({rebaseTo: './public/assets'}))
+        .pipe(clean_css({}))
         .pipe(concat('all.min.css'))
         .pipe(development(sourcemaps.write()))
         .pipe(gulp.dest(distPath));
