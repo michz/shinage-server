@@ -35,7 +35,7 @@
                 </div>
                 <div class="ui middle attached segment row horizontal segments">
                     <div class="ui middle attached segment row slide">
-                        <p>{{ presentation.type|trans([], 'PresentationTypes') }}</p>
+                        <p><i class="ui icon {{ presentation.type|trans([], 'PresentationTypesIcons') }}"></i> {{ presentation.type|trans([], 'PresentationTypes') }}</p>
                     </div>
                     <div class="ui middle attached segment row slide">
                         <p>{{ 'Last modified'|trans }}: {{ presentation.lastModified|date('d.m.Y H:i') }}</p>
@@ -69,7 +69,7 @@
         </div>
         <div class="actions">
             <div class="ui cancel button">{{ 'No (cancel)'|trans }}</div>
-            <div class="ui approve button">{{ 'Yes'|trans }}</div>
+            <div class="ui red approve button">{{ 'Yes'|trans }}</div>
         </div>
     </div>
 
