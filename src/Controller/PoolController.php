@@ -57,15 +57,32 @@ class PoolController extends Controller
 
         try {
             $absolutePath = $this->filePoolUrlBuilder->getAbsolutePath($path, $userRoot);
-
             $fileInfo = new File($absolutePath);
+            $lastModifiedDate = $fileInfo->getMTime();
+
+            $expectedLastModifiedDate = $request->headers->get('if-modified-since');
+            if (null !== $expectedLastModifiedDate) {
+                $expectedLastModifiedTimestamp = \strtotime($expectedLastModifiedDate);
+                if ($lastModifiedDate <= $expectedLastModifiedTimestamp) {
+                    return new Response(
+                        \file_get_contents($absolutePath),
+                        304,
+                        [
+                            'Content-Length' => 0,
+                            'Last-Modified' => \gmdate('D, d M Y G:i:s T', $lastModifiedDate),
+                        ]
+                    );
+                }
+            }
+
             return new StreamedResponse(
                 function () use ($absolutePath): void {
-                    readfile($absolutePath);
+                    \readfile($absolutePath);
                 },
                 200,
                 [
-                    'Content-Type' => $fileInfo->getMimeType(),
+                    'Content-Type'  => $fileInfo->getMimeType(),
+                    'Last-Modified' => \gmdate('D, d M Y G:i:s T', $lastModifiedDate),
                 ]
             );
         } catch (FileNotFoundException $oException) {
@@ -74,30 +91,4 @@ class PoolController extends Controller
             return new Response('', 403);
         }
     }
-
-//    /**
-//     * @param User|null $user
-//     * @param Request   $request
-//     * @param           $userRoot
-//     *
-//     * @return bool
-//     */
-//    protected function checkPermissions($user, Request $request, $userRoot): bool
-//    {
-//        // Check logged in user
-//        if ($user !== null) {
-//            /** @var FilePoolPermissionChecker $permissionChecker */
-//            $permissionChecker = $this->get('app.filepool.permission_checker');
-//            if ($permissionChecker->mayUserAccessRoot($user, $userRoot)) {
-//                return true;
-//            }
-//        }
-//
-//        return false;
-//    }
-//
-//    protected function getLoggedInUser(Request $request)
-//    {
-//        return $this->getUser();
-//    }
 }
