@@ -115,60 +115,11 @@ code { background: #F5F5F5; max-width: 100px; padding: 2px 6px; word-wrap: break
     background: #000; color: #eee; text-align: center; }
 
 
-/* presentations */
-
-/*
-.new-pres, .load-pres { cursor: pointer; }
-
-#chose-presentation li { position: relative; padding-left:20px; }
-#chose-presentation li img { position: absolute; left:1px; top:3px; cursor: pointer; }
-
-
-#pool-tree { border: 1px solid #2a6496; overflow-x:scroll; min-height:300px; }
-#pool-tree ul li { list-style: circle; white-space: nowrap; font-size:14px; }
-#presentation-builder-container .presentation-builder { border:1px solid #3a87ad;
-    min-height:300px; margin:0; padding:5px; }
-
-
-.elem { position:relative; display:inline-block;
-    margin:0 5px; padding:0; background-color:#000000;
-    width: 140px; height: 100px; border:1px solid #000; }
-
-.elem .name { display:block; position:absolute;
-    top:0; left:0; right:0; height: 16px;
-    font-size: 12px; font-weight:bold; text-align: center;
-    visibility: hidden; }
-
-.elem .duration { display:block; position:absolute;
-    bottom:2px; right:2px; height: 16px; line-height: 14px;
-    font-size:12px; background-color:#FFF; padding-bottom:2px;}
-
-.elem .duration input { width:40px; font-size:12px;
-    text-align: right; padding-right:4px; font-weight: bold;
-    border:0; margin:1px; line-height: 14px;  }
-
-.elem .duration input:hover,
-.elem .duration input:focus
-{ margin:0;  border:1px solid #92AAB0; }
-
-.elem img.preview { position:absolute; top:0; left:0; right:0; bottom:0;
-    max-width:100%; max-height:100%; height:auto; text-align:center; margin:auto; }
-
-.elem img.button-delete { position:absolute; top:2px; right:2px; cursor: pointer; }
-*/
 
 /* screens */
 #screens-wrapper { text-align: center; }
-/*
-#connect-screen { border:1px solid #2a6496; margin:5px; padding:5px; }
-#connect-screen p, .form p { margin:3px 0; padding:0; }
-#connect-screen .label, .form .label, .form label { display:inline-block; width:180px; }
 
-#connect-screen .input input, #connect-screen .input select,
-.form .input input, .form .input select
-  { width:150px; }
-*/
-
+/* Account */
 .account-form { border:1px solid #92AAB0; margin:10px 0; padding:5px; }
 
 /* make sidebar nav vertical */
