@@ -61,21 +61,34 @@ var playerPaths = {
 };
 
 gulp.task('clean', function() {
-    return del([distPath]);
+    return del([
+        distPath,
+        elfinderDistPath,
+        semanticDistPath,
+        jqueryUiDistPath,
+        revealDistPath,
+    ]);
 });
 
-gulp.task('copy', function() {
-    gulp.src('node_modules/semantic-ui-css/themes/**')
+gulp.task('copy1', function() {
+    return gulp.src('node_modules/semantic-ui-css/themes/**')
         .pipe(gulp.dest(semanticDistPath + '/themes/'));
-    gulp.src('vendor/studio-42/elfinder/img/**')
+});
+gulp.task('copy2', function() {
+    return gulp.src('vendor/studio-42/elfinder/img/**')
         .pipe(gulp.dest(elfinderDistPath + '/img/'));
-    gulp.src('node_modules/jquery-ui-dist/images/**')
+});
+gulp.task('copy3', function() {
+    return gulp.src('node_modules/jquery-ui-dist/images/**')
         .pipe(gulp.dest(jqueryUiDistPath + '/images/'));
-    gulp.src('node_modules/reveal.js/**')
+});
+gulp.task('copy4', function() {
+    return gulp.src('node_modules/reveal.js/**')
         .pipe(gulp.dest(revealDistPath + '/'));
 });
+gulp.task('copy', ['copy1','copy2','copy3','copy4']);
 
-gulp.task('css', ['clean'], function() {
+gulp.task('css', ['copy'], function() {
     return gulp.src(paths.css)
         .pipe(development(sourcemaps.init()))
         .pipe(clean_css({}))
@@ -84,7 +97,7 @@ gulp.task('css', ['clean'], function() {
         .pipe(gulp.dest(distPath));
 });
 
-gulp.task('js', ['clean'], function() {
+gulp.task('js', ['copy'], function() {
     return gulp.src(paths.js)
         .pipe(development(sourcemaps.init()))
         .pipe(uglify())
@@ -93,7 +106,7 @@ gulp.task('js', ['clean'], function() {
         .pipe(gulp.dest(distPath));
 });
 
-gulp.task('player-css', ['clean'], function() {
+gulp.task('player-css', ['copy'], function() {
     return gulp.src(playerPaths.css)
         .pipe(development(sourcemaps.init()))
         .pipe(clean_css({rebaseTo: './public/assets'}))
@@ -102,7 +115,7 @@ gulp.task('player-css', ['clean'], function() {
         .pipe(gulp.dest(distPath));
 });
 
-gulp.task('player-js', ['clean'], function() {
+gulp.task('player-js', ['copy'], function() {
     return gulp.src(playerPaths.js)
         .pipe(development(sourcemaps.init()))
         .pipe(uglify())
