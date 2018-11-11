@@ -8,11 +8,11 @@ declare(strict_types=1);
 
 namespace App\Presentation;
 
-use App\Entity\Presentation;
+use App\Entity\PresentationInterface;
 
 interface PresentationRendererInterface
 {
-    public function render(Presentation $presentation): string;
+    public function render(PresentationInterface $presentation): string;
 
-    public function getLastModified(Presentation $presentation): \DateTime;
+    public function getLastModified(PresentationInterface $presentation): \DateTime;
 }

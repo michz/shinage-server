@@ -9,6 +9,7 @@ declare(strict_types=1);
 namespace App\Controller\Management;
 
 use App\Entity\Presentation;
+use App\Entity\PresentationInterface;
 use App\Entity\User;
 use App\Presentation\PresentationTypeRegistryInterface;
 use App\Service\SchedulerService;
@@ -108,7 +109,7 @@ class PresentationsController extends Controller
 
     public function deletePresentationAction(int $presentationId): Response
     {
-        /** @var Presentation $presentation */
+        /** @var PresentationInterface $presentation */
         $presentation = $this->entityManager->find('App:Presentation', $presentationId);
 
         /** @var User $user */
@@ -175,7 +176,7 @@ class PresentationsController extends Controller
     }
 
     /**
-     * @return array|Presentation[]
+     * @return array|PresentationInterface[]
      */
     public function getPresentationsForUser(User $user): array
     {

@@ -8,14 +8,14 @@ declare(strict_types=1);
 
 namespace App\Controller\PresentationEditors;
 
-use App\Entity\Presentation;
+use App\Entity\PresentationInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 
 abstract class AbstractPresentationEditor extends Controller
 {
-    abstract public function supports(Presentation $presentation): bool;
+    abstract public function supports(PresentationInterface $presentation): bool;
 
-    public function getPresentation(int $id): Presentation
+    public function getPresentation(int $id): PresentationInterface
     {
         // @TODO catch error (not found) and show meaningful error message
         return $this->getDoctrine()->getEntityManager()->find('App:Presentation', $id);

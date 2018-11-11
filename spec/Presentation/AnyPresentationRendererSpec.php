@@ -3,6 +3,7 @@
 namespace spec\App\Presentation;
 
 use App\Entity\Presentation;
+use App\Entity\PresentationInterface;
 use App\Presentation\AnyPresentationRenderer;
 use App\Presentation\AnyPresentationRendererInterface;
 use App\Presentation\PresentationRendererInterface;
@@ -33,7 +34,7 @@ class AnyPresentationRendererSpec extends ObjectBehavior
         PresentationTypeRegistryInterface $presentationTypeRegistry,
         PresentationTypeInterface $presentationType,
         PresentationRendererInterface $presentationRenderer,
-        Presentation $presentation
+        PresentationInterface $presentation
     ) {
         $typeSlug = 'test_type';
         $renderedPresentation = 'RENDERED PRESENTATION DATA';

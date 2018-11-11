@@ -8,7 +8,7 @@ declare(strict_types=1);
 
 namespace App\Controller\ScreenRemote;
 
-use App\Entity\Presentation;
+use App\Entity\PresentationInterface;
 use App\Entity\Screen;
 use App\Exceptions\NoScreenGivenException;
 use App\Presentation\PresentationTypeRegistryInterface;
@@ -86,7 +86,7 @@ class HeartbeatController extends Controller
         $this->entityManager->flush();
 
         $presentation = null;
-        /** @var Presentation $current */
+        /** @var PresentationInterface $current */
         $current = $this->getCurrentPresentation($screen);
         if (null !== $current) {
             $presentation = $current;
@@ -169,7 +169,7 @@ class HeartbeatController extends Controller
         return $code;
     }
 
-    protected function getCurrentPresentation(Screen $screen): ?Presentation
+    protected function getCurrentPresentation(Screen $screen): ?PresentationInterface
     {
         return $this->scheduler->getCurrentPresentation($screen, true);
     }

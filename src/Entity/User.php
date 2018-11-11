@@ -79,7 +79,7 @@ class User extends BaseUser
         return \in_array($base, $this->getAllowedPoolPaths(), true);
     }
 
-    public function isPresentationAllowed(Presentation $presentation): bool
+    public function isPresentationAllowed(PresentationInterface $presentation): bool
     {
         // @TODO Remove from here and move to own service
 
@@ -98,7 +98,7 @@ class User extends BaseUser
     }
 
     /**
-     * @return Presentation[]|array
+     * @return PresentationInterface[]|array
      *
      * @deprecated
      *

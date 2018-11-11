@@ -10,7 +10,7 @@ namespace App\Entity;
 
 use JMS\Serializer\Annotation as JMS;
 
-class Presentation
+class Presentation implements PresentationInterface
 {
     /**
      * @var int
@@ -62,12 +62,19 @@ class Presentation
         $this->lastModified = new \DateTime();
     }
 
+    public function setId(int $id): PresentationInterface
+    {
+        $this->id = $id;
+
+        return $this;
+    }
+
     public function getId(): int
     {
         return $this->id;
     }
 
-    public function setTitle(string $title): self
+    public function setTitle(string $title): PresentationInterface
     {
         $this->title = $title;
 
@@ -79,7 +86,7 @@ class Presentation
         return $this->title;
     }
 
-    public function setNotes(string $notes): self
+    public function setNotes(string $notes): PresentationInterface
     {
         $this->notes = $notes;
 
@@ -91,7 +98,7 @@ class Presentation
         return $this->notes;
     }
 
-    public function setSettings(string $settings): self
+    public function setSettings(string $settings): PresentationInterface
     {
         $this->settings = $settings;
 
@@ -118,7 +125,7 @@ class Presentation
         return $this->getTitle();
     }
 
-    public function setOwner(User $owner = null): self
+    public function setOwner(User $owner = null): PresentationInterface
     {
         $this->owner = $owner;
 

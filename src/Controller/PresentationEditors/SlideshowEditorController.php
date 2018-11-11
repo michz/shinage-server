@@ -8,7 +8,7 @@ declare(strict_types=1);
 
 namespace App\Controller\PresentationEditors;
 
-use App\Entity\Presentation;
+use App\Entity\PresentationInterface;
 use App\Presentation\Slideshow\Settings;
 use App\Presentation\Slideshow\Slides\ImageSlide;
 use Doctrine\ORM\EntityManagerInterface;
@@ -71,12 +71,12 @@ class SlideshowEditorController extends AbstractPresentationEditor
         return new Response('', 204);
     }
 
-    public function supports(Presentation $presentation): bool
+    public function supports(PresentationInterface $presentation): bool
     {
         return 'slideshow' === $presentation->getType();
     }
 
-    protected function getCurrentSettingsOrEmpty(Presentation $presentation): Settings
+    protected function getCurrentSettingsOrEmpty(PresentationInterface $presentation): Settings
     {
         try {
             $settings = $this->serializer->deserialize($presentation->getSettings(), Settings::class, 'json');

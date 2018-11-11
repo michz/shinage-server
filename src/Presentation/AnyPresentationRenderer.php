@@ -8,7 +8,7 @@ declare(strict_types=1);
 
 namespace App\Presentation;
 
-use App\Entity\Presentation;
+use App\Entity\PresentationInterface;
 
 class AnyPresentationRenderer implements AnyPresentationRendererInterface
 {
@@ -21,7 +21,7 @@ class AnyPresentationRenderer implements AnyPresentationRendererInterface
         $this->presentationTypeRegistry = $presentationTypeRegistry;
     }
 
-    public function render(Presentation $presentation): string
+    public function render(PresentationInterface $presentation): string
     {
         $type = $this->presentationTypeRegistry->getPresentationType($presentation->getType());
         $renderer = $type->getRenderer();

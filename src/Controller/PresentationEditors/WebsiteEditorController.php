@@ -8,7 +8,7 @@ declare(strict_types=1);
 
 namespace App\Controller\PresentationEditors;
 
-use App\Entity\Presentation;
+use App\Entity\PresentationInterface;
 use App\Presentation\Website\Settings;
 use Doctrine\ORM\EntityManagerInterface;
 use JMS\Serializer\SerializerInterface;
@@ -76,7 +76,7 @@ class WebsiteEditorController extends AbstractPresentationEditor
         ]);
     }
 
-    public function supports(Presentation $presentation): bool
+    public function supports(PresentationInterface $presentation): bool
     {
         return 'website' === $presentation->getType();
     }

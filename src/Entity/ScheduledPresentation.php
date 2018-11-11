@@ -16,7 +16,7 @@ class ScheduledPresentation
     /** @var Screen */
     private $screen;
 
-    /** @var Presentation */
+    /** @var PresentationInterface */
     private $presentation;
 
     /** @var \DateTime */
@@ -66,14 +66,14 @@ class ScheduledPresentation
         return $this->scheduled_end;
     }
 
-    public function setPresentation(?Presentation $presentation = null): self
+    public function setPresentation(?PresentationInterface $presentation = null): self
     {
         $this->presentation = $presentation;
 
         return $this;
     }
 
-    public function getPresentation(): ?Presentation
+    public function getPresentation(): ?PresentationInterface
     {
         return $this->presentation;
     }

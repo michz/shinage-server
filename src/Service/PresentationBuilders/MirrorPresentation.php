@@ -8,7 +8,7 @@ declare(strict_types=1);
 
 namespace App\Service\PresentationBuilders;
 
-use App\Entity\Presentation;
+use App\Entity\PresentationInterface;
 
 /**
  * @deprecated
@@ -17,7 +17,7 @@ class MirrorPresentation
 {
     const PRESENTATION_TYPE = 'mirror';
 
-    public function supports(Presentation $presentation): bool
+    public function supports(PresentationInterface $presentation): bool
     {
         return self::PRESENTATION_TYPE === $presentation->getType();
     }
@@ -33,7 +33,7 @@ class MirrorPresentation
     /**
      * @return \App\Entity\ScreenRemote\PlayablePresentation|bool|string
      */
-    public function buildPresentation(Presentation $presentation)
+    public function buildPresentation(PresentationInterface $presentation)
     {
         $settings = json_decode($presentation->getSettings());
         $this->checkValid($presentation);
@@ -46,7 +46,7 @@ class MirrorPresentation
         return file_get_contents($url);
     }
 
-    public function getLastModified(Presentation $presentation): \DateTime
+    public function getLastModified(PresentationInterface $presentation): \DateTime
     {
         $settings = json_decode($presentation->getSettings());
         $this->checkValid($presentation);
@@ -60,7 +60,7 @@ class MirrorPresentation
         return new \DateTime($lastModifiedRaw[0]);
     }
 
-    protected function checkValid(Presentation $presentation): void
+    protected function checkValid(PresentationInterface $presentation): void
     {
         $settings = json_decode($presentation->getSettings());
         if (!isset($settings->url)) {

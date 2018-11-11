@@ -34,10 +34,10 @@ class Screen
     /** @var string */
     protected $connect_code = '';
 
-    /** @var Presentation */
+    /** @var PresentationInterface */
     protected $default_presentation;
 
-    /** @var Presentation */
+    /** @var PresentationInterface */
     protected $current_presentation = null;
 
     public function setGuid(string $guid): self
@@ -136,25 +136,25 @@ class Screen
         return $this->connect_code;
     }
 
-    public function setDefaultPresentation(?Presentation $presentation): self
+    public function setDefaultPresentation(?PresentationInterface $presentation): self
     {
         $this->default_presentation = $presentation;
 
         return $this;
     }
 
-    public function getDefaultPresentation(): ?Presentation
+    public function getDefaultPresentation(): ?PresentationInterface
     {
         return $this->default_presentation;
     }
 
-    public function setCurrentPresentation(?Presentation $presentation = null): self
+    public function setCurrentPresentation(?PresentationInterface $presentation = null): self
     {
         $this->current_presentation = $presentation;
         return $this;
     }
 
-    public function getCurrentPresentation(): ?Presentation
+    public function getCurrentPresentation(): ?PresentationInterface
     {
         return $this->current_presentation;
     }

@@ -8,9 +8,9 @@ declare(strict_types=1);
 
 namespace App\Presentation;
 
-use App\Entity\Presentation;
+use App\Entity\PresentationInterface;
 
 interface AnyPresentationRendererInterface
 {
-    public function render(Presentation $presentation): string;
+    public function render(PresentationInterface $presentation): string;
 }

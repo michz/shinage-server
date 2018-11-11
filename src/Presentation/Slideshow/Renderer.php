@@ -8,7 +8,7 @@ declare(strict_types=1);
 
 namespace App\Presentation\Slideshow;
 
-use App\Entity\Presentation;
+use App\Entity\PresentationInterface;
 use App\Presentation\PresentationRendererInterface;
 use App\Presentation\SettingsReaderInterface;
 use App\Presentation\Slideshow\Slides\ImageSlide;
@@ -31,7 +31,7 @@ class Renderer implements PresentationRendererInterface
         $this->assetPackages = $assetPackages;
     }
 
-    public function render(Presentation $presentation): string
+    public function render(PresentationInterface $presentation): string
     {
         /** @var Settings $parsedSettings */
         $parsedSettings = $this->settingsReader->get($presentation->getSettings());
@@ -184,7 +184,7 @@ class Renderer implements PresentationRendererInterface
         ";
     }
 
-    public function getLastModified(Presentation $presentation): \DateTime
+    public function getLastModified(PresentationInterface $presentation): \DateTime
     {
         return $presentation->getLastModified();
     }
