@@ -1,0 +1,45 @@
+{#
+<div class="dialog">
+    <select name="screen" id="screen-prototype">
+        {% for screen in screens %}
+            <option value="{{ screen.getGuid() }}">{{ screen.getName() }}</option>
+        {% endfor %}
+    </select>
+</div>
+#}
+
+<div class="dialog">
+    <select name="screen" id="screen-prototype">
+        {% for screen in screens %}
+            <option value="{{ screen.getGuid() }}">{{ screen.getName() }}</option>
+        {% endfor %}
+    </select>
+    <select name="presentation" id="presentation-prototype">
+        {% for instance in presentations %}
+            {% for presentation in instance %}
+                <option value="{{ presentation.getId() }}">{{ presentation.getTitle() }}</option>
+            {% endfor %}
+        {% endfor %}
+    </select>
+</div>
+
+<div id="scheduler-diag-place" class="dialog">
+    <form action="{{ path('management-add-scheduled') }}" method="post" class="form-horizontal">
+        <p>
+            <span class="label">{{ 'Presentation'|trans }}:</span>
+            <span id="inp-pres" class="input"></span>
+        </p>
+        <p>
+            <span class="label">{{ 'Screen'|trans }}:</span>
+            <span id="inp-screen" class="input"></span>
+        </p>
+        <p>
+            <span class="label">{{ 'StartTime'|trans }}:</span>
+            <span class="input"><input id="date-start" name="start" class="date-pick" type="text"></span>
+        </p>
+        <p>
+            <span class="label">{{ 'EndTime'|trans }}:</span>
+            <span class="input"><input id="date-end" name="end" class="date-pick" type="text"></span>
+        </p>
+    </form>
+</div>

@@ -1,7 +1,13 @@
 {% extends 'manage/screens/screen-details-base.html.twig' %}
 
 {% block screen_details_main %}
-    TODO
+    <h3 class="ui top attached block header">
+        {{ 'Schedule'|trans }}
+    </h3>
+    <div class="ui bottom attached segment">
+        {% include 'modules/scheduler.html.twig' with { screens: [screen] } %}
+        {% include 'modules/scheduler-dialogs.html.twig' with { screens: [screen] } %}
+    </div>
 {% endblock %}
 
 {% block scripts %}
