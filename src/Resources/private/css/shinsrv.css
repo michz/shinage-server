@@ -31,34 +31,28 @@ body { background: #F5F5F5; font: 16px/1.5 sans-serif; }
     background-color: #ffd4cb;
 }
 
-.sidebar-nav li {
+.sidebar-nav .item {
     border-top: 1px solid #e7e7e7;
     background-color: #fff;
 }
 
-.sidebar-nav li.first {
+.sidebar-nav .item.first {
     border-top: 0;
     background-color: #fff;
 }
 
-/*
-.sidebar-nav li.current {
-    border-left: 3px solid red;
-}
-*/
-.sidebar-nav li.current a:before {
+.ui.menu.sidebar-nav .item.current:before {
     position: absolute;
     top: 0;
     bottom: 0;
     left: 0;
     width: 2px;
+    height: 100%;
     content: "";
-    border-left: 2px solid #ee0000;
+    border-left: 2px solid #4183cb;
 }
 
-
-
-.sidebar-nav li.current a {
+.ui.menu.sidebar-nav .item.current {
     font-weight: bold;
 }
 
@@ -75,7 +69,6 @@ h1, h2 { line-height: 1.2; margin: 0 0 .5em; font-weight:bold; }
 h1 { font-size: 36px; }
 h2 { font-size: 21px; margin-bottom: 1em; }
 p { margin: 0 0 1em 0; }
-a { color: #0000F0; }
 a:hover { text-decoration: none; }
 
 code { background: #F5F5F5; max-width: 100px; padding: 2px 6px; word-wrap: break-word; }
@@ -118,6 +111,7 @@ code { background: #F5F5F5; max-width: 100px; padding: 2px 6px; word-wrap: break
 
 /* screens */
 #screens-wrapper { text-align: center; }
+
 
 /* Account */
 .account-form { border:1px solid #92AAB0; margin:10px 0; padding:5px; }
@@ -191,6 +185,8 @@ code { background: #F5F5F5; max-width: 100px; padding: 2px 6px; word-wrap: break
 #calendar a { color:#000; text-decoration:none; }
 #calendar a:hover { text-decoration:underline; }
 
+
+/*  */
 
 
 /* login form */

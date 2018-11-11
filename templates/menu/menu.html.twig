@@ -12,7 +12,7 @@
 {% block list %}
     {% if item.hasChildren and options.depth is not same as(0) and item.displayChildren %}
         {% import _self as knp_menu %}
-        <div class="ui vertical fluid menu"{{ knp_menu.attributes(listAttributes) }}>
+        <div class="ui vertical fluid menu sidebar-nav"{{ knp_menu.attributes(listAttributes) }}>
             {{ block('children') }}
         </div>
     {% endif %}
@@ -52,7 +52,7 @@
         {%- endif %}
         {# displaying the item #}
         {% import _self as knp_menu %}
-        <div{{ knp_menu.attributes(attributes) }}>
+        {#<div{{ knp_menu.attributes(attributes) }}>#}
             {%- if item.uri is not empty and (not matcher.isCurrent(item) or options.currentAsLink) %}
                 {{ block('linkElement') }}
             {%- else %}
@@ -63,10 +63,11 @@
             {%- set childrenClasses = childrenClasses|merge(['menu_level_' ~ item.level]) %}
             {%- set listAttributes = item.childrenAttributes|merge({'class': childrenClasses|join(' ') }) %}
             {{ block('list') }}
-        </div>
+        {#</div>#}
     {% endif %}
 {% endblock %}
 
 {% block linkElement %}
-    {% import _self as knp_menu %}<a href="{{ item.uri }}"{{ knp_menu.attributes(item.linkAttributes) }}>{{ block('label') }}</a>
+    {#{% import _self as knp_menu %}<a href="{{ item.uri }}"{{ knp_menu.attributes(item.linkAttributes) }}>{{ block('label') }}</a>#}
+    {% import _self as knp_menu %}<a href="{{ item.uri }}"{{ knp_menu.attributes(attributes) }}{{ knp_menu.attributes(item.linkAttributes) }}>{{ block('label') }}</a>
 {% endblock %}
