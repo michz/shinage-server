@@ -92,6 +92,16 @@ services:
       - '@jms_serializer.serializer'
       - 'App\Presentation\Website\Settings'
 
+
+  app.presentation.type.splash:
+    class: App\Presentation\GenericPresentationType
+    arguments:
+      - 'splash'
+      - '@App\Presentation\Splash\Renderer'
+    tags:
+      - app.presentation_type
+
+
   app.presentation.type.slideshow:
     class: App\Presentation\GenericPresentationType
     arguments:
@@ -110,6 +120,7 @@ services:
     arguments:
       - '@jms_serializer.serializer'
       - 'App\Presentation\Slideshow\Settings'
+
 
   app.presentation.type.mirror:
     class: App\Presentation\GenericPresentationType
