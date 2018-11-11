@@ -35,7 +35,11 @@ class CurrentForController extends Controller
     {
         $presentation = $this->scheduler->getCurrentPresentation($screen, true);
         return new Response(
-            $this->urlBuilder->getAbsoluteRouteBasedOnRequest($request, 'presentation', ['id' => $presentation->getId()]),
+            $this->urlBuilder->getAbsoluteRouteBasedOnRequest(
+                $request,
+                'presentation',
+                ['id' => $presentation->getId()]
+            ),
             200,
             [
                 'Access-Control-Allow-Origin' => '*',

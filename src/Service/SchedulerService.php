@@ -9,6 +9,7 @@ declare(strict_types=1);
 namespace App\Service;
 
 use App\Entity\Presentation;
+use App\Entity\PresentationInterface;
 use App\Entity\ScheduledPresentation;
 use App\Entity\Screen;
 use Doctrine\ORM\EntityManagerInterface;
@@ -28,7 +29,7 @@ class SchedulerService
         $this->tokenStorage = $tokenStorage;
     }
 
-    public function getCurrentPresentation(Screen $screen, bool $fallbackToDefault = true): ?Presentation
+    public function getCurrentPresentation(Screen $screen, bool $fallbackToDefault = true): ?PresentationInterface
     {
         $em = $this->em;
 
@@ -54,12 +55,17 @@ class SchedulerService
         }
 
         // no presentation scheduled, so return default
-        if ($fallbackToDefault) {
-            return $screen->getDefaultPresentation();
+        $defaultPresentation = $screen->getDefaultPresentation();
+        if ($fallbackToDefault && null !== $defaultPresentation) {
+            return $defaultPresentation;
         }
 
-        // don't fallback to default, so return null
-        return null;
+        // last option: splash screen
+        $splash = new Presentation();
+        $splash->setId(0);
+        $splash->setType('splash');
+        $splash->setSettings('{}');
+        return $splash;
     }
 
     /**
@@ -73,7 +79,7 @@ class SchedulerService
     /**
      * Delete all scheduled entries of the given presentation.
      */
-    public function deleteAllScheduledPresentationsForPresentation(Presentation $presentation): void
+    public function deleteAllScheduledPresentationsForPresentation(PresentationInterface $presentation): void
     {
         $q = $this->em->createQuery(
             'delete from App:ScheduledPresentation p where p.presentation = :presentation'

@@ -6,7 +6,10 @@
             <select class="ui dropdown">
                 <option disabled selected value="">{{ 'Please chose screen...'|trans }}</option>
                 {% for screen in screens %}
-                    <option value="{{ screen.guid }}">{{ screen.name }}</option>
+                    <option
+                            value="{{ screen.guid }}"
+                            data-preview-url="{{ previewUrls[screen.guid] }}"
+                    >{{ screen.name }}</option>
                 {% endfor %}
             </select>
         </div>
@@ -20,10 +23,8 @@
 {% block scripts %}
     <script>
         $('#screenSelector select').on('change', function (e) {
-            var basePreviewUrl = '{{ path('shinage.player.index') }}';
-            var target = e.currentTarget;
-            var guid = $(target).val();
-            $('#previewFrame').attr('src', basePreviewUrl + '?preview=1&screen=' + guid);
+            var url = $(':selected', e.currentTarget).data('previewUrl');
+            $('#previewFrame').attr('src', url);
         });
     </script>
 {% endblock %}
