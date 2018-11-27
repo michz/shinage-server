@@ -51,7 +51,7 @@ class ScreenContext implements Context
         $this->entityManager->flush();
 
         $association = new ScreenAssociation();
-        $association->setRole('admin');
+        $association->setRoles(['view_screenshot', 'manage', 'schedule']);
         $association->setUser($user);
         $association->setScreen($screen);
         $this->entityManager->persist($association);
