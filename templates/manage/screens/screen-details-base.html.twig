@@ -5,7 +5,7 @@
         <h1>{{ 'Screen Settings'|trans }}</h1>
         <div class="ui stackable grid">
             <div class="four wide column">
-                {% set menu = knp_menu_get('screen-settings', [], {'guid': screen.guid} ) %}
+                {% set menu = knp_menu_get('screen-settings', [], {'screen': screen} ) %}
                 {{ knp_menu_render(menu) }}
             </div>
             <div class="twelve wide column">

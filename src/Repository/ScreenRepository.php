@@ -12,15 +12,16 @@ use App\Entity\Screen;
 use App\Entity\ScreenAssociation;
 use App\Entity\User;
 use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\ORM\Query\Expr;
 
 class ScreenRepository
 {
     /** @var EntityManagerInterface */
-    private $em;
+    private $entityManager;
 
     public function __construct(EntityManagerInterface $em)
     {
-        $this->em = $em;
+        $this->entityManager = $em;
     }
 
     /**
@@ -28,13 +29,20 @@ class ScreenRepository
      */
     public function getScreensForUser(User $user): array
     {
-        $query = $this->em->createQuery(
-            'SELECT screen FROM ' . Screen::class . ' screen ' .
-            '    JOIN ' . ScreenAssociation::class . ' association ' .
-            '    WHERE association.user = :user AND association.screen = screen'
-        );
-        return $query
-                ->setParameter('user', $user)
-                ->getResult();
+        $organizations = $user->getOrganizations();
+        $users = [$user];
+        foreach ($organizations as $organization) {
+            $users[] = $organization;
+        }
+
+        $queryBuilder = $this->entityManager->createQueryBuilder();
+        $queryBuilder
+            ->select('screen')
+            ->from(ScreenAssociation::class, 'assoc')
+            ->join(Screen::class, 'screen', Expr\Join::WITH, $queryBuilder->expr()->eq('assoc.screen', 'screen.guid'))
+            ->where($queryBuilder->expr()->in('assoc.user', ':users'))
+            ->setParameter(':users', $users);
+
+        return $queryBuilder->getQuery()->execute();
     }
 }

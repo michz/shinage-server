@@ -17,14 +17,14 @@ use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInt
 class ScreenAssociation
 {
     /** @var EntityManagerInterface */
-    protected $em;
+    protected $entityManager;
 
     /** @var TokenStorageInterface */
     protected $tokenStorage;
 
     public function __construct(EntityManagerInterface $em, TokenStorageInterface $tokenStorage)
     {
-        $this->em = $em;
+        $this->entityManager = $em;
         $this->tokenStorage = $tokenStorage;
     }
 
@@ -35,59 +35,58 @@ class ScreenAssociation
 
     public function isUserAllowedTo(Screen $screen, User $user, string $attribute): bool
     {
-        $rep = $this->em->getRepository('App:ScreenAssociation');
-        $assoc = $rep->findBy(['screen' => $screen->getGuid()]);
-        $orgas = $user->getOrganizations();
+        $organizations = $user->getOrganizations();
 
-        foreach ($assoc as $a) { /** @var ScreenAssociationEntity $a */
-            if ($user === $a->getUser()) {
-                return $this->roleGreaterOrEqual($a->getRole(), $attribute);
+        $users = [$user];
+        foreach ($organizations as $organization) {
+            $users[] = $organization;
+        }
+
+        $queryBuilder = $this->entityManager->createQueryBuilder();
+        $queryBuilder
+            ->select('assoc')
+            ->from(\App\Entity\ScreenAssociation::class, 'assoc')
+            ->where($queryBuilder->expr()->eq('assoc.screen', ':screen'))
+            ->andWhere($queryBuilder->expr()->in('assoc.user', ':users'))
+            ->setParameter(':screen', $screen)
+            ->setParameter(':users', $users);
+
+        $associations = $queryBuilder->getQuery()->execute();
+        /** @var \App\Entity\ScreenAssociation $association */
+        foreach ($associations as $association) {
+            if (in_array($attribute, $association->getRoles())) {
+                return true;
             }
-
-            foreach ($orgas as $o) { /** @var User $o */
-                if ($o === $a->getUser()) {
-                    return $this->roleGreaterOrEqual($a->getRole(), $attribute);
-                }
-            }
         }
 
-        return false;
-    }
-
-    private function roleGreaterOrEqual(string $granted, string $reference): bool
-    {
-        if ('admin' === $granted || $granted === $reference) {
-            return true;
-        }
-        if ('manage' === $granted && 'author' === $reference) {
-            return true;
-        }
         return false;
     }
 
     public function isScreenAssociated(Screen $screen): bool
     {
-        $rep = $this->em->getRepository('App:ScreenAssociation');
+        $rep = $this->entityManager->getRepository('App:ScreenAssociation');
         $assoc = $rep->findBy(['screen' => $screen->getGuid()]);
 
         return count($assoc) > 0;
     }
 
     /**
-     * @param string $owner (format: "user:<id>" or "orga:<id>")
-     * @param string $role  (from ScreenRoleType-enum)
+     * @param string   $owner (format: "user:<id>" or "orga:<id>")
+     * @param string[] $roles
+     *
+     * @deprecated
      */
-    public function associateByString(Screen $screen, string $owner, string $role): ScreenAssociationEntity
+    public function associateByString(Screen $screen, string $owner, array $roles): ScreenAssociationEntity
     {
         $assoc = new ScreenAssociationEntity();
         $assoc->setScreen($screen);
-        $assoc->setRole($role);
+        $assoc->setRoles($roles);
 
         $aOwner = explode(':', $owner);
         switch ($aOwner[0]) {
             case 'user':
             case 'orga':
-                $assoc->setUser($this->em->find('App:User', $aOwner[1]));
+                $assoc->setUser($this->entityManager->find('App:User', $aOwner[1]));
                 break;
             default:
                 // Error above. Use current user as default.
@@ -97,8 +96,8 @@ class ScreenAssociation
                 break;
         }
 
-        $this->em->persist($assoc);
-        $this->em->flush();
+        $this->entityManager->persist($assoc);
+        $this->entityManager->flush();
         return $assoc;
     }
 }

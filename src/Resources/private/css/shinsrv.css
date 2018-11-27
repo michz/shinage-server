@@ -41,7 +41,7 @@ body { background: #F5F5F5; font: 16px/1.5 sans-serif; }
     background-color: #fff;
 }
 
-.ui.menu.sidebar-nav .item.current:before {
+.ui.menu.sidebar-nav .item.current::after {
     position: absolute;
     top: 0;
     bottom: 0;

@@ -8,11 +8,13 @@
 >
     <div class="sched-screen-list">
         {% for screen in screens %}
-            <div class="item visible{% if loop.first %} selected{% endif %}" data-guid="{{ screen.getGuid() }}">
-                <span title="Anzeigen/Ausblenden" class="selector" data-guid="{{ screen.getGuid() }}"></span>
-                <p title="Name: {{ screen.getName() }}" class="screen-name">{{ screen.getName() }}</p>
-                <p title="Ort: {{ screen.getLocation() }}" class="screen-loction">{{ screen.getLocation() }}</p>
-            </div>
+            {% if is_granted('schedule', screen) %}
+                <div class="item visible{% if loop.first %} selected{% endif %}" data-guid="{{ screen.getGuid() }}">
+                    <span title="Anzeigen/Ausblenden" class="selector" data-guid="{{ screen.getGuid() }}"></span>
+                    <p title="Name: {{ screen.getName() }}" class="screen-name">{{ screen.getName() }}</p>
+                    <p title="Ort: {{ screen.getLocation() }}" class="screen-loction">{{ screen.getLocation() }}</p>
+                </div>
+            {% endif %}
         {% endfor %}
     </div>
 

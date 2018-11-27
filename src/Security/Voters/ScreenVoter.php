@@ -9,7 +9,6 @@ declare(strict_types=1);
 namespace App\Security\Voters;
 
 use App\Entity\Screen;
-use App\Entity\User;
 use App\Service\ScreenAssociation;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\Voter;
@@ -37,9 +36,6 @@ class ScreenVoter extends Voter
      */
     protected function voteOnAttribute($attribute, $subject, TokenInterface $token)
     {
-        /** @var User $user */
-        $user = $token->getUser();
-
-        return $this->screenAssociation->isUserAllowedTo($subject, $user, $attribute);
+        return $this->screenAssociation->isUserAllowedTo($subject, $token->getUser(), $attribute);
     }
 }

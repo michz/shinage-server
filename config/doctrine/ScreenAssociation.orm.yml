@@ -11,9 +11,9 @@ App\Entity\ScreenAssociation:
       generator:
         strategy: IDENTITY
   fields:
-    role:
-      type: string
-      length: 32
+    roles:
+      type: simple_array
+      length: 255
       unique: false
       nullable: false
   manyToOne:

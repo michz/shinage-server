@@ -24,6 +24,22 @@ management-screen-rights:
   requirements:
     guid: "[^/]*"
 
+management-screen-rights-check-user-exists:
+  path: /screen-rights/user-exists
+  controller: App\Controller\Management\Screens\ScreenRightsController:checkUserExistsAction
+
+management-screen-rights-add:
+  path: /{guid}/rights/add
+  controller: App\Controller\Management\Screens\ScreenRightsController:addAction
+  requirements:
+    guid: "[^/]*"
+
+management-screen-rights-remove:
+  path: /screen-rights/remove/{id}
+  controller: App\Controller\Management\Screens\ScreenRightsController:removeAction
+  requirements:
+    id: "\\d*"
+
 management-screen-schedule:
   path: /{guid}/schedule
   controller: App\Controller\Management\Screens\ScreenScheduleController:indexAction

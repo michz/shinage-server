@@ -14,10 +14,9 @@ use App\Entity\ScreenAssociation as ScreenAssociationEntity;
 use App\Entity\User;
 use App\Form\CreateVirtualScreenForm;
 use App\Repository\ScreenRepository;
-use App\ScreenRoleType;
 use App\Service\SchedulerService;
 use App\Service\ScreenAssociation;
-use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Form\Form;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -27,6 +26,9 @@ use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInt
 
 class ScreensController extends Controller
 {
+    /** @var EntityManagerInterface */
+    private $entityManager;
+
     /** @var TokenStorageInterface */
     private $tokenStorage;
 
@@ -40,11 +42,13 @@ class ScreensController extends Controller
     private $screenAssociation;
 
     public function __construct(
+        EntityManagerInterface $entityManager,
         TokenStorageInterface $tokenStorage,
         SchedulerService $scheduler,
         ScreenRepository $screenRepository,
         ScreenAssociation $screenAssociation
     ) {
+        $this->entityManager = $entityManager;
         $this->tokenStorage = $tokenStorage;
         $this->scheduler = $scheduler;
         $this->screenRepository = $screenRepository;
@@ -55,8 +59,6 @@ class ScreensController extends Controller
     {
         /** @var User $user user that is logged in */
         $user = $this->tokenStorage->getToken()->getUser();
-        /** @var EntityManager $em */
-        $em = $this->getDoctrine()->getManager();
 
         // @TODO{s:5} Standardpräsentation pro Screen einstellen
 
@@ -65,7 +67,7 @@ class ScreensController extends Controller
         $this->handleCreateVirtualScreen($request, $createForm);
 
         // make sure former changes to database are visible to getScreensForUser()
-        $em->flush();
+        $this->entityManager->flush();
 
         $screens = $this->screenRepository->getScreensForUser($user);
 
@@ -84,8 +86,7 @@ class ScreensController extends Controller
     public function connectAction(Request $request): RedirectResponse
     {
         $user = $this->tokenStorage->getToken()->getUser();
-        $em = $this->getDoctrine()->getManager();
-        $rep = $em->getRepository('App:Screen');
+        $rep = $this->entityManager->getRepository('App:Screen');
 
         $code   = $request->get('connect_code');
         $who    = $request->get('who');
@@ -99,21 +100,21 @@ class ScreensController extends Controller
         $screen = $screens[0]; /* @var Screen $screen */
 
         $screen->setConnectCode('');
-        $em->persist($screen);
+        $this->entityManager->persist($screen);
 
         $assoc = new ScreenAssociationEntity();
         $assoc->setScreen($screen);
-        $assoc->setRole(ScreenRoleType::ROLE_ADMIN);
+        $assoc->setRoles(['schedule', 'manage', 'view_screenshot']);
 
         if ('me' === $who) {
             $assoc->setUser($user);
         } else {
-            $orga = $em->find(User::class, $who);
+            $orga = $this->entityManager->find(User::class, $who);
             $assoc->setUser($orga);
         }
 
-        $em->persist($assoc);
-        $em->flush();
+        $this->entityManager->persist($assoc);
+        $this->entityManager->flush();
 
         $this->addFlash('success', 'Die Anzeige wurde erfolgreich hinzugefügt.');
         return $this->redirectToRoute('management-screens');
@@ -130,9 +131,6 @@ class ScreensController extends Controller
      */
     protected function handleCreateVirtualScreen(Request $request, Form $createForm): void
     {
-        /** @var EntityManager $em */
-        $em = $this->getDoctrine()->getManager();
-
         if ('POST' !== $request->getMethod() || !$request->request->has($createForm->getName())) {
             return;
         }
@@ -148,14 +146,15 @@ class ScreensController extends Controller
         $virtualScreen->setName($createForm->get('name')->getData());
         $virtualScreen->setFirstConnect(new \DateTime());
         $virtualScreen->setLastConnect(new \DateTime());
-        $em->persist($virtualScreen);
-        $em->flush();
+        $this->entityManager->persist($virtualScreen);
+        $this->entityManager->flush();
 
         // now create association
+        // @TODO Replace
         $this->screenAssociation->associateByString(
             $virtualScreen,
             $createForm->get('owner')->getData(),
-            ScreenRoleType::ROLE_ADMIN
+            ['schedule', 'manage', 'view_screenshot']
         );
 
         $this->addFlash('success', 'Die virtuelle Anzeige wurde erstellt.');

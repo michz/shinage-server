@@ -8,8 +8,6 @@ declare(strict_types=1);
 
 namespace App\Entity;
 
-use App\ScreenRoleType;
-
 class ScreenAssociation
 {
     /** @var int */
@@ -21,24 +19,30 @@ class ScreenAssociation
     /** @var User */
     protected $user;
 
-    /** @var string */
-    protected $role = ScreenRoleType::ROLE_ADMIN;
+    /** @var array|string[] */
+    protected $roles;
 
     public function getId(): int
     {
         return $this->id;
     }
 
-    public function setRole(string $role): self
+    /**
+     * @param array|string[] $roles
+     */
+    public function setRoles(array $roles): self
     {
-        $this->role = $role;
+        $this->roles = $roles;
 
         return $this;
     }
 
-    public function getRole(): string
+    /**
+     * @return array|string[]
+     */
+    public function getRoles(): array
     {
-        return $this->role;
+        return $this->roles;
     }
 
     public function setScreen(Screen $screen): self

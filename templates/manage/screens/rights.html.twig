@@ -1,11 +1,114 @@
 {% extends 'manage/screens/screen-details-base.html.twig' %}
 
 {% block screen_details_main %}
-    TODO
+    <h3 class="ui top attached block header">
+        {{ 'Users with access to this screen'|trans }}
+    </h3>
+    <div class="ui middle attached segment">
+        <div class="ui middle aligned divided list">
+            {% for association in associations %}
+                <div class="item">
+                    <div class="right floated content">
+                        <a href="{{ path('management-screen-rights-remove', { id: association.id }) }}" class="ui button">{{ 'Remove'|trans }}</a>
+                    </div>
+                    {#<img class="ui avatar image" src="/images/avatar2/small/lena.png">#}
+                    <div class="content">
+                        <div class="header">{{ association.user.name }}</div>
+                        <div class="description">
+                            {% for role in association.roles %}
+                                <div class="ui label">
+                                    {{ role|trans([], 'ScreenRoles') }}
+                                </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+    <div class="ui bottom attached segment">
+        <a id="btnAddRights" class="ui open-modal labeled icon button">
+            <i class="add icon"></i>{{ 'Add further rights'|trans }}
+        </a>
+    </div>
+    <div id="add-modal" class="ui modal">
+        <div class="header">
+            {{ 'Add further rights'|trans }}
+        </div>
+        <div class="content">
+            <form method="post" action="{{ path('management-screen-rights-add', { guid: screen.guid }) }}" class="ui form">
+                <div class="ui field segment">
+                    <p>{{ 'User'|trans }}:</p>
+                    <div class="ui fluid icon input">
+                        <input name="mail" id="add-rights-mail" type="text" placeholder="{{ 'Email'|trans }}">
+                        <i class="icon"></i>
+                    </div>
+                </div>
+                <div class="ui field segment">
+                    <div class="ui checkbox">
+                        <input type="checkbox" name="roles[]" value="schedule" id="checkbox-schedule">
+                        <label for="checkbox-schedule">{{ 'schedule'|trans([], 'ScreenRoles') }}</label>
+                    </div>
+                </div>
+                <div class="ui field segment">
+                    <div class="ui checkbox">
+                        <input type="checkbox" name="roles[]" value="manage" id="checkbox-manage">
+                        <label for="checkbox-manage">{{ 'manage'|trans([], 'ScreenRoles') }}</label>
+                    </div>
+                </div>
+            </form>
+        </div>
+        <div class="actions">
+            <div class="ui cancel button">{{ 'Cancel'|trans }}</div>
+            <div class="ui primary approve disabled button">{{ 'Save'|trans }}</div>
+        </div>
+    </div>
 {% endblock %}
 
 {% block scripts %}
-{% endblock %}
+    <script>
+        $('#add-modal').modal({
+            detachable: true,
+            onDeny: function () {
+                $('form', this).reset();
+            },
+            onApprove: function () {
+                $('form', this).submit();
+            }
+        });
+        $('#btnAddRights').on('click', function () {
+            $('#add-modal').modal('show');
+        });
 
-{% block stylesheets %}
+        $('#add-rights-mail').on('change', function () {
+            var $input = $(this);
+            var url = '{{ path('management-screen-rights-check-user-exists') }}';
+
+            $input.parent().addClass('loading');
+            $.ajax({
+                url: url,
+                method: 'post',
+                data: {
+                    mail: $(this).val()
+                },
+                success: function () {
+                    $input.siblings('i')
+                        .removeClass()
+                        .addClass('ui green check icon');
+                    $input.closest('.modal').find('.button.primary')
+                        .removeClass('disabled');
+                },
+                error: function () {
+                    $input.siblings('i')
+                        .removeClass()
+                        .addClass('ui red exclamation triangle icon');
+                    $input.closest('.modal').find('.button.primary')
+                        .addClass('disabled');
+                },
+                complete: function () {
+                    $input.parent().removeClass('loading');
+                }
+            });
+        });
+    </script>
 {% endblock %}

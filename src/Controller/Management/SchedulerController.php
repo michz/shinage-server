@@ -12,14 +12,12 @@ use App\Entity\Presentation;
 use App\Entity\ScheduledPresentation;
 use App\Entity\Screen;
 use App\Repository\ScreenRepository;
-use App\Service\ScreenAssociation;
 use Doctrine\ORM\EntityManager;
 use JMS\Serializer\SerializerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
-use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 class SchedulerController extends Controller
 {
@@ -29,21 +27,16 @@ class SchedulerController extends Controller
     /** @var ScreenRepository */
     private $screenRepository;
 
-    /** @var ScreenAssociation */
-    private $screenAssociation;
-
     /** @var SerializerInterface */
     private $serializer;
 
     public function __construct(
         TokenStorageInterface $tokenStorage,
         ScreenRepository $screenRepository,
-        ScreenAssociation $screenAssociation,
         SerializerInterface $serializer
     ) {
         $this->tokenStorage = $tokenStorage;
         $this->screenRepository = $screenRepository;
-        $this->screenAssociation = $screenAssociation;
         $this->serializer = $serializer;
     }
 
@@ -84,10 +77,7 @@ class SchedulerController extends Controller
         $sched = [];
         if ($screen) {
             // Check if user is allowed to see/edit screen
-            $user = $this->tokenStorage->getToken()->getUser();
-            if (!$this->screenAssociation->isUserAllowed($screen, $user)) {
-                throw new AccessDeniedException();
-            }
+            $this->denyAccessUnlessGranted('schedule', $screen);
 
             $sf = $start->format('Y-m-d H:i:s');
             $su = $end->format('Y-m-d H:i:s');
@@ -120,10 +110,7 @@ class SchedulerController extends Controller
         $screen = $em->find(Screen::class, $guid);
 
         // Check if user is allowed to see/edit screen
-        $user = $this->tokenStorage->getToken()->getUser();
-        if (!$this->screenAssociation->isUserAllowed($screen, $user)) {
-            throw new AccessDeniedException();
-        }
+        $this->denyAccessUnlessGranted('schedule', $screen);
 
         $start  = new \DateTime($request->get('start'), new \DateTimeZone('UTC'));
         $end    = new \DateTime($request->get('end'), new \DateTimeZone('UTC'));
@@ -155,13 +142,11 @@ class SchedulerController extends Controller
         $end    = new \DateTime($request->get('end'), new \DateTimeZone('UTC'));
         $guid   = $request->get('screen');
         $screen = $em->find(Screen::class, $guid);
-        $s      = $em->find(ScheduledPresentation::class, $id); /** @var ScheduledPresentation $s */
+        /** @var ScheduledPresentation $s */
+        $s      = $em->find(ScheduledPresentation::class, $id);
 
         // Check if user is allowed to see/edit screen
-        $user = $this->tokenStorage->getToken()->getUser();
-        if (!$this->screenAssociation->isUserAllowed($screen, $user)) {
-            throw new AccessDeniedException();
-        }
+        $this->denyAccessUnlessGranted('schedule', $screen);
 
         $s->setScheduledStart($start);
         $s->setScheduledEnd($end);
@@ -186,10 +171,7 @@ class SchedulerController extends Controller
         $screen = $s->getScreen();
 
         // Check if user is allowed to see/edit screen
-        $user = $this->tokenStorage->getToken()->getUser();
-        if (!$this->screenAssociation->isUserAllowed($screen, $user)) {
-            throw new AccessDeniedException();
-        }
+        $this->denyAccessUnlessGranted('schedule', $screen);
 
         $em->remove($s);
         $em->flush();
