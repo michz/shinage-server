@@ -50,7 +50,7 @@ services:
       - "${MAILHOG_PORT}:8025"
 
   phpmyadmin:
-    image: phpmyadmin/phpmyadmin:latest
+    image: phpmyadmin/phpmyadmin:edge
     environment:
       MYSQL_ROOT_PASSWORD: ${MARIADB_ROOT_PASSWORD}
       PMA_HOST: mariadb
