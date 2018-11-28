@@ -14,9 +14,12 @@
                         <img class="preview" src="{{ path('management-dashboard-preview', {'screen_guid': screen.getGuid()}) }}">
                     </div>
                     <div class="content">
-                        {% include 'forms/edit-screen.html.twig' %}
-                        <a href="{{ path('management-screen-data', {guid: screen.guid}) }}" class="ui button">{{ 'Settings'|trans }}</a>
-                        <a class="ui open-modal olive labeled icon button"><i class="eye icon"></i>{{ 'View in online player'|trans }}</a>
+                        <p>
+                            <a href="{{ path('management-screen-data', {guid: screen.guid}) }}" class="ui button">{{ 'Settings'|trans }}</a>
+                        </p>
+                        <p>
+                            <a class="ui open-modal olive labeled icon button"><i class="eye icon"></i>{{ 'View in online player'|trans }}</a>
+                        </p>
                         <div class="ui modal">
                             <div class="header">{{ 'View in online player'|trans }}</div>
                             <div class="content">
@@ -78,7 +81,7 @@
     <script>
         $('.ui.modal').modal({ detachable: false });
         $('.open-modal').on('click', function () {
-            var $modal = $(this).siblings('.ui.modal');
+            var $modal = $(this).parent().siblings('.ui.modal');
             $modal.modal('show');
         });
 

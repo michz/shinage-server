@@ -22,7 +22,7 @@ class ScreenOfflineController extends Controller
 
         $screen = $em->find(Screen::class, $guid);
 
-        return $this->render('manage/screens/data.html.twig', [
+        return $this->render('manage/screens/offline.html.twig', [
             'screen' => $screen,
         ]);
     }

@@ -1,7 +1,34 @@
 {% extends 'manage/screens/screen-details-base.html.twig' %}
 
 {% block screen_details_main %}
-    TODO
+    <h3 class="ui top attached block header">
+        {{ 'Screen Settings'|trans }}
+    </h3>
+    <div class="ui middle attached segment">
+        <div class="ui form">
+            <form method="post" action="{{ path('management-screen-data-save', { guid: screen.guid }) }}">
+                <input type="hidden" name="hidUri" value="{{ path(app.request.attributes.get('_route'), { guid: screen.guid }) }}">
+
+                <div class="input-label">Name:</div>
+                <div class="input"><input type="text" name="txtName" value="{{  screen.getName() }}" {{ readonlyAttr }}></div>
+                <div class="input-label">Standort:</div>
+                <div class="input"><input type="text" name="txtLocation" value="{{  screen.getLocation() }}" {{ readonlyAttr }}></div>
+                <div class="input-label">Administrativer Ansprechpartner:</div>
+                <div class="input"><input type="text" name="txtAdmin" value="{{  screen.getAdminC() }}" {{ readonlyAttr }}></div>
+                <div class="input-label">Notizen:</div>
+                <div class="input"><textarea name="txtNotes" {{ readonlyAttr }}>{{  screen.getNotes() }}</textarea></div>
+                <div class="input-label">Angemeldet:</div>
+                <div class="input">{{ screen.getFirstConnect().format('d.m.Y H:i:s') }}</div>
+                <div class="input-label">Letzte Verbindung:</div>
+                <div class="input">{{ screen.getLastConnect().format('d.m.Y H:i:s') }}</div>
+                <div class="input-buttons">
+                    {% if not readonly %}
+                        <input class="ui button" type="submit" value="Speichern">
+                    {% endif %}
+                </div>
+            </form>
+        </div>
+    </div>
 {% endblock %}
 
 {% block scripts %}

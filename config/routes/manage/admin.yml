@@ -10,10 +10,6 @@ admin-screens:
   path: /screens
   controller: App\Controller\Admin\ScreenController::indexAction
 
-modify-screen:
-  path: /modify_screen
-  controller: App\Controller\Admin\ScreenController::modifyAction
-
 admin-organizations:
   path: /organizations
   controller: App\Controller\Admin\OrganizationsController::indexAction
