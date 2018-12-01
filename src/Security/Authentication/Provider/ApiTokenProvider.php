@@ -11,7 +11,6 @@ namespace App\Security\Authentication\Provider;
 use App\Security\Authentication\Token\ApiUserToken;
 use Symfony\Component\Security\Core\Authentication\Provider\AuthenticationProviderInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
-use Symfony\Component\Security\Core\Exception\AuthenticationException;
 use Symfony\Component\Security\Core\User\UserProviderInterface;
 
 class ApiTokenProvider implements AuthenticationProviderInterface
@@ -31,14 +30,10 @@ class ApiTokenProvider implements AuthenticationProviderInterface
     {
         $user = $this->userProvider->loadUserByUsername($token->getUsername());
 
-        if ($user) {
-            $authenticatedToken = new ApiUserToken($user->getRoles());
-            $authenticatedToken->setUser($user);
+        $authenticatedToken = new ApiUserToken($user->getRoles());
+        $authenticatedToken->setUser($user);
 
-            return $authenticatedToken;
-        }
-
-        throw new AuthenticationException('The API token authentication failed.');
+        return $authenticatedToken;
     }
 
     /**
