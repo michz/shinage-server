@@ -10,4 +10,3 @@ window.ajaxLoadShow = function() {
 window.ajaxLoadHide = function() {
     $('#ajax-loading').fadeOut(200);
 };
-

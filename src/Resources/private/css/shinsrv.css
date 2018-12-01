@@ -253,6 +253,6 @@ code { background: #F5F5F5; max-width: 100px; padding: 2px 6px; word-wrap: break
 
 
 /* AJAX */
-#ajax-loading { position:absolute; top:-1500px; left:-1500px; right:-500px; bottom:-500px;
+#ajax-loading { position:absolute; top:-1500px; left:-1500px; right:-1500px; bottom:-1500px;
     background:rgba(0,0,0,0.8); z-index:99999; display: none; }
 #ajax-loading img { position:absolute; top:49%; left:49%; }
