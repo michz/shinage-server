@@ -101,6 +101,7 @@ services:
             - "@Route"
             - "@todo"
             - "@dataProvider"
+            - "@required"
         enableEachParameterAndReturnInspection: true
 
     # Throwable
