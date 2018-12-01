@@ -23,3 +23,5 @@ coding_style:
                 concatenation: true
             other:
                 after_type_cast: true
+            before_parentheses:
+                closure_definition: true
