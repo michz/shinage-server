@@ -53,7 +53,7 @@
 
             {% for label, messages in app.flashes %}
                 {% for message in messages %}
-                    $.notify("{{ message }}", { className: '{{ label }}', autoHideDelay: 10000 });
+                    $.notify("{{ message|trans([], 'flashes') }}", { className: '{{ label }}', autoHideDelay: 10000 });
                 {% endfor %}
             {% endfor %}
         </script>
