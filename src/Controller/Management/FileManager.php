@@ -130,10 +130,10 @@ class FileManager extends Controller
                         'management-files-el-thumbnail',
                         ['base' => $basename, 'file' => '']
                     ),
-                    'uploadDeny'    => ['all'],            // all mime not allowed to upload
-                    'uploadAllow'   => ['image', 'video'], // mime `image` allowed
-                    'uploadOrder'   => ['deny', 'allow'],  // allowed specified mime only
-                    'accessControl' => 'access',                 // disable and hide dot starting files
+                    'uploadDeny'    => ['all'],
+                    'uploadAllow'   => ['image', 'video'],
+                    'uploadOrder'   => ['deny', 'allow'],
+                    'accessControl' => 'access',
                 ];
             }
 
