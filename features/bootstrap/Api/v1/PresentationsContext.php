@@ -8,8 +8,10 @@ declare(strict_types=1);
 
 namespace shinage\server\behat\Api\v1;
 
+use App\Entity\Presentation;
 use Behat\Behat\Context\Context;
 use Behat\Gherkin\Node\PyStringNode;
+use Doctrine\ORM\EntityManagerInterface;
 use shinage\server\behat\Service\ApiV1ClientContext;
 use Webmozart\Assert\Assert;
 
@@ -18,10 +20,21 @@ class PresentationsContext implements Context
     /** @var ApiV1ClientContext */
     private $apiV1ClientContext;
 
+    /** @var EntityManagerInterface */
+    private $entityManager;
+
     public function __construct(
-        ApiV1ClientContext $apiV1ClientContext
+        ApiV1ClientContext $apiV1ClientContext,
+        EntityManagerInterface $entityManager
     ) {
         $this->apiV1ClientContext = $apiV1ClientContext;
+        $this->entityManager = $entityManager;
+    }
+
+    private function getPresentationByTitle(string $title): Presentation
+    {
+        $repo = $this->entityManager->getRepository(Presentation::class);
+        return $repo->findOneBy(['title' => $title]);
     }
 
     /**
@@ -37,7 +50,10 @@ class PresentationsContext implements Context
      */
     public function iGetThePresentation(string $title)
     {
-        $this->apiV1ClientContext->executeRequest('get', 'presentations/' . $title);
+        $this->apiV1ClientContext->executeRequest(
+            'get',
+            'presentations/' . $this->getPresentationByTitle($title)->getId()
+        );
     }
 
     /**
@@ -45,7 +61,11 @@ class PresentationsContext implements Context
      */
     public function iUpdateThePresentationWithSettings(string $title, PyStringNode $string)
     {
-        $this->apiV1ClientContext->executeRequest('post', 'presentations/' . $title, $string->getRaw());
+        $this->apiV1ClientContext->executeRequest(
+            'post',
+            'presentations/' . $this->getPresentationByTitle($title)->getId(),
+            $string->getRaw()
+        );
     }
 
     /**
@@ -53,7 +73,10 @@ class PresentationsContext implements Context
      */
     public function iDeleteThePresentation(string $title)
     {
-        $this->apiV1ClientContext->executeRequest('delete', 'presentations/' . $title);
+        $this->apiV1ClientContext->executeRequest(
+            'delete',
+            'presentations/' . $this->getPresentationByTitle($title)->getId()
+        );
     }
 
     /**
@@ -80,9 +103,9 @@ class PresentationsContext implements Context
     }
 
     /**
-     * @Given /^I see that the presentation contains a slide with title "([^"]*)"$/
+     * @Given /^I can see that the presentation contains a slide with title "([^"]*)"$/
      */
-    public function iSeeThatThisPresentationContainsASlideWithTitle(string $slideTitle)
+    public function iCanSeeThatThisPresentationContainsASlideWithTitle(string $slideTitle)
     {
         $json = \json_decode($this->apiV1ClientContext->getResponseBody());
         foreach ($json->slides as $slide) {

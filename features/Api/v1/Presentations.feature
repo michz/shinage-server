@@ -17,20 +17,20 @@ Feature: In order to manage presentations remotely
 
   Scenario: I can get a list of presentations
     Given I use the api key "testapikey"
-    And The user "apitester@shinage.test" has a presentation of type "slideshow" and name "testpres"
+    And The user "apitester@shinage.test" has a presentation of type "slideshow" and title "testpres"
     When I get the list of presentations
     Then I can see that the api request was successful
     And I can see that the api response contains a presentation with name "testpres"
 
   Scenario: I can get an existing presentation
     Given I use the api key "testapikey"
-    And The user "apitester@shinage.test" has a presentation of type "slideshow" and name "testpres"
+    And The user "apitester@shinage.test" has a presentation of type "slideshow" and title "testpres"
     When I get the presentation "testpres"
     Then I can see that the api request was successful
 
   Scenario: I can get an existing presentation
     Given I use the api key "testapikey"
-    And The user "apitester@shinage.test" has a presentation of type "slideshow" and name "testpres"
+    And The user "apitester@shinage.test" has a presentation of type "slideshow" and title "testpres"
     When I get the presentation "testpres"
     Then I can see that the api request was successful
 
@@ -41,7 +41,7 @@ Feature: In order to manage presentations remotely
 
   Scenario: I can update an existing presentation
     Given I use the api key "testapikey"
-    And The user "apitester@shinage.test" has a presentation of type "slideshow" and name "testpres"
+    And The user "apitester@shinage.test" has a presentation of type "slideshow" and title "testpres"
     When I update the presentation "testpres" with settings:
       """
       {}
@@ -50,7 +50,7 @@ Feature: In order to manage presentations remotely
 
   Scenario: I can update an existing presentation and see that it changed
     Given I use the api key "testapikey"
-    And The user "apitester@shinage.test" has a presentation of type "slideshow" and name "testpres"
+    And The user "apitester@shinage.test" has a presentation of type "slideshow" and title "testpres"
     When I update the presentation "testpres" with settings:
       """
       {
@@ -74,11 +74,11 @@ Feature: In order to manage presentations remotely
       """
     And I get the presentation "testpres"
     Then I can see that the api request was successful
-    And I see that the presentation contains a slide with title "SlideWithTestString"
+    And I can see that the presentation contains a slide with title "SlideWithTestString"
 
   Scenario: I can delete an existing presentation and see that it does not exist anymore
     Given I use the api key "testapikey"
-    And The user "apitester@shinage.test" has a presentation of type "slideshow" and name "testpres"
+    And The user "apitester@shinage.test" has a presentation of type "slideshow" and title "testpres"
     When I delete the presentation "testpres"
     And I get the presentation "testpres"
     Then I should get a Not Found response

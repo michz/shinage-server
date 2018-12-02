@@ -31,7 +31,7 @@ class PresentationsContext implements Context
     }
 
     /**
-     * @Given /^The user "([^"]*)" has a presentation of type "([^"]*)" and name "([^"]*)"$/
+     * @Given /^The user "([^"]*)" has a presentation of type "([^"]*)" and title "([^"]*)"$/
      */
     public function theUserHasAPresentationOfTypeAndName(string $username, string $type, string $name)
     {
