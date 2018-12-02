@@ -10,39 +10,18 @@ namespace shinage\server\behat\Api\v1;
 
 use Behat\Behat\Context\Context;
 use Behat\Gherkin\Node\PyStringNode;
-use GuzzleHttp\Client;
-use GuzzleHttp\Psr7\Response;
+use shinage\server\behat\Service\ApiV1ClientContext;
 use Webmozart\Assert\Assert;
 
 class FilePoolContext implements Context
 {
-    /** @var string */
-    private $apiKey = '';
-
-    /** @var null|Response */
-    private $response = null;
-
-    /** @var string */
-    private $rawResponse = '';
-
-    /** @var int */
-    private $responseStatusCode = 0;
-
-    /** @var string */
-    private $baseUrl;
+    /** @var ApiV1ClientContext */
+    private $apiV1ClientContext;
 
     public function __construct(
-        string $baseUrl
+        ApiV1ClientContext $apiV1ClientContext
     ) {
-        $this->baseUrl = $baseUrl;
-    }
-
-    /**
-     * @Given /^I use the api key "([^"]*)"$/
-     */
-    public function iUseTheApiKey(string $apiKey)
-    {
-        $this->apiKey = $apiKey;
+        $this->apiV1ClientContext = $apiV1ClientContext;
     }
 
     /**
@@ -50,20 +29,7 @@ class FilePoolContext implements Context
      */
     public function iGetTheFilePoolContentsOf(string $path)
     {
-        $client = new Client();
-        $this->response = $client->request(
-            'get',
-            $this->baseUrl . '/api/v1/files' . $path,
-            [
-                'headers' => [
-                    'x-api-token' => $this->apiKey,
-                ],
-                'http_errors' => false,
-            ]
-        );
-
-        $this->responseStatusCode = $this->response->getStatusCode();
-        $this->rawResponse = $this->response->getBody()->getContents();
+        $this->apiV1ClientContext->executeRequest('get', 'files' . $path);
     }
 
     /**
@@ -71,21 +37,12 @@ class FilePoolContext implements Context
      */
     public function iGetTheFilePoolContentsOfIfModfiedSince(string $path, string $date)
     {
-        $client = new Client();
-        $this->response = $client->request(
+        $this->apiV1ClientContext->executeRequest(
             'get',
-            $this->baseUrl . '/api/v1/files' . $path,
-            [
-                'headers' => [
-                    'x-api-token' => $this->apiKey,
-                    'if-modified-since' => gmdate('D, d M Y G:i:s T', strtotime($date)),
-                ],
-                'http_errors' => false,
-            ]
+            'files' . $path,
+            null,
+            ['if-modified-since' => \gmdate('D, d M Y G:i:s T', strtotime($date))]
         );
-
-        $this->responseStatusCode = $this->response->getStatusCode();
-        $this->rawResponse = $this->response->getBody()->getContents();
     }
 
     /**
@@ -93,15 +50,15 @@ class FilePoolContext implements Context
      */
     public function iCanSeeThatTheApiResponseContainsDirectory(string $type, string $content)
     {
-        if ($this->responseStatusCode < 200 || $this->responseStatusCode > 299) {
-            throw new \Exception('Invalid API response: ' . $this->rawResponse);
+        if ($this->apiV1ClientContext->getResponseStatusCode() < 200 || $this->apiV1ClientContext->getResponseStatusCode() > 299) {
+            throw new \Exception('Invalid API response: ' . $this->apiV1ClientContext->getResponseBody());
         }
 
         if ('directory' === $type && '/' !== substr($content, -1)) {
             $content .= '/';
         }
 
-        $json = \json_decode($this->rawResponse);
+        $json = \json_decode($this->apiV1ClientContext->getResponseBody());
         if (false === \in_array($content, $json)) {
             throw new \Exception(
                 'Directory listing content not found. Expected "' . $content . '", found: ' . \var_export($json, true)
@@ -114,15 +71,15 @@ class FilePoolContext implements Context
      */
     public function iCanSeeThatTheApiResponseDoesNotContainFile(string $type, string $content)
     {
-        if ($this->responseStatusCode < 200 || $this->responseStatusCode > 299) {
-            throw new \Exception('Invalid API response: ' . $this->rawResponse);
+        if ($this->apiV1ClientContext->getResponseStatusCode() < 200 || $this->apiV1ClientContext->getResponseStatusCode() > 299) {
+            throw new \Exception('Invalid API response: ' . $this->apiV1ClientContext->getResponseBody());
         }
 
         if ('directory' === $type && '/' !== substr($content, -1)) {
             $content .= '/';
         }
 
-        $json = \json_decode($this->rawResponse);
+        $json = \json_decode($this->apiV1ClientContext->getResponseBody());
         if (true === \in_array($content, $json)) {
             throw new \Exception(
                 'Directory listing content found. Expected NOT to find "' . $content .
@@ -136,21 +93,7 @@ class FilePoolContext implements Context
      */
     public function iPutAFileToWithContents(string $path, PyStringNode $content)
     {
-        $client = new Client();
-        $this->response = $client->request(
-            'put',
-            $this->baseUrl . '/api/v1/files' . $path,
-            [
-                'headers' => [
-                    'x-api-token' => $this->apiKey,
-                ],
-                'http_errors' => false,
-                'body' => $content->getRaw(),
-            ]
-        );
-
-        $this->responseStatusCode = $this->response->getStatusCode();
-        $this->rawResponse = $this->response->getBody()->getContents();
+        $this->apiV1ClientContext->executeRequest('put', 'files' . $path, $content->getRaw());
     }
 
     /**
@@ -158,76 +101,7 @@ class FilePoolContext implements Context
      */
     public function iDeleteAt(string $path)
     {
-        $client = new Client();
-        $this->response = $client->request(
-            'delete',
-            $this->baseUrl . '/api/v1/files' . $path,
-            [
-                'headers' => [
-                    'x-api-token' => $this->apiKey,
-                ],
-                'http_errors' => false,
-            ]
-        );
-
-        $this->responseStatusCode = $this->response->getStatusCode();
-        $this->rawResponse = $this->response->getBody()->getContents();
-    }
-
-    /**
-     * @Then /^I can see that the api request was successfull$/
-     */
-    public function iCanSeeThatTheApiRequestWasSuccessfull()
-    {
-        Assert::notNull($this->response);
-        Assert::eq($this->response->getStatusCode(), 200);
-    }
-
-    /**
-     * @Then /^I should get a No Content response$/
-     */
-    public function iShouldGetANoContentResponse()
-    {
-        Assert::notNull($this->response);
-        Assert::eq($this->responseStatusCode, 204);
-    }
-
-    /**
-     * @Then /^I should get a Not Modified response$/
-     */
-    public function iShouldGetANotModifiedResponse()
-    {
-        Assert::notNull($this->response);
-        Assert::eq($this->responseStatusCode, 304);
-    }
-
-    /**
-     * @Then /^I should get a Bad Request response$/
-     */
-    public function iShouldGetABadRequestResponse()
-    {
-        Assert::notNull($this->response);
-        Assert::eq($this->responseStatusCode, 400);
-    }
-
-    /**
-     * @Then /^I should get an Access Denied response$/
-     */
-    public function iShouldGetAnAccessDeniedResponse()
-    {
-        Assert::notNull($this->response);
-        Assert::eq($this->responseStatusCode, 403);
-    }
-
-    /**
-     * @Then /^I should get a Not Found response$/
-     */
-    public function iShouldGetANotFoundResponse()
-    {
-        Assert::notNull($this->response);
-        Assert::eq($this->responseStatusCode, 404);
-        $json = \json_decode($this->rawResponse, true);
-        Assert::eq($json['type'], 'Symfony\\Component\\HttpKernel\\Exception\\NotFoundHttpException');
+        $this->apiV1ClientContext->executeRequest('delete', 'files' . $path);
     }
 
     /**
@@ -235,6 +109,6 @@ class FilePoolContext implements Context
      */
     public function iCanSeeThatTheReturnedFileContains(PyStringNode $string)
     {
-        Assert::contains($this->rawResponse, $string->getRaw());
+        Assert::contains($this->apiV1ClientContext->getResponseBody(), $string->getRaw());
     }
 }

@@ -14,7 +14,7 @@ Feature: In order to manage files remotely
   Scenario: I can get a list of files and directories of one directory
     Given I use the api key "testapikey"
     When I get the file pool contents of "/user:apitester@shinage.test"
-    Then I can see that the api request was successfull
+    Then I can see that the api request was successful
     And I can see that the api response contains directory "dir1/"
     And I can see that the api response contains file "file2"
 
@@ -138,4 +138,4 @@ Feature: In order to manage files remotely
     And In the pool the user "apitester@shinage.test" has a file "/dir1/cached1" with content "testcontent1"
     And this pool file has the last modified timestamp "2018-06-01 00:00:00"
     When I get the file pool contents of "/user:apitester@shinage.test/dir1/cached1" if modfied since "2018-01-01 00:00:00"
-    Then I can see that the api request was successfull
+    Then I can see that the api request was successful

@@ -18,7 +18,13 @@ services:
     class: shinage\server\behat\Api\v1\FilePoolContext
     tags: ["fob.context_service"]
     arguments:
-      - "%__behat__.mink.base_url%"
+      - "@shinage.server.behat.service.api_v1_client"
+
+  shinage.server.behat.context.api.v1.presentations:
+    class: shinage\server\behat\Api\v1\PresentationsContext
+    tags: ["fob.context_service"]
+    arguments:
+      - "@shinage.server.behat.service.api_v1_client"
 
   shinage.server.behat.context.heartbeat:
     class: shinage\server\behat\HeartbeatContext
