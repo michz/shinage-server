@@ -49,6 +49,14 @@ class PresentationsContext implements Context
     }
 
     /**
+     * @When /^I delete the presentation "([^"]*)"$/
+     */
+    public function iDeleteThePresentation(string $title)
+    {
+        $this->apiV1ClientContext->executeRequest('delete', 'presentations/' . $title);
+    }
+
+    /**
      * @Given /^I can see that the api response contains no presentation$/
      */
     public function iCanSeeThatTheApiResponseContainsNoPresentation()
@@ -69,5 +77,20 @@ class PresentationsContext implements Context
         }
 
         throw new \Exception('Desired presentation not found: ' . $title);
+    }
+
+    /**
+     * @Given /^I see that the presentation contains a slide with title "([^"]*)"$/
+     */
+    public function iSeeThatThisPresentationContainsASlideWithTitle(string $slideTitle)
+    {
+        $json = \json_decode($this->apiV1ClientContext->getResponseBody());
+        foreach ($json->slides as $slide) {
+            if ($slide->title === $slideTitle) {
+                return;
+            }
+        }
+
+        throw new \Exception('Slide with title `' . $slideTitle . '` not found.');
     }
 }

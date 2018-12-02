@@ -39,6 +39,15 @@ Feature: In order to manage presentations remotely
     When I get the presentation "testpres"
     Then I should get a Not Found response
 
+  Scenario: I can update an existing presentation
+    Given I use the api key "testapikey"
+    And The user "apitester@shinage.test" has a presentation of type "slideshow" and name "testpres"
+    When I update the presentation "testpres" with settings:
+      """
+      {}
+      """
+    Then I can see that the api request was successful
+
   Scenario: I can update an existing presentation and see that it changed
     Given I use the api key "testapikey"
     And The user "apitester@shinage.test" has a presentation of type "slideshow" and name "testpres"
@@ -48,7 +57,7 @@ Feature: In order to manage presentations remotely
           "slides": [
               {
                   "duration": 5000,
-                  "title": "Slide",
+                  "title": "SlideWithTestString",
                   "transition": "",
                   "type": "Image",
                   "src": "test.jpg"
@@ -63,4 +72,13 @@ Feature: In order to manage presentations remotely
           ]
       }
       """
+    And I get the presentation "testpres"
     Then I can see that the api request was successful
+    And I see that the presentation contains a slide with title "SlideWithTestString"
+
+  Scenario: I can delete an existing presentation and see that it does not exist anymore
+    Given I use the api key "testapikey"
+    And The user "apitester@shinage.test" has a presentation of type "slideshow" and name "testpres"
+    When I delete the presentation "testpres"
+    And I get the presentation "testpres"
+    Then I should get a Not Found response
