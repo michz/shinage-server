@@ -25,6 +25,7 @@ services:
     tags: ["fob.context_service"]
     arguments:
       - "@shinage.server.behat.service.api_v1_client"
+      - "@__symfony_shared__.doctrine.orm.entity_manager"
 
   shinage.server.behat.context.heartbeat:
     class: shinage\server\behat\HeartbeatContext
