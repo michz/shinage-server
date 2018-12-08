@@ -1,0 +1,15 @@
+admin-dashboard:
+  path: /
+  controller: App\Controller\Admin\AdminDashboardController::indexAction
+
+admin-users:
+  path: /users
+  controller: App\Controller\Admin\UsersController::indexAction
+
+admin-screens:
+  path: /screens
+  controller: App\Controller\Admin\ScreenController::indexAction
+
+admin-organizations:
+  path: /organizations
+  controller: App\Controller\Admin\OrganizationsController::indexAction

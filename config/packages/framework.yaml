@@ -1,0 +1,26 @@
+framework:
+  secret: '%env(APP_SECRET)%'
+  default_locale: de
+  csrf_protection: true
+  http_method_override: true
+  serializer: false
+
+  # Enables session support. Note that the session will ONLY be started if you read or write from it.
+  # Remove or comment this section to explicitly disable session support.
+  session:
+    handler_id:  session.handler.native_file
+    save_path:   "%kernel.root_dir%/../var/sessions/%kernel.environment%"
+
+  #fragments: true
+  php_errors:
+    log: true
+
+  cache:
+    prefix_seed: mztx/shinage-server
+
+  templating:
+    engines:
+      - twig
+
+  validation:
+    enable_annotations:

@@ -1,0 +1,45 @@
+App\Entity\ScheduledPresentation:
+  type: entity
+  table: schedule
+  id:
+    id:
+      type: integer
+      length: null
+      unique: false
+      nullable: false
+      id: true
+      generator:
+        strategy: IDENTITY
+  fields:
+    scheduled_start:
+      type: datetime
+      length: null
+      unique: false
+      nullable: false
+    scheduled_end:
+      type: datetime
+      length: null
+      unique: false
+      nullable: false
+  manyToOne:
+    screen:
+      targetEntity: App\Entity\Screen
+      fetch: EAGER
+      mappedBy: null
+      inversedBy: null
+      joinColumns:
+        screen_id:
+          referencedColumnName: guid
+          nullable: false
+      orphanRemoval: false
+    presentation:
+      targetEntity: App\Entity\Presentation
+      fetch: EAGER
+      mappedBy: null
+      inversedBy: null
+      joinColumns:
+        presentation_id:
+          referencedColumnName: id
+          nullable: false
+      orphanRemoval: false
+  lifecycleCallbacks: {  }

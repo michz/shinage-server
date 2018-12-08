@@ -106,8 +106,11 @@ class LoginContext extends \Behat\MinkExtension\Context\RawMinkContext
     {
         $current = $this->getSession()->getCurrentUrl();
         $current = str_replace($this->getMinkParameter('base_url'), '', $current);
+        if (false !== strpos($current, '#')) {
+            $current = substr($current, 0, strpos($current, '#'));
+        }
         if ($current !== $url) {
-            throw new \Exception('I am on wrong page. I am on "'.$current.'", but I should be on "'.$current.'".');
+            throw new \Exception('I am on wrong page. I am on "'.$current.'", but I should be on "'.$url.'".');
         }
     }
 
@@ -140,7 +143,7 @@ class LoginContext extends \Behat\MinkExtension\Context\RawMinkContext
         $user = $this->userManager->findUserBy(['username' => $username]);
         /** @var \FOS\UserBundle\Model\UserInterface $user */
         $token = new UsernamePasswordToken($user, null, $firewall, $user->getRoles());
-        $this->session->set('_security_'.$firewall, serialize($token));
+        $this->session->set('_security_' . $firewall, serialize($token));
         $this->session->save();
 
         $cookie = new Cookie($this->session->getName(), $this->session->getId());

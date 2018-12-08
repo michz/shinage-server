@@ -12,10 +12,11 @@ use Doctrine\ORM\EntityManagerInterface;
  */
 class PurgeContext implements Context
 {
-    /**
-     * @var EntityManagerInterface
-     */
+    /** @var EntityManagerInterface */
     private $entityManager;
+
+    /** @var array|string[] */
+    private $poolFiles = [];
 
     /**
      * @param EntityManagerInterface $entityManager
@@ -28,11 +29,44 @@ class PurgeContext implements Context
     /**
      * @BeforeScenario
      */
-    public function purgeDatabase()
+    public function purgeDatabase(): void
     {
         $this->entityManager->getConnection()->getConfiguration()->setSQLLogger(null);
         $purger = new ORMPurger($this->entityManager);
         $purger->purge();
         $this->entityManager->clear();
+    }
+
+    /**
+     * @AfterScenario
+     */
+    public function purgePool(): void
+    {
+        $folders = [];
+        foreach ($this->poolFiles as $poolFile) {
+            if (\is_file($poolFile)) {
+                @unlink($poolFile);
+            } elseif (\is_dir($poolFile)) {
+                $folders[] = $poolFile;
+            }
+        }
+
+        $this->purgePoolFolders($folders);
+    }
+
+    /**
+     * @param array|string[] $folders
+     */
+    private function purgePoolFolders(array $folders): void
+    {
+        foreach ($folders as $folder) {
+            @rmdir($folder);
+            // @TODO recursive
+        }
+    }
+
+    public function addPurgablePoolFile(string $path): void
+    {
+        $this->poolFiles[] = $path;
     }
 }

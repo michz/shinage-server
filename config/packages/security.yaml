@@ -1,0 +1,41 @@
+security:
+  encoders:
+    FOS\UserBundle\Model\UserInterface: bcrypt
+
+  role_hierarchy:
+    ROLE_USER:        ROLE_POOL_USER
+    ROLE_ADMIN:       ROLE_USER
+    ROLE_SUPER_ADMIN: ROLE_ADMIN
+
+  providers:
+    fos_userbundle:
+      id: fos_user.user_provider.username_email
+
+  firewalls:
+    apitoken_secured:
+      pattern: ^/api/v1
+      stateless: true
+      apitoken: true
+    main:
+      pattern: ^/
+      form_login:
+        provider: fos_userbundle
+        csrf_token_generator: security.csrf.token_manager
+      logout:       true
+      anonymous:    true
+    pool:
+      pattern: ^/pool
+      form_login:
+        provider: fos_userbundle
+        check_path: ~
+        login_path: ~
+      access_denied_handler: App\Component\Event\AccessDeniedHandler
+
+  access_control:
+    - { path: ^/login$, role: IS_AUTHENTICATED_ANONYMOUSLY }
+    - { path: ^/register, role: IS_AUTHENTICATED_ANONYMOUSLY }
+    #- { path: ^/resetting, role: IS_AUTHENTICATED_ANONYMOUSLY }
+    - { path: ^/adm/modify_screen, role: ROLE_USER }
+    - { path: ^/adm, role: ROLE_ADMIN }
+    - { path: ^/manage, role: ROLE_USER }
+    - { path: ^/pool, role: IS_AUTHENTICATED_ANONYMOUSLY, methods: [GET] }

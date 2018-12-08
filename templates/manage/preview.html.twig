@@ -1,0 +1,30 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <div class="ui main container">
+        <div id="screenSelector">
+            <select class="ui dropdown">
+                <option disabled selected value="">{{ 'Please chose screen...'|trans }}</option>
+                {% for screen in screens %}
+                    <option
+                            value="{{ screen.guid }}"
+                            data-preview-url="{{ previewUrls[screen.guid] }}"
+                    >{{ screen.name }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div id="previewArea">
+            <iframe id="previewFrame"></iframe>
+        </div>
+    </div>
+    {% endblock %}
+
+
+{% block scripts %}
+    <script>
+        $('#screenSelector select').on('change', function (e) {
+            var url = $(':selected', e.currentTarget).data('previewUrl');
+            $('#previewFrame').attr('src', url);
+        });
+    </script>
+{% endblock %}

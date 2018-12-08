@@ -1,0 +1,23 @@
+App\Entity\Presentation:
+  exclusion_policy: ALL
+  properties:
+    id:
+      type: integer
+      expose: true
+      readonly: true
+    title:
+      type: string
+      expose: true
+    lastModified:
+      type: "DateTime<'Y-m-d H:i:s'>"
+      expose: true
+      readonly: true
+    notes:
+      type: string
+      expose: true
+    settings:
+      type: string
+      expose: true
+    type:
+      type: string
+      expose: true

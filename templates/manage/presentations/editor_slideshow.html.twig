@@ -1,0 +1,166 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <div class="ui main container">
+        <div id="slideshowEditor" class="ui stackable grid">
+            <div id="prototypes">
+                <div class="prototype slide Image">
+                    <img>
+                </div>
+                <div class="prototype slide Video">
+                    <div class="videoIcon">
+                        <i class="ui video play icon"></i>
+                    </div>
+                    <div class="videoFileName"></div>
+                </div>
+            </div>
+
+            <div id="slides" class="ui segment ten wide column">
+            </div>
+
+            <div id="sideTabContainer" class="ui six wide column">
+                <div class="ui top attached tabular menu">
+                    <a class="item active" data-tab="tabAdd">{{ "Add"|trans }}</a>
+                    <a class="item" data-tab="tabSlide">{{ "Slide"|trans }}</a>
+                </div>
+                <div id="tabAdd" class="ui bottom attached tab segment active" data-tab="tabAdd">
+                    <button id="btnAddSlideImage"
+                            class="add Image ui labeled icon button"
+                            data-prototype='{"type":"Image","duration":5000,"title":"Slide","transition":"","src":"//via.placeholder.com/500x380"}'
+                    >
+                        <i class="image icon"></i> {{ "Add Image"|trans }}
+                    </button>
+                    <button id="btnAddSlideVideo"
+                            class="add Video ui labeled icon button"
+                            data-prototype='{"type":"Video","duration":0,"title":"Slide","transition":"","src":"//via.placeholder.com/500x380"}'
+                    >
+                        <i class="video icon"></i> {{ "Add Video"|trans }}
+                    </button>
+                </div>
+                <div id="tabSlide" class="ui bottom attached tab segment" data-tab="tabSlide">
+                    <div class="settings Image">
+                        <label for="settingsImageSrc">{{ "Image Source"|trans }}:</label>
+                        <div class="ui input fluid">
+                            <input type="text" name="src" id="settingsImageSrc">
+                        </div>
+                        <label for="settingsImageDuration">{{ "Duration"|trans }}:</label>
+                        <div class="ui right labeled input fluid">
+                            <input type="text" name="duration" id="settingsImageDuration">
+                            <div class="ui basic label">
+                                ms
+                            </div>
+                        </div>
+                    </div>
+                    <div class="settings Video">
+                        <label for="settingsVideoSrc">{{ "Video Source"|trans }}:</label>
+                        <div class="ui input fluid">
+                            <input type="text" name="src" id="settingsVideoSrc">
+                        </div>
+                    </div>
+                    <div class="settingsButtons">
+                        <button id="btnSaveSettings" class="ui button primary"><i class="fa fa-save fa-lg fa-fw"></i>{{ "Save"|trans }}</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="choseImageOverlay" class="ui modal">
+        <div class="header">{{ "Choose to add"|trans }}</div>
+        <div class="content">
+            <div id="selectFilesPane">
+            </div>
+        </div>
+        <div class="actions">
+            <div class="ui cancel button">{{ "Cancel"|trans }}</div>
+            <div class="ui approve primary button">{{ "Add selected to slideshow"|trans }}</div>
+        </div>
+    </div>
+{% endblock %}
+
+
+{% block scripts %}
+    <script>
+        document.addEventListener(
+            'DOMContentLoaded',
+            function () {
+                $('.tabular.menu .item').tab();
+
+                window.initElFinder = function () {
+                    var options = {
+                        url  : '{{ path('management-files-connector') }}',
+                        lang : '{{ app.request.locale }}',
+                        uiOptions : {
+                            // toolbar configuration
+                            toolbar : [
+                                ['back', 'forward'],
+                                // ['reload'],
+                                // ['home', 'up'],
+                                ['mkdir', 'mkfile', 'upload'],
+                                ['open', 'download', 'getfile'],
+                                ['info'],
+                                ['quicklook'],
+                                ['copy', 'cut', 'paste'],
+                                ['rm'],
+                                ['duplicate', 'rename', 'edit', 'resize'],
+                                ['extract', 'archive'],
+                                /*['search'],*/
+                                ['view']
+                            ],
+
+                            // directories tree options
+                            tree : {
+                                // expand current root on init
+                                openRootOnLoad : true,
+                                // auto load current dir parents
+                                syncTree : true
+                            },
+
+                            // navbar options
+                            navbar : {
+                                minWidth : 150,
+                                maxWidth : 500
+                            },
+
+                            // current working directory options
+                            cwd : {
+                                // display parent directory in listing as ".."
+                                oldSchool : false
+                            }
+                        },
+                        handlers : {
+                            dblclick : function(event, elfinderInstance) {
+                                event.preventDefault();
+                                elfinderInstance.exec('getfile')
+                                    .done(function() { elfinderInstance.exec('quicklook'); })
+                                    .fail(function() { elfinderInstance.exec('open'); });
+                            }
+                        },
+
+                        getFileCallback : function(files, fm) {
+                            window.selectedFiles = files;
+                        },
+
+                        commandsOptions : {
+                            getfile: {
+                                multiple: true
+                            },
+                            quicklook : {
+                                width : 640,  // Set default width/height voor quicklook
+                                height : 480
+                            }
+                        }
+                    };
+                    $('#selectFilesPane').elfinder(options);
+                };
+
+                initElFinder();
+
+                SlideshowEditor
+                    .init("#slideshowEditor", "{{ path('presentation-editor-slideshow-update', { presentationId: presentation.id }) }}")
+                    .loadSlides({{ slidesJson|raw }});
+            },
+            false
+        );
+    </script>
+{% endblock %}

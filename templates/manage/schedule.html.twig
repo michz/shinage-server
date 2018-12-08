@@ -1,0 +1,15 @@
+{% extends 'base.html.twig' %}
+
+{# Title suffix of page #}
+{% block title %} :: Zeitplan{% endblock %}
+
+{% block body %}
+    <div class="ui main container">
+        <div class="page-header">
+            <h1>{{ 'Schedule'|trans }}</h1>
+        </div>
+
+        {% include 'modules/scheduler.html.twig' %}
+        {% include 'modules/scheduler-dialogs.html.twig' %}
+    </div>
+{% endblock %}

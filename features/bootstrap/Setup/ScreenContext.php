@@ -2,9 +2,9 @@
 
 namespace shinage\server\behat\Setup;
 
-use AppBundle\Entity\Screen;
-use AppBundle\Entity\ScreenAssociation;
-use AppBundle\Entity\User;
+use App\Entity\Screen;
+use App\Entity\ScreenAssociation;
+use App\Entity\User;
 use Behat\Behat\Context\Context;
 use Doctrine\ORM\EntityManagerInterface;
 
@@ -51,7 +51,7 @@ class ScreenContext implements Context
         $this->entityManager->flush();
 
         $association = new ScreenAssociation();
-        $association->setRole('admin');
+        $association->setRoles(['view_screenshot', 'manage', 'schedule']);
         $association->setUser($user);
         $association->setScreen($screen);
         $this->entityManager->persist($association);

@@ -3,6 +3,8 @@ version: '3'
 services:
   nginx:
     image: nginx:1.14-alpine
+    environment:
+      - VIRTUAL_HOST=shinage.localhost
     ports:
       - "${HTTP_PORT}:80"
       - "${HTTPS_PORT}:443"
@@ -10,6 +12,8 @@ services:
       - ${PROJECT_DIR}:/usr/share/nginx/html:delegated
       - ./nginx/nginx.conf:/etc/nginx/nginx.conf:delegated
       - ./nginx/default.conf:/etc/nginx/conf.d/default.conf:delegated
+      - ./nginx/server.crt:/opt/server.crt:delegated
+      - ./nginx/server.key:/opt/server.key:delegated
     links:
       - php
       - mariadb
@@ -23,7 +27,7 @@ services:
         PHP_VERSION: ${PHP_VERSION}
     volumes:
       - ${PROJECT_DIR}:/usr/share/nginx/html:delegated
-      - ${PROJECT_DIR}/app/config/parameters.yml.dev.docker:/usr/share/nginx/html/app/config/parameters.yml:delegated
+      - ${PROJECT_DIR}/.env.dev-docker:/usr/share/nginx/html/.env:delegated
       - ./php/php.ini:/usr/local/etc/php/conf.d/zzz-override-php.ini:delegated
     links:
       - mariadb
@@ -46,7 +50,7 @@ services:
       - "${MAILHOG_PORT}:8025"
 
   phpmyadmin:
-    image: phpmyadmin/phpmyadmin:latest
+    image: phpmyadmin/phpmyadmin:edge
     environment:
       MYSQL_ROOT_PASSWORD: ${MARIADB_ROOT_PASSWORD}
       PMA_HOST: mariadb

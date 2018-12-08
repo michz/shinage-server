@@ -1,0 +1,12 @@
+jms_serializer:
+  metadata:
+    auto_detection: false
+    infer_types_from_doctrine_metadata: false
+    directories:
+      app:
+        namespace_prefix: "App\\Entity"
+        path: "%kernel.root_dir%/../config/jms_serializer"
+    warmup:
+      paths:
+        included:
+          - "%kernel.root_dir%/Entity"

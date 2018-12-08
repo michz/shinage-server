@@ -101,6 +101,7 @@ services:
             - "@Route"
             - "@todo"
             - "@dataProvider"
+            - "@required"
         enableEachParameterAndReturnInspection: true
 
     # Throwable
@@ -124,9 +125,6 @@ services:
 
 
 parameters:
-    exclude_files:
-        - "*src/AppBundle/spec/*"
-
     skip_codes:
         PHP_CodeSniffer\Standards\Squiz\Sniffs\WhiteSpace\ControlStructureSpacingSniff.NoLineAfterClose:
             - "./*"

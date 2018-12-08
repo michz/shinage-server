@@ -1,0 +1,118 @@
+_account:
+  prefix: /account
+  resource: ./manage/account.yml
+
+_admin:
+  prefix: /adm
+  resource: ./manage/admin.yml
+
+_screen:
+  prefix: /screen
+  resource: ./manage/screen.yml
+
+_presentation_editors:
+  prefix: /presentations/
+  resource: ./manage/presentation.yml
+
+management-dashboard:
+  path: /dashboard
+  controller: App\Controller\Management\DashboardController::dashboardAction
+
+management-dashboard-preview:
+  path: /dashboard/preview/{screen_guid}
+  controller: App\Controller\Management\DashboardController::previewAction
+  requirements:
+    screen_guid: '.+'  # TODO
+
+management-presentations:
+  path: /presentations
+  controller: App\Controller\Management\PresentationsController::managePresentationsAction
+
+management-presentations-create:
+  path: /presentations/create
+  controller: App\Controller\Management\PresentationsController::createPresentationAction
+
+presentation-delete:
+  path: /presentations/delete/{presentationId}
+  controller: App\Controller\Management\PresentationsController::deletePresentationAction
+  requirements:
+    presentationId: '\d+'
+
+presentation-save-title:
+  path: /presentations/save-title/
+  controller: App\Controller\Management\PresentationsController::savePresentationTitle
+  methods: [ post ]
+
+presentation-save-notes:
+  path: /presentations/save-notes/
+  controller: App\Controller\Management\PresentationsController::savePresentationNotes
+  methods: [ post ]
+
+
+management-preview:
+  path: /preview
+  controller: App\Controller\Management\PreviewController::previewAction
+
+
+# @TODO Move scheduler routes into own namespace
+
+management-scheduler:
+  path: /scheduler
+  controller: App\Controller\Management\SchedulerController::schedulerAction
+
+management-get-schedule:
+  path: /get-schedule
+  controller: App\Controller\Management\SchedulerController::getScheduleAction
+
+management-add-scheduled:
+  path: /add-scheduled
+  controller: App\Controller\Management\SchedulerController::addScheduledAction
+
+management-change-scheduled:
+  path: /change-scheduled
+  controller: App\Controller\Management\SchedulerController::changeScheduledAction
+
+management-delete-scheduled:
+  path: /delete-scheduled
+  controller: App\Controller\Management\SchedulerController::deleteScheduledAction
+
+
+management-files:
+  path: /files
+  controller: App\Controller\Management\FileManager::filesAction
+
+
+management-files-download:
+  path: /files-download/{file}
+  controller: App\Controller\Management\FileManager::downloadAction
+  requirements:
+    file: .+
+
+management-files-el-thumbnail:
+  path: /files-el-thumbnail/{base}/{file}
+  controller: App\Controller\Management\FileManager::elThumbnailAction
+  requirements:
+    base: .*
+    file: .*
+
+management-files-connector:
+  path: /files-connector
+  controller: App\Controller\Management\FileManager::connectorAction
+
+presentation-editor-slideshow:
+  path: /presentations/editor/slideshow/{presentationId}
+  controller: App\Controller\PresentationEditors\SlideshowEditorController::editAction
+  requirements:
+    presentationId: "[0-9]+"
+
+presentation-editor-slideshow-update:
+  path: /presentations/editor/slideshow/{presentationId}/update
+  controller: App\Controller\PresentationEditors\SlideshowEditorController::updateAction
+  requirements:
+    presentationId: "[0-9]+"
+
+presentation-editor-mirror:
+  path: /presentations/editor/mirror/{presentationId}
+  controller: App\Controller\PresentationEditors::editAction
+  requirements:
+    presentationId: "[0-9]+"

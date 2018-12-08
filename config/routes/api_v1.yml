@@ -1,0 +1,44 @@
+api-v1-files-get:
+  path: /files/{path}
+  controller: App\Controller\Api\v1\FilesController:getAction
+  methods: [ GET ]
+  requirements:
+    path: ".+"
+
+api-v1-files-put:
+  path: /files/{path}
+  controller: App\Controller\Api\v1\FilesController:putAction
+  methods: [ PUT ]
+  requirements:
+    path: ".+"
+
+api-v1-files-delete:
+  path: /files/{path}
+  controller: App\Controller\Api\v1\FilesController:deleteAction
+  methods: [ DELETE ]
+  requirements:
+    path: ".+"
+
+api-v1-presentations-list:
+  path: /presentations
+  controller: App\Controller\Api\v1\PresentationsController:listAction
+  methods: [ GET ]
+
+api-v1-presentations-get:
+  path: /presentations/{id}
+  controller: App\Controller\Api\v1\PresentationsController:getAction
+  methods: [ GET ]
+  requirements:
+    id: "\\d+"
+
+api-v1-presentations-put:
+  path: /presentations
+  controller: App\Controller\Api\v1\PresentationsController:putAction
+  methods: [ PUT ]
+
+api-v1-presentations-delete:
+  path: /presentations/{id}
+  controller: App\Controller\Api\v1\PresentationsController:deleteAction
+  methods: [ DELETE ]
+  requirements:
+    id: "\\d+"

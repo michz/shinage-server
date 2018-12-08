@@ -1,0 +1,54 @@
+management-screens:
+  path: /
+  controller: App\Controller\Management\ScreensController::indexAction
+
+management-connect-screen:
+  path: /connect
+  controller: App\Controller\Management\ScreensController::connectAction
+
+management-screen-data:
+  path: /{guid}
+  controller: App\Controller\Management\Screens\ScreenDataController:indexAction
+  requirements:
+    guid: "[^/]*"
+
+management-screen-data-save:
+  path: /{guid}/save_data
+  controller: App\Controller\Management\Screens\ScreenDataController:saveDataAction
+  requirements:
+    guid: "[^/]*"
+
+
+management-screen-offline:
+  path: /{guid}/offline
+  controller: App\Controller\Management\Screens\ScreenOfflineController:indexAction
+  requirements:
+    guid: "[^/]*"
+
+management-screen-rights:
+  path: /{guid}/rights
+  controller: App\Controller\Management\Screens\ScreenRightsController:indexAction
+  requirements:
+    guid: "[^/]*"
+
+management-screen-rights-check-user-exists:
+  path: /screen-rights/user-exists
+  controller: App\Controller\Management\Screens\ScreenRightsController:checkUserExistsAction
+
+management-screen-rights-add:
+  path: /{guid}/rights/add
+  controller: App\Controller\Management\Screens\ScreenRightsController:addAction
+  requirements:
+    guid: "[^/]*"
+
+management-screen-rights-remove:
+  path: /screen-rights/remove/{id}
+  controller: App\Controller\Management\Screens\ScreenRightsController:removeAction
+  requirements:
+    id: "\\d*"
+
+management-screen-schedule:
+  path: /{guid}/schedule
+  controller: App\Controller\Management\Screens\ScreenScheduleController:indexAction
+  requirements:
+    guid: "[^/]*"
