@@ -142,6 +142,11 @@ services:
 
 
   ###### Voters ######
+  app.security.voters.presentation:
+    class: App\Security\Voters\PresentationVoter
+    tags:
+      - security.voter
+
   app.security.voters.screen:
     class: App\Security\Voters\ScreenVoter
     arguments:

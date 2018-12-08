@@ -62,7 +62,7 @@ class PresentationsContext implements Context
     public function iUpdateThePresentationWithSettings(string $title, PyStringNode $string)
     {
         $this->apiV1ClientContext->executeRequest(
-            'post',
+            'put',
             'presentations/' . $this->getPresentationByTitle($title)->getId(),
             $string->getRaw()
         );

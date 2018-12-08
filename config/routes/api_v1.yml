@@ -18,3 +18,24 @@ api-v1-files-delete:
   methods: [ DELETE ]
   requirements:
     path: ".+"
+
+api-v1-presentations-get:
+  path: /presentations/{id}
+  controller: App\Controller\Api\v1\PresentationsController:getAction
+  methods: [ GET ]
+  requirements:
+    id: "\\d+"
+
+api-v1-presentations-put:
+  path: /presentations/{id}
+  controller: App\Controller\Api\v1\PresentationsController:putAction
+  methods: [ PUT ]
+  requirements:
+    id: "\\d+"
+
+api-v1-presentations-delete:
+  path: /presentations/{id}
+  controller: App\Controller\Api\v1\PresentationsController:deleteAction
+  methods: [ DELETE ]
+  requirements:
+    id: "\\d+"

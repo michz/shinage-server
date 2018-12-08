@@ -1,0 +1,19 @@
+App\Entity\Presentation:
+  exclusion_policy: ALL
+  properties:
+    id:
+      type: integer
+      expose: true
+    title:
+      expose: true
+    lastModified:
+      type: "DateTime<'Y-m-d H:i:s'>"
+      expose: true
+    notes:
+      expose: true
+    settings:
+      expose: true
+    owner:
+      type: integer
+      expose: true
+
