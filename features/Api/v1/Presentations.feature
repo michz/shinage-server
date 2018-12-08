@@ -36,7 +36,7 @@ Feature: In order to manage presentations remotely
 
   Scenario: I cannot get a non-existing presentation
     Given I use the api key "testapikey"
-    When I get the presentation "testpres"
+    When I get the presentation with id 23
     Then I should get a Not Found response
 
   Scenario: I can update an existing presentation
@@ -46,7 +46,7 @@ Feature: In order to manage presentations remotely
       """
       {}
       """
-    Then I can see that the api request was successful
+    Then I should get a No Content response
 
   Scenario: I can update an existing presentation and see that it changed
     Given I use the api key "testapikey"
@@ -80,5 +80,5 @@ Feature: In order to manage presentations remotely
     Given I use the api key "testapikey"
     And The user "apitester@shinage.test" has a presentation of type "slideshow" and title "testpres"
     When I delete the presentation "testpres"
-    And I get the presentation "testpres"
-    Then I should get a Not Found response
+    And I get the list of presentations
+    Then I can see that the api response does not contain a presentation with name "testpres"

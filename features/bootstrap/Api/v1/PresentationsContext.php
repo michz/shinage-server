@@ -57,15 +57,27 @@ class PresentationsContext implements Context
     }
 
     /**
+     * @When /^I get the presentation with id (\d+)$/
+     */
+    public function iGetThePresentationWithId(int $id)
+    {
+        $this->apiV1ClientContext->executeRequest('get', 'presentations/' . $id);
+    }
+
+    /**
      * @When /^I update the presentation "([^"]*)" with settings:$/
      */
     public function iUpdateThePresentationWithSettings(string $title, PyStringNode $string)
     {
-        $this->apiV1ClientContext->executeRequest(
-            'put',
-            'presentations/' . $this->getPresentationByTitle($title)->getId(),
-            $string->getRaw()
-        );
+        $presentation = $this->getPresentationByTitle($title);
+        $object = new \stdClass();
+
+        $object->id = $presentation->getId();
+        $object->notes = $presentation->getNotes();
+        $object->title = $presentation->getTitle();
+        $object->settings = $string->getRaw();
+
+        $this->apiV1ClientContext->executeRequest('put', 'presentations', \json_encode($object));
     }
 
     /**
@@ -103,12 +115,26 @@ class PresentationsContext implements Context
     }
 
     /**
+     * @Then /^I can see that the api response does not contain a presentation with name "([^"]*)"$/
+     */
+    public function iCanSeeThatTheApiResponseDoesNotContainAPresentationWithName(string $title)
+    {
+        $json = \json_decode($this->apiV1ClientContext->getResponseBody());
+        foreach ($json as $presentation) {
+            if ($presentation->title === $title) {
+                throw new \Exception('Presentation found, that should not be there: ' . $title);
+            }
+        }
+    }
+
+    /**
      * @Given /^I can see that the presentation contains a slide with title "([^"]*)"$/
      */
     public function iCanSeeThatThisPresentationContainsASlideWithTitle(string $slideTitle)
     {
         $json = \json_decode($this->apiV1ClientContext->getResponseBody());
-        foreach ($json->slides as $slide) {
+        $settings = \json_decode($json->settings);
+        foreach ($settings->slides as $slide) {
             if ($slide->title === $slideTitle) {
                 return;
             }
