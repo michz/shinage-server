@@ -9,6 +9,7 @@ declare(strict_types=1);
 namespace App\Security\Voters;
 
 use App\Entity\Presentation;
+use App\Entity\User;
 use App\Service\ScreenAssociation;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\Voter;
@@ -36,13 +37,14 @@ class PresentationVoter extends Voter
     protected function voteOnAttribute($attribute, $subject, TokenInterface $token)
     {
         $owner = $subject->getOwner();
+        /** @var User $user */
         $user = $token->getUser();
 
         if ($owner === $user) {
             return true;
         }
 
-        if (in_array($owner, $user->getOrganizations())) {
+        if ($user->getOrganizations()->contains($owner)) {
             return true;
         }
 
