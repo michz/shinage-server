@@ -98,21 +98,3 @@ management-files-el-thumbnail:
 management-files-connector:
   path: /files-connector
   controller: App\Controller\Management\FileManager::connectorAction
-
-presentation-editor-slideshow:
-  path: /presentations/editor/slideshow/{presentationId}
-  controller: App\Controller\PresentationEditors\SlideshowEditorController::editAction
-  requirements:
-    presentationId: "[0-9]+"
-
-presentation-editor-slideshow-update:
-  path: /presentations/editor/slideshow/{presentationId}/update
-  controller: App\Controller\PresentationEditors\SlideshowEditorController::updateAction
-  requirements:
-    presentationId: "[0-9]+"
-
-presentation-editor-mirror:
-  path: /presentations/editor/mirror/{presentationId}
-  controller: App\Controller\PresentationEditors::editAction
-  requirements:
-    presentationId: "[0-9]+"
