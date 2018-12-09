@@ -6,6 +6,8 @@ declare(strict_types=1);
  * Licensed under MIT. See file /LICENSE.
  */
 
+// @TODO Replace virtual pool urls by real public pool urls
+
 namespace App\Presentation\Slideshow;
 
 use App\Entity\PresentationInterface;
