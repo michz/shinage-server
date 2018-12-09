@@ -188,7 +188,7 @@ window.SlideshowEditor = {
 
     generateRealUrlFromPoolUrl: function (poolUrl) {
         return poolUrl.replace(this.virtualBaseUrl, this.poolBaseUrl);
-    },
+    }
 };
 
 
