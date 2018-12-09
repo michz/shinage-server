@@ -54,11 +54,22 @@ class RevealJsEditorController extends AbstractPresentationEditor
                 $settings,
                 ['translation_domain' => 'RevealJsPresentationEditor']
             )
-            ->add('content', TextareaType::class)
+            ->add(
+                'content',
+                TextareaType::class,
+                [
+                    'attr' => ['data-codemirror' => 'true', 'data-codemirror-mode' => 'htmlmixed'],
+                ]
+            )
             ->add(
                 'revealSettings',
                 TextareaType::class,
-                ['label' => 'Reveal.js settings (leave empty for defaults)', 'required' => false, 'empty_data' => '']
+                [
+                    'label'      => 'Reveal.js settings (leave empty for defaults)',
+                    'required'   => false,
+                    'empty_data' => '',
+                    'attr' => ['data-codemirror' => 'true', 'data-codemirror-mode' => 'json'],
+                ]
             )
             ->add('save', SubmitType::class, ['label' => 'Save'])
             ->getForm();

@@ -10,6 +10,22 @@
 
 {% block scripts %}
     <script>
+        $('[data-codemirror="true"]').each(function () {
+            var mode = $(this).data('codemirrorMode');
+            if (!mode) {
+                mode = 'htmlmixed';
+            } else if ('json' === mode) {
+                mode = { name: "javascript", json: true };
+            }
+
+            CodeMirror.fromTextArea(this, {
+                lineNumbers: true,
+                mode: mode,
+                smartIndent: true,
+                indentWithTabs: false,
+                indentUnit: 4
+            });
+        });
     </script>
 {% endblock %}
 
