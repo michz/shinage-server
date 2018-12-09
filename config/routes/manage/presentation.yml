@@ -3,3 +3,27 @@ presentation-editor-website:
   controller: App\Controller\PresentationEditors\WebsiteEditorController::editAction
   requirements:
     presentationId: '\d+'
+
+presentation-editor-slideshow:
+  path: /presentations/editor/slideshow/{presentationId}
+  controller: App\Controller\PresentationEditors\SlideshowEditorController::editAction
+  requirements:
+    presentationId: "[0-9]+"
+
+presentation-editor-slideshow-update:
+  path: /presentations/editor/slideshow/{presentationId}/update
+  controller: App\Controller\PresentationEditors\SlideshowEditorController::updateAction
+  requirements:
+    presentationId: "[0-9]+"
+
+presentation-editor-mirror:
+  path: /presentations/editor/mirror/{presentationId}
+  controller: App\Controller\PresentationEditors\MirrorEditorController::editAction
+  requirements:
+    presentationId: "[0-9]+"
+
+presentation-editor-reveal_js:
+  path: /presentations/editor/reveal_js/{presentationId}
+  controller: App\Controller\PresentationEditors\RevealJsEditorController::editAction
+  requirements:
+    presentationId: "[0-9]+"

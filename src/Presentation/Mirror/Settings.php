@@ -17,14 +17,14 @@ class Settings
      *
      * @JMS\Type("string")
      */
-    protected $url;
+    protected $url = '';
 
     /**
      * @var string
      *
      * @JMS\Type("string")
      */
-    protected $type;
+    protected $type = 'jsonp';
 
     public function getUrl(): string
     {

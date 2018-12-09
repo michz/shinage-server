@@ -71,7 +71,7 @@ class FilesController extends Controller
                 \json_encode($files),
                 200,
                 [
-                    'Content-Type' => 'text/json',
+                    'Content-Type' => 'application/json',
                 ]
             );
         } elseif (\is_file($fullPath)) {

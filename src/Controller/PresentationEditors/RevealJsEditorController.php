@@ -9,16 +9,16 @@ declare(strict_types=1);
 namespace App\Controller\PresentationEditors;
 
 use App\Entity\PresentationInterface;
-use App\Presentation\Website\Settings;
+use App\Presentation\RevealJs\Settings;
 use Doctrine\ORM\EntityManagerInterface;
 use JMS\Serializer\SerializerInterface;
 use Symfony\Component\Form\Extension\Core\Type\FormType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
-use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
-class WebsiteEditorController extends AbstractPresentationEditor
+class RevealJsEditorController extends AbstractPresentationEditor
 {
     /** @var EntityManagerInterface */
     private $entityManager;
@@ -42,21 +42,42 @@ class WebsiteEditorController extends AbstractPresentationEditor
         }
 
         try {
-            $setttings = $this->serializer->deserialize($presentation->getSettings(), Settings::class, 'json');
+            $settings = $this->serializer->deserialize($presentation->getSettings(), Settings::class, 'json');
         } catch (\Throwable $ex) {
-            $setttings = new Settings();
+            $settings = new Settings();
         }
 
         $form = $this->get('form.factory')
-            ->createNamedBuilder('form_presentation', FormType::class, $setttings)
-            ->add('url', TextType::class)
+            ->createNamedBuilder(
+                'form_presentation',
+                FormType::class,
+                $settings,
+                ['translation_domain' => 'RevealJsPresentationEditor']
+            )
+            ->add(
+                'content',
+                TextareaType::class,
+                [
+                    'attr' => ['data-codemirror' => 'true', 'data-codemirror-mode' => 'htmlmixed'],
+                ]
+            )
+            ->add(
+                'revealSettings',
+                TextareaType::class,
+                [
+                    'label'      => 'Reveal.js settings (leave empty for defaults)',
+                    'required'   => false,
+                    'empty_data' => '',
+                    'attr' => ['data-codemirror' => 'true', 'data-codemirror-mode' => 'json'],
+                ]
+            )
             ->add('save', SubmitType::class, ['label' => 'Save'])
             ->getForm();
 
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $presentation->setSettings($this->serializer->serialize($setttings, 'json'));
+            $presentation->setSettings($this->serializer->serialize($settings, 'json'));
             $presentation->setLastModified(new \DateTime('now'));
             $this->entityManager->persist($presentation);
             $this->entityManager->flush();
@@ -64,7 +85,7 @@ class WebsiteEditorController extends AbstractPresentationEditor
             $this->addFlash('success', 'Saved successfully');
         }
 
-        return $this->render('manage/presentations/editor_website.html.twig', [
+        return $this->render('manage/presentations/editor_reveal_js.html.twig', [
             'presentation' => $presentation,
             'form' => $form->createView(),
         ]);
@@ -72,6 +93,6 @@ class WebsiteEditorController extends AbstractPresentationEditor
 
     public function supports(PresentationInterface $presentation): bool
     {
-        return 'website' === $presentation->getType();
+        return 'reveal_js' === $presentation->getType();
     }
 }

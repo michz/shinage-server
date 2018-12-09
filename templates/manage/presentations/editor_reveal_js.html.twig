@@ -1,0 +1,30 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <div class="ui main container">
+        {{ form_start(form) }}
+        {{ form_widget(form) }}
+        {{ form_end(form) }}
+    </div>
+{% endblock %}
+
+{% block scripts %}
+    <script>
+        $('[data-codemirror="true"]').each(function () {
+            var mode = $(this).data('codemirrorMode');
+            if (!mode) {
+                mode = 'htmlmixed';
+            } else if ('json' === mode) {
+                mode = { name: "javascript", json: true };
+            }
+
+            CodeMirror.fromTextArea(this, {
+                lineNumbers: true,
+                mode: mode,
+                smartIndent: true,
+                indentWithTabs: false,
+                indentUnit: 4
+            });
+        });
+    </script>
+{% endblock %}
