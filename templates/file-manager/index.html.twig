@@ -15,9 +15,6 @@
 
 {% block scripts %}
     <script>
-        window.filePoolVirtualPrefix = 'pool://';
-        window.filePoolBaseUrl = '{{ path('pool-get-root') }}';
-
         var options = {
             url  : '{{ path('management-files-connector') }}',
             i18nBaseUrl : '{{ url('homepage', {}, false) }}vendor/studio-42/elfinder/js/i18n',
@@ -61,6 +58,7 @@
                 }
             },
             handlers : {
+                // @TODO On DoubleClick do not open but submit dialog
                 dblclick : function(event, elfinderInstance) {
                     event.preventDefault();
                     elfinderInstance.exec('getfile')
