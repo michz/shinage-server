@@ -39,3 +39,6 @@ pool-get:
   requirements:
     userRoot: "[^/]*"
     path: .*
+
+pool-get-root:
+  path: /pool/
