@@ -1,14 +1,20 @@
 // @TODO Transform this Javascript monster into a jQuery plugin to better bind it and better instantiate it
-// @TODO Language Strings?
 
 window.SlideshowEditor = {
     container: null,
     selectedSlide: null,
     slides: [],
     saveUrl: "",
+    virtualBaseUrl: 'pool://',
+    poolBaseUrl: '',
+    messages: {},
     init: function (container, saveUrl) {
         this.saveUrl = saveUrl;
         this.container = $(container);
+        this.poolBaseUrl = $(container).data('poolBaseUrl');
+        this.messages.savedSuccessfully = $(container).data('messageSavedSuccessfully');
+        this.messages.failedSaving = $(container).data('messageFailedSaving');
+        this.messages.saving = $(container).data('messageSaving');
 
         // sortable slide list
         var that = this;
@@ -34,17 +40,17 @@ window.SlideshowEditor = {
     },
     setupAjax: function() {
         $.ajaxSetup({
-            'beforeSend': function () {
+            'beforeSend': $.proxy(function () {
                 $(document).trigger('notify-hide');
-            },
-            'success': function () {
+            }, this),
+            'success': $.proxy(function () {
                 $('.notifyjs-wrapper').trigger('notify-hide');
-                $.notify("Gespeichert.", 'success');
-            },
-            'error': function () {
+                $.notify(this.messages.savedSuccessfully, 'success');
+            }, this),
+            'error': $.proxy(function () {
                 $('.notifyjs-wrapper').trigger('notify-hide');
-                $.notify("Speichern fehlgeschlagen.", 'error');
-            }
+                $.notify(this.messages.failedSaving, 'error');
+            }, this)
         });
     },
     addSlideButton: function (e) {
@@ -63,7 +69,7 @@ window.SlideshowEditor = {
                 for (var i = 0; i < window.selectedFiles.length; i++) {
                     var file = window.selectedFiles[i];
                     var slide = $(e.currentTarget).data('prototype');
-                    slide.src = file.url;
+                    slide.src = this.generatePoolUrlFromElFinderFile(file);
                     this.appendSlide(slide);
                     this.saveSlides();
                 }
@@ -135,7 +141,7 @@ window.SlideshowEditor = {
         return this;
     },
     provisionImageSlide: function (div, slide) {
-        $("img", div).attr("src", slide.src);
+        $("img", div).attr("src", this.generateRealUrlFromPoolUrl(slide.src));
         return this;
     },
     provisionVideoSlide: function (div, slide) {
@@ -158,13 +164,13 @@ window.SlideshowEditor = {
                 "slides": JSON.stringify(data)
             },
             "dataType": "json",
-            'beforeSend': function () {
-                $.notify("Speichern...", {
+            'beforeSend': $.proxy(function () {
+                $.notify(this.messages.saving, {
                     'autoHide': false,
                     'className': 'info',
                     'clickToHide': false
                 });
-            }
+            }, this)
         }).done(function () {
             // do nothing by now
         }).fail(function () {
@@ -172,7 +178,17 @@ window.SlideshowEditor = {
             // console.log("Error saving slides: ");
             // console.log(e);
         });
-    }
+    },
+
+    generatePoolUrlFromElFinderFile: function (file) {
+        var url = file.url;
+        url = url.replace(this.poolBaseUrl, this.virtualBaseUrl);
+        return url;
+    },
+
+    generateRealUrlFromPoolUrl: function (poolUrl) {
+        return poolUrl.replace(this.virtualBaseUrl, this.poolBaseUrl);
+    },
 };
 
 

@@ -56,7 +56,7 @@ class FileManager extends Controller
         }
 
         // @TODO cleanup here and do not use getParamter() twice
-        $realPathPool = realpath($this->poolPath);
+        $realPathPool = \realpath($this->poolPath);
         if (false === $realPathPool) {
             throw new \RuntimeException('Pool path not found.');
         }
@@ -64,14 +64,14 @@ class FileManager extends Controller
         $file = new File($this->poolPath . '/' . $file);
         $response = new Response();
         $response->headers->set('Content-Type', $file->getMimeType());
-        $response->setContent(file_get_contents($path));
+        $response->setContent(\file_get_contents($path));
         return $response;
     }
 
     public function elThumbnailAction(string $base, string $file): Response
     {
         // @TODO Refactor: Make method "getPoolPath" or so to avoid code duplication
-        $realPoolPath = realpath($this->poolPath);
+        $realPoolPath = \realpath($this->poolPath);
         if (false === $realPoolPath) {
             throw new \LogicException('Pool path not found.');
         }
@@ -88,19 +88,19 @@ class FileManager extends Controller
         $file = new File($path);
         $response = new Response();
         $response->headers->set('Content-Type', $file->getMimeType());
-        $response->setContent(file_get_contents($path));
+        $response->setContent(\file_get_contents($path));
         return $response;
     }
 
     public function connectorAction(): Response
     {
-        $poolBase = realpath($this->poolPath);
+        $poolBase = \realpath($this->poolPath);
         if (false === $poolBase) {
             throw new \RuntimeException('Pool path not found.');
         }
         $thumbBase = $poolBase . '/.el-thumbnails/';
-        if (!is_dir($thumbBase)) {
-            @mkdir($thumbBase, 0777, true);
+        if (!\is_dir($thumbBase)) {
+            @\mkdir($thumbBase, 0777, true);
         }
 
         $response = new StreamedResponse();
@@ -112,8 +112,8 @@ class FileManager extends Controller
             $roots = [];
 
             foreach ($paths as $name => $path) {
-                $basename = basename($path);
-                $tmb_path = realpath($this->poolPath) .
+                $basename = \basename($path);
+                $tmb_path = \realpath($this->poolPath) .
                     '/.el-thumbnails/' . $basename . '/';
 
                 $roots[] = [

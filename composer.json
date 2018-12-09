@@ -29,7 +29,7 @@
     "doctrine/doctrine-bundle": "^1.6",
     "doctrine/doctrine-cache-bundle": "^1.2",
     "friendsofsymfony/user-bundle": "~2.0",
-    "studio-42/elfinder": "2.1.x@dev",
+    "studio-42/elfinder": "^2.1",
     "guzzlehttp/guzzle": "^6.3",
     "roave/security-advisories": "dev-master",
     "knplabs/knp-menu-bundle": "^2.1",

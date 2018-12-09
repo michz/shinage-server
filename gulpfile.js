@@ -74,9 +74,13 @@ gulp.task('copy1', function() {
     return gulp.src('node_modules/semantic-ui-css/themes/**')
         .pipe(gulp.dest(semanticDistPath + '/themes/'));
 });
-gulp.task('copy2', function() {
+gulp.task('copy2a', function() {
     return gulp.src('vendor/studio-42/elfinder/img/**')
         .pipe(gulp.dest(elfinderDistPath + '/img/'));
+});
+gulp.task('copy2b', function() {
+    return gulp.src('vendor/studio-42/elfinder/js/i18n/**')
+        .pipe(gulp.dest(elfinderDistPath + '/js/i18n/'));
 });
 gulp.task('copy3', function() {
     return gulp.src('node_modules/jquery-ui-dist/images/**')
@@ -86,7 +90,7 @@ gulp.task('copy4', function() {
     return gulp.src('node_modules/reveal.js/**')
         .pipe(gulp.dest(revealDistPath + '/'));
 });
-gulp.task('copy', ['copy1','copy2','copy3','copy4']);
+gulp.task('copy', ['copy1','copy2a','copy2b','copy3','copy4']);
 
 gulp.task('css', ['copy'], function() {
     return gulp.src(paths.css)

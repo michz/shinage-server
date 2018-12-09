@@ -14,21 +14,29 @@ use App\Presentation\SettingsReaderInterface;
 use App\Presentation\Slideshow\Slides\ImageSlide;
 use App\Presentation\Slideshow\Slides\VideoSlide;
 use Symfony\Component\Asset\Packages;
+use Symfony\Component\Routing\RouterInterface;
 
 class Renderer implements PresentationRendererInterface
 {
+    const POOL_VIRTUAL_BASE_URL = 'pool://';
+
     /** @var SettingsReaderInterface */
     private $settingsReader;
 
     /** @var Packages */
     private $assetPackages;
 
+    /** @var string */
+    private $baseUrl;
+
     public function __construct(
         SettingsReaderInterface $settingsReader,
-        Packages $assetPackages
+        Packages $assetPackages,
+        RouterInterface $router
     ) {
         $this->settingsReader = $settingsReader;
         $this->assetPackages = $assetPackages;
+        $this->baseUrl = $router->generate('pool-get-root', [], RouterInterface::ABSOLUTE_URL);
     }
 
     public function render(PresentationInterface $presentation): string
@@ -41,6 +49,7 @@ class Renderer implements PresentationRendererInterface
         $playerCssUrl = $this->assetPackages->getUrl('assets/player.min.css');
 
         $slides = '';
+        $videoCounter = 0;
 
         foreach ($parsedSettings->getSlides() as $slide) {
             // @TODO Own render service per Slide Type
@@ -56,7 +65,8 @@ class Renderer implements PresentationRendererInterface
                 ";
             } elseif ('Video' === $slide->getType()) {
                 /* @var $slide VideoSlide */
-                $uniqueId = 'video-' . \random_int(1, 10000); // @TODO better unique id (counter)
+                ++$videoCounter;
+                $uniqueId = 'video-' . $videoCounter++; // @TODO better unique id (counter)
                 $slides .= "
                     <section 
                         id='{$uniqueId}'
@@ -70,6 +80,8 @@ class Renderer implements PresentationRendererInterface
                 ";
             }
         }
+
+        $slides = $this->replaceVirtualUrls($slides);
 
         return "
 <!doctype html>
@@ -187,5 +199,10 @@ class Renderer implements PresentationRendererInterface
     public function getLastModified(PresentationInterface $presentation): \DateTime
     {
         return $presentation->getLastModified();
+    }
+
+    private function replaceVirtualUrls(string $data): string
+    {
+        return str_replace(self::POOL_VIRTUAL_BASE_URL, $this->baseUrl, $data);
     }
 }
