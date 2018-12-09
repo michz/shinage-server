@@ -17,6 +17,7 @@
     <script>
         var options = {
             url  : '{{ path('management-files-connector') }}',
+            i18nBaseUrl : '{{ url('homepage', {}, false) }}vendor/studio-42/elfinder/js/i18n',
             lang : '{{ app.request.locale }}',
             uiOptions : {
                 // toolbar configuration
