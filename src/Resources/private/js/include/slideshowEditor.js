@@ -1,5 +1,4 @@
 // @TODO Transform this Javascript monster into a jQuery plugin to better bind it and better instantiate it
-// @TODO Language Strings?
 
 window.SlideshowEditor = {
     container: null,
@@ -8,10 +7,14 @@ window.SlideshowEditor = {
     saveUrl: "",
     virtualBaseUrl: 'pool://',
     poolBaseUrl: '',
+    messages: {},
     init: function (container, saveUrl) {
         this.saveUrl = saveUrl;
         this.container = $(container);
         this.poolBaseUrl = $(container).data('poolBaseUrl');
+        this.messages.savedSuccessfully = $(container).data('messageSavedSuccessfully');
+        this.messages.failedSaving = $(container).data('messageFailedSaving');
+        this.messages.saving = $(container).data('messageSaving');
 
         // sortable slide list
         var that = this;
@@ -37,17 +40,17 @@ window.SlideshowEditor = {
     },
     setupAjax: function() {
         $.ajaxSetup({
-            'beforeSend': function () {
+            'beforeSend': $.proxy(function () {
                 $(document).trigger('notify-hide');
-            },
-            'success': function () {
+            }, this),
+            'success': $.proxy(function () {
                 $('.notifyjs-wrapper').trigger('notify-hide');
-                $.notify("Gespeichert.", 'success');
-            },
-            'error': function () {
+                $.notify(this.messages.savedSuccessfully, 'success');
+            }, this),
+            'error': $.proxy(function () {
                 $('.notifyjs-wrapper').trigger('notify-hide');
-                $.notify("Speichern fehlgeschlagen.", 'error');
-            }
+                $.notify(this.messages.failedSaving, 'error');
+            }, this)
         });
     },
     addSlideButton: function (e) {
@@ -161,13 +164,13 @@ window.SlideshowEditor = {
                 "slides": JSON.stringify(data)
             },
             "dataType": "json",
-            'beforeSend': function () {
-                $.notify("Speichern...", {
+            'beforeSend': $.proxy(function () {
+                $.notify(this.messages.saving, {
                     'autoHide': false,
                     'className': 'info',
                     'clickToHide': false
                 });
-            }
+            }, this)
         }).done(function () {
             // do nothing by now
         }).fail(function () {

@@ -2,7 +2,14 @@
 
 {% block body %}
     <div class="ui main container">
-        <div id="slideshowEditor" class="ui stackable grid" data-pool-base-url="{{ url('pool-get-root', {}, false) }}">
+        <div
+                id="slideshowEditor"
+                class="ui stackable grid"
+                data-pool-base-url="{{ url('pool-get-root', {}, false) }}"
+                data-message-saved-successfully="{{ 'Saved successfully'|trans({}, 'flashes') }}"
+                data-message-failed-saving="{{ 'Failed saving'|trans({}, 'flashes') }}"
+                data-message-saving="{{ 'Saving...'|trans({}, 'flashes') }}"
+        >
             <div id="prototypes">
                 <div class="prototype slide Image">
                     <img>
