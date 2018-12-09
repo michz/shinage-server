@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "5f9925259c69a5813dbbad1cef686ea0",
+    "content-hash": "283fc5da118e73ef187dd0223b59d322",
     "packages": [
         {
             "name": "doctrine/annotations",
@@ -2905,16 +2905,16 @@
         },
         {
             "name": "studio-42/elfinder",
-            "version": "2.1.x-dev",
+            "version": "2.1.43",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Studio-42/elFinder.git",
-                "reference": "3af4f29161d2563e7e5a8854701719b724d3c98b"
+                "reference": "878daf75321c5c81d1ae308298241d94b383ea62"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Studio-42/elFinder/zipball/3af4f29161d2563e7e5a8854701719b724d3c98b",
-                "reference": "3af4f29161d2563e7e5a8854701719b724d3c98b",
+                "url": "https://api.github.com/repos/Studio-42/elFinder/zipball/878daf75321c5c81d1ae308298241d94b383ea62",
+                "reference": "878daf75321c5c81d1ae308298241d94b383ea62",
                 "shasum": ""
             },
             "require": {
@@ -2959,7 +2959,7 @@
             ],
             "description": "File manager for web",
             "homepage": "http://elfinder.org",
-            "time": "2018-11-02T13:48:44+00:00"
+            "time": "2018-11-24T01:37:42+00:00"
         },
         {
             "name": "swiftmailer/swiftmailer",
@@ -9038,7 +9038,6 @@
     "aliases": [],
     "minimum-stability": "stable",
     "stability-flags": {
-        "studio-42/elfinder": 20,
         "roave/security-advisories": 20
     },
     "prefer-stable": false,
