@@ -29,10 +29,6 @@ shinage_player:
   prefix: "virtual_player"
   resource: "@ShinagePlayerBundle/Resources/config/routing.yml"
 
-shinage_online_player:
-  prefix: "online_player"
-  resource: "@ShinageOnlinePlayerBundle/Resources/config/routing.yml"
-
 pool-get:
   path: /pool/{userRoot}/{path}
   controller: App\Controller\PoolController::getAction
