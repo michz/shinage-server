@@ -14,14 +14,21 @@ use Symfony\Component\HttpFoundation\Response;
 
 class AdminDashboardController extends Controller
 {
+    /** @var TodoList */
+    private $todoList;
+
+    public function __construct(
+        TodoList $todoList
+    ) {
+        $this->todoList = $todoList;
+    }
+
     public function indexAction(): Response
     {
         // @TODO Do this only in devenv!
 
-        // @TODO Inject this service via constructor, do not use DI container
-        $todo = $this->get('mztx.todo.todolist');
         /** @var TodoList $todo */
-        $todos = $todo->getTodoList();
+        $todos = $this->todoList->getTodoList();
 
         // replace this example code with whatever you need
         return $this->render('adm/dashboard.html.twig', [

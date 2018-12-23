@@ -7,7 +7,6 @@
     "psr-4": {
       "App\\": "src/",
       "mztx\\ShinageOnlinePlayerBundle\\": "_old_src/ShinageOnlinePlayerBundle/",
-      "mztx\\TodoBundle\\": "_old_src/TodoBundle/",
       "shinage\\server\\behat\\": "features/bootstrap/"
     },
     "classmap": [
@@ -25,6 +24,8 @@
     "ext-intl": "*",
     "ext-json": "*",
     "mztx/shinage-player-bundle": "~0.1",
+    "mztx/todo-bundle": "~0.1",
+
     "doctrine/orm": "^2.5",
     "doctrine/doctrine-bundle": "^1.6",
     "doctrine/doctrine-cache-bundle": "^1.2",

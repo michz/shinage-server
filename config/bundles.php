@@ -18,5 +18,6 @@ return [
     Doctrine\Bundle\FixturesBundle\DoctrineFixturesBundle::class => ['dev' => true, 'test' => true],
     Onurb\Bundle\YumlBundle\OnurbYumlBundle::class => ['all' => true],
     mztx\ShinageOnlinePlayerBundle\ShinageOnlinePlayerBundle::class => ['all' => true],
+    mztx\TodoBundle\TodoBundle::class => ['all' => true],
     Sensio\Bundle\FrameworkExtraBundle\SensioFrameworkExtraBundle::class => ['all' => true],
 ];
