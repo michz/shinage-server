@@ -7,6 +7,7 @@ parameters:
   locale: 'de'
   path_screenshots: '%kernel.root_dir%/../data/screenshots/'
   path_pool: '%kernel.root_dir%/../data/pool/'
+  env(SHINAGE_ONLINE_PLAYER_BASE_URL): 'https://player.shinage.org/player.html?current_presentation_url='
 
 services:
   # default configuration for services in *this* file
