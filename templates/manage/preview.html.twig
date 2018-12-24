@@ -22,9 +22,19 @@
 
 {% block scripts %}
     <script>
-        $('#screenSelector select').on('change', function (e) {
-            var url = $(':selected', e.currentTarget).data('previewUrl');
-            $('#previewFrame').attr('src', url);
+        $(function () {
+            $('#screenSelector select').on('change', function (e) {
+                var guid = $(':selected', e.currentTarget).val();
+                var url = $(':selected', e.currentTarget).data('previewUrl');
+                $('#previewFrame').attr('src', url);
+                location.hash = guid;
+            });
+
+            var hash = location.hash.replace('#','');
+            if (hash !== '') {
+                $('#screenSelector select').val(hash);
+                $('#screenSelector select').trigger('change');
+            }
         });
     </script>
 {% endblock %}
