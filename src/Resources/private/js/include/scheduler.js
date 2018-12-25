@@ -233,61 +233,57 @@
         },
 
         showCreateDialog: function (start, stop, success) {
-            $('#scheduler-diag-place').find('#date-start').val(start.format('DD-MM-YYYY HH:mm'));
-            $('#scheduler-diag-place').find('#date-end').val(stop.format('DD-MM-YYYY HH:mm'));
-            $('#scheduler-diag-place').dialog('option', 'successCallback', success);
-            $('#scheduler-diag-place').dialog('open');
+            $('#scheduler-diag-place').find('#date-start').val(start.format('DD.MM.YYYY HH:mm'));
+            $('#scheduler-diag-place').find('#date-end').val(stop.format('DD.MM.YYYY HH:mm'));
+
+            $('#scheduler-diag-place').data('successCallback', success);
+            $('#scheduler-diag-place').modal('show');
         },
 
         initCreateDialog: function () {
-            $('#scheduler-diag-place').dialog({
-                resizable: false,
-                height: 'auto',
-                width: 400,
-                modal: true,
-                autoOpen: false,
-                buttons: {
-                    'Speichern': function () {
-                        //var succ = $(this).dialog('option', 'successCallback');
-                        var form = $(this).children('form');
+            var me = this;
+            $('#scheduler-diag-place').modal({
+                closable: true,
+                onApprove: function () {
+                    //var succ = $(this).dialog('option', 'successCallback');
+                    var form = $('form', this);
 
-                        window.ajaxLoadShow();
-                        $.ajax({
-                            type: 'post',
-                            url: form.attr('action'),
-                            data: form.serialize()
-                        })
-                        .fail(function () {
-                            $.notify("Beim Eintragen ist leider ein Fehler aufgetreten.", "error");
-                        })
-                        .done(function () {
-                            $.notify("Die Präsentation wurde eingetragen.", "success");
-                            var cb = $('#scheduler-diag-place').dialog('option', 'successCallback');
-                            cb();
-                        })
-                        .always(function () {
-                            window.ajaxLoadHide();
-                        });
-
-                        $(this).dialog("close");
-                    },
-                    Cancel: function () {
-                        $(this).dialog("close");
-                    }
+                    window.ajaxLoadShow();
+                    $.ajax({
+                        type: 'post',
+                        url: form.attr('action'),
+                        data: form.serialize()
+                    })
+                    .fail(function () {
+                        $.notify("Beim Eintragen ist leider ein Fehler aufgetreten.", "error");
+                    })
+                    .done(function () {
+                        $.notify("Die Präsentation wurde eingetragen.", "success");
+                        var cb = $('#scheduler-diag-place').data('successCallback');
+                        cb();
+                    })
+                    .always(function () {
+                        window.ajaxLoadHide();
+                    });
                 },
-                open: $.proxy(function (event) {
-                    var diag = $(event.target);
-                    diag.find('#inp-screen').empty();
-                    diag.find('#inp-screen').append($('#screen-prototype').clone());
-                    diag.find('#inp-pres').empty();
-                    diag.find('#inp-pres').append($('#presentation-prototype').clone());
-                    diag.find('#inp-screen').children('select').val($(this.getSelectedScreen()).data('guid'));
+                onHide: function () {
+                    $('.calendar', me.element).fullCalendar('unselect');
+                },
+                onHidden: function () {
+                    $('form', this).trigger('reset');
+                },
+                onShow: function () {
+                    $('#inp-screen', this).empty();
+                    $('#inp-screen', this).append($('#screen-prototype').clone());
+                    $('#inp-pres', this).empty();
+                    $('#inp-pres', this).append($('#presentation-prototype').clone());
+                    $('#inp-screen', this).children('select').val($(me.getSelectedScreen()).data('guid'));
 
                     $.datetimepicker.setLocale('de');
-                    diag.find('.date-pick').datetimepicker({
+                    $('.date-pick', this).datetimepicker({
                         format: 'd.m.Y H:i'
                     });
-                }, this)
+                }
             });
         }
     });

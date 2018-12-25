@@ -8,6 +8,9 @@
 </div>
 #}
 
+
+
+
 <div class="dialog">
     <select name="screen" id="screen-prototype">
         {% for screen in screens %}
@@ -23,23 +26,39 @@
     </select>
 </div>
 
-<div id="scheduler-diag-place" class="dialog">
-    <form action="{{ path('management-add-scheduled') }}" method="post" class="form-horizontal">
-        <p>
-            <span class="label">{{ 'Presentation'|trans }}:</span>
-            <span id="inp-pres" class="input"></span>
-        </p>
-        <p>
-            <span class="label">{{ 'Screen'|trans }}:</span>
-            <span id="inp-screen" class="input"></span>
-        </p>
-        <p>
-            <span class="label">{{ 'StartTime'|trans }}:</span>
-            <span class="input"><input id="date-start" name="start" class="date-pick" type="text"></span>
-        </p>
-        <p>
-            <span class="label">{{ 'EndTime'|trans }}:</span>
-            <span class="input"><input id="date-end" name="end" class="date-pick" type="text"></span>
-        </p>
-    </form>
+<div id="scheduler-diag-place" class="ui modal">
+    <div class="header">
+        {{ 'Add further rights'|trans }}
+    </div>
+    <div class="content">
+        <form action="{{ path('management-add-scheduled') }}" method="post" class="ui form">
+            <div class="ui field segment">
+                <p>{{ 'Presentation'|trans }}:</p>
+                <div id="inp-pres" class="ui fluid input">
+                </div>
+            </div>
+            <div class="ui field segment">
+                <p>{{ 'Screen'|trans }}:</p>
+                <div id="inp-screen" class="ui fluid input">
+                </div>
+            </div>
+            <div class="ui field segment">
+                <p>{{ 'StartTime'|trans }}:</p>
+                <div id="inp-screen" class="ui fluid input">
+                    <input id="date-start" name="start" class="date-pick" type="text">
+                </div>
+            </div>
+            <div class="ui field segment">
+                <p>{{ 'EndTime'|trans }}:</p>
+                <div id="inp-screen" class="ui fluid input">
+                    <input id="date-end" name="end" class="date-pick" type="text">
+                </div>
+            </div>
+
+        </form>
+    </div>
+    <div class="actions">
+        <div class="ui cancel button">{{ 'Cancel'|trans }}</div>
+        <div class="ui primary approve button">{{ 'Save'|trans }}</div>
+    </div>
 </div>

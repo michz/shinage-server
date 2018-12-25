@@ -32,6 +32,7 @@ var paths = {
         'node_modules/codemirror/mode/css/css.js',
         'node_modules/codemirror/mode/javascript/javascript.js',
         'node_modules/codemirror/mode/htmlmixed/htmlmixed.js',
+        'node_modules/jquery-datetimepicker/build/jquery.datetimepicker.full.js',
         'vendor/studio-42/elfinder/js/elfinder.full.js',
         'src/Resources/private/js/lib/**',
     ],
@@ -45,6 +46,7 @@ var paths = {
         'node_modules/jquery-ui-dist/jquery-ui.theme.css',
         'node_modules/fullcalendar/dist/fullcalendar.css',
         'node_modules/codemirror/lib/codemirror.css',
+        'node_modules/jquery-datetimepicker/build/jquery.datetimepicker.min.css',
         'vendor/studio-42/elfinder/css/elfinder.full.css',
         'vendor/studio-42/elfinder/css/theme.css',
         'src/Resources/private/css/**',
@@ -134,7 +136,7 @@ gulp.task('libraryJs', ['copy'], function() {
         .pipe(gulp.dest(distPath));
 });
 
-gulp.task('js', ['copy'], function() {
+gulp.task('js', [], function() {
     return gulp.src(paths.js)
         .pipe(development(sourcemaps.init()))
         .pipe(uglify())
