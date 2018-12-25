@@ -10,7 +10,7 @@ Introduction
 This is a piece of software running on a web server providing management
 functionality for *Shinage* digital signage solutions.
 
-It's based on [Symfony 3](http://symfony.com/).
+It's based on [Symfony 4](http://symfony.com/).
 
 
 Hosted
