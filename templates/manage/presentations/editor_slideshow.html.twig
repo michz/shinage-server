@@ -139,9 +139,7 @@
                         handlers : {
                             dblclick : function(event, elfinderInstance) {
                                 event.preventDefault();
-                                elfinderInstance.exec('getfile')
-                                    .done(function() { elfinderInstance.exec('quicklook'); })
-                                    .fail(function() { elfinderInstance.exec('open'); });
+                                $('#choseImageOverlay .approve').trigger('click');
                             }
                         },
 
