@@ -116,7 +116,7 @@ gulp.task('less', ['copy'], function() {
         .pipe(gulp.dest(distPath));
 });
 
-gulp.task('css', ['copy'], function() {
+gulp.task('css', ['copy', 'less'], function() {
     var finalPaths = paths.css;
     finalPaths.push(distPath + '/less.css');
     return gulp.src(finalPaths)
@@ -176,6 +176,6 @@ gulp.task('eslint', () => {
 gulp.task('watch', function() {
   gulp.watch(paths.js, ['js']);
   gulp.watch(paths.css, ['css']);
-  gulp.watch(paths.lessSrc, ['less']);
+  gulp.watch(paths.lessSrc, ['less', 'css']);
 });
 
