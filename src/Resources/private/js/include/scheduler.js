@@ -241,7 +241,7 @@
         },
 
         initCreateDialog: function () {
-            var me = this;
+            var that = this;
             $('#scheduler-diag-place').modal({
                 closable: true,
                 onApprove: function () {
@@ -266,7 +266,7 @@
                     });
                 },
                 onHide: function () {
-                    $('.calendar', me.element).fullCalendar('unselect');
+                    $('.calendar', that.element).fullCalendar('unselect');
                 },
                 onHidden: function () {
                     $('form', this).trigger('reset');
@@ -276,7 +276,7 @@
                     $('#inp-screen', this).append($('#screen-prototype').clone());
                     $('#inp-pres', this).empty();
                     $('#inp-pres', this).append($('#presentation-prototype').clone());
-                    $('#inp-screen', this).children('select').val($(me.getSelectedScreen()).data('guid'));
+                    $('#inp-screen', this).children('select').val($(that.getSelectedScreen()).data('guid'));
 
                     $.datetimepicker.setLocale('de');
                     $('.date-pick', this).datetimepicker({
