@@ -8,30 +8,42 @@ declare(strict_types=1);
 
 namespace App\Controller\Management\Screens;
 
+use App\Entity\Presentation;
 use App\Entity\Screen;
+use App\Repository\PresentationsRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 class ScreenDataController extends Controller
 {
     /** @var EntityManagerInterface */
     private $entityManager;
 
+    /** @var PresentationsRepository */
+    private $presentationsRepository;
+
+    /** @var TokenStorageInterface */
+    private $tokenStorage;
+
     public function __construct(
-        EntityManagerInterface $entityManager
+        EntityManagerInterface $entityManager,
+        PresentationsRepository $presentationsRepository,
+        TokenStorageInterface $tokenStorage
     ) {
         $this->entityManager = $entityManager;
+        $this->presentationsRepository = $presentationsRepository;
+        $this->tokenStorage = $tokenStorage;
     }
 
     public function indexAction(Request $request, string $guid): Response
     {
-        // TODO Check if logged in user is allowed to edit screen.
-
         $screen = $this->entityManager->find(Screen::class, $guid);
 
         $readonlyAttr = ' readonly';
@@ -46,6 +58,11 @@ class ScreenDataController extends Controller
                 ->add('location', TextType::class)
                 ->add('adminc', TextType::class)
                 ->add('notes', TextareaType::class)
+                ->add('defaultPresentation', EntityType::class, [
+                    'class' => Presentation::class,
+                    'choices' => $this->getPresentationsChoices(),
+                    'required' => false,
+                ])
                 ->add('save', SubmitType::class)
                 ->getForm();
 
@@ -69,5 +86,20 @@ class ScreenDataController extends Controller
             'readonlyAttr' => $readonlyAttr,
             'readonly' => $readonly,
         ]);
+    }
+
+    /**
+     * @return Presentation[]
+     */
+    private function getPresentationsChoices(): array
+    {
+        $user = $this->tokenStorage->getToken()->getUser();
+        $choices = [null];
+
+        foreach ($this->presentationsRepository->getPresentationsForsUser($user) as $presentation) {
+            $choices[] = $presentation;
+        }
+
+        return $choices;
     }
 }
