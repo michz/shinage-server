@@ -1,0 +1,60 @@
+#slideshowEditor {
+  #prototypes {
+    display: none;
+  }
+
+  .slide {
+    display: inline-block;
+    position: relative;
+    margin: 2px;
+    width: 160px;
+    height: 110px;
+    border: 1px solid #d5d5d5;
+    text-align: center;
+    background-color: #ececec;
+    overflow: hidden;
+
+    &.selected {
+      border: 1px solid #2b5759;
+      background-color: #e1f3fa;
+    }
+
+    .removeSlide {
+      display: inline-block;
+      visibility: hidden;
+      position: absolute;
+      right: 0px;
+      top: 2px;
+      font-size: 18px;
+      text-shadow: 0 2px 1px #fff, 0 -2px 1px #fff, 2px 0 1px #fff, -2px 0 1px #fff;
+    }
+
+    &:hover .removeSlide {
+      visibility: visible;
+    }
+
+    &.Image img {
+      display: block;
+      width: 100%;
+      height: 100%;
+      object-fit: contain; /* fancy CSS3! */
+    }
+
+    &.Video .videoIcon {
+      display: block;
+      margin-top: 45px;
+      color: #ddd;
+      font-size: 80px;
+    }
+
+    &.Video .videoFileName {
+      padding: 0 5px;
+      position: absolute;
+      top: 40px;
+      width: 100%;
+      font-size: 0.9em;
+      word-wrap: break-word;
+    }
+
+  }
+}

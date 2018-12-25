@@ -1,0 +1,7 @@
+todo:
+  paths:
+    - '%kernel.project_dir%/src'
+    - '%kernel.project_dir%/templates'
+    - '%kernel.project_dir%/templates'
+    - '%kernel.project_dir%/translations'
+    - '%kernel.project_dir%/config'

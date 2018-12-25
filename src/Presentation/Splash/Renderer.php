@@ -15,6 +15,10 @@ class Renderer implements PresentationRendererInterface
 {
     public function render(PresentationInterface $presentation): string
     {
+        $splashImageBase64 = \base64_encode(
+            \file_get_contents(__DIR__ . '/../../Resources/private/img/logo-base-dark.png')
+        );
+
         return "
 <!doctype html>
 <html>
@@ -33,6 +37,7 @@ class Renderer implements PresentationRendererInterface
             padding: 0;
             overflow: hidden;
             height: 100%;
+            background: #000;
         }
         
         body {
@@ -41,7 +46,7 @@ class Renderer implements PresentationRendererInterface
             width: 100%;
         }
         
-        #container, #container iframe {
+        #container {
             display: block;
             margin: 0;
             padding: 0;
@@ -53,15 +58,48 @@ class Renderer implements PresentationRendererInterface
             max-height: 100%;
             overflow: hidden;
         }
+        
+        #container img {
+            display: block;
+            margin: 30vh auto 0 auto;
+            max-width: 50vw;
+        }
       
       </style>
     </head>
     <body>
-        <div id='container'>Shinage -- no presentation configured</div>
+        <div id='container'>
+            <img id='logo' src='data:image/png;base64,{$splashImageBase64}'
+        </div>
+        
+        <script>
+            var animationTimout = 15000;
+            function reposition() {
+                var logo = document.getElementById('logo');
+                var imgWidth = logo.width;
+                var imgHeight = logo.height;
+                
+                var windowWidth = Math.max(document.documentElement.clientWidth, window.innerWidth || 0);
+                var windowHeight = Math.max(document.documentElement.clientHeight, window.innerHeight || 0);
+                
+                var maxX = windowWidth - imgWidth;
+                var maxY = windowHeight - imgHeight;
+                
+                var x = Math.floor(Math.random() * maxX);
+                var y = Math.floor(Math.random() * maxY);
+                
+                logo.style.position = 'absolute';
+                logo.style.left = x + 'px';
+                logo.style.top = y + 'px';
+                logo.style.margin = 0;
+                
+                setTimeout(reposition, animationTimout);
+            }
+            setTimeout(reposition, animationTimout);
+        </script>
     </body>
 </html>
         ";
-        // @TODO add beautiful default splash screen
     }
 
     public function getLastModified(PresentationInterface $presentation): \DateTime

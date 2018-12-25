@@ -22,6 +22,8 @@ use Symfony\Component\Form\Form;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 class ScreensController extends Controller
@@ -41,18 +43,23 @@ class ScreensController extends Controller
     /** @var ScreenAssociation */
     private $screenAssociation;
 
+    /** @var RouterInterface */
+    private $router;
+
     public function __construct(
         EntityManagerInterface $entityManager,
         TokenStorageInterface $tokenStorage,
         SchedulerService $scheduler,
         ScreenRepository $screenRepository,
-        ScreenAssociation $screenAssociation
+        ScreenAssociation $screenAssociation,
+        RouterInterface $router
     ) {
         $this->entityManager = $entityManager;
         $this->tokenStorage = $tokenStorage;
         $this->scheduler = $scheduler;
         $this->screenRepository = $screenRepository;
         $this->screenAssociation = $screenAssociation;
+        $this->router = $router;
     }
 
     public function indexAction(Request $request): Response
@@ -80,7 +87,28 @@ class ScreensController extends Controller
             'screens_count' => \count($screens),
             'organizations' => $user->getOrganizations(),
             'create_form' => $createForm->createView(),
+            'onlinePlayerBaseUrls' => $this->generateCurrentUrls($screens),
         ]);
+    }
+
+    /**
+     * @param Screen[] $screens
+     *
+     * @return string[]
+     */
+    private function generateCurrentUrls(array $screens): array
+    {
+        $urls = [];
+        foreach ($screens as $screen) {
+            $urls[$screen->getGuid()] = $this->getParameter('env(SHINAGE_ONLINE_PLAYER_BASE_URL)') .
+                $this->router->generate(
+                    'current-for',
+                    ['guid' => $screen->getGuid()],
+                    UrlGeneratorInterface::ABSOLUTE_URL
+                );
+        }
+
+        return $urls;
     }
 
     public function connectAction(Request $request): RedirectResponse

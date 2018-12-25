@@ -41,7 +41,7 @@ class FileManager extends Controller
 
     public function filesAction(): Response
     {
-        return $this->render('file-manager/index.html.twig', []);
+        return $this->render('manage/file-manager/index.html.twig', []);
     }
 
     public function downloadAction(string $file): Response
@@ -55,7 +55,7 @@ class FileManager extends Controller
             throw new AccessDeniedException();
         }
 
-        // @TODO cleanup here and do not use getParamter() twice
+        // @TODO cleanup here and do not use getParameter() twice
         $realPathPool = \realpath($this->poolPath);
         if (false === $realPathPool) {
             throw new \RuntimeException('Pool path not found.');

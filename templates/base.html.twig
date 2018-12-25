@@ -33,8 +33,8 @@
             {# main content #}
             {% block body %}{% endblock %}
 
-            <div id="ajax-loading">
-                <img src="{{ asset('img/spin.gif') }}">
+            <div id="global-dimmer" class="ui dimmer">
+                <div class="ui loader"></div>
             </div>
 
             <div id="footer">
@@ -42,7 +42,8 @@
             </div>
         </div>
 
-        <script src="{{ asset('assets/all.min.js') }}"></script>
+        <script src="{{ asset('assets/lib.min.js') }}"></script>
+        <script src="{{ asset('assets/app.min.js') }}"></script>
 
         <script>
             $('.ui.dropdown').dropdown();

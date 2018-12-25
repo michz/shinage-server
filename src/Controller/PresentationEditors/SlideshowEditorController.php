@@ -64,6 +64,7 @@ class SlideshowEditorController extends AbstractPresentationEditor
         $settings = $this->getCurrentSettingsOrEmpty($presentation);
         $settings->setSlides($slides);
         $presentation->setSettings($this->serializer->serialize($settings, 'json'));
+        $presentation->setLastModified(new \DateTime('now'));
 
         $this->entityManager->persist($presentation);
         $this->entityManager->flush();

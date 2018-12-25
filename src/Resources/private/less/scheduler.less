@@ -1,0 +1,74 @@
+.sched-screen-list {
+  .item {
+    display: inline-block;
+    width: 225px;
+    margin: 5px;
+    padding: 2px 0;
+    border: 1px solid #92AAB0;
+    overflow: hidden;
+    font-size: 12px;
+    line-height: 14px;
+    background-color: #EDEEFE;
+    color: #556666;
+  }
+
+
+  p {
+    margin: 0;
+    padding: 0;
+    white-space: nowrap;
+
+    &.screen-name {
+      font-weight: bold;
+    }
+  }
+
+  .selected {
+    border: 3px solid #2a6496;
+    margin: 3px;
+  }
+
+  .selector {
+    float: left;
+    margin: 6px 4px;
+    width: 16px;
+    height: 16px;
+    content: "O";
+    background-color: #666;
+  }
+
+  .visible .selector {
+    background-color: #EEE;
+  }
+}
+
+.calendar {
+  width: 100%;
+
+  .fc-event {
+    .fc-event-title {
+      font-weight: bold;
+      font-size: 13px;
+    }
+
+    .event-delete {
+      visibility: hidden;
+      position: absolute;
+      right: 6px;
+      top: 0;
+    }
+
+    &:hover .event-delete {
+      visibility: visible;
+    }
+  }
+
+  a {
+    color: #000;
+    text-decoration: none;
+
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+}

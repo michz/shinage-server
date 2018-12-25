@@ -34,24 +34,7 @@ window.SlideshowEditor = {
         $("#btnSaveSettings").on('click', $.proxy(this.saveSlides, this));
         $("#tabAdd .add").on('click', $.proxy(this.addSlideButton, this));
 
-        this.setupAjax();
-
         return this;
-    },
-    setupAjax: function() {
-        $.ajaxSetup({
-            'beforeSend': $.proxy(function () {
-                $(document).trigger('notify-hide');
-            }, this),
-            'success': $.proxy(function () {
-                $('.notifyjs-wrapper').trigger('notify-hide');
-                $.notify(this.messages.savedSuccessfully, 'success');
-            }, this),
-            'error': $.proxy(function () {
-                $('.notifyjs-wrapper').trigger('notify-hide');
-                $.notify(this.messages.failedSaving, 'error');
-            }, this)
-        });
     },
     addSlideButton: function (e) {
         //var slide = $(e.currentTarget).data('prototype');
@@ -165,11 +148,20 @@ window.SlideshowEditor = {
             },
             "dataType": "json",
             'beforeSend': $.proxy(function () {
+                $(document).trigger('notify-hide');
                 $.notify(this.messages.saving, {
                     'autoHide': false,
                     'className': 'info',
                     'clickToHide': false
                 });
+            }, this),
+            'success': $.proxy(function () {
+                $('.notifyjs-wrapper').trigger('notify-hide');
+                $.notify(this.messages.savedSuccessfully, 'success');
+            }, this),
+            'error': $.proxy(function () {
+                $('.notifyjs-wrapper').trigger('notify-hide');
+                $.notify(this.messages.failedSaving, 'error');
             }, this)
         }).done(function () {
             // do nothing by now

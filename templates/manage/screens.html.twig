@@ -18,28 +18,32 @@
                             <a href="{{ path('management-screen-data', {guid: screen.guid}) }}" class="ui button">{{ 'Settings'|trans }}</a>
                         </p>
                         <p>
-                            <a class="ui open-modal olive labeled icon button"><i class="eye icon"></i>{{ 'View in online player'|trans }}</a>
+                            <a
+                                    class="ui open-modal olive labeled icon button"
+                                    data-screen-url="{{ onlinePlayerBaseUrls[screen.guid] }}"
+                            >
+                                <i class="eye icon"></i>{{ 'View in online player'|trans }}
+                            </a>
                         </p>
-                        <div class="ui modal">
-                            <div class="header">{{ 'View in online player'|trans }}</div>
-                            <div class="content">
-                                <p>{{ 'Use the following link'|trans }}:</p>
-                                <p>
-                                    <a target="_blank" href="{{ url('shinage.online.player.view', {screenGuid: screen.guid}) }}">
-                                        {{ url('shinage.online.player.view', {screenGuid: screen.guid}) }}
-                                    </a>
-                                </p>
-                            </div>
-                            <div class="actions">
-                                <div class="ui cancel button">{{ 'Close'|trans }}</div>
-                            </div>
-                        </div>
                     </div>
                     <div class="extra content">
                         {{ 'Current'|trans }}: {{ screen.getCurrentPresentation() }}
                     </div>
                 </div>
             {% endfor %}
+        </div>
+
+        <div id="modal--online-player" class="ui modal">
+            <div class="header">{{ 'View in online player'|trans }}</div>
+            <div class="content">
+                <p>{{ 'Use the following link'|trans }}:</p>
+                <p>
+                    <a target="_blank" href="#"></a>
+                </p>
+            </div>
+            <div class="actions">
+                <div class="ui cancel button">{{ 'Close'|trans }}</div>
+            </div>
         </div>
         
         <h3 class="ui top attached block header">
@@ -81,7 +85,10 @@
     <script>
         $('.ui.modal').modal({ detachable: false });
         $('.open-modal').on('click', function () {
-            var $modal = $(this).parent().siblings('.ui.modal');
+            var url = $(this).data('screenUrl');
+            var $modal = $('#modal--online-player');
+            $('a', $modal).attr('href', url);
+            $('a', $modal).text(url);
             $modal.modal('show');
         });
 

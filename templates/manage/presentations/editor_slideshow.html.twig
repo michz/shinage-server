@@ -1,7 +1,8 @@
 {% extends 'base.html.twig' %}
 
 {% block body %}
-    <div class="ui main container">
+    <div class="ui main full-width container">
+        <h1>{{ 'Presentation'|trans }}: {{ presentation.title }}</h1>
         <div
                 id="slideshowEditor"
                 class="ui stackable grid"
@@ -139,9 +140,7 @@
                         handlers : {
                             dblclick : function(event, elfinderInstance) {
                                 event.preventDefault();
-                                elfinderInstance.exec('getfile')
-                                    .done(function() { elfinderInstance.exec('quicklook'); })
-                                    .fail(function() { elfinderInstance.exec('open'); });
+                                $('#choseImageOverlay .approve').trigger('click');
                             }
                         },
 

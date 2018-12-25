@@ -1,6 +1,7 @@
 var gulp = require('gulp');
 var concat = require('gulp-concat');
 var uglify = require('gulp-uglify');
+var less = require('gulp-less');
 var clean_css = require('gulp-clean-css');
 var environments = require('gulp-environments');
 var sourcemaps = require('gulp-sourcemaps');
@@ -19,7 +20,7 @@ var esLintPaths = [
     'src/Resources/private/js/include/**',
 ];
 var paths = {
-    js: [
+    libraryJs: [
         'node_modules/jquery/dist/jquery.js',
         'node_modules/jquery-ui-dist/jquery-ui.js',
         'node_modules/semantic-ui-css/semantic.js',
@@ -31,8 +32,11 @@ var paths = {
         'node_modules/codemirror/mode/css/css.js',
         'node_modules/codemirror/mode/javascript/javascript.js',
         'node_modules/codemirror/mode/htmlmixed/htmlmixed.js',
+        'node_modules/jquery-datetimepicker/build/jquery.datetimepicker.full.js',
         'vendor/studio-42/elfinder/js/elfinder.full.js',
         'src/Resources/private/js/lib/**',
+    ],
+    js: [
         'src/Resources/private/js/include/**',
     ],
     css: [
@@ -42,11 +46,16 @@ var paths = {
         'node_modules/jquery-ui-dist/jquery-ui.theme.css',
         'node_modules/fullcalendar/dist/fullcalendar.css',
         'node_modules/codemirror/lib/codemirror.css',
+        'node_modules/jquery-datetimepicker/build/jquery.datetimepicker.min.css',
         'vendor/studio-42/elfinder/css/elfinder.full.css',
         'vendor/studio-42/elfinder/css/theme.css',
         'src/Resources/private/css/**',
     ],
-    less: [
+    lessMain: [
+        'src/Resources/private/less/main.less',
+    ],
+    lessSrc: [
+        'src/Resources/private/less/**',
     ],
 };
 var playerPaths = {
@@ -98,8 +107,19 @@ gulp.task('copy4', function() {
 });
 gulp.task('copy', ['copy1','copy2a','copy2b','copy3','copy4']);
 
-gulp.task('css', ['copy'], function() {
-    return gulp.src(paths.css)
+gulp.task('less', ['copy'], function() {
+    return gulp.src(paths.lessMain)
+        .pipe(development(sourcemaps.init()))
+        .pipe(less())
+        .pipe(concat('less.css'))
+        .pipe(development(sourcemaps.write()))
+        .pipe(gulp.dest(distPath));
+});
+
+gulp.task('css', ['copy', 'less'], function() {
+    var finalPaths = paths.css;
+    finalPaths.push(distPath + '/less.css');
+    return gulp.src(finalPaths)
         .pipe(development(sourcemaps.init()))
         .pipe(clean_css({}))
         .pipe(concat('all.min.css'))
@@ -107,11 +127,20 @@ gulp.task('css', ['copy'], function() {
         .pipe(gulp.dest(distPath));
 });
 
-gulp.task('js', ['copy'], function() {
+gulp.task('libraryJs', ['copy'], function() {
+    return gulp.src(paths.libraryJs)
+        .pipe(development(sourcemaps.init()))
+        .pipe(uglify())
+        .pipe(concat('lib.min.js'))
+        .pipe(development(sourcemaps.write()))
+        .pipe(gulp.dest(distPath));
+});
+
+gulp.task('js', [], function() {
     return gulp.src(paths.js)
         .pipe(development(sourcemaps.init()))
         .pipe(uglify())
-        .pipe(concat('all.min.js'))
+        .pipe(concat('app.min.js'))
         .pipe(development(sourcemaps.write()))
         .pipe(gulp.dest(distPath));
 });
@@ -134,7 +163,7 @@ gulp.task('player-js', ['copy'], function() {
         .pipe(gulp.dest(distPath));
 });
 
-gulp.task('default', ['copy', 'css', 'js', 'player-css', 'player-js']);
+gulp.task('default', ['copy', 'less', 'css', 'libraryJs', 'js', 'player-css', 'player-js']);
 
 gulp.task('eslint', () => {
     return gulp.src(esLintPaths)
@@ -147,5 +176,6 @@ gulp.task('eslint', () => {
 gulp.task('watch', function() {
   gulp.watch(paths.js, ['js']);
   gulp.watch(paths.css, ['css']);
+  gulp.watch(paths.lessSrc, ['less', 'css']);
 });
 

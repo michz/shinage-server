@@ -34,12 +34,15 @@ class CurrentForController extends Controller
     public function indexAction(Request $request, Screen $screen): Response
     {
         $presentation = $this->scheduler->getCurrentPresentation($screen, true);
+
+        $url = $this->urlBuilder->getAbsoluteRouteBasedOnRequest(
+            $request,
+            'presentation',
+            ['id' => $presentation->getId()]
+        ) . '?last_modified=' . $presentation->getLastModified()->getTimestamp();
+
         return new Response(
-            $this->urlBuilder->getAbsoluteRouteBasedOnRequest(
-                $request,
-                'presentation',
-                ['id' => $presentation->getId()]
-            ),
+            $url,
             200,
             [
                 'Access-Control-Allow-Origin' => '*',

@@ -185,6 +185,9 @@
     "mztx/shinage-player-bundle": {
         "version": "v0.1.1"
     },
+    "mztx/todo-bundle": {
+        "version": "dev-master"
+    },
     "nette/finder": {
         "version": "v2.4.2"
     },

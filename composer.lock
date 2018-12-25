@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "283fc5da118e73ef187dd0223b59d322",
+    "content-hash": "ab53ee9cc2a7ba25c837e447838485db",
     "packages": [
         {
             "name": "doctrine/annotations",
@@ -2141,6 +2141,37 @@
             "description": "Symfony bundle for digital signage player Shinage.",
             "homepage": "https://shinage.mztx.de",
             "time": "2018-07-01T10:43:23+00:00"
+        },
+        {
+            "name": "mztx/todo-bundle",
+            "version": "v0.1.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/michz/todo-bundle.git",
+                "reference": "102a58a98a329b4922584e4293c63f1a13711a07"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/michz/todo-bundle/zipball/102a58a98a329b4922584e4293c63f1a13711a07",
+                "reference": "102a58a98a329b4922584e4293c63f1a13711a07",
+                "shasum": ""
+            },
+            "require": {
+                "mztx/todo-bundle": "@dev",
+                "php": ">=7.1.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "mztx\\TodoBundle\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "description": "Very simple Symfony bundle that helps tracking TODO markers in code.",
+            "time": "2018-12-23T16:42:33+00:00"
         },
         {
             "name": "ocramius/package-versions",

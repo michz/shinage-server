@@ -1,0 +1,58 @@
+#todolist {
+  li {
+    position: relative;
+    border: 1px solid #000;
+    height: 32px;
+    font-size: 13px;
+    padding: 0;
+    margin: 1px 0;
+    overflow: hidden;
+    white-space: nowrap;
+
+    &.todo-todo {
+      background-color: #9aff9c;
+
+      &.severity-5 {
+        background-color: #ff3b31;
+      }
+
+      &.severity-4 {
+        background-color: #ff572d;
+      }
+
+      &.severity-3 {
+        background-color: #ffac5e;
+      }
+
+      &.severity-2 {
+        background-color: #fffc99;
+      }
+
+      &.severity-1 {
+        background-color: #dcff9d;
+      }
+    }
+
+    span.todo-li-text {
+      position: absolute;
+      top: 0;
+      left: 2px;
+      color: #333;
+      font-weight: bold;
+    }
+
+    span.todo-li-file {
+      position: absolute;
+      bottom: 0;
+      left: 2px;
+      color: #333;
+    }
+
+    span.todo-li-line {
+      position: absolute;
+      bottom: 0;
+      right: 2px;
+      color: #333;
+    }
+  }
+}
