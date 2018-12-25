@@ -68,6 +68,7 @@
                 navLinks: true,     // can click day/week names to navigate views
                 editable: true,
                 eventLimit: true,   // allow "more" link when too many events
+                nowIndicator: true,
                 allDaySlot: false,
                 snapDuration: '00:05:00',
                 events: [],
