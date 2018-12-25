@@ -1,6 +1,7 @@
 var gulp = require('gulp');
 var concat = require('gulp-concat');
 var uglify = require('gulp-uglify');
+var less = require('gulp-less');
 var clean_css = require('gulp-clean-css');
 var environments = require('gulp-environments');
 var sourcemaps = require('gulp-sourcemaps');
@@ -46,7 +47,11 @@ var paths = {
         'vendor/studio-42/elfinder/css/theme.css',
         'src/Resources/private/css/**',
     ],
-    less: [
+    lessMain: [
+        'src/Resources/private/less/main.less',
+    ],
+    lessSrc: [
+        'src/Resources/private/less/**',
     ],
 };
 var playerPaths = {
@@ -98,8 +103,19 @@ gulp.task('copy4', function() {
 });
 gulp.task('copy', ['copy1','copy2a','copy2b','copy3','copy4']);
 
+gulp.task('less', ['copy'], function() {
+    return gulp.src(paths.lessMain)
+        .pipe(development(sourcemaps.init()))
+        .pipe(less())
+        .pipe(concat('less.css'))
+        .pipe(development(sourcemaps.write()))
+        .pipe(gulp.dest(distPath));
+});
+
 gulp.task('css', ['copy'], function() {
-    return gulp.src(paths.css)
+    var finalPaths = paths.css;
+    finalPaths.push(distPath + '/less.css');
+    return gulp.src(finalPaths)
         .pipe(development(sourcemaps.init()))
         .pipe(clean_css({}))
         .pipe(concat('all.min.css'))
@@ -134,7 +150,7 @@ gulp.task('player-js', ['copy'], function() {
         .pipe(gulp.dest(distPath));
 });
 
-gulp.task('default', ['copy', 'css', 'js', 'player-css', 'player-js']);
+gulp.task('default', ['copy', 'less', 'css', 'js', 'player-css', 'player-js']);
 
 gulp.task('eslint', () => {
     return gulp.src(esLintPaths)
@@ -147,5 +163,6 @@ gulp.task('eslint', () => {
 gulp.task('watch', function() {
   gulp.watch(paths.js, ['js']);
   gulp.watch(paths.css, ['css']);
+  gulp.watch(paths.lessSrc, ['less']);
 });
 

@@ -33,8 +33,8 @@
             {# main content #}
             {% block body %}{% endblock %}
 
-            <div id="ajax-loading">
-                <img src="{{ asset('img/spin.gif') }}">
+            <div id="global-dimmer" class="ui dimmer">
+                <div class="ui loader"></div>
             </div>
 
             <div id="footer">

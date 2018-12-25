@@ -1,0 +1,34 @@
+.navbar-default {
+  .navbar-nav > .admin > a, .navbar-nav > .admin > a:hover,
+  .navbar-nav > .admin.open > a, .navbar-nav > .admin.open > a:hover {
+    color: #555;
+    background-color: #ffd4cb;
+  }
+}
+
+.ui.menu.sidebar-nav {
+  .item {
+    border-top: 1px solid #e7e7e7;
+    background-color: #fff;
+
+    &.first {
+      border-top: 0;
+      background-color: #fff;
+    }
+
+    &.current {
+      font-weight: bold;
+
+      &::after {
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        width: 2px;
+        height: 100%;
+        content: "";
+        border-left: 2px solid #4183cb;
+      }
+    }
+  }
+}
