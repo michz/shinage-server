@@ -245,7 +245,6 @@
             $('#scheduler-diag-place').modal({
                 closable: true,
                 onApprove: function () {
-                    //var succ = $(this).dialog('option', 'successCallback');
                     var form = $('form', this);
 
                     window.ajaxLoadShow();
