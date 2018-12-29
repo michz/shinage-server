@@ -74,6 +74,7 @@ class HeartbeatController extends Controller
             $screen = new Screen();
             $screen->setGuid($screenId);
             $screen->setFirstConnect(new \DateTime());
+            $screen->setLastConnect(new \DateTime('@0'));
             $screen->setConnectCode($this->generateUniqueConnectcode());
         }
 
