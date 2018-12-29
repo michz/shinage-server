@@ -11,6 +11,7 @@ namespace App\Controller\ScreenRemote;
 use App\Entity\Screen;
 use App\Service\ConnectCodeGeneratorInterface;
 use App\Service\SchedulerService;
+use App\Service\ScreenAssociation;
 use App\Service\UrlBuilderInterface;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -31,16 +32,21 @@ class CurrentForController extends Controller
     /** @var EntityManagerInterface */
     private $entityManager;
 
+    /** @var ScreenAssociation */
+    private $screenAssociationHelper;
+
     public function __construct(
         SchedulerService $scheduler,
         UrlBuilderInterface $urlBuilder,
         ConnectCodeGeneratorInterface $connectCodeGenerator,
-        EntityManagerInterface $entityManager
+        EntityManagerInterface $entityManager,
+        ScreenAssociation $screenAssociationHelper
     ) {
         $this->scheduler = $scheduler;
         $this->urlBuilder = $urlBuilder;
         $this->connectCodeGenerator = $connectCodeGenerator;
         $this->entityManager = $entityManager;
+        $this->screenAssociationHelper = $screenAssociationHelper;
     }
 
     public function indexAction(Request $request, ?Screen $screen = null): Response
@@ -58,11 +64,16 @@ class CurrentForController extends Controller
 
         $presentation = $this->scheduler->getCurrentPresentation($screen, true);
 
+        $parameters = ['last_modified' => $presentation->getLastModified()->getTimestamp()];
+        if (false === $this->screenAssociationHelper->isScreenAssociated($screen)) {
+            $parameters['connect_code'] = $screen->getConnectCode();
+        }
+
         $url = $this->urlBuilder->getAbsoluteRouteBasedOnRequest(
             $request,
             'presentation',
             ['id' => $presentation->getId()]
-        ) . '?last_modified=' . $presentation->getLastModified()->getTimestamp();
+        ) . '?' . \http_build_query($parameters);
 
         return new Response(
             $url,
