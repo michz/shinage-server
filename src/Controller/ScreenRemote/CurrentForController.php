@@ -59,7 +59,7 @@ class CurrentForController extends Controller
             $this->entityManager->persist($screen);
         }
 
-        $screen->setLastConnect(new \DateTime('@0'));
+        $screen->setLastConnect(new \DateTime('now'));
         $this->entityManager->flush();
 
         $presentation = $this->scheduler->getCurrentPresentation($screen, true);
