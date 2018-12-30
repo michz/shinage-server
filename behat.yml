@@ -6,8 +6,14 @@ default:
       contexts_services:
         - shinage.server.behat.context.hook.purge
 
+        - shinage.server.behat.context.transform.presentation
+        - shinage.server.behat.context.transform.screen
+
+        - shinage.server.behat.context.setup.presentations
         - shinage.server.behat.context.setup.screen
         - shinage.server.behat.context.heartbeat
+
+        - shinage.server.behat.context.presentation
 
     login_features:
       paths:

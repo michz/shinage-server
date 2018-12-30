@@ -8,12 +8,6 @@ use App\Entity\User;
 use Behat\Behat\Context\Context;
 use Doctrine\ORM\EntityManagerInterface;
 
-/**
- * @author   :  Michael Zapf <m.zapf@mztx.de>
- * @date     :  06.05.18
- * @time     :  15:41
- */
-
 class ScreenContext implements Context
 {
     /**
@@ -38,12 +32,20 @@ class ScreenContext implements Context
         $screen->setGuid($guid);
         $screen->setName('Screen ' . $guid);
         $screen->setFirstConnect(new \DateTime());
-        $screen->setLastConnect(new \DateTime());
+        $screen->setLastConnect(new \DateTime('@0'));
         $screen->setLocation('Somewhere');
         $this->entityManager->persist($screen);
+        $this->entityManager->flush();
+    }
 
+     // * @Given The screen :screen belongs to an arbitrary user
+    /**
+     * @Given /^(The screen "[^"]+") belongs to an arbitrary user$/
+     */
+    public function theScreenBelongsToAnArbitraryUser(Screen $screen)
+    {
         $user = new User();
-        $user->setName('Owner of ' . $guid);
+        $user->setName('Owner of ' . $screen->getGuid());
         $user->setEmail('default-owner@test.test');
         $user->setPassword('testpasswordunusable');
         $this->entityManager->persist($user);
@@ -55,7 +57,6 @@ class ScreenContext implements Context
         $association->setUser($user);
         $association->setScreen($screen);
         $this->entityManager->persist($association);
-
         $this->entityManager->flush();
     }
 }

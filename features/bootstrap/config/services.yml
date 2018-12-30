@@ -34,6 +34,13 @@ services:
       - "@__symfony_shared__.doctrine.orm.entity_manager"
       - "@__symfony__.test.client"
 
+  shinage.server.behat.context.presentation:
+    class: shinage\server\behat\PresentationContext
+    tags: ["fob.context_service"]
+    arguments:
+      - "@__symfony_shared__.doctrine.orm.entity_manager"
+      - "@__symfony__.test.client"
+
   shinage.server.behat.context.login:
     class: shinage\server\behat\LoginContext
     tags: ["fob.context_service"]
