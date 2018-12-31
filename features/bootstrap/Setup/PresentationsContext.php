@@ -9,6 +9,9 @@ declare(strict_types=1);
 namespace shinage\server\behat\Setup;
 
 use App\Entity\Presentation;
+use App\Entity\ScheduledPresentation;
+use App\Entity\Screen;
+use App\Entity\ScreenAssociation;
 use App\Entity\User;
 use Behat\Behat\Context\Context;
 use Doctrine\ORM\EntityManagerInterface;
@@ -47,5 +50,43 @@ class PresentationsContext implements Context
         $this->entityManager->flush();
 
         $this->sharedStorage->set('presentation', $presentation);
+    }
+
+    /**
+     * @Given /^There is a presentation of type "([^"]*)" called "([^"]*)"$/
+     */
+    public function thereIsAPresentationOfTypeCalled(string $type, string $name)
+    {
+        $presentation = new Presentation();
+        $presentation->setLastModified(new \DateTime());
+        //$presentation->setOwner();
+        $presentation->setTitle($name);
+        $presentation->setType($type);
+
+        $this->entityManager->persist($presentation);
+        $this->entityManager->flush();
+
+        $this->sharedStorage->set('presentation', $presentation);
+    }
+
+     // Given /^(The presentation "([^"]+)") is scheduled now for (screen "([^"]+)")$/
+    /**
+     * @Given The presentation :presentation is scheduled now for screen :screen
+     */
+    public function thePresentationIsScheduledNowForScreen(Presentation $presentation, Screen $screen)
+    {
+        $start = new \DateTime('now');
+        $start->sub(new \DateInterval('PT1H'));
+        $end = new \DateTime('now');
+        $end->add(new \DateInterval('PT1H'));
+
+        $scheduledPresentation = new ScheduledPresentation();
+        $scheduledPresentation->setPresentation($presentation);
+        $scheduledPresentation->setScreen($screen);
+        $scheduledPresentation->setScheduledStart($start);
+        $scheduledPresentation->setScheduledEnd($end);
+
+        $this->entityManager->persist($scheduledPresentation);
+        $this->entityManager->flush();
     }
 }

@@ -19,6 +19,16 @@ class Renderer implements PresentationRendererInterface
             \file_get_contents(__DIR__ . '/../../Resources/private/img/logo-base-dark.png')
         );
 
+        $connectInstructions = '';
+        try {
+            $settings = \json_decode($presentation->getSettings());
+            if (isset($settings->connectCode)) {
+                $connectInstructions = '<div id="connect-instructions">Verbindungskennung: ' . $settings->connectCode . '</div>';
+            }
+        } catch (\Throwable $exception) {
+            // If no valid settings could be parsed, there should no connect code be displayed
+        }
+
         return "
 <!doctype html>
 <html>
@@ -38,6 +48,8 @@ class Renderer implements PresentationRendererInterface
             overflow: hidden;
             height: 100%;
             background: #000;
+            color: #fff;
+            font-family: sans-serif;
         }
         
         body {
@@ -64,16 +76,31 @@ class Renderer implements PresentationRendererInterface
             margin: 30vh auto 0 auto;
             max-width: 50vw;
         }
+        
+        #container #connect-instructions {
+            position: absolute;
+            bottom: 20vh;
+            width: 100%;
+            font-size: 4vh;
+            text-align: center;
+            color: #ddd;
+        }
+        #container #connect-instructions.top {
+            top: 20vh;
+            bottom: unset;
+        }
       
       </style>
     </head>
     <body>
         <div id='container'>
-            <img id='logo' src='data:image/png;base64,{$splashImageBase64}'
+            <img id='logo' src='data:image/png;base64,{$splashImageBase64}'>
+            {$connectInstructions}
         </div>
         
         <script>
             var animationTimout = 15000;
+
             function reposition() {
                 var logo = document.getElementById('logo');
                 var imgWidth = logo.width;
@@ -92,6 +119,16 @@ class Renderer implements PresentationRendererInterface
                 logo.style.left = x + 'px';
                 logo.style.top = y + 'px';
                 logo.style.margin = 0;
+                
+                var instructions = document.getElementById('connect-instructions');
+                if (!instructions) {
+                } else {
+                    if (y > windowHeight / 2) {
+                        instructions.className = 'top';
+                    } else {
+                        instructions.className = '';
+                    }
+                }
                 
                 setTimeout(reposition, animationTimout);
             }

@@ -1,10 +1,11 @@
-@api @screen_remote
+@api @screen_remote @deprecated
 Feature: As a player
   I can do a so called heartbeat
 
 
   Background:
     Given There is a screen with guid "123456"
+    And The screen "123456" belongs to an arbitrary user
 
 
   Scenario: I can see that the screen was not registered yet

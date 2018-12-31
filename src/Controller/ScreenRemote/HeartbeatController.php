@@ -12,6 +12,7 @@ use App\Entity\PresentationInterface;
 use App\Entity\Screen;
 use App\Exceptions\NoScreenGivenException;
 use App\Presentation\PresentationTypeRegistryInterface;
+use App\Service\ConnectCodeGeneratorInterface;
 use App\Service\SchedulerService;
 use App\Service\ScreenAssociation;
 use Doctrine\ORM\EntityManagerInterface;
@@ -39,18 +40,23 @@ class HeartbeatController extends Controller
     /** @var SchedulerService */
     private $scheduler;
 
+    /** @var ConnectCodeGeneratorInterface */
+    private $connectCodeGenerator;
+
     public function __construct(
         EntityManagerInterface $entityManager,
         PresentationTypeRegistryInterface $presentationTypeRegistry,
         ScreenAssociation $screenAssociationHelper,
         RouterInterface $router,
-        SchedulerService $scheduler
+        SchedulerService $scheduler,
+        ConnectCodeGeneratorInterface $connectCodeGenerator
     ) {
         $this->entityManager = $entityManager;
         $this->presentationTypeRegistry = $presentationTypeRegistry;
         $this->screenAssociationHelper = $screenAssociationHelper;
         $this->router = $router;
         $this->scheduler = $scheduler;
+        $this->connectCodeGenerator = $connectCodeGenerator;
     }
 
     public function heartbeatAction(Request $request, string $screenId): Response
@@ -68,6 +74,7 @@ class HeartbeatController extends Controller
             $screen = new Screen();
             $screen->setGuid($screenId);
             $screen->setFirstConnect(new \DateTime());
+            $screen->setLastConnect(new \DateTime('@0'));
             $screen->setConnectCode($this->generateUniqueConnectcode());
         }
 
@@ -111,7 +118,7 @@ class HeartbeatController extends Controller
             'connect_code'     => $screen->getConnectCode(),
             'presentation'     => $presentationId,
             'presentationUrl'  => $presentationUrl,
-            'last_modified'    => $lastModified ? $lastModified->format('Y-m-d H:i:s') : '0000-00-00 00:00:00',
+            'last_modified'    => $lastModified->format('Y-m-d H:i:s'),
         ]);
     }
 
@@ -138,35 +145,7 @@ class HeartbeatController extends Controller
 
     protected function generateUniqueConnectcode(): string
     {
-        $this->entityManager = $this->getDoctrine()->getManager();
-        $rep = $this->entityManager->getRepository('App:Screen');
-
-        $code = '';
-        $unique = false;
-        while (!$unique) {
-            $code = $this->generateConnectcode();
-
-            $screens = $rep->findBy(['connect_code' => $code]);
-            if (0 === \count($screens)) {
-                $unique = true;
-            }
-        }
-
-        return $code;
-    }
-
-    protected function generateConnectcode(): string
-    {
-        $chars = 'abcdefghkmnpqrstuvwxyz23456789';
-        $chars_n = \strlen($chars);
-        $len = 8;
-        $code = '';
-
-        for ($i = 0; $i < $len; ++$i) {
-            $code .= $chars[\random_int(0, $chars_n - 1)];
-        }
-
-        return $code;
+        return $this->connectCodeGenerator->generateUniqueConnectcode();
     }
 
     protected function getCurrentPresentation(Screen $screen): ?PresentationInterface

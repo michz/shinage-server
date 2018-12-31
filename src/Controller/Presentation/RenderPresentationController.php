@@ -12,6 +12,7 @@ use App\Entity\Presentation;
 use App\Presentation\AnyPresentationRendererInterface;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 class RenderPresentationController extends Controller
@@ -30,15 +31,22 @@ class RenderPresentationController extends Controller
         $this->anyPresentationRenderer = $anyPresentationRenderer;
     }
 
-    public function getAction(int $id): Response
+    public function getAction(Request $request, int $id): Response
     {
         $presentation = $this->entityManager->find(Presentation::class, $id);
 
         if (null === $presentation) {
+            $settings = [];
+
+            $connectCode = $request->get('connect_code');
+            if (null !== $connectCode) {
+                $settings['connectCode'] = $connectCode;
+            }
+
             $presentation = new Presentation();
             $presentation->setId(0);
             $presentation->setType('splash');
-            $presentation->setSettings('{}');
+            $presentation->setSettings(\json_encode($settings));
         }
 
         return new Response(
