@@ -118,7 +118,7 @@ class HeartbeatController extends Controller
             'connect_code'     => $screen->getConnectCode(),
             'presentation'     => $presentationId,
             'presentationUrl'  => $presentationUrl,
-            'last_modified'    => $lastModified ? $lastModified->format('Y-m-d H:i:s') : '0000-00-00 00:00:00',
+            'last_modified'    => $lastModified->format('Y-m-d H:i:s'),
         ]);
     }
 

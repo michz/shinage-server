@@ -26,6 +26,7 @@ class Renderer implements PresentationRendererInterface
                 $connectInstructions = '<div id="connect-instructions">Verbindungskennung: ' . $settings->connectCode . '</div>';
             }
         } catch (\Throwable $exception) {
+            // If no valid settings could be parsed, there should no connect code be displayed
         }
 
         return "

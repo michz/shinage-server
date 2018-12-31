@@ -10,6 +10,7 @@ namespace App\Controller\Management\Screens;
 
 use App\Entity\Presentation;
 use App\Entity\Screen;
+use App\Entity\User;
 use App\Repository\PresentationsRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
@@ -20,6 +21,7 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 class ScreenDataController extends Controller
 {
@@ -94,8 +96,13 @@ class ScreenDataController extends Controller
     private function getPresentationsChoices(): array
     {
         $user = $this->tokenStorage->getToken()->getUser();
-        $choices = [null];
+        if (false === $user instanceof User) {
+            throw new AccessDeniedException(
+                'Presentations of user could not be fetched as no valid user was found in session.'
+            );
+        }
 
+        $choices = [null];
         foreach ($this->presentationsRepository->getPresentationsForsUser($user) as $presentation) {
             $choices[] = $presentation;
         }
