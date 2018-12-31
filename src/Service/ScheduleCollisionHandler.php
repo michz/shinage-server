@@ -10,16 +10,38 @@ namespace App\Service;
 
 use App\Entity\ScheduledPresentation;
 use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\ORM\Query;
 
 class ScheduleCollisionHandler implements ScheduleCollisionHandlerInterface
 {
     /** @var EntityManagerInterface */
     private $entityManager;
 
+    /** @var Query */
+    private $selectEnclosedQuery;
+
     public function __construct(
         EntityManagerInterface $entityManager
     ) {
         $this->entityManager = $entityManager;
+
+        $this->prepareQueries();
+    }
+
+    private function prepareQueries(): void
+    {
+        $selectEnclosedQueryBuilder = $this->entityManager->createQueryBuilder();
+
+        $this->selectEnclosedQuery =
+            $selectEnclosedQueryBuilder
+                ->select('scheduledPresentation')
+                ->from(ScheduledPresentation::class, 'scheduledPresentation')
+                ->where($selectEnclosedQueryBuilder->expr()->gte('scheduledPresentation.scheduled_start', ':current_start'))
+                ->andWhere($selectEnclosedQueryBuilder->expr()->lte('scheduledPresentation.scheduled_end', ':current_end'))
+                ->andWhere($selectEnclosedQueryBuilder->expr()->eq('scheduledPresentation.screen', ':screen'))
+                ->andWhere($selectEnclosedQueryBuilder->expr()->neq('scheduledPresentation.id', ':id'))
+                ->orderBy('scheduledPresentation.scheduled_start', 'ASC')
+                ->getQuery();
     }
 
     public function handleCollisions(ScheduledPresentation $s): void
@@ -28,25 +50,16 @@ class ScheduleCollisionHandler implements ScheduleCollisionHandlerInterface
         $end = $s->getScheduledEnd();
 
         // check if scheduled presentation encloses same/other schedule on same screen entirely
-        $query = $this->entityManager->createQuery(
-            'SELECT p
-                    FROM App:ScheduledPresentation p
-                    WHERE
-                        (
-                        (p.scheduled_start  >= :current_start AND p.scheduled_end <= :current_end)
-                        ) AND 
-                        p.screen = :screen
-                        AND 
-                        p.id != :id
-                    ORDER BY p.scheduled_start ASC'
-        )
-            ->setParameter('current_start', $start)
-            ->setParameter('current_end', $end)
-            ->setParameter('id', $s->getId())
-            ->setParameter('screen', $s->getScreen());
+        $overlaps = $this->selectEnclosedQuery
+            ->execute([
+                'current_start' => $start,
+                'current_end'   => $end,
+                'id'            => $s->getId(),
+                'screen'        => $s->getScreen(),
+            ]);
 
-        $overlaps = $query->getResult();
-        foreach ($overlaps as $o) { /* @var ScheduledPresentation $o */
+        /* @var ScheduledPresentation $o */
+        foreach ($overlaps as $o) {
             // remove all that are fully enclosed
             $this->entityManager->remove($o);
         }
