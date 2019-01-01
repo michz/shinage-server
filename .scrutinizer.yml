@@ -1,10 +1,6 @@
 filter:
     paths:
-        - "app/"
         - "src/"
-    excluded_paths:
-        - "src/AppBundle/spec/"
-        - "src/AppBundle/tests/"
 
 build:
     tests:

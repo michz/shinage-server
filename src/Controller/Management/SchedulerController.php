@@ -12,6 +12,7 @@ use App\Entity\Presentation;
 use App\Entity\ScheduledPresentation;
 use App\Entity\Screen;
 use App\Repository\ScreenRepository;
+use App\Service\ScheduleCollisionHandlerInterface;
 use Doctrine\ORM\EntityManager;
 use JMS\Serializer\SerializerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -30,14 +31,19 @@ class SchedulerController extends Controller
     /** @var SerializerInterface */
     private $serializer;
 
+    /** @var ScheduleCollisionHandlerInterface */
+    private $collisionHandler;
+
     public function __construct(
         TokenStorageInterface $tokenStorage,
         ScreenRepository $screenRepository,
-        SerializerInterface $serializer
+        SerializerInterface $serializer,
+        ScheduleCollisionHandlerInterface $collisionHandler
     ) {
         $this->tokenStorage = $tokenStorage;
         $this->screenRepository = $screenRepository;
         $this->serializer = $serializer;
+        $this->collisionHandler = $collisionHandler;
     }
 
     public function schedulerAction(): Response
@@ -127,7 +133,7 @@ class SchedulerController extends Controller
         $em->persist($s);
         $em->flush(); // just for sure
 
-        $this->handleCollisions($s);
+        $this->collisionHandler->handleCollisions($s);
         $em->flush();
 
         return $this->json(['status' => 'ok']);
@@ -155,7 +161,7 @@ class SchedulerController extends Controller
         $em->persist($s);
         $em->flush(); // just for sure
 
-        $this->handleCollisions($s);
+        $this->collisionHandler->handleCollisions($s);
         $em->flush();
 
         return $this->json(['status' => 'ok']);
@@ -177,174 +183,5 @@ class SchedulerController extends Controller
         $em->flush();
 
         return $this->json(['status' => 'ok']);
-    }
-
-    // @TODO Move this to own service.
-    protected function handleCollisions(ScheduledPresentation $s): void
-    {
-        $em = $this->getDoctrine()->getManager(); /** @var EntityManager $em */
-        $start = $s->getScheduledStart();
-        $end = $s->getScheduledEnd();
-
-        // check if scheduled presentation encloses same/other schedule on same screen entirely
-        $query = $em->createQuery(
-            'SELECT p
-                    FROM App:ScheduledPresentation p
-                    WHERE
-                        (
-                        (p.scheduled_start  >= :current_start AND p.scheduled_end <= :current_end)
-                        ) AND 
-                        p.screen = :screen
-                        AND 
-                        p.id != :id
-                    ORDER BY p.scheduled_start ASC'
-        )
-            ->setParameter('current_start', $start)
-            ->setParameter('current_end', $end)
-            ->setParameter('id', $s->getId())
-            ->setParameter('screen', $s->getScreen());
-
-        $overlaps = $query->getResult();
-        foreach ($overlaps as $o) { /* @var ScheduledPresentation $o */
-            // remove all that are fully enclosed
-            $em->remove($o);
-        }
-        $em->flush();
-
-        // check if scheduled presentation is entirely enclosed by same/other schedule on same screen
-        $query = $em->createQuery(
-            'SELECT p
-                    FROM App:ScheduledPresentation p
-                    WHERE
-                        (
-                        (p.scheduled_start < :current_start AND p.scheduled_end > :current_end)
-                        ) AND 
-                        p.screen = :screen
-                        AND 
-                        p.id != :id
-                    ORDER BY p.scheduled_start ASC'
-        )
-            ->setParameter('current_start', $start)
-            ->setParameter('current_end', $end)
-            ->setParameter('id', $s->getId())
-            ->setParameter('screen', $s->getScreen());
-
-        $overlaps = $query->getResult();
-        foreach ($overlaps as $o) { /** @var ScheduledPresentation $o */
-            $new_o = new ScheduledPresentation();
-            $new_o->setScreen($o->getScreen());
-            $new_o->setPresentation($o->getPresentation());
-
-            // new scheduled item at end
-            $new_o->setScheduledStart($s->getScheduledEnd());
-            $new_o->setScheduledEnd($o->getScheduledEnd());
-
-            // old scheduled item at start
-            $o->setScheduledEnd($s->getScheduledStart());
-            $em->persist($o);
-            $em->persist($new_o);
-        }
-        $em->flush();
-
-        // check if scheduled presentation overlaps same/other schedule on same screen
-        $query = $em->createQuery(
-            'SELECT p
-                    FROM App:ScheduledPresentation p
-                    WHERE
-                        (p.scheduled_start < :current_start AND 
-                        p.scheduled_end >= :current_start AND p.scheduled_end <= :current_end)
-                        AND p.screen = :screen AND p.id != :id
-                    ORDER BY p.scheduled_start ASC'
-        )
-            ->setParameter('current_start', $start)
-            ->setParameter('current_end', $end)
-            ->setParameter('id', $s->getId())
-            ->setParameter('screen', $s->getScreen());
-
-        $overlaps = $query->getResult();
-        foreach ($overlaps as $o) { /* @var ScheduledPresentation $o */
-            $o->setScheduledEnd($s->getScheduledStart());
-            $em->persist($o);
-        }
-        $em->flush();
-
-        // check if scheduled presentation overlaps same/other schedule on same screen (second case)
-        $query = $em->createQuery(
-            'SELECT p
-                    FROM App:ScheduledPresentation p
-                    WHERE
-                        (p.scheduled_start > :current_start AND 
-                        p.scheduled_start <= :current_end AND 
-                        p.scheduled_end > :current_end)
-                        AND p.screen = :screen AND p.id != :id
-                    ORDER BY p.scheduled_start ASC'
-        )
-            ->setParameter('current_start', $start)
-            ->setParameter('current_end', $end)
-            ->setParameter('id', $s->getId())
-            ->setParameter('screen', $s->getScreen());
-
-        $overlaps = $query->getResult();
-        foreach ($overlaps as $o) { /* @var ScheduledPresentation $o */
-            $o->setScheduledStart($s->getScheduledEnd());
-            $em->persist($o);
-        }
-        $em->flush();
-
-        // check if scheduled presentation overlaps same presentation on same screen at start
-        $query = $em->createQuery(
-            'SELECT p
-                    FROM App:ScheduledPresentation p
-                    WHERE
-                        (
-                        p.scheduled_start  < :current_start AND
-                        p.scheduled_end >= :current_start AND p.scheduled_end <= :current_end
-                        ) AND 
-                        p.screen = :screen AND 
-                        p.presentation = :presentation AND 
-                        p.id != :id
-                    ORDER BY p.scheduled_start ASC'
-        )
-            ->setParameter('current_start', $start)
-            ->setParameter('current_end', $end)
-            ->setParameter('id', $s->getId())
-            ->setParameter('presentation', $s->getPresentation())
-            ->setParameter('screen', $s->getScreen());
-
-        $overlaps = $query->getResult();
-        foreach ($overlaps as $o) { /* @var ScheduledPresentation $o */
-            $s->setScheduledStart($o->getScheduledStart());
-            $em->persist($s);
-            $em->remove($o);
-        }
-        $em->flush();
-
-        // check if scheduled presentation overlaps same presentation on same screen at end
-        $query = $em->createQuery(
-            'SELECT p
-                    FROM App:ScheduledPresentation p
-                    WHERE
-                        (
-                        p.scheduled_start >= :current_start AND p.scheduled_start <= :current_end AND
-                        p.scheduled_end > :current_end
-                        ) AND 
-                        p.screen = :screen AND 
-                        p.presentation = :presentation AND 
-                        p.id != :id
-                    ORDER BY p.scheduled_start ASC'
-        )
-            ->setParameter('current_start', $start)
-            ->setParameter('current_end', $end)
-            ->setParameter('id', $s->getId())
-            ->setParameter('presentation', $s->getPresentation())
-            ->setParameter('screen', $s->getScreen());
-
-        $overlaps = $query->getResult();
-        foreach ($overlaps as $o) { /* @var ScheduledPresentation $o */
-            $s->setScheduledEnd($o->getScheduledEnd());
-            $em->persist($s);
-            $em->remove($o);
-        }
-        $em->flush();
     }
 }
