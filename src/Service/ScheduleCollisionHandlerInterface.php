@@ -12,5 +12,5 @@ use App\Entity\ScheduledPresentation;
 
 interface ScheduleCollisionHandlerInterface
 {
-    public function handleCollisions(ScheduledPresentation $s): void;
+    public function handleCollisions(ScheduledPresentation $scheduledPresentation): void;
 }

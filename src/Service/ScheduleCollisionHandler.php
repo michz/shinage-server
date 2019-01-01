@@ -106,23 +106,20 @@ class ScheduleCollisionHandler implements ScheduleCollisionHandlerInterface
                 ->getQuery();
     }
 
-    public function handleCollisions(ScheduledPresentation $s): void
+    public function handleCollisions(ScheduledPresentation $scheduledPresentation): void
     {
-        $start = $s->getScheduledStart();
-        $end = $s->getScheduledEnd();
-
         // First check if new presentation is entirely enclosed by the same presentation => remove the new one
         $overlaps = $this->selectSameEnclosingQuery
             ->execute([
-                'current_start' => $start,
-                'current_end'   => $end,
-                'id'            => $s->getId(),
-                'screen'        => $s->getScreen(),
-                'presentation'  => $s->getPresentation(),
+                'current_start' => $scheduledPresentation->getScheduledStart(),
+                'current_end'   => $scheduledPresentation->getScheduledEnd(),
+                'id'            => $scheduledPresentation->getId(),
+                'screen'        => $scheduledPresentation->getScreen(),
+                'presentation'  => $scheduledPresentation->getPresentation(),
             ]);
 
         if (false === empty($overlaps)) {
-            $this->entityManager->remove($s);
+            $this->entityManager->remove($scheduledPresentation);
             $this->entityManager->flush();
             return;
         }
@@ -130,10 +127,10 @@ class ScheduleCollisionHandler implements ScheduleCollisionHandlerInterface
         // check if scheduled presentation encloses same/other schedule on same screen entirely
         $overlaps = $this->selectEnclosedQuery
             ->execute([
-                'current_start' => $start,
-                'current_end'   => $end,
-                'id'            => $s->getId(),
-                'screen'        => $s->getScreen(),
+                'current_start' => $scheduledPresentation->getScheduledStart(),
+                'current_end'   => $scheduledPresentation->getScheduledEnd(),
+                'id'            => $scheduledPresentation->getId(),
+                'screen'        => $scheduledPresentation->getScreen(),
             ]);
 
         /* @var ScheduledPresentation $o */
@@ -147,10 +144,10 @@ class ScheduleCollisionHandler implements ScheduleCollisionHandlerInterface
         // check if scheduled presentation is entirely enclosed by same/other schedule on same screen
         $overlaps = $this->selectOtherEnclosingQuery
             ->execute([
-                'current_start' => $start,
-                'current_end'   => $end,
-                'id'            => $s->getId(),
-                'screen'        => $s->getScreen(),
+                'current_start' => $scheduledPresentation->getScheduledStart(),
+                'current_end'   => $scheduledPresentation->getScheduledEnd(),
+                'id'            => $scheduledPresentation->getId(),
+                'screen'        => $scheduledPresentation->getScreen(),
             ]);
 
         /** @var ScheduledPresentation $o */
@@ -160,11 +157,11 @@ class ScheduleCollisionHandler implements ScheduleCollisionHandlerInterface
             $new_o->setPresentation($o->getPresentation());
 
             // new scheduled item at end
-            $new_o->setScheduledStart($s->getScheduledEnd());
+            $new_o->setScheduledStart($scheduledPresentation->getScheduledEnd());
             $new_o->setScheduledEnd($o->getScheduledEnd());
 
             // old scheduled item at start
-            $o->setScheduledEnd($s->getScheduledStart());
+            $o->setScheduledEnd($scheduledPresentation->getScheduledStart());
             $this->entityManager->persist($new_o);
         }
 
@@ -173,22 +170,22 @@ class ScheduleCollisionHandler implements ScheduleCollisionHandlerInterface
         // check if scheduled presentation overlaps same/other schedule on same screen at beginning
         $overlaps = $this->selectOverlappingAtStartQuery
             ->execute([
-                'current_start' => $start,
-                'current_end'   => $end,
-                'id'            => $s->getId(),
-                'screen'        => $s->getScreen(),
+                'current_start' => $scheduledPresentation->getScheduledStart(),
+                'current_end'   => $scheduledPresentation->getScheduledEnd(),
+                'id'            => $scheduledPresentation->getId(),
+                'screen'        => $scheduledPresentation->getScreen(),
             ]);
 
         /* @var ScheduledPresentation $o */
         foreach ($overlaps as $o) {
-            if ($o->getPresentation() === $s->getPresentation()) {
+            if ($o->getPresentation() === $scheduledPresentation->getPresentation()) {
                 // The same presentation is scheduled twice overlapping, merge.
-                $o->setScheduledStart($s->getScheduledStart());
-                $this->entityManager->remove($s);
+                $o->setScheduledStart($scheduledPresentation->getScheduledStart());
+                $this->entityManager->remove($scheduledPresentation);
                 $this->entityManager->flush();
                 return;
             } else {
-                $o->setScheduledStart($s->getScheduledEnd());
+                $o->setScheduledStart($scheduledPresentation->getScheduledEnd());
             }
         }
 
@@ -197,22 +194,22 @@ class ScheduleCollisionHandler implements ScheduleCollisionHandlerInterface
         // check if scheduled presentation overlaps same/other schedule on same screen at end
         $overlaps = $this->selectOverlappingAtEndQuery
             ->execute([
-                'current_start' => $start,
-                'current_end'   => $end,
-                'id'            => $s->getId(),
-                'screen'        => $s->getScreen(),
+                'current_start' => $scheduledPresentation->getScheduledStart(),
+                'current_end'   => $scheduledPresentation->getScheduledEnd(),
+                'id'            => $scheduledPresentation->getId(),
+                'screen'        => $scheduledPresentation->getScreen(),
             ]);
 
         /* @var ScheduledPresentation $o */
         foreach ($overlaps as $o) {
-            if ($o->getPresentation() === $s->getPresentation()) {
+            if ($o->getPresentation() === $scheduledPresentation->getPresentation()) {
                 // The same presentation is scheduled twice overlapping, merge.
-                $o->setScheduledEnd($s->getScheduledEnd());
-                $this->entityManager->remove($s);
+                $o->setScheduledEnd($scheduledPresentation->getScheduledEnd());
+                $this->entityManager->remove($scheduledPresentation);
                 $this->entityManager->flush();
                 return;
             } else {
-                $o->setScheduledEnd($s->getScheduledStart());
+                $o->setScheduledEnd($scheduledPresentation->getScheduledStart());
             }
         }
 
