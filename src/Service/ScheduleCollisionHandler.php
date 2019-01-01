@@ -26,6 +26,12 @@ class ScheduleCollisionHandler implements ScheduleCollisionHandlerInterface
     /** @var Query */
     private $selectSameEnclosingQuery;
 
+    /** @var Query */
+    private $selectOverlappingAtStartQuery;
+
+    /** @var Query */
+    private $selectOverlappingAtEndQuery;
+
     public function __construct(
         EntityManagerInterface $entityManager
     ) {
@@ -72,6 +78,32 @@ class ScheduleCollisionHandler implements ScheduleCollisionHandlerInterface
                 ->andWhere($selectOtherEnclosingQueryBuilder->expr()->neq('scheduledPresentation.id', ':id'))
                 ->orderBy('scheduledPresentation.scheduled_start', 'ASC')
                 ->getQuery();
+
+        $selectOverlappingAtStartQueryBuilder = $this->entityManager->createQueryBuilder();
+        $this->selectOverlappingAtStartQuery =
+            $selectOverlappingAtStartQueryBuilder
+                ->select('scheduledPresentation')
+                ->from(ScheduledPresentation::class, 'scheduledPresentation')
+                ->where($selectOverlappingAtStartQueryBuilder->expr()->gt('scheduledPresentation.scheduled_start', ':current_start'))
+                ->andWhere($selectOverlappingAtStartQueryBuilder->expr()->lt('scheduledPresentation.scheduled_start', ':current_end'))
+                ->andWhere($selectOverlappingAtStartQueryBuilder->expr()->gte('scheduledPresentation.scheduled_end', ':current_end'))
+                ->andWhere($selectOverlappingAtStartQueryBuilder->expr()->eq('scheduledPresentation.screen', ':screen'))
+                ->andWhere($selectOverlappingAtStartQueryBuilder->expr()->neq('scheduledPresentation.id', ':id'))
+                ->orderBy('scheduledPresentation.scheduled_start', 'ASC')
+                ->getQuery();
+
+        $selectOverlappingAtEndQueryBuilder = $this->entityManager->createQueryBuilder();
+        $this->selectOverlappingAtEndQuery =
+            $selectOverlappingAtEndQueryBuilder
+                ->select('scheduledPresentation')
+                ->from(ScheduledPresentation::class, 'scheduledPresentation')
+                ->where($selectOverlappingAtEndQueryBuilder->expr()->lt('scheduledPresentation.scheduled_start', ':current_start'))
+                ->andWhere($selectOverlappingAtEndQueryBuilder->expr()->lt('scheduledPresentation.scheduled_end', ':current_end'))
+                ->andWhere($selectOverlappingAtEndQueryBuilder->expr()->gte('scheduledPresentation.scheduled_end', ':current_start'))
+                ->andWhere($selectOverlappingAtEndQueryBuilder->expr()->eq('scheduledPresentation.screen', ':screen'))
+                ->andWhere($selectOverlappingAtEndQueryBuilder->expr()->neq('scheduledPresentation.id', ':id'))
+                ->orderBy('scheduledPresentation.scheduled_start', 'ASC')
+                ->getQuery();
     }
 
     public function handleCollisions(ScheduledPresentation $s): void
@@ -91,6 +123,7 @@ class ScheduleCollisionHandler implements ScheduleCollisionHandlerInterface
 
         if (false === empty($overlaps)) {
             $this->entityManager->remove($s);
+            $this->entityManager->flush();
             return;
         }
 
@@ -132,115 +165,55 @@ class ScheduleCollisionHandler implements ScheduleCollisionHandlerInterface
 
             // old scheduled item at start
             $o->setScheduledEnd($s->getScheduledStart());
-            $this->entityManager->persist($o);
             $this->entityManager->persist($new_o);
         }
 
         $this->entityManager->flush();
 
-        return;
+        // check if scheduled presentation overlaps same/other schedule on same screen at beginning
+        $overlaps = $this->selectOverlappingAtStartQuery
+            ->execute([
+                'current_start' => $start,
+                'current_end'   => $end,
+                'id'            => $s->getId(),
+                'screen'        => $s->getScreen(),
+            ]);
 
-        // check if scheduled presentation overlaps same/other schedule on same screen
-        $query = $this->entityManager->createQuery(
-            'SELECT p
-                    FROM App:ScheduledPresentation p
-                    WHERE
-                        (p.scheduled_start < :current_start AND 
-                        p.scheduled_end >= :current_start AND p.scheduled_end <= :current_end)
-                        AND p.screen = :screen AND p.id != :id
-                    ORDER BY p.scheduled_start ASC'
-        )
-            ->setParameter('current_start', $start)
-            ->setParameter('current_end', $end)
-            ->setParameter('id', $s->getId())
-            ->setParameter('screen', $s->getScreen());
-
-        $overlaps = $query->getResult();
-        foreach ($overlaps as $o) { /* @var ScheduledPresentation $o */
-            $o->setScheduledEnd($s->getScheduledStart());
-            $this->entityManager->persist($o);
+        /* @var ScheduledPresentation $o */
+        foreach ($overlaps as $o) {
+            if ($o->getPresentation() === $s->getPresentation()) {
+                // The same presentation is scheduled twice overlapping, merge.
+                $o->setScheduledStart($s->getScheduledStart());
+                $this->entityManager->remove($s);
+                $this->entityManager->flush();
+                return;
+            } else {
+                $o->setScheduledStart($s->getScheduledEnd());
+            }
         }
 
         $this->entityManager->flush();
 
-        // check if scheduled presentation overlaps same/other schedule on same screen (second case)
-        $query = $this->entityManager->createQuery(
-            'SELECT p
-                    FROM App:ScheduledPresentation p
-                    WHERE
-                        (p.scheduled_start > :current_start AND 
-                        p.scheduled_start <= :current_end AND 
-                        p.scheduled_end > :current_end)
-                        AND p.screen = :screen AND p.id != :id
-                    ORDER BY p.scheduled_start ASC'
-        )
-            ->setParameter('current_start', $start)
-            ->setParameter('current_end', $end)
-            ->setParameter('id', $s->getId())
-            ->setParameter('screen', $s->getScreen());
+        // check if scheduled presentation overlaps same/other schedule on same screen at end
+        $overlaps = $this->selectOverlappingAtEndQuery
+            ->execute([
+                'current_start' => $start,
+                'current_end'   => $end,
+                'id'            => $s->getId(),
+                'screen'        => $s->getScreen(),
+            ]);
 
-        $overlaps = $query->getResult();
-        foreach ($overlaps as $o) { /* @var ScheduledPresentation $o */
-            $o->setScheduledStart($s->getScheduledEnd());
-            $this->entityManager->persist($o);
-        }
-
-        $this->entityManager->flush();
-
-        // check if scheduled presentation overlaps same presentation on same screen at start
-        $query = $this->entityManager->createQuery(
-            'SELECT p
-                    FROM App:ScheduledPresentation p
-                    WHERE
-                        (
-                        p.scheduled_start  < :current_start AND
-                        p.scheduled_end >= :current_start AND p.scheduled_end <= :current_end
-                        ) AND 
-                        p.screen = :screen AND 
-                        p.presentation = :presentation AND 
-                        p.id != :id
-                    ORDER BY p.scheduled_start ASC'
-        )
-            ->setParameter('current_start', $start)
-            ->setParameter('current_end', $end)
-            ->setParameter('id', $s->getId())
-            ->setParameter('presentation', $s->getPresentation())
-            ->setParameter('screen', $s->getScreen());
-
-        $overlaps = $query->getResult();
-        foreach ($overlaps as $o) { /* @var ScheduledPresentation $o */
-            $s->setScheduledStart($o->getScheduledStart());
-            $this->entityManager->persist($s);
-            $this->entityManager->remove($o);
-        }
-
-        $this->entityManager->flush();
-
-        // check if scheduled presentation overlaps same presentation on same screen at end
-        $query = $this->entityManager->createQuery(
-            'SELECT p
-                    FROM App:ScheduledPresentation p
-                    WHERE
-                        (
-                        p.scheduled_start >= :current_start AND p.scheduled_start <= :current_end AND
-                        p.scheduled_end > :current_end
-                        ) AND 
-                        p.screen = :screen AND 
-                        p.presentation = :presentation AND 
-                        p.id != :id
-                    ORDER BY p.scheduled_start ASC'
-        )
-            ->setParameter('current_start', $start)
-            ->setParameter('current_end', $end)
-            ->setParameter('id', $s->getId())
-            ->setParameter('presentation', $s->getPresentation())
-            ->setParameter('screen', $s->getScreen());
-
-        $overlaps = $query->getResult();
-        foreach ($overlaps as $o) { /* @var ScheduledPresentation $o */
-            $s->setScheduledEnd($o->getScheduledEnd());
-            $this->entityManager->persist($s);
-            $this->entityManager->remove($o);
+        /* @var ScheduledPresentation $o */
+        foreach ($overlaps as $o) {
+            if ($o->getPresentation() === $s->getPresentation()) {
+                // The same presentation is scheduled twice overlapping, merge.
+                $o->setScheduledEnd($s->getScheduledEnd());
+                $this->entityManager->remove($s);
+                $this->entityManager->flush();
+                return;
+            } else {
+                $o->setScheduledEnd($s->getScheduledStart());
+            }
         }
 
         $this->entityManager->flush();
