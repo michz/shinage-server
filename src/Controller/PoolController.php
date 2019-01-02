@@ -9,6 +9,8 @@ declare(strict_types=1);
 namespace App\Controller;
 
 use App\Service\FilePoolUrlBuilder;
+use App\Service\PathConcatenatorInterface;
+use App\Service\Pool\VirtualPathResolverInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\File\Exception\AccessDeniedException;
 use Symfony\Component\HttpFoundation\File\Exception\FileNotFoundException;
@@ -22,10 +24,20 @@ class PoolController extends Controller
     /** @var FilePoolUrlBuilder */
     private $filePoolUrlBuilder;
 
+    /** @var VirtualPathResolverInterface */
+    private $virtualPathResolver;
+
+    /** @var PathConcatenatorInterface */
+    private $pathConcatenator;
+
     public function __construct(
-        FilePoolUrlBuilder $filePoolUrlBuilder
+        FilePoolUrlBuilder $filePoolUrlBuilder,
+        VirtualPathResolverInterface $virtualPathResolver,
+        PathConcatenatorInterface $pathConcatenator
     ) {
         $this->filePoolUrlBuilder = $filePoolUrlBuilder;
+        $this->virtualPathResolver = $virtualPathResolver;
+        $this->pathConcatenator = $pathConcatenator;
     }
 
     /**
@@ -35,6 +47,8 @@ class PoolController extends Controller
      */
     public function getAction(Request $request, string $userRoot, string $path): Response
     {
+        $concatenatedPath = $this->pathConcatenator->concatTwo($userRoot, $path);
+
         // @TODO get user that is logged in via cookie
         // @TODO                         or via api token
 
@@ -56,7 +70,10 @@ class PoolController extends Controller
         // @TODO    OR if belongs to organziation that user belongs to that is logged in via API Token
 
         try {
-            $absolutePath = $this->filePoolUrlBuilder->getAbsolutePath($path, $userRoot);
+            $absolutePath = $this->filePoolUrlBuilder->getAbsolutePath(
+                $this->virtualPathResolver->replaceVirtualBasePath($concatenatedPath)
+            );
+
             $fileInfo = new File($absolutePath);
             $lastModifiedDate = $fileInfo->getMTime();
 

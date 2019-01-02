@@ -34,7 +34,7 @@ pool-get:
   controller: App\Controller\PoolController::getAction
   requirements:
     userRoot: "[^/]*"
-    path: .*
+    path: ".*"
 
 pool-get-root:
   path: /pool/
