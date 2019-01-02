@@ -49,15 +49,22 @@ class FilePool
         return $paths;
     }
 
-    public function getPathForUser(User $user): string
+    /**
+     * @return array|string[]
+     */
+    public function getPathForUser(User $user): array
     {
         $realBasePath = realpath($this->base);
         if (false === $realBasePath) {
             throw new \RuntimeException('Data pool base path not found.');
         }
-        $path = $realBasePath . '/user-' . $user->getId();
+
+        $path = $realBasePath . '/' . $user->getUserType() . '-' . $user->getId();
         self::createPathIfNeeded($path);
-        return $path;
+        return [
+            'real' => $path,
+            'virtual' => $realBasePath . '/' . $user->getUserType() . ':' . $user->getEmail(),
+        ];
     }
 
     public function getFileTree(string $base, bool $displayHidden = false): PoolDirectory
