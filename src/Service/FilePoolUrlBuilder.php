@@ -20,19 +20,26 @@ class FilePoolUrlBuilder
     /** @var RouterInterface */
     protected $router;
 
+    /** @var PathConcatenatorInterface */
+    private $pathConcatenator;
+
     /**
      * FilePoolUrlBuilder constructor.
      */
-    public function __construct(string $basePath, RouterInterface $router)
-    {
+    public function __construct(
+        string $basePath,
+        RouterInterface $router,
+        PathConcatenatorInterface $pathConcatenator
+    ) {
         $this->basePath = $basePath;
         $this->router = $router;
+        $this->pathConcatenator = $pathConcatenator;
     }
 
     public function getAbsolutePath(string $filePath, string $userRoot = ''): string
     {
-        $relative = $this->concatPaths($userRoot, $filePath);
-        $absolute = realpath($this->concatPaths($this->basePath, $relative));
+        $relative = $this->pathConcatenator->concatTwo($userRoot, $filePath);
+        $absolute = realpath($this->pathConcatenator->concatTwo($this->basePath, $relative));
         if (false === $absolute) {
             throw new FileNotFoundException($relative);
         }
@@ -41,10 +48,5 @@ class FilePoolUrlBuilder
             throw new AccessDeniedException($relative);
         }
         return $absolute;
-    }
-
-    private function concatPaths(string $left, string $right): string
-    {
-        return rtrim($left, '/\\') . DIRECTORY_SEPARATOR . ltrim($right, '/\\');
     }
 }
