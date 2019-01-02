@@ -91,7 +91,15 @@ class PresentationsController extends AbstractController
     {
         /** @var Presentation $presentation */
         $presentation = $this->serializer->deserialize($request->getContent(), Presentation::class, 'json');
-        $this->denyAccessUnlessGranted('put', $presentation);
+
+        if (false === $this->entityManager->contains($presentation)) {
+            // Persist new presentation
+            $presentation->setOwner($this->tokenStorage->getToken()->getUser());
+            $this->entityManager->persist($presentation);
+        } else {
+            // Assure that existing presentation may be altered
+            $this->denyAccessUnlessGranted('put', $presentation);
+        }
 
         $presentation->setLastModified(new \DateTime());
         $this->entityManager->flush();
