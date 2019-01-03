@@ -42,6 +42,37 @@ class ScheduleCollisionHandler implements ScheduleCollisionHandlerInterface
 
     private function prepareQueries(): void
     {
+        $this->createSelectSameEnclosingQuery();
+        $this->createSelectEnclosedQuery();
+        $this->createSelectOtherEnclosingQuery();
+        $this->createOverlappingAtStartQuery();
+        $this->createOverlappingAtEndQuery();
+    }
+
+    public function handleCollisions(ScheduledPresentation $scheduledPresentation): void
+    {
+        $removed = $this->handleSameEnclosing($scheduledPresentation);
+        if ($removed) {
+            return;
+        }
+
+        $this->handleEnclosed($scheduledPresentation);
+
+        $this->handleEntirelyEnclosing($scheduledPresentation);
+
+        $removed = $this->handleOverlapsAtStart($scheduledPresentation);
+        if ($removed) {
+            return;
+        }
+
+        $removed = $this->handleOverlapsAtEnd($scheduledPresentation);
+        if ($removed) {
+            return;
+        }
+    }
+
+    private function createSelectSameEnclosingQuery(): void
+    {
         $selectSameEnclosingQueryBuilder = $this->entityManager->createQueryBuilder();
         $this->selectSameEnclosingQuery =
             $selectSameEnclosingQueryBuilder
@@ -54,7 +85,10 @@ class ScheduleCollisionHandler implements ScheduleCollisionHandlerInterface
                 ->andWhere($selectSameEnclosingQueryBuilder->expr()->eq('scheduledPresentation.presentation', ':presentation'))
                 ->orderBy('scheduledPresentation.scheduled_start', 'ASC')
                 ->getQuery();
+    }
 
+    private function createSelectEnclosedQuery(): void
+    {
         $selectEnclosedQueryBuilder = $this->entityManager->createQueryBuilder();
         $this->selectEnclosedQuery =
             $selectEnclosedQueryBuilder
@@ -66,7 +100,10 @@ class ScheduleCollisionHandler implements ScheduleCollisionHandlerInterface
                 ->andWhere($selectEnclosedQueryBuilder->expr()->neq('scheduledPresentation.id', ':id'))
                 ->orderBy('scheduledPresentation.scheduled_start', 'ASC')
                 ->getQuery();
+    }
 
+    private function createSelectOtherEnclosingQuery(): void
+    {
         $selectOtherEnclosingQueryBuilder = $this->entityManager->createQueryBuilder();
         $this->selectOtherEnclosingQuery =
             $selectOtherEnclosingQueryBuilder
@@ -78,7 +115,10 @@ class ScheduleCollisionHandler implements ScheduleCollisionHandlerInterface
                 ->andWhere($selectOtherEnclosingQueryBuilder->expr()->neq('scheduledPresentation.id', ':id'))
                 ->orderBy('scheduledPresentation.scheduled_start', 'ASC')
                 ->getQuery();
+    }
 
+    private function createOverlappingAtStartQuery(): void
+    {
         $selectOverlappingAtStartQueryBuilder = $this->entityManager->createQueryBuilder();
         $this->selectOverlappingAtStartQuery =
             $selectOverlappingAtStartQueryBuilder
@@ -91,7 +131,10 @@ class ScheduleCollisionHandler implements ScheduleCollisionHandlerInterface
                 ->andWhere($selectOverlappingAtStartQueryBuilder->expr()->neq('scheduledPresentation.id', ':id'))
                 ->orderBy('scheduledPresentation.scheduled_start', 'ASC')
                 ->getQuery();
+    }
 
+    private function createOverlappingAtEndQuery(): void
+    {
         $selectOverlappingAtEndQueryBuilder = $this->entityManager->createQueryBuilder();
         $this->selectOverlappingAtEndQuery =
             $selectOverlappingAtEndQueryBuilder
@@ -106,31 +149,40 @@ class ScheduleCollisionHandler implements ScheduleCollisionHandlerInterface
                 ->getQuery();
     }
 
-    public function handleCollisions(ScheduledPresentation $scheduledPresentation): void
+    /**
+     * First check if new presentation is entirely enclosed by the same presentation => remove the new one.
+     */
+    private function handleSameEnclosing(ScheduledPresentation $scheduledPresentation): bool
     {
-        // First check if new presentation is entirely enclosed by the same presentation => remove the new one
         $overlaps = $this->selectSameEnclosingQuery
             ->execute([
                 'current_start' => $scheduledPresentation->getScheduledStart(),
-                'current_end'   => $scheduledPresentation->getScheduledEnd(),
-                'id'            => $scheduledPresentation->getId(),
-                'screen'        => $scheduledPresentation->getScreen(),
-                'presentation'  => $scheduledPresentation->getPresentation(),
+                'current_end' => $scheduledPresentation->getScheduledEnd(),
+                'id' => $scheduledPresentation->getId(),
+                'screen' => $scheduledPresentation->getScreen(),
+                'presentation' => $scheduledPresentation->getPresentation(),
             ]);
 
         if (false === empty($overlaps)) {
             $this->entityManager->remove($scheduledPresentation);
             $this->entityManager->flush();
-            return;
+            return true;
         }
 
-        // check if scheduled presentation encloses same/other schedule on same screen entirely
+        return false;
+    }
+
+    /**
+     * Check if scheduled presentation encloses same/other schedule on same screen entirely.
+     */
+    private function handleEnclosed(ScheduledPresentation $scheduledPresentation): void
+    {
         $overlaps = $this->selectEnclosedQuery
             ->execute([
                 'current_start' => $scheduledPresentation->getScheduledStart(),
-                'current_end'   => $scheduledPresentation->getScheduledEnd(),
-                'id'            => $scheduledPresentation->getId(),
-                'screen'        => $scheduledPresentation->getScreen(),
+                'current_end' => $scheduledPresentation->getScheduledEnd(),
+                'id' => $scheduledPresentation->getId(),
+                'screen' => $scheduledPresentation->getScreen(),
             ]);
 
         /* @var ScheduledPresentation $o */
@@ -140,14 +192,19 @@ class ScheduleCollisionHandler implements ScheduleCollisionHandlerInterface
         }
 
         $this->entityManager->flush();
+    }
 
-        // check if scheduled presentation is entirely enclosed by same/other schedule on same screen
+    /**
+     * Check if scheduled presentation is entirely enclosed by same/other schedule on same screen.
+     */
+    private function handleEntirelyEnclosing(ScheduledPresentation $scheduledPresentation): void
+    {
         $overlaps = $this->selectOtherEnclosingQuery
             ->execute([
                 'current_start' => $scheduledPresentation->getScheduledStart(),
-                'current_end'   => $scheduledPresentation->getScheduledEnd(),
-                'id'            => $scheduledPresentation->getId(),
-                'screen'        => $scheduledPresentation->getScreen(),
+                'current_end' => $scheduledPresentation->getScheduledEnd(),
+                'id' => $scheduledPresentation->getId(),
+                'screen' => $scheduledPresentation->getScreen(),
             ]);
 
         /** @var ScheduledPresentation $o */
@@ -166,8 +223,13 @@ class ScheduleCollisionHandler implements ScheduleCollisionHandlerInterface
         }
 
         $this->entityManager->flush();
+    }
 
-        // check if scheduled presentation overlaps same/other schedule on same screen at beginning
+    /**
+     * Check if scheduled presentation overlaps same/other schedule on same screen at beginning.
+     */
+    private function handleOverlapsAtStart(ScheduledPresentation $scheduledPresentation): bool
+    {
         $overlaps = $this->selectOverlappingAtStartQuery
             ->execute([
                 'current_start' => $scheduledPresentation->getScheduledStart(),
@@ -183,21 +245,27 @@ class ScheduleCollisionHandler implements ScheduleCollisionHandlerInterface
                 $o->setScheduledStart($scheduledPresentation->getScheduledStart());
                 $this->entityManager->remove($scheduledPresentation);
                 $this->entityManager->flush();
-                return;
+                return true;
             } else {
                 $o->setScheduledStart($scheduledPresentation->getScheduledEnd());
             }
         }
 
         $this->entityManager->flush();
+        return false;
+    }
 
-        // check if scheduled presentation overlaps same/other schedule on same screen at end
+    /**
+     * Check if scheduled presentation overlaps same/other schedule on same screen at end.
+     */
+    private function handleOverlapsAtEnd(ScheduledPresentation $scheduledPresentation): bool
+    {
         $overlaps = $this->selectOverlappingAtEndQuery
             ->execute([
                 'current_start' => $scheduledPresentation->getScheduledStart(),
-                'current_end'   => $scheduledPresentation->getScheduledEnd(),
-                'id'            => $scheduledPresentation->getId(),
-                'screen'        => $scheduledPresentation->getScreen(),
+                'current_end' => $scheduledPresentation->getScheduledEnd(),
+                'id' => $scheduledPresentation->getId(),
+                'screen' => $scheduledPresentation->getScreen(),
             ]);
 
         /* @var ScheduledPresentation $o */
@@ -207,12 +275,13 @@ class ScheduleCollisionHandler implements ScheduleCollisionHandlerInterface
                 $o->setScheduledEnd($scheduledPresentation->getScheduledEnd());
                 $this->entityManager->remove($scheduledPresentation);
                 $this->entityManager->flush();
-                return;
+                return true;
             } else {
                 $o->setScheduledEnd($scheduledPresentation->getScheduledStart());
             }
         }
 
         $this->entityManager->flush();
+        return false;
     }
 }

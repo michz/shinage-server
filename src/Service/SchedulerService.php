@@ -65,6 +65,7 @@ class SchedulerService
         $splash->setId(0);
         $splash->setType('splash');
         $splash->setSettings('{}');
+        $splash->setLastModified(new \DateTime(gmdate('Y-m-d 00:00:00')));
         return $splash;
     }
 
