@@ -42,68 +42,11 @@ class ScheduleCollisionHandler implements ScheduleCollisionHandlerInterface
 
     private function prepareQueries(): void
     {
-        $selectSameEnclosingQueryBuilder = $this->entityManager->createQueryBuilder();
-        $this->selectSameEnclosingQuery =
-            $selectSameEnclosingQueryBuilder
-                ->select('scheduledPresentation')
-                ->from(ScheduledPresentation::class, 'scheduledPresentation')
-                ->where($selectSameEnclosingQueryBuilder->expr()->lt('scheduledPresentation.scheduled_start', ':current_start'))
-                ->andWhere($selectSameEnclosingQueryBuilder->expr()->gt('scheduledPresentation.scheduled_end', ':current_end'))
-                ->andWhere($selectSameEnclosingQueryBuilder->expr()->eq('scheduledPresentation.screen', ':screen'))
-                ->andWhere($selectSameEnclosingQueryBuilder->expr()->neq('scheduledPresentation.id', ':id'))
-                ->andWhere($selectSameEnclosingQueryBuilder->expr()->eq('scheduledPresentation.presentation', ':presentation'))
-                ->orderBy('scheduledPresentation.scheduled_start', 'ASC')
-                ->getQuery();
-
-        $selectEnclosedQueryBuilder = $this->entityManager->createQueryBuilder();
-        $this->selectEnclosedQuery =
-            $selectEnclosedQueryBuilder
-                ->select('scheduledPresentation')
-                ->from(ScheduledPresentation::class, 'scheduledPresentation')
-                ->where($selectEnclosedQueryBuilder->expr()->gte('scheduledPresentation.scheduled_start', ':current_start'))
-                ->andWhere($selectEnclosedQueryBuilder->expr()->lte('scheduledPresentation.scheduled_end', ':current_end'))
-                ->andWhere($selectEnclosedQueryBuilder->expr()->eq('scheduledPresentation.screen', ':screen'))
-                ->andWhere($selectEnclosedQueryBuilder->expr()->neq('scheduledPresentation.id', ':id'))
-                ->orderBy('scheduledPresentation.scheduled_start', 'ASC')
-                ->getQuery();
-
-        $selectOtherEnclosingQueryBuilder = $this->entityManager->createQueryBuilder();
-        $this->selectOtherEnclosingQuery =
-            $selectOtherEnclosingQueryBuilder
-                ->select('scheduledPresentation')
-                ->from(ScheduledPresentation::class, 'scheduledPresentation')
-                ->where($selectOtherEnclosingQueryBuilder->expr()->lt('scheduledPresentation.scheduled_start', ':current_start'))
-                ->andWhere($selectOtherEnclosingQueryBuilder->expr()->gt('scheduledPresentation.scheduled_end', ':current_end'))
-                ->andWhere($selectOtherEnclosingQueryBuilder->expr()->eq('scheduledPresentation.screen', ':screen'))
-                ->andWhere($selectOtherEnclosingQueryBuilder->expr()->neq('scheduledPresentation.id', ':id'))
-                ->orderBy('scheduledPresentation.scheduled_start', 'ASC')
-                ->getQuery();
-
-        $selectOverlappingAtStartQueryBuilder = $this->entityManager->createQueryBuilder();
-        $this->selectOverlappingAtStartQuery =
-            $selectOverlappingAtStartQueryBuilder
-                ->select('scheduledPresentation')
-                ->from(ScheduledPresentation::class, 'scheduledPresentation')
-                ->where($selectOverlappingAtStartQueryBuilder->expr()->gt('scheduledPresentation.scheduled_start', ':current_start'))
-                ->andWhere($selectOverlappingAtStartQueryBuilder->expr()->lt('scheduledPresentation.scheduled_start', ':current_end'))
-                ->andWhere($selectOverlappingAtStartQueryBuilder->expr()->gte('scheduledPresentation.scheduled_end', ':current_end'))
-                ->andWhere($selectOverlappingAtStartQueryBuilder->expr()->eq('scheduledPresentation.screen', ':screen'))
-                ->andWhere($selectOverlappingAtStartQueryBuilder->expr()->neq('scheduledPresentation.id', ':id'))
-                ->orderBy('scheduledPresentation.scheduled_start', 'ASC')
-                ->getQuery();
-
-        $selectOverlappingAtEndQueryBuilder = $this->entityManager->createQueryBuilder();
-        $this->selectOverlappingAtEndQuery =
-            $selectOverlappingAtEndQueryBuilder
-                ->select('scheduledPresentation')
-                ->from(ScheduledPresentation::class, 'scheduledPresentation')
-                ->where($selectOverlappingAtEndQueryBuilder->expr()->lt('scheduledPresentation.scheduled_start', ':current_start'))
-                ->andWhere($selectOverlappingAtEndQueryBuilder->expr()->lt('scheduledPresentation.scheduled_end', ':current_end'))
-                ->andWhere($selectOverlappingAtEndQueryBuilder->expr()->gte('scheduledPresentation.scheduled_end', ':current_start'))
-                ->andWhere($selectOverlappingAtEndQueryBuilder->expr()->eq('scheduledPresentation.screen', ':screen'))
-                ->andWhere($selectOverlappingAtEndQueryBuilder->expr()->neq('scheduledPresentation.id', ':id'))
-                ->orderBy('scheduledPresentation.scheduled_start', 'ASC')
-                ->getQuery();
+        $this->createSelectSameEnclosingQuery();
+        $this->createSelectEnclosedQuery();
+        $this->createSelectOtherEnclosingQuery();
+        $this->createOverlappingAtStartQuery();
+        $this->createOverlappingAtEndQuery();
     }
 
     public function handleCollisions(ScheduledPresentation $scheduledPresentation): void
@@ -126,6 +69,84 @@ class ScheduleCollisionHandler implements ScheduleCollisionHandlerInterface
         if ($removed) {
             return;
         }
+    }
+
+    private function createSelectSameEnclosingQuery(): void
+    {
+        $selectSameEnclosingQueryBuilder = $this->entityManager->createQueryBuilder();
+        $this->selectSameEnclosingQuery =
+            $selectSameEnclosingQueryBuilder
+                ->select('scheduledPresentation')
+                ->from(ScheduledPresentation::class, 'scheduledPresentation')
+                ->where($selectSameEnclosingQueryBuilder->expr()->lt('scheduledPresentation.scheduled_start', ':current_start'))
+                ->andWhere($selectSameEnclosingQueryBuilder->expr()->gt('scheduledPresentation.scheduled_end', ':current_end'))
+                ->andWhere($selectSameEnclosingQueryBuilder->expr()->eq('scheduledPresentation.screen', ':screen'))
+                ->andWhere($selectSameEnclosingQueryBuilder->expr()->neq('scheduledPresentation.id', ':id'))
+                ->andWhere($selectSameEnclosingQueryBuilder->expr()->eq('scheduledPresentation.presentation', ':presentation'))
+                ->orderBy('scheduledPresentation.scheduled_start', 'ASC')
+                ->getQuery();
+    }
+
+    private function createSelectEnclosedQuery(): void
+    {
+        $selectEnclosedQueryBuilder = $this->entityManager->createQueryBuilder();
+        $this->selectEnclosedQuery =
+            $selectEnclosedQueryBuilder
+                ->select('scheduledPresentation')
+                ->from(ScheduledPresentation::class, 'scheduledPresentation')
+                ->where($selectEnclosedQueryBuilder->expr()->gte('scheduledPresentation.scheduled_start', ':current_start'))
+                ->andWhere($selectEnclosedQueryBuilder->expr()->lte('scheduledPresentation.scheduled_end', ':current_end'))
+                ->andWhere($selectEnclosedQueryBuilder->expr()->eq('scheduledPresentation.screen', ':screen'))
+                ->andWhere($selectEnclosedQueryBuilder->expr()->neq('scheduledPresentation.id', ':id'))
+                ->orderBy('scheduledPresentation.scheduled_start', 'ASC')
+                ->getQuery();
+    }
+
+    private function createSelectOtherEnclosingQuery(): void
+    {
+        $selectOtherEnclosingQueryBuilder = $this->entityManager->createQueryBuilder();
+        $this->selectOtherEnclosingQuery =
+            $selectOtherEnclosingQueryBuilder
+                ->select('scheduledPresentation')
+                ->from(ScheduledPresentation::class, 'scheduledPresentation')
+                ->where($selectOtherEnclosingQueryBuilder->expr()->lt('scheduledPresentation.scheduled_start', ':current_start'))
+                ->andWhere($selectOtherEnclosingQueryBuilder->expr()->gt('scheduledPresentation.scheduled_end', ':current_end'))
+                ->andWhere($selectOtherEnclosingQueryBuilder->expr()->eq('scheduledPresentation.screen', ':screen'))
+                ->andWhere($selectOtherEnclosingQueryBuilder->expr()->neq('scheduledPresentation.id', ':id'))
+                ->orderBy('scheduledPresentation.scheduled_start', 'ASC')
+                ->getQuery();
+    }
+
+    private function createOverlappingAtStartQuery(): void
+    {
+        $selectOverlappingAtStartQueryBuilder = $this->entityManager->createQueryBuilder();
+        $this->selectOverlappingAtStartQuery =
+            $selectOverlappingAtStartQueryBuilder
+                ->select('scheduledPresentation')
+                ->from(ScheduledPresentation::class, 'scheduledPresentation')
+                ->where($selectOverlappingAtStartQueryBuilder->expr()->gt('scheduledPresentation.scheduled_start', ':current_start'))
+                ->andWhere($selectOverlappingAtStartQueryBuilder->expr()->lt('scheduledPresentation.scheduled_start', ':current_end'))
+                ->andWhere($selectOverlappingAtStartQueryBuilder->expr()->gte('scheduledPresentation.scheduled_end', ':current_end'))
+                ->andWhere($selectOverlappingAtStartQueryBuilder->expr()->eq('scheduledPresentation.screen', ':screen'))
+                ->andWhere($selectOverlappingAtStartQueryBuilder->expr()->neq('scheduledPresentation.id', ':id'))
+                ->orderBy('scheduledPresentation.scheduled_start', 'ASC')
+                ->getQuery();
+    }
+
+    private function createOverlappingAtEndQuery(): void
+    {
+        $selectOverlappingAtEndQueryBuilder = $this->entityManager->createQueryBuilder();
+        $this->selectOverlappingAtEndQuery =
+            $selectOverlappingAtEndQueryBuilder
+                ->select('scheduledPresentation')
+                ->from(ScheduledPresentation::class, 'scheduledPresentation')
+                ->where($selectOverlappingAtEndQueryBuilder->expr()->lt('scheduledPresentation.scheduled_start', ':current_start'))
+                ->andWhere($selectOverlappingAtEndQueryBuilder->expr()->lt('scheduledPresentation.scheduled_end', ':current_end'))
+                ->andWhere($selectOverlappingAtEndQueryBuilder->expr()->gte('scheduledPresentation.scheduled_end', ':current_start'))
+                ->andWhere($selectOverlappingAtEndQueryBuilder->expr()->eq('scheduledPresentation.screen', ':screen'))
+                ->andWhere($selectOverlappingAtEndQueryBuilder->expr()->neq('scheduledPresentation.id', ':id'))
+                ->orderBy('scheduledPresentation.scheduled_start', 'ASC')
+                ->getQuery();
     }
 
     /**
