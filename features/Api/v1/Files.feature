@@ -13,14 +13,14 @@ Feature: In order to manage files remotely
 
   Scenario: I can get a list of files and directories of one directory
     Given I use the api key "testapikey"
-    When I get the file pool contents of "/user:apitester@shinage.test"
+    When I get the file pool contents of "/user:apitester@shinage.test/"
     Then I can see that the api request was successful
     And I can see that the api response contains directory "dir1/"
     And I can see that the api response contains file "file2"
 
   Scenario: I cannot get a list of files and directories of another user's directory
     Given I use the api key "testapikey"
-    When I get the file pool contents of "/user:othertester@shinage.test"
+    When I get the file pool contents of "/user:othertester@shinage.test/"
     Then I should get an Access Denied response
 
   Scenario: I cannot get a list of files and directories in root directory
@@ -30,7 +30,7 @@ Feature: In order to manage files remotely
 
   Scenario: I cannot get a list of files and directories from a non existing user
     Given I use the api key "testapikey"
-    When I get the file pool contents of "/user:you-dont-get-me@nowhere.test"
+    When I get the file pool contents of "/user:you-dont-get-me@nowhere.test/"
     Then I should get an Access Denied response
 
   Scenario: I can upload a file

@@ -61,11 +61,11 @@ class User extends BaseUser
     {
         // @TODO Remove from here and move to own service
         $r = [];
-        $r[] = 'user-' . $this->id;
+        $r[] = $this->getUserType() . '-' . $this->id;
 
         $orgas = $this->getOrganizations();
         foreach ($orgas as $orga) { /* @var User $orga */
-            $r[] = 'orga-' . $orga->getId();
+            $r[] = $orga->getUserType() . '-' . $orga->getId();
         }
 
         return $r;

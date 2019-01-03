@@ -25,17 +25,20 @@ class VirtualPathResolver implements VirtualPathResolverInterface
 
     public function replaceVirtualBasePath(string $path): string
     {
-        if (0 === \strpos($path, 'user:') || 0 === \strpos($path, '/user:')) {
-            // Replace part of path with real path name instead of virtual folder name
-            \preg_match('/user\:([^\/]+)/i', $path, $matches);
+        $result = \preg_match('#^/?(?P<type>user|organization):(?P<mail>[^/]+)/(?P<path>.*)#', $path, $matches);
+
+        if (0 < $result) {
+            $mail = $matches['mail'];
+            //$cleanPath = $matches['path'];
+            $type = $matches['type'];
 
             /** @var User $user */
-            $user = $this->entityManager->getRepository(User::class)->findOneBy(['email' => $matches[1]]);
+            $user = $this->entityManager->getRepository(User::class)->findOneBy(['email' => $mail]);
             if (null === $user) {
                 throw new AccessDeniedException();
             }
 
-            return \preg_replace('/user\:([^\/]+)/i', 'user-' . $user->getId(), $path);
+            return \preg_replace('/' . $type . '\:([^\/]+)/i', $type . '-' . $user->getId(), $path);
         }
 
         return $path;

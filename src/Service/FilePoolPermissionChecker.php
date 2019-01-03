@@ -24,12 +24,12 @@ class FilePoolPermissionChecker implements FilePoolPermissionCheckerInterface
 
     public function mayUserAccessRoot(User $user, string $root): bool
     {
-        if ($root === 'user-' . $user->getId()) {
+        if ($root === $user->getUserType() . '-' . $user->getId()) {
             return true;
         }
 
         foreach ($user->getOrganizations() as $organization) {
-            if ($root === 'orga-' . $organization->getId()) {
+            if ($root === $organization->getUserType() . '-' . $organization->getId()) {
                 return true;
             }
         }
@@ -61,10 +61,10 @@ class FilePoolPermissionChecker implements FilePoolPermissionCheckerInterface
     private function getAllowedRoots(User $user): array
     {
         $roots = [];
-        $roots[] = 'user-' . $user->getId() . '/';
+        $roots[] = $user->getUserType() . '-' . $user->getId() . '/';
 
         foreach ($user->getOrganizations() as $organization) {
-            $roots[] = 'orga-' . $organization->getId() . '/';
+            $roots[] = $organization->getUserType() . '-' . $organization->getId() . '/';
         }
 
         return $roots;

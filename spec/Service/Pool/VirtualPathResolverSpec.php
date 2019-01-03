@@ -51,10 +51,35 @@ class VirtualPathResolverSpec extends ObjectBehavior
         $user
             ->getId()
             ->willReturn(5);
+        $user
+            ->getUserType()
+            ->willReturn('user');
 
         $this
             ->replaceVirtualBasePath($path)
             ->shouldReturn('/user-5/file/there.txt');
+    }
+
+    public function it_can_replace_organization(
+        EntityRepository $repository,
+        User $user
+    ) {
+        $path = '/organization:test2@test.test/file/there.txt';
+
+        $repository
+            ->findOneBy(Argument::exact(['email' => 'test2@test.test']))
+            ->willReturn($user);
+
+        $user
+            ->getId()
+            ->willReturn(7);
+        $user
+            ->getUserType()
+            ->willReturn('organization');
+
+        $this
+            ->replaceVirtualBasePath($path)
+            ->shouldReturn('/organization-7/file/there.txt');
     }
 
     public function it_can_leave_untouched(

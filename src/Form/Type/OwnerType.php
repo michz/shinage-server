@@ -85,11 +85,11 @@ class OwnerType extends AbstractType
         /** @var User $user */
         $user = $this->tokenStorage->getToken()->getUser();
 
-        $choices = ['me' => 'user:' . $user->getId()];
+        $choices = ['me' => $user->getUserType() . ':' . $user->getId()];
 
         /** @var User $orga */
         foreach ($user->getOrganizations() as $orga) {
-            $choices['Organisation: ' . $orga->getName()] = 'orga:' . $orga->getId();
+            $choices['Organisation: ' . $orga->getName()] = $orga->getUserType() . ':' . $orga->getId();
         }
 
         $resolver->setRequired('ownable');

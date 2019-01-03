@@ -8,6 +8,7 @@ declare(strict_types=1);
 
 namespace App\Controller\Api\v1;
 
+use App\Controller\Api\Exception\AccessDeniedException;
 use App\Entity\Presentation;
 use App\Entity\User;
 use Doctrine\ORM\EntityManagerInterface;
@@ -91,7 +92,20 @@ class PresentationsController extends AbstractController
     {
         /** @var Presentation $presentation */
         $presentation = $this->serializer->deserialize($request->getContent(), Presentation::class, 'json');
-        $this->denyAccessUnlessGranted('put', $presentation);
+
+        $user = $this->tokenStorage->getToken()->getUser();
+        if (false === ($user instanceof User)) {
+            throw new AccessDeniedException('User could not be loaded to be set as owner.');
+        }
+
+        if (false === $this->entityManager->contains($presentation)) {
+            // Persist new presentation
+            $presentation->setOwner($user);
+            $this->entityManager->persist($presentation);
+        } else {
+            // Assure that existing presentation may be altered
+            $this->denyAccessUnlessGranted('put', $presentation);
+        }
 
         $presentation->setLastModified(new \DateTime());
         $this->entityManager->flush();

@@ -112,17 +112,18 @@ class FileManager extends Controller
             $roots = [];
 
             foreach ($paths as $name => $path) {
-                $basename = \basename($path);
+                $basename = \basename($path['real']);
+                $basenameVirtual = \basename($path['virtual']);
                 $tmb_path = \realpath($this->poolPath) .
                     '/.el-thumbnails/' . $basename . '/';
 
                 $roots[] = [
                     'driver'        => 'LocalFileSystem',
                     'alias'         => $name,
-                    'path'          => $path,
+                    'path'          => $path['real'],
                     'URL'           => $this->generateUrl(
                         'pool-get',
-                        ['userRoot' => $basename, 'path' => ''],
+                        ['userRoot' => $basenameVirtual, 'path' => ''],
                         UrlGeneratorInterface::ABSOLUTE_URL
                     ),
                     'tmbPath'       => $tmb_path,
@@ -136,7 +137,6 @@ class FileManager extends Controller
                     'accessControl' => 'access',
                 ];
             }
-
             // Documentation for connector options:
             // https://github.com/Studio-42/elFinder/wiki/Connector-configuration-options
             $opts = [

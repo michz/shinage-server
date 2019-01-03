@@ -83,7 +83,7 @@ class FilesController extends Controller
                 $expectedLastModifiedTimestamp = \strtotime($expectedLastModifiedDate);
                 if ($lastModifiedDate < $expectedLastModifiedTimestamp) {
                     return new Response(
-                        \file_get_contents($fullPath),
+                        '',
                         304,
                         [
                             'Content-Length' => 0,
