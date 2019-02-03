@@ -42,3 +42,27 @@ api-v1-presentations-delete:
   methods: [ DELETE ]
   requirements:
     id: "\\d+"
+
+api-v1-schedule-list:
+  path: /schedule
+  controller: App\Controller\Api\v1\ScheduleController:listAction
+  methods: [ GET ]
+
+api-v1-schedule-get:
+  path: /schedule/{id}
+  controller: App\Controller\Api\v1\ScheduleController:getAction
+  methods: [ GET ]
+  requirements:
+    id: "\\d+"
+
+api-v1-schedule-put:
+  path: /schedule
+  controller: App\Controller\Api\v1\ScheduleController:putAction
+  methods: [ PUT ]
+
+api-v1-schedule-delete:
+  path: /schedule/{id}
+  controller: App\Controller\Api\v1\ScheduleController:deleteAction
+  methods: [ DELETE ]
+  requirements:
+    id: "\\d+"

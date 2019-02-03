@@ -4,8 +4,6 @@ App\Entity\ScheduledPresentation:
     id:
       type: integer
       expose: true
-    presentation:
-      expose: true
     scheduled_start:
       serialized_name: start
       type: "DateTime<'Y-m-d H:i:s'>"
@@ -15,7 +13,9 @@ App\Entity\ScheduledPresentation:
       type: "DateTime<'Y-m-d H:i:s'>"
       expose: true
   virtual_properties:
+    presentation_id:
+      serialized_name: presentation
+      exp: object.getPresentation().getId()
     screen_prop:
       serialized_name: screen
       exp: object.getScreen().getGuid()
-
