@@ -12,7 +12,6 @@ use App\Entity\Presentation;
 use App\Entity\ScheduledPresentation;
 use App\Entity\Screen;
 use App\Entity\ScreenAssociation;
-use App\Entity\User;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Query\Expr;
 use JMS\Serializer\SerializerInterface;

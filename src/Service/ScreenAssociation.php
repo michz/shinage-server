@@ -37,7 +37,6 @@ class ScreenAssociation
     {
         $organizations = $user->getOrganizations();
 
-
         $users = [$user];
         foreach ($organizations as $organization) {
             $users[] = $organization;
