@@ -8,9 +8,10 @@ services:
   - mysql
 
 before_script:
+  - phpenv config-rm xdebug.ini
   - mysql -e 'CREATE DATABASE shinage_test;'
   - cp .env.travis .env
-  - composer install
+  - composer install --no-scripts
   - npm install
   - NODE_ENV=production ./node_modules/.bin/gulp
   - php bin/console assets:install --env=test
@@ -27,15 +28,21 @@ script:
   - ./bin/console lint:twig config/
   - ./bin/console lint:twig src/
   - ./bin/console lint:twig templates/
-  - ./vendor/bin/phpspec run --no-code-generation
-  - ./vendor/bin/behat --strict -n --tags="~@todo"
+  - ./vendor/bin/phpspec run --format=progress --no-code-generation
+  - ./vendor/bin/behat --format=progress --strict -n --tags="~@todo"
+
+after_failure:
+  - echo "Printing some debug information:"
+  - php -i
+  - cat ./var/log/test.log
 
 before_deploy:
   - mkdir ./build
   - rm -f .scrutinizer.yml .travis.yml .gitignore .web-server-pid
   - rm -f easy-coding-standard.yml package* behat.yml codeception.yml install-git-hooks.php phpspec.yml gulpfile.js
-  - rm -rf node_modules/  var/cache/dev/ var/cache/test/ var/session/dev/ var/session/test/ .git/ etc/ features/ git-hooks/
+  - rm -rf node_modules/  var/cache/dev/ var/cache/test/ var/session/dev/ var/session/test/ .git/ etc/ features/ git-hooks/ vendor
   - echo "${TRAVIS_BRANCH}" > REVISION
+  - composer install --no-scripts --no-dev
   - tar --exclude="./build" --exclude="./var/logs/*.log" --transform 's,^\./,,' -czf ./build/shinage-server-release.tar.gz .
 
 deploy:
