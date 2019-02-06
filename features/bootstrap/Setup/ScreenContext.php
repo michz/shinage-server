@@ -38,7 +38,6 @@ class ScreenContext implements Context
         $this->entityManager->flush();
     }
 
-     // * @Given The screen :screen belongs to an arbitrary user
     /**
      * @Given /^(The screen "[^"]+") belongs to an arbitrary user$/
      */
@@ -52,6 +51,19 @@ class ScreenContext implements Context
 
         $this->entityManager->flush();
 
+        $association = new ScreenAssociation();
+        $association->setRoles(['view_screenshot', 'manage', 'schedule']);
+        $association->setUser($user);
+        $association->setScreen($screen);
+        $this->entityManager->persist($association);
+        $this->entityManager->flush();
+    }
+
+    /**
+     * @Given /^(The screen "[^"]+") belongs to (user "[^"]+")$/
+     */
+    public function theScreenBelongsToUser(Screen $screen, User $user)
+    {
         $association = new ScreenAssociation();
         $association->setRoles(['view_screenshot', 'manage', 'schedule']);
         $association->setUser($user);

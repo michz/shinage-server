@@ -27,6 +27,13 @@ services:
       - "@shinage.server.behat.service.api_v1_client"
       - "@__symfony_shared__.doctrine.orm.entity_manager"
 
+  shinage.server.behat.context.api.v1.schedule:
+    class: shinage\server\behat\Api\v1\ScheduleContext
+    tags: ["fob.context_service"]
+    arguments:
+      - "@shinage.server.behat.service.api_v1_client"
+      - "@__symfony_shared__.doctrine.orm.entity_manager"
+
   shinage.server.behat.context.heartbeat:
     class: shinage\server\behat\HeartbeatContext
     tags: ["fob.context_service"]

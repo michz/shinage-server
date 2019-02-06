@@ -14,3 +14,8 @@ services:
     tags: ["fob.context_service"]
     arguments:
       - "@__symfony_shared__.doctrine.orm.entity_manager"
+  shinage.server.behat.context.transform.user:
+    class: shinage\server\behat\Transform\UserTransformerContext
+    tags: ["fob.context_service"]
+    arguments:
+      - "@__symfony_shared__.doctrine.orm.entity_manager"
