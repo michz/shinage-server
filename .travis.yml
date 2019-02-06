@@ -23,8 +23,10 @@ script:
   - ./node_modules/.bin/gulp eslint
   - ./bin/console lint:yaml config/
   - ./bin/console lint:yaml src/
+  - ./bin/console lint:yaml translations/
   - ./bin/console lint:twig config/
   - ./bin/console lint:twig src/
+  - ./bin/console lint:twig templates/
   - ./vendor/bin/phpspec run --no-code-generation
   - ./vendor/bin/behat --strict -n --tags="~@todo"
 
