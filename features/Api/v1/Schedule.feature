@@ -5,7 +5,6 @@ Feature: In order to manage the schedule
 
   Background:
     Given There is a user with username "apitester@shinage.test" and password "noneededpassword"
-    And The user "apitester@shinage.test" has the roles "ROLE_SUPER_ADMIN"
     And The user "apitester@shinage.test" has an api key "testapikey" with scope "SCHEDULE"
     And There is a screen with guid "screen1"
     And The screen "screen1" belongs to user "apitester@shinage.test"
