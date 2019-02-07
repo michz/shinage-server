@@ -88,7 +88,7 @@ class ApiV1ClientContext implements Context
     public function iCanSeeThatTheApiRequestWasSuccessful()
     {
         Assert::notNull($this->responseObject);
-        Assert::eq($this->responseObject->getStatusCode(), 200);
+        Assert::eq($this->responseObject->getStatusCode(), 200, $this->responseBody);
     }
 
     /**
@@ -97,7 +97,7 @@ class ApiV1ClientContext implements Context
     public function iShouldGetANoContentResponse()
     {
         Assert::notNull($this->responseObject);
-        Assert::eq($this->responseStatusCode, 204);
+        Assert::eq($this->responseStatusCode, 204, $this->responseBody);
     }
 
     /**
@@ -106,7 +106,7 @@ class ApiV1ClientContext implements Context
     public function iShouldGetANotModifiedResponse()
     {
         Assert::notNull($this->responseObject);
-        Assert::eq($this->responseStatusCode, 304);
+        Assert::eq($this->responseStatusCode, 304, $this->responseBody);
     }
 
     /**
@@ -115,7 +115,7 @@ class ApiV1ClientContext implements Context
     public function iShouldGetABadRequestResponse()
     {
         Assert::notNull($this->responseObject);
-        Assert::eq($this->responseStatusCode, 400);
+        Assert::eq($this->responseStatusCode, 400, $this->responseBody);
     }
 
     /**
@@ -124,7 +124,7 @@ class ApiV1ClientContext implements Context
     public function iShouldGetAnAccessDeniedResponse()
     {
         Assert::notNull($this->responseObject);
-        Assert::eq($this->responseStatusCode, 403);
+        Assert::eq($this->responseStatusCode, 403, $this->responseBody);
     }
 
     /**
@@ -133,7 +133,7 @@ class ApiV1ClientContext implements Context
     public function iShouldGetANotFoundResponse()
     {
         Assert::notNull($this->responseObject);
-        Assert::eq($this->responseStatusCode, 404);
+        Assert::eq($this->responseStatusCode, 404, $this->responseBody);
         $json = \json_decode($this->responseBody, true);
         Assert::eq($json['type'], 'Symfony\\Component\\HttpKernel\\Exception\\NotFoundHttpException');
     }
