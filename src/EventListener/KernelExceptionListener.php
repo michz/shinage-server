@@ -9,10 +9,12 @@ declare(strict_types=1);
 namespace App\EventListener;
 
 use App\Controller\Api\Exception\AccessDeniedException;
+use Symfony\Component\HttpFoundation\File\Exception\AccessDeniedException as HttpFoundationFileAccessDeniedException;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Event\GetResponseForExceptionEvent;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException as SecurityCoreAccessDeniedException;
 
 class KernelExceptionListener
 {
@@ -40,6 +42,8 @@ class KernelExceptionListener
     {
         switch (\get_class($throwable)) {
             case AccessDeniedException::class:
+            case SecurityCoreAccessDeniedException::class:
+            case HttpFoundationFileAccessDeniedException::class:
                 return Response::HTTP_FORBIDDEN;
             case NotFoundHttpException::class:
                 return Response::HTTP_NOT_FOUND;
