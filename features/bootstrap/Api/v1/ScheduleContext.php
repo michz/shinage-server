@@ -9,8 +9,10 @@ declare(strict_types=1);
 namespace shinage\server\behat\Api\v1;
 
 use App\Entity\Presentation;
+use App\Entity\ScheduledPresentation;
 use App\Entity\Screen;
 use Behat\Behat\Context\Context;
+use Doctrine\ORM\EntityManagerInterface;
 use shinage\server\behat\Service\ApiV1ClientContext;
 use Webmozart\Assert\Assert;
 
@@ -21,11 +23,15 @@ class ScheduleContext implements Context
 
     /** @var \stdClass */
     private $rememberedItem;
+    /** @var EntityManagerInterface */
+    private $entityManager;
 
     public function __construct(
-        ApiV1ClientContext $apiV1ClientContext
+        ApiV1ClientContext $apiV1ClientContext,
+        EntityManagerInterface $entityManager
     ) {
         $this->apiV1ClientContext = $apiV1ClientContext;
+        $this->entityManager = $entityManager;
     }
 
     /**
@@ -63,11 +69,21 @@ class ScheduleContext implements Context
     }
 
     /**
-     * @Given I delete the remembered item of the schedule
+     * @When I delete the remembered item of the schedule
      */
     public function iDeleteTheRememberedItemOfTheSchedule(): void
     {
         $this->apiV1ClientContext->executeRequest('delete', 'schedule/' . $this->rememberedItem->id);
+    }
+
+    /**
+     * @When I delete the presentation :presentation from screen :screen
+     */
+    public function iDeleteThePresentationFromScreen(Presentation $presentation, Screen $screen): void
+    {
+        $repo = $this->entityManager->getRepository(ScheduledPresentation::class);
+        $scheduledPresentation = $repo->findOneBy(['presentation' => $presentation, 'screen' => $screen]);
+        $this->apiV1ClientContext->executeRequest('delete', 'schedule/' . $scheduledPresentation->getId());
     }
 
     /**
