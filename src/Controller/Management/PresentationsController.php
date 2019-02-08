@@ -2,7 +2,6 @@
 declare(strict_types=1);
 
 /*
- * Copyright 2018 by Michael Zapf.
  * Licensed under MIT. See file /LICENSE.
  */
 
@@ -194,6 +193,7 @@ class PresentationsController extends Controller
         foreach (array_keys($types) as $type) {
             $ret[$type] = $type;
         }
+
         return $ret;
     }
 }

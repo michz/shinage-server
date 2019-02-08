@@ -2,7 +2,6 @@
 declare(strict_types=1);
 
 /*
- * Copyright 2018 by Michael Zapf.
  * Licensed under MIT. See file /LICENSE.
  */
 
@@ -43,10 +42,12 @@ class FilePoolUrlBuilder
         if (false === $absolute) {
             throw new FileNotFoundException($relative);
         }
+
         $absoluteBase = realpath($this->basePath);
         if (0 !== strpos($absolute, $absoluteBase)) {
             throw new AccessDeniedException($relative);
         }
+
         return $absolute;
     }
 }

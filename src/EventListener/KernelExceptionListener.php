@@ -2,7 +2,6 @@
 declare(strict_types=1);
 
 /*
- * Copyright 2018 by Michael Zapf.
  * Licensed under MIT. See file /LICENSE.
  */
 
@@ -50,6 +49,7 @@ class KernelExceptionListener
             case BadRequestHttpException::class:
                 return Response::HTTP_BAD_REQUEST;
         }
+
         return Response::HTTP_INTERNAL_SERVER_ERROR;
     }
 }

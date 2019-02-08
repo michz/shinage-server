@@ -2,7 +2,6 @@
 declare(strict_types=1);
 
 /*
- * Copyright 2018 by Michael Zapf.
  * Licensed under MIT. See file /LICENSE.
  */
 
@@ -112,6 +111,7 @@ class HeartbeatController extends Controller
             $presentationUrl = $request->getScheme() . '://' . $request->getHttpHost() .
                 $this->router->generate('presentation', ['id' => $presentationId]);
         }
+
         return $this->json([
             'status'           => 'ok',
             'screen_status'    => $is_assoc ? 'registered' : 'not_registered',

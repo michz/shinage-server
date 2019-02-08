@@ -2,7 +2,6 @@
 declare(strict_types=1);
 
 /*
- * Copyright 2018 by Michael Zapf.
  * Licensed under MIT. See file /LICENSE.
  */
 
@@ -26,6 +25,7 @@ class FilePool
         if (!is_dir($basepath)) {
             mkdir($basepath, 0700, true);
         }
+
         // if not: try to create
         // test if it exists now; if not: Exception
         if (!is_dir($basepath)) {
@@ -92,8 +92,10 @@ class FilePool
                     $files[] = new PoolFile($entry, $base . '/' . $entry);
                 }
             }
+
             closedir($handle);
         }
+
         return $dir;
     }
 

@@ -2,7 +2,6 @@
 declare(strict_types=1);
 
 /*
- * Copyright 2018 by Michael Zapf.
  * Licensed under MIT. See file /LICENSE.
  */
 
@@ -60,6 +59,7 @@ class FileManager extends Controller
         if (false === $realPathPool) {
             throw new \RuntimeException('Pool path not found.');
         }
+
         $path = $realPathPool . '/' . $file;
         $file = new File($this->poolPath . '/' . $file);
         $response = new Response();
@@ -75,6 +75,7 @@ class FileManager extends Controller
         if (false === $realPoolPath) {
             throw new \LogicException('Pool path not found.');
         }
+
         $path = $realPoolPath . '/.el-thumbnails/' . $base . '/' . $file;
 
         /** @var User $user */
@@ -98,6 +99,7 @@ class FileManager extends Controller
         if (false === $poolBase) {
             throw new \RuntimeException('Pool path not found.');
         }
+
         $thumbBase = $poolBase . '/.el-thumbnails/';
         if (!\is_dir($thumbBase)) {
             @\mkdir($thumbBase, 0777, true);
@@ -137,6 +139,7 @@ class FileManager extends Controller
                     'accessControl' => 'access',
                 ];
             }
+
             // Documentation for connector options:
             // https://github.com/Studio-42/elFinder/wiki/Connector-configuration-options
             $opts = [

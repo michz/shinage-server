@@ -2,7 +2,6 @@
 declare(strict_types=1);
 
 /*
- * Copyright 2018 by Michael Zapf.
  * Licensed under MIT. See file /LICENSE.
  */
 
@@ -67,6 +66,7 @@ class FilesController extends Controller
                     $files[] = $file->getFilename() . '/';
                 }
             }
+
             return new Response(
                 \json_encode($files),
                 200,
@@ -162,6 +162,7 @@ class FilesController extends Controller
         if (false === is_a($user, User::class)) {
             throw new AccessDeniedException('Not logged in.');
         }
+
         if (false === $this->filePoolPermissionChecker->mayUserAccessPath($user, $path)) {
             throw new AccessDeniedException();
         }

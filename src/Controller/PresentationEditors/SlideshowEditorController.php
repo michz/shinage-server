@@ -2,7 +2,6 @@
 declare(strict_types=1);
 
 /*
- * Copyright 2018 by Michael Zapf.
  * Licensed under MIT. See file /LICENSE.
  */
 
@@ -84,6 +83,7 @@ class SlideshowEditorController extends AbstractPresentationEditor
         } catch (\Throwable $exception) {
             $settings = new Settings();
         }
+
         return $settings;
     }
 }

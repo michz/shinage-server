@@ -2,7 +2,6 @@
 declare(strict_types=1);
 
 /*
- * Copyright 2018 by Michael Zapf.
  * Licensed under MIT. See file /LICENSE.
  */
 
@@ -29,6 +28,7 @@ class ApiRoleRegistry
         if (array_key_exists($role, $this->roles)) {
             throw new \RuntimeException('Role ' . $role . ' already registered.');
         }
+
         $this->roles[$role] = $role;
         return $this;
     }
