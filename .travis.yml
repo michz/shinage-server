@@ -20,7 +20,7 @@ before_script:
   - php bin/console server:start 127.0.0.1:8000 --env=test
 
 script:
-  - ./vendor/bin/ecs check src/
+  - ./vendor/bin/ecs check src/ features/bootstrap/
   - ./node_modules/.bin/gulp eslint
   - ./bin/console lint:yaml config/
   - ./bin/console lint:yaml src/

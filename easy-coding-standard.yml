@@ -118,13 +118,15 @@ services:
 
     PhpCsFixer\Fixer\Comment\HeaderCommentFixer:
         header: |
-            Copyright 2018 by Michael Zapf.
             Licensed under MIT. See file /LICENSE.
 
         location: after_declare_strict
 
 
 parameters:
-    skip_codes:
+    skip:
+        SlevomatCodingStandard\Sniffs\TypeHints\TypeHintDeclarationSniff.UselessDocComment:
+            - "features/*"
+            - "./features/*"
         PHP_CodeSniffer\Standards\Squiz\Sniffs\WhiteSpace\ControlStructureSpacingSniff.NoLineAfterClose:
             - "./*"
