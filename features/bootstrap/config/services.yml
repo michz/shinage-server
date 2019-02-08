@@ -38,7 +38,6 @@ services:
     class: shinage\server\behat\HeartbeatContext
     tags: ["fob.context_service"]
     arguments:
-      - "@__symfony_shared__.doctrine.orm.entity_manager"
       - "@__symfony__.test.client"
 
   shinage.server.behat.context.presentation:
@@ -52,7 +51,6 @@ services:
     class: shinage\server\behat\LoginContext
     tags: ["fob.context_service"]
     arguments:
-      - "@__symfony_shared__.doctrine.orm.entity_manager"
       - "@__symfony_shared__.fos_user.user_manager"
       - "@__symfony_shared__.session"
       - "main"

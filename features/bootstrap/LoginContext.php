@@ -1,59 +1,48 @@
 <?php
+declare(strict_types=1);
+
+/*
+ * Licensed under MIT. See file /LICENSE.
+ */
 
 namespace shinage\server\behat;
 
 use Behat\Mink\Driver\BrowserKitDriver;
 use Behat\Mink\Exception\UnsupportedDriverActionException;
-use Doctrine\ORM\EntityManagerInterface;
 use FOS\UserBundle\Model\UserManagerInterface;
 use Symfony\Component\BrowserKit\Cookie;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 
-/**
- * @author   :  Michael Zapf <m.zapf@mztx.de>
- * @date     :  20.11.17
- * @time     :  20:01
- */
-
 class LoginContext extends \Behat\MinkExtension\Context\RawMinkContext
 {
-    /** @var EntityManagerInterface */
-    private $entityManager;
-
     /** @var UserManagerInterface */
     private $userManager;
 
     /** @var string */
     private $firewallName;
 
+    /** @var mixed */
     private $session;
 
     /**
-     * LoginContext constructor.
-     *
-     * @param EntityManagerInterface $entityManager
-     * @param UserManagerInterface   $userManager
-     * @param string                 $firewallName
-     * @param                        $session
+     * @param mixed $session
      */
     public function __construct(
-        EntityManagerInterface $entityManager,
         UserManagerInterface $userManager,
         $session,
         string $firewallName
     ) {
-        $this->entityManager = $entityManager;
         $this->userManager = $userManager;
         $this->session = $session;
         $this->firewallName = $firewallName;
     }
 
-
     /**
      * @Given /^I am on page "([^"]*)"$/
+     *
      * @When /^I go to URL "([^"]*)"$/
      */
-    public function iGoToURL($url)
+    public function iGoToURL(string $url): void
     {
         $this->visitPath($url);
     }
@@ -61,30 +50,30 @@ class LoginContext extends \Behat\MinkExtension\Context\RawMinkContext
     /**
      * @Then /^I see an input field with name "([^"]*)"$/
      */
-    public function iSeeAnInputFieldWithName($name)
+    public function iSeeAnInputFieldWithName(string $name): void
     {
         $field = $this->getSession()->getPage()->findField($name);
         if (empty($field)) {
             echo $this->getSession()->getPage()->getHtml();
-            throw new \Exception('Field '.$name.' not found on page.');
+            throw new \Exception('Field ' . $name . ' not found on page.');
         }
     }
 
     /**
      * @Given /^I see an button with name "([^"]*)"$/
      */
-    public function iSeeAnButtonWithName($name)
+    public function iSeeAnButtonWithName(string $name): void
     {
         $field = $this->getSession()->getPage()->findButton($name);
         if (empty($field)) {
-            throw new \Exception('Button '.$name.' not found on page.');
+            throw new \Exception('Button ' . $name . ' not found on page.');
         }
     }
 
     /**
      * @Given /^I fill the field "([^"]*)" with "([^"]*)"$/
      */
-    public function iFillTheFieldWith($fieldName, $value)
+    public function iFillTheFieldWith(string $fieldName, string $value): void
     {
         $field = $this->getSession()->getPage()->findField($fieldName);
         $field->setValue($value);
@@ -93,7 +82,7 @@ class LoginContext extends \Behat\MinkExtension\Context\RawMinkContext
     /**
      * @When /^I click on the button "([^"]*)"$/
      */
-    public function iSubmitTheLoginForm($buttonName)
+    public function iSubmitTheLoginForm(string $buttonName): void
     {
         $this->getSession()->getPage()->findButton($buttonName)->click();
     }
@@ -102,37 +91,37 @@ class LoginContext extends \Behat\MinkExtension\Context\RawMinkContext
      * @Then /^I should be on page "([^"]*)"$/
      * @Then /^I should be on page "([^"]*)" again$/
      */
-    public function iShouldBeOnPage($url)
+    public function iShouldBeOnPage(string $url): void
     {
         $current = $this->getSession()->getCurrentUrl();
         $current = str_replace($this->getMinkParameter('base_url'), '', $current);
         if (false !== strpos($current, '#')) {
             $current = substr($current, 0, strpos($current, '#'));
         }
+
         if ($current !== $url) {
-            throw new \Exception('I am on wrong page. I am on "'.$current.'", but I should be on "'.$url.'".');
+            throw new \Exception('I am on wrong page. I am on "' . $current . '", but I should be on "' . $url . '".');
         }
     }
 
     /**
      * @Given /^I should see an error flash message$/
      */
-    public function iShouldSeeAnErrorFlashMessage()
+    public function iShouldSeeAnErrorFlashMessage(): void
     {
         $elem = $this->getSession()->getPage()->find('css', '.flash-error');
-        if ($elem === null) {
+        if (null === $elem) {
             throw new \Exception('I cannot see error message.');
         }
     }
 
-
     /**
      * @Given /^I am logged in as user "([^"]*)"$/
      */
-    public function iAmLoggedInAsUser($username)
+    public function iAmLoggedInAsUser(string $username): void
     {
         $driver = $this->getSession()->getDriver();
-        if (! ($driver instanceof BrowserKitDriver)) {
+        if (!($driver instanceof BrowserKitDriver)) {
             throw new UnsupportedDriverActionException('This step is only supported by the BrowserKitDriver', $driver);
         }
 

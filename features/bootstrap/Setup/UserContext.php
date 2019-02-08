@@ -1,6 +1,10 @@
 <?php
 declare(strict_types=1);
 
+/*
+ * Licensed under MIT. See file /LICENSE.
+ */
+
 namespace shinage\server\behat\Setup;
 
 use App\Entity\Api\AccessKey;
@@ -30,7 +34,7 @@ class UserContext implements Context
      * @Given There is a user with username :userName
      * @Given There is an organization with name :userName
      */
-    public function thereIsAUserWithUsernameAndPassword(string $userName, string $password = '')
+    public function thereIsAUserWithUsernameAndPassword(string $userName, string $password = ''): void
     {
         if (empty($password)) {
             $password = 'ThisIsATestPassword';
@@ -50,7 +54,7 @@ class UserContext implements Context
     /**
      * @Given The user :user has the roles :roles
      */
-    public function theUserHasTheRoles(User $user, string $roles)
+    public function theUserHasTheRoles(User $user, string $roles): void
     {
         $rolesArray = explode(',', $roles);
         foreach ($rolesArray as $role) {
@@ -63,7 +67,7 @@ class UserContext implements Context
     /**
      * @Given The user :user has an api key :code with scope :apiScope
      */
-    public function theUserHasAnApiKeyWithScope(User $user, string $code, string $apiScope)
+    public function theUserHasAnApiKeyWithScope(User $user, string $code, string $apiScope): void
     {
         $apiKey = new AccessKey();
         $apiKey->setOwner($user);
@@ -78,7 +82,7 @@ class UserContext implements Context
     /**
      * @Given The user :user belongs to the organization :organization
      */
-    public function theUserBelongsToTheOrganization(User $user, User $organization)
+    public function theUserBelongsToTheOrganization(User $user, User $organization): void
     {
         $user->getOrganizations()->add($organization);
         $organization->getUsers()->add($user);

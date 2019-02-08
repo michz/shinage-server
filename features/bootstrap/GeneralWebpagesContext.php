@@ -1,26 +1,25 @@
 <?php
+declare(strict_types=1);
+
+/*
+ * Licensed under MIT. See file /LICENSE.
+ */
 
 namespace shinage\server\behat;
-
-/**
- * @author   :  Michael Zapf <m.zapf@mztx.de>
- * @date     :  20.11.17
- * @time     :  20:01
- */
 
 class GeneralWebpagesContext extends \Behat\MinkExtension\Context\RawMinkContext
 {
     /**
-     * @Given /^I see a headline "([^"]*)"$/
+     * @Given I see a headline :title
      */
-    public function iSeeAHeadline($title)
+    public function iSeeAHeadline(string $title): void
     {
         $el = $this->getSession()->getPage()->find(
             'xpath',
-            '//h1[contains(., "'.$title.'")]|//h2[contains(., "'.$title.'")]|//h3[contains(., "'.$title.'")]'
+            '//h1[contains(., "' . $title . '")]|//h2[contains(., "' . $title . '")]|//h3[contains(., "' . $title . '")]'
         );
-        if ($el === null) {
-            throw new \Exception('No headline "'.$title.'" found.');
+        if (null === $el) {
+            throw new \Exception('No headline "' . $title . '" found.');
         }
     }
 }

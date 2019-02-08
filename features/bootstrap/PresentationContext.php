@@ -2,7 +2,6 @@
 declare(strict_types=1);
 
 /*
- * Copyright 2018 by Michael Zapf.
  * Licensed under MIT. See file /LICENSE.
  */
 
@@ -32,7 +31,7 @@ class PresentationContext implements Context
     /**
      * @When /^I ask for the current presentation of (screen "([^"]*)")$/
      */
-    public function iAskForTheCurrentPresentationOfScreen(Screen $screen)
+    public function iAskForTheCurrentPresentationOfScreen(Screen $screen): void
     {
         $this->client->request(
             'GET',
@@ -43,7 +42,7 @@ class PresentationContext implements Context
     /**
      * @Then /^I should see the url of (presentation "([^"]+)")$/
      */
-    public function iShouldSeeTheUrlOfPresentation(Presentation $presentation)
+    public function iShouldSeeTheUrlOfPresentation(Presentation $presentation): void
     {
         $content = $this->client->getResponse()->getContent();
         Assert::contains($content, '/presentations/' . $presentation->getId());
@@ -52,7 +51,7 @@ class PresentationContext implements Context
     /**
      * @Then /^I should see the url of splash presentation with connect code of (screen "([^"]*)")$/
      */
-    public function iShouldSeeTheUrlOfSplashPresentationWithConnectCode(Screen $screen)
+    public function iShouldSeeTheUrlOfSplashPresentationWithConnectCode(Screen $screen): void
     {
         $content = $this->client->getResponse()->getContent();
         Assert::contains($content, '/presentations/0');
@@ -62,7 +61,7 @@ class PresentationContext implements Context
     /**
      * @Given /^I the last connect timestamp of (screen "([^"]*)") is now$/
      */
-    public function iTheLastConnectTimestampOfScreenIsNow(Screen $screen)
+    public function iTheLastConnectTimestampOfScreenIsNow(Screen $screen): void
     {
         // reload entity as it has been changed
         $this->entityManager->refresh($screen);

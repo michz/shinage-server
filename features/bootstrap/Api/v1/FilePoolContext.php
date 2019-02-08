@@ -2,7 +2,6 @@
 declare(strict_types=1);
 
 /*
- * Copyright 2018 by Michael Zapf.
  * Licensed under MIT. See file /LICENSE.
  */
 
@@ -27,7 +26,7 @@ class FilePoolContext implements Context
     /**
      * @When /^I get the file pool contents of "([^"]*)"$/
      */
-    public function iGetTheFilePoolContentsOf(string $path)
+    public function iGetTheFilePoolContentsOf(string $path): void
     {
         $this->apiV1ClientContext->executeRequest('get', 'files' . $path);
     }
@@ -35,7 +34,7 @@ class FilePoolContext implements Context
     /**
      * @When /^I get the file pool contents of "([^"]*)" if modfied since "([^"]*)"$/
      */
-    public function iGetTheFilePoolContentsOfIfModfiedSince(string $path, string $date)
+    public function iGetTheFilePoolContentsOfIfModfiedSince(string $path, string $date): void
     {
         $this->apiV1ClientContext->executeRequest(
             'get',
@@ -48,7 +47,7 @@ class FilePoolContext implements Context
     /**
      * @Then /^I can see that the api response contains (file|directory) "([^"]*)"$/
      */
-    public function iCanSeeThatTheApiResponseContainsDirectory(string $type, string $content)
+    public function iCanSeeThatTheApiResponseContainsDirectory(string $type, string $content): void
     {
         if ($this->apiV1ClientContext->getResponseStatusCode() < 200 || $this->apiV1ClientContext->getResponseStatusCode() > 299) {
             throw new \Exception('Invalid API response: ' . $this->apiV1ClientContext->getResponseBody());
@@ -69,7 +68,7 @@ class FilePoolContext implements Context
     /**
      * @Then /^I can see that the api response does not contain (file|directory) "([^"]*)"$/
      */
-    public function iCanSeeThatTheApiResponseDoesNotContainFile(string $type, string $content)
+    public function iCanSeeThatTheApiResponseDoesNotContainFile(string $type, string $content): void
     {
         if ($this->apiV1ClientContext->getResponseStatusCode() < 200 || $this->apiV1ClientContext->getResponseStatusCode() > 299) {
             throw new \Exception('Invalid API response: ' . $this->apiV1ClientContext->getResponseBody());
@@ -91,7 +90,7 @@ class FilePoolContext implements Context
     /**
      * @When /^I put a file to "([^"]*)" with contents:$/
      */
-    public function iPutAFileToWithContents(string $path, PyStringNode $content)
+    public function iPutAFileToWithContents(string $path, PyStringNode $content): void
     {
         $this->apiV1ClientContext->executeRequest('put', 'files' . $path, $content->getRaw());
     }
@@ -99,7 +98,7 @@ class FilePoolContext implements Context
     /**
      * @When /^I delete at "([^"]*)"$/
      */
-    public function iDeleteAt(string $path)
+    public function iDeleteAt(string $path): void
     {
         $this->apiV1ClientContext->executeRequest('delete', 'files' . $path);
     }
@@ -107,7 +106,7 @@ class FilePoolContext implements Context
     /**
      * @Then /^I can see that the returned file contains$/
      */
-    public function iCanSeeThatTheReturnedFileContains(PyStringNode $string)
+    public function iCanSeeThatTheReturnedFileContains(PyStringNode $string): void
     {
         Assert::contains($this->apiV1ClientContext->getResponseBody(), $string->getRaw());
     }

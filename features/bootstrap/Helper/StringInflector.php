@@ -2,15 +2,15 @@
 declare(strict_types=1);
 
 /*
- * Copyright 2018 by Michael Zapf.
  * Licensed under MIT. See file /LICENSE.
- *
- * This file is inspired by Sylius. Thanks for fantastic open source software!
- * See: https://github.com/Sylius/Sylius/blob/master/src/Sylius/Behat/Service/SharedStorage.php
  */
 
 namespace shinage\server\behat\Helper;
 
+/*
+ * This file is inspired by Sylius. Thanks for fantastic open source software!
+ * See: https://github.com/Sylius/Sylius/blob/master/src/Sylius/Behat/Service/SharedStorage.php
+ */
 class StringInflector
 {
     public static function nameToCode(string $value): string

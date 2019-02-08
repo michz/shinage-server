@@ -2,7 +2,6 @@
 declare(strict_types=1);
 
 /*
- * Copyright 2018 by Michael Zapf.
  * Licensed under MIT. See file /LICENSE.
  */
 
@@ -23,6 +22,7 @@ class ScheduleContext implements Context
 
     /** @var \stdClass */
     private $rememberedItem;
+
     /** @var EntityManagerInterface */
     private $entityManager;
 

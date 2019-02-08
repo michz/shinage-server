@@ -2,7 +2,6 @@
 declare(strict_types=1);
 
 /*
- * Copyright 2018 by Michael Zapf.
  * Licensed under MIT. See file /LICENSE.
  */
 
@@ -36,7 +35,10 @@ class ApiV1ClientContext implements Context
         $this->baseUrl = $baseUrl;
     }
 
-    public function executeRequest(string $method, string $url, ?string $body = null, array $customHeaders = [])
+    /**
+     * @param string[] $customHeaders
+     */
+    public function executeRequest(string $method, string $url, ?string $body = null, array $customHeaders = []): void
     {
         $defaultHeaders = [
             'x-api-token' => $this->apiKey,
@@ -77,7 +79,7 @@ class ApiV1ClientContext implements Context
     /**
      * @Given /^I use the api key "([^"]*)"$/
      */
-    public function iUseTheApiKey(string $apiKey)
+    public function iUseTheApiKey(string $apiKey): void
     {
         $this->apiKey = $apiKey;
     }
@@ -85,7 +87,7 @@ class ApiV1ClientContext implements Context
     /**
      * @Then /^I can see that the api request was successful$/
      */
-    public function iCanSeeThatTheApiRequestWasSuccessful()
+    public function iCanSeeThatTheApiRequestWasSuccessful(): void
     {
         Assert::notNull($this->responseObject);
         Assert::eq($this->responseObject->getStatusCode(), 200, $this->responseBody);
@@ -94,7 +96,7 @@ class ApiV1ClientContext implements Context
     /**
      * @Then /^I should get a No Content response$/
      */
-    public function iShouldGetANoContentResponse()
+    public function iShouldGetANoContentResponse(): void
     {
         Assert::notNull($this->responseObject);
         Assert::eq($this->responseStatusCode, 204, $this->responseBody);
@@ -103,7 +105,7 @@ class ApiV1ClientContext implements Context
     /**
      * @Then /^I should get a Not Modified response$/
      */
-    public function iShouldGetANotModifiedResponse()
+    public function iShouldGetANotModifiedResponse(): void
     {
         Assert::notNull($this->responseObject);
         Assert::eq($this->responseStatusCode, 304, $this->responseBody);
@@ -112,7 +114,7 @@ class ApiV1ClientContext implements Context
     /**
      * @Then /^I should get a Bad Request response$/
      */
-    public function iShouldGetABadRequestResponse()
+    public function iShouldGetABadRequestResponse(): void
     {
         Assert::notNull($this->responseObject);
         Assert::eq($this->responseStatusCode, 400, $this->responseBody);
@@ -121,7 +123,7 @@ class ApiV1ClientContext implements Context
     /**
      * @Then /^I should get an Access Denied response$/
      */
-    public function iShouldGetAnAccessDeniedResponse()
+    public function iShouldGetAnAccessDeniedResponse(): void
     {
         Assert::notNull($this->responseObject);
         Assert::eq($this->responseStatusCode, 403, $this->responseBody);
@@ -130,7 +132,7 @@ class ApiV1ClientContext implements Context
     /**
      * @Then /^I should get a Not Found response$/
      */
-    public function iShouldGetANotFoundResponse()
+    public function iShouldGetANotFoundResponse(): void
     {
         Assert::notNull($this->responseObject);
         Assert::eq($this->responseStatusCode, 404, $this->responseBody);

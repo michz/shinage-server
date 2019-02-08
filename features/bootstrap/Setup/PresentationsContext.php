@@ -2,7 +2,6 @@
 declare(strict_types=1);
 
 /*
- * Copyright 2018 by Michael Zapf.
  * Licensed under MIT. See file /LICENSE.
  */
 
@@ -11,7 +10,6 @@ namespace shinage\server\behat\Setup;
 use App\Entity\Presentation;
 use App\Entity\ScheduledPresentation;
 use App\Entity\Screen;
-use App\Entity\ScreenAssociation;
 use App\Entity\User;
 use Behat\Behat\Context\Context;
 use Doctrine\ORM\EntityManagerInterface;
@@ -36,7 +34,7 @@ class PresentationsContext implements Context
     /**
      * @Given /^The user "([^"]*)" has a presentation of type "([^"]*)" and title "([^"]*)"$/
      */
-    public function theUserHasAPresentationOfTypeAndName(string $username, string $type, string $name)
+    public function theUserHasAPresentationOfTypeAndName(string $username, string $type, string $name): void
     {
         $user = $this->entityManager->getRepository(User::class)->findOneBy(['username' => $username]);
 
@@ -55,7 +53,7 @@ class PresentationsContext implements Context
     /**
      * @Given /^There is a presentation of type "([^"]*)" called "([^"]*)"$/
      */
-    public function thereIsAPresentationOfTypeCalled(string $type, string $name)
+    public function thereIsAPresentationOfTypeCalled(string $type, string $name): void
     {
         $presentation = new Presentation();
         $presentation->setLastModified(new \DateTime());
@@ -69,11 +67,12 @@ class PresentationsContext implements Context
         $this->sharedStorage->set('presentation', $presentation);
     }
 
-     // Given /^(The presentation "([^"]+)") is scheduled now for (screen "([^"]+)")$/
+    // Given /^(The presentation "([^"]+)") is scheduled now for (screen "([^"]+)")$/
+
     /**
      * @Given The presentation :presentation is scheduled now for screen :screen
      */
-    public function thePresentationIsScheduledNowForScreen(Presentation $presentation, Screen $screen)
+    public function thePresentationIsScheduledNowForScreen(Presentation $presentation, Screen $screen): void
     {
         $start = new \DateTime('now');
         $start->sub(new \DateInterval('PT1H'));
