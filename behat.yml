@@ -21,6 +21,8 @@ default:
       contexts_services:
         - shinage.server.behat.context.hook.purge
 
+        - shinage.server.behat.context.transform.user
+
         - shinage.server.behat.context.login
         - shinage.server.behat.context.setup.user
         - shinage.server.behat.context.general_webpages
@@ -30,6 +32,8 @@ default:
         - "%paths.base%/features/PresentationEditors"
       contexts_services:
         - shinage.server.behat.context.hook.purge
+
+        - shinage.server.behat.context.transform.user
 
         - shinage.server.behat.context.setup.user
         - shinage.server.behat.context.login
