@@ -10,9 +10,7 @@ use Doctrine\ORM\EntityManagerInterface;
 
 class ScreenContext implements Context
 {
-    /**
-     * @var EntityManagerInterface
-     */
+    /** @var EntityManagerInterface */
     private $entityManager;
 
     /**
@@ -24,7 +22,7 @@ class ScreenContext implements Context
     }
 
     /**
-     * @Given /^There is a screen with guid "([^"]*)"$/
+     * @Given There is a screen with guid :guid
      */
     public function thereIsAScreenWithGuid(string $guid)
     {
@@ -39,7 +37,7 @@ class ScreenContext implements Context
     }
 
     /**
-     * @Given /^(The screen "[^"]+") belongs to an arbitrary user$/
+     * @Given The screen :screen belongs to an arbitrary user
      */
     public function theScreenBelongsToAnArbitraryUser(Screen $screen)
     {
@@ -60,7 +58,7 @@ class ScreenContext implements Context
     }
 
     /**
-     * @Given /^(The screen "[^"]+") belongs to (user "[^"]+")$/
+     * @Given The screen :screen belongs to user :user
      */
     public function theScreenBelongsToUser(Screen $screen, User $user)
     {

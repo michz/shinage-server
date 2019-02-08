@@ -25,11 +25,10 @@ class UserContext implements Context
         $this->userManager = $userManager;
     }
 
-
     /**
-     * @Given /^There is a user with username "([^"]*)" and password "([^"]*)"$/
-     * @Given /^There is a user with username "([^"]*)"$/
-     * @Given /^There is an organization with name "([^"]*)"$/
+     * @Given There is a user with username :userName and password :password
+     * @Given There is a user with username :userName
+     * @Given There is an organization with name :userName
      */
     public function thereIsAUserWithUsernameAndPassword(string $userName, string $password = '')
     {
@@ -49,34 +48,23 @@ class UserContext implements Context
     }
 
     /**
-     * @Given /^The user "([^"]*)" has the roles "([^"]*)"$/
+     * @Given The user :user has the roles :roles
      */
-    public function theUserHasTheRoles(string $userName, string $roles)
+    public function theUserHasTheRoles(User $user, string $roles)
     {
         $rolesArray = explode(',', $roles);
-        /** @var User $user */
-        $users = $this->entityManager->getRepository(User::class)->findBy(['username' => $userName]);
-        if (\count($users) < 1) {
-            throw new \Exception("Cannot add roles to user '$userName', reason: Not found.");
-        }
-        $user = $users[0];
         foreach ($rolesArray as $role) {
             $user->addRole($role);
         }
+
         $this->userManager->updateUser($user);
     }
 
     /**
-     * @Given /^The user "([^"]*)" has an api key "([^"]*)" with scope "([^"]*)"$/
+     * @Given The user :user has an api key :code with scope :apiScope
      */
-    public function theUserHasAnApiKeyWithScope(string $userName, string $code, string $apiScope)
+    public function theUserHasAnApiKeyWithScope(User $user, string $code, string $apiScope)
     {
-        $users = $this->entityManager->getRepository(User::class)->findBy(['username' => $userName]);
-        if (\count($users) < 1) {
-            throw new \Exception("Cannot add roles to user '$userName', reason: Not found.");
-        }
-        $user = $users[0];
-
         $apiKey = new AccessKey();
         $apiKey->setOwner($user);
         $apiKey->setCode($code);
