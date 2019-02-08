@@ -101,6 +101,7 @@ class ScheduleContext implements Context
 
     /**
      * @Then I should see that the schedule contains exactly :count item
+     * @Then I should see that the schedule contains exactly :count items
      */
     public function iShouldSeeThatTheScheduleContainsExactlyItem(int $count): void
     {

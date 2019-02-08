@@ -24,7 +24,9 @@ class UserTransformerContext implements Context
 
     /**
      * @Transform :user
+     * @Transform :organization
      * @Transform /^user "([^"]+)"$/
+     * @Transform /^organization "([^"]+)"$/
      * @Transform /^The user "([^"]+)"$/
      * @Transform /^the user "([^"]+)"$/
      */

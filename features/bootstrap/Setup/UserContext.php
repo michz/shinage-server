@@ -17,9 +17,6 @@ class UserContext implements Context
     /** @var UserManagerInterface */
     private $userManager;
 
-    /**
-     * UserContext constructor.
-     */
     public function __construct(
         EntityManagerInterface $entityManager,
         UserManagerInterface $userManager
@@ -31,9 +28,15 @@ class UserContext implements Context
 
     /**
      * @Given /^There is a user with username "([^"]*)" and password "([^"]*)"$/
+     * @Given /^There is a user with username "([^"]*)"$/
+     * @Given /^There is an organization with name "([^"]*)"$/
      */
-    public function thereIsAUserWithUsernameAndPassword(string $userName, string $password)
+    public function thereIsAUserWithUsernameAndPassword(string $userName, string $password = '')
     {
+        if (empty($password)) {
+            $password = 'ThisIsATestPassword';
+        }
+
         $user = new User();
         $user->setUsername($userName);
         $user->setEmail($userName);
@@ -81,6 +84,16 @@ class UserContext implements Context
         $apiKey->setName('testkey');
 
         $this->entityManager->persist($apiKey);
+        $this->entityManager->flush();
+    }
+
+    /**
+     * @Given The user :user belongs to the organization :organization
+     */
+    public function theUserBelongsToTheOrganization(User $user, User $organization)
+    {
+        $user->getOrganizations()->add($organization);
+        $organization->getUsers()->add($user);
         $this->entityManager->flush();
     }
 }

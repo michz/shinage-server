@@ -71,4 +71,30 @@ class ScreenContext implements Context
         $this->entityManager->persist($association);
         $this->entityManager->flush();
     }
+
+    /**
+     * @Given The user :user has the right to :role for the screen :screen
+     * @Given The organization :user has the right to :role for the screen :screen
+     */
+    public function theUserHasTheRightToForTheScreen(Screen $screen, string $role, User $user)
+    {
+        $repo = $this->entityManager->getRepository(ScreenAssociation::class);
+        $association = $repo->findOneBy(['user' => $user, 'screen' => $screen]);
+
+        if (null === $association) {
+            $association = new ScreenAssociation();
+            $this->entityManager->persist($association);
+            $association->setRoles([]);
+            $association->setUser($user);
+            $association->setScreen($screen);
+        }
+
+        $associationRoles = $association->getRoles();
+        if (false === \in_array($role, $associationRoles)) {
+            $associationRoles[] = $role;
+        }
+
+        $association->setRoles($associationRoles);
+        $this->entityManager->flush();
+    }
 }
