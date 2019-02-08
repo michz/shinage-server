@@ -126,7 +126,7 @@ class LoginContext extends \Behat\MinkExtension\Context\RawMinkContext
         }
 
         $client = $driver->getClient();
-        $client->getCookieJar()->set(new Cookie(session_name(), true));
+        $client->getCookieJar()->set(new Cookie(session_name(), '1'));
 
         $firewall = $this->firewallName;
         $user = $this->userManager->findUserBy(['username' => $username]);
