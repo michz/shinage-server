@@ -137,7 +137,13 @@ class ScheduleController extends AbstractController
 
         // @TODO detect and resolve collisions
 
-        return new Response('', 204);
+        return new Response(
+            $this->serializer->serialize($scheduledPresentation, 'json'),
+            200,
+            [
+                'Content-Type' => 'application/json; charset=UTF-8',
+            ]
+        );
     }
 
     public function deleteAction(int $id): Response

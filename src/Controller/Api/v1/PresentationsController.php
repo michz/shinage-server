@@ -108,7 +108,14 @@ class PresentationsController extends AbstractController
 
         $presentation->setLastModified(new \DateTime());
         $this->entityManager->flush();
-        return new Response('', 204);
+
+        return new Response(
+            $this->serializer->serialize($presentation, 'json'),
+            200,
+            [
+                'Content-Type' => 'application/json; charset=UTF-8',
+            ]
+        );
     }
 
     public function deleteAction(int $id): Response
