@@ -11,6 +11,7 @@ use App\Entity\Presentation;
 use App\Entity\ScheduledPresentation;
 use App\Entity\Screen;
 use App\Entity\ScreenAssociation;
+use App\Service\ScheduleCollisionHandlerInterface;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Query\Expr;
 use JMS\Serializer\SerializerInterface;
@@ -32,14 +33,19 @@ class ScheduleController extends AbstractController
     /** @var SerializerInterface */
     private $serializer;
 
+    /** @var ScheduleCollisionHandlerInterface */
+    private $collisionHandler;
+
     public function __construct(
         TokenStorageInterface $tokenStorage,
         EntityManagerInterface $entityManager,
-        SerializerInterface $serializer
+        SerializerInterface $serializer,
+        ScheduleCollisionHandlerInterface $collisionHandler
     ) {
         $this->tokenStorage = $tokenStorage;
         $this->entityManager = $entityManager;
         $this->serializer = $serializer;
+        $this->collisionHandler = $collisionHandler;
     }
 
     public function listAction(): Response
@@ -135,7 +141,9 @@ class ScheduleController extends AbstractController
 
         $this->entityManager->flush();
 
-        // @TODO detect and resolve collisions
+        // detect and resolve collisions
+        $this->collisionHandler->handleCollisions($scheduledPresentation);
+        $this->entityManager->flush();
 
         return new Response(
             $this->serializer->serialize($scheduledPresentation, 'json'),
