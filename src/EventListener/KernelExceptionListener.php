@@ -17,6 +17,15 @@ use Symfony\Component\Security\Core\Exception\AccessDeniedException as SecurityC
 
 class KernelExceptionListener
 {
+    /** @var string */
+    private $environment;
+
+    public function __construct(
+        string $environment
+    ) {
+        $this->environment = $environment;
+    }
+
     public function onKernelException(GetResponseForExceptionEvent $event): void
     {
         if (0 !== strpos($event->getRequest()->getPathInfo(), '/api/')) {
@@ -27,6 +36,10 @@ class KernelExceptionListener
         $data->message = $event->getException()->getMessage();
         $data->type = \get_class($event->getException());
         $statusCode = $this->getStatusCode($event->getException());
+
+        if (\in_array($this->environment, ['dev', 'test'])) {
+            $data->trace = $event->getException()->getTraceAsString();
+        }
 
         if (null === $event->getResponse()) {
             $event->setResponse(Response::create());

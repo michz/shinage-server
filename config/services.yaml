@@ -200,6 +200,8 @@ services:
       - { name: kernel.event_subscriber }
 
   App\EventListener\KernelExceptionListener:
+    arguments:
+      - '%kernel.environment%'
     tags:
       - { name: kernel.event_listener, event: kernel.exception, priority: 999 }
 
