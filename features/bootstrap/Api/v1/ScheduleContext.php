@@ -130,4 +130,21 @@ class ScheduleContext implements Context
         // Not found, throw exception
         throw new \ErrorException('Expected scheduled item not found.');
     }
+
+    /**
+     * @Then I should see in the response that the presentation :presentation is scheduled on screen :screen from :from to :to
+     */
+    public function iShouldSeeInTheResponseThatThePresentationIsScheduledOnScreenFromTo(
+        Presentation $presentation,
+        Screen $screen,
+        string $from,
+        string $to
+    ): void {
+        $schedule = \json_decode($this->apiV1ClientContext->getResponseBody());
+
+        Assert::eq($schedule->presentation, $presentation->getId());
+        Assert::eq($schedule->screen, $screen->getGuid());
+        Assert::eq($schedule->start, $from);
+        Assert::eq($schedule->end, $to);
+    }
 }

@@ -26,7 +26,8 @@ Feature: In order to manage the schedule in an organization
   Scenario: I can schedule a presentation
     Given I use the api key "stick"
     When I schedule the presentation "song1" on screen "sheet" from "2035-02-06 10:00:00" to "2035-02-06 18:00:00"
-    Then I should get a No Content response
+    Then I can see that the api request was successful
+    And I should see in the response that the presentation "song1" is scheduled on screen "sheet" from "2035-02-06 10:00:00" to "2035-02-06 18:00:00"
 
   Scenario: I can see a scheduled presentation
     Given I use the api key "stick"
