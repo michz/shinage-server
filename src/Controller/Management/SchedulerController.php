@@ -13,6 +13,7 @@ use App\Entity\Screen;
 use App\Repository\ScreenRepository;
 use App\Service\ScheduleCollisionHandlerInterface;
 use Doctrine\ORM\EntityManager;
+use JMS\Serializer\SerializationContext;
 use JMS\Serializer\SerializerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -105,7 +106,11 @@ class SchedulerController extends AbstractController
         }
 
         // is AJAX request
-        return new Response($this->serializer->serialize($sched, 'json'));
+        return new Response($this->serializer->serialize(
+            $sched,
+            'json',
+            SerializationContext::create()->setGroups(['ui'])
+        ));
     }
 
     public function addScheduledAction(Request $request): Response

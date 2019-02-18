@@ -14,6 +14,8 @@ use App\Entity\ScreenAssociation;
 use App\Service\ScheduleCollisionHandlerInterface;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Query\Expr;
+use JMS\Serializer\DeserializationContext;
+use JMS\Serializer\SerializationContext;
 use JMS\Serializer\SerializerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -76,7 +78,11 @@ class ScheduleController extends AbstractController
         $scheduledPresentations = $queryBuilder->getQuery()->execute();
 
         return new Response(
-            $this->serializer->serialize($scheduledPresentations, 'json'),
+            $this->serializer->serialize(
+                $scheduledPresentations,
+                'json',
+                SerializationContext::create()->setGroups(['api'])
+            ),
             200,
             [
                 'Content-Type' => 'application/json; charset=UTF-8',
@@ -94,7 +100,11 @@ class ScheduleController extends AbstractController
         $this->denyAccessUnlessGranted('get', $scheduledPresentation);
 
         return new Response(
-            $this->serializer->serialize($scheduledPresentation, 'json'),
+            $this->serializer->serialize(
+                $scheduledPresentation,
+                'json',
+                SerializationContext::create()->setGroups(['api'])
+            ),
             200,
             [
                 'Content-Type' => 'application/json; charset=UTF-8',
@@ -115,7 +125,8 @@ class ScheduleController extends AbstractController
         $scheduledPresentation = $this->serializer->deserialize(
             $rawBody,
             ScheduledPresentation::class,
-            'json'
+            'json',
+            DeserializationContext::create()->setGroups(['api'])
         );
 
         $screen = $this->entityManager->find(Screen::class, $rawData->screen);
@@ -146,7 +157,11 @@ class ScheduleController extends AbstractController
         $this->entityManager->flush();
 
         return new Response(
-            $this->serializer->serialize($scheduledPresentation, 'json'),
+            $this->serializer->serialize(
+                $scheduledPresentation,
+                'json',
+                SerializationContext::create()->setGroups(['api'])
+            ),
             200,
             [
                 'Content-Type' => 'application/json; charset=UTF-8',

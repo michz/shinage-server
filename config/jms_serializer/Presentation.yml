@@ -5,19 +5,25 @@ App\Entity\Presentation:
       type: integer
       expose: true
       readonly: true
+      groups: ['Default', 'ui', 'api']
     title:
       type: string
       expose: true
+      groups: ['Default', 'ui', 'api']
     lastModified:
       type: "DateTime<'Y-m-d H:i:s'>"
       expose: true
       readonly: true
+      groups: ['Default', 'ui', 'api']
     notes:
       type: string
       expose: true
+      groups: ['Default', 'ui', 'api']
     settings:
       type: string
       expose: true
+      groups: ['Default', 'ui', 'api']
     type:
       type: string
       expose: true
+      groups: ['Default', 'ui', 'api']
