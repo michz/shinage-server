@@ -2,17 +2,16 @@
 declare(strict_types=1);
 
 /*
- * Copyright 2018 by Michael Zapf.
  * Licensed under MIT. See file /LICENSE.
  */
 
 namespace App\Controller\Admin;
 
 use mztx\TodoBundle\Service\TodoList;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 
-class AdminDashboardController extends Controller
+class AdminDashboardController extends AbstractController
 {
     /** @var TodoList */
     private $todoList;

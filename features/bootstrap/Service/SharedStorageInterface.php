@@ -2,7 +2,6 @@
 declare(strict_types=1);
 
 /*
- * Copyright 2018 by Michael Zapf.
  * Licensed under MIT. See file /LICENSE.
  */
 
@@ -21,7 +20,6 @@ interface SharedStorageInterface
     public function has(string $key): bool;
 
     /**
-     * @param string $key
      * @param mixed $resource
      */
     public function set(string $key, $resource): void;

@@ -2,7 +2,6 @@
 declare(strict_types=1);
 
 /*
- * Copyright 2018 by Michael Zapf.
  * Licensed under MIT. See file /LICENSE.
  */
 
@@ -40,7 +39,7 @@ class PresentationsContext implements Context
     /**
      * @When /^I get the list of presentations$/
      */
-    public function iGetTheListOfPresentations()
+    public function iGetTheListOfPresentations(): void
     {
         $this->apiV1ClientContext->executeRequest('get', 'presentations');
     }
@@ -48,7 +47,7 @@ class PresentationsContext implements Context
     /**
      * @When /^I get the presentation "([^"]*)"$/
      */
-    public function iGetThePresentation(string $title)
+    public function iGetThePresentation(string $title): void
     {
         $this->apiV1ClientContext->executeRequest(
             'get',
@@ -59,7 +58,7 @@ class PresentationsContext implements Context
     /**
      * @When /^I get the presentation with id (\d+)$/
      */
-    public function iGetThePresentationWithId(int $id)
+    public function iGetThePresentationWithId(int $id): void
     {
         $this->apiV1ClientContext->executeRequest('get', 'presentations/' . $id);
     }
@@ -67,7 +66,7 @@ class PresentationsContext implements Context
     /**
      * @When /^I update the presentation "([^"]*)" with settings:$/
      */
-    public function iUpdateThePresentationWithSettings(string $title, PyStringNode $string)
+    public function iUpdateThePresentationWithSettings(string $title, PyStringNode $string): void
     {
         $presentation = $this->getPresentationByTitle($title);
         $object = new \stdClass();
@@ -83,7 +82,7 @@ class PresentationsContext implements Context
     /**
      * @When /^I delete the presentation "([^"]*)"$/
      */
-    public function iDeleteThePresentation(string $title)
+    public function iDeleteThePresentation(string $title): void
     {
         $this->apiV1ClientContext->executeRequest(
             'delete',
@@ -94,7 +93,7 @@ class PresentationsContext implements Context
     /**
      * @Given /^I can see that the api response contains no presentation$/
      */
-    public function iCanSeeThatTheApiResponseContainsNoPresentation()
+    public function iCanSeeThatTheApiResponseContainsNoPresentation(): void
     {
         Assert::eq($this->apiV1ClientContext->getResponseBody(), '[]');
     }
@@ -102,7 +101,7 @@ class PresentationsContext implements Context
     /**
      * @Given /^I can see that the api response contains a presentation with name "([^"]*)"$/
      */
-    public function iCanSeeThatTheApiResponseContainsAPresentationWithName(string $title)
+    public function iCanSeeThatTheApiResponseContainsAPresentationWithName(string $title): void
     {
         $json = \json_decode($this->apiV1ClientContext->getResponseBody());
         foreach ($json as $presentation) {
@@ -117,7 +116,7 @@ class PresentationsContext implements Context
     /**
      * @Then /^I can see that the api response does not contain a presentation with name "([^"]*)"$/
      */
-    public function iCanSeeThatTheApiResponseDoesNotContainAPresentationWithName(string $title)
+    public function iCanSeeThatTheApiResponseDoesNotContainAPresentationWithName(string $title): void
     {
         $json = \json_decode($this->apiV1ClientContext->getResponseBody());
         foreach ($json as $presentation) {
@@ -130,7 +129,7 @@ class PresentationsContext implements Context
     /**
      * @Given /^I can see that the presentation contains a slide with title "([^"]*)"$/
      */
-    public function iCanSeeThatThisPresentationContainsASlideWithTitle(string $slideTitle)
+    public function iCanSeeThatThisPresentationContainsASlideWithTitle(string $slideTitle): void
     {
         $json = \json_decode($this->apiV1ClientContext->getResponseBody());
         $settings = \json_decode($json->settings);

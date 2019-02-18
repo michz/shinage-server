@@ -2,7 +2,6 @@
 declare(strict_types=1);
 
 /*
- * Copyright 2018 by Michael Zapf.
  * Licensed under MIT. See file /LICENSE.
  */
 
@@ -10,7 +9,7 @@ namespace App\Controller\Management;
 
 use App\Entity\User;
 use App\Service\FilePool;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\StreamedResponse;
@@ -18,7 +17,7 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
-class FileManager extends Controller
+class FileManager extends AbstractController
 {
     /** @var TokenStorageInterface */
     private $tokenStorage;
@@ -60,6 +59,7 @@ class FileManager extends Controller
         if (false === $realPathPool) {
             throw new \RuntimeException('Pool path not found.');
         }
+
         $path = $realPathPool . '/' . $file;
         $file = new File($this->poolPath . '/' . $file);
         $response = new Response();
@@ -75,6 +75,7 @@ class FileManager extends Controller
         if (false === $realPoolPath) {
             throw new \LogicException('Pool path not found.');
         }
+
         $path = $realPoolPath . '/.el-thumbnails/' . $base . '/' . $file;
 
         /** @var User $user */
@@ -98,6 +99,7 @@ class FileManager extends Controller
         if (false === $poolBase) {
             throw new \RuntimeException('Pool path not found.');
         }
+
         $thumbBase = $poolBase . '/.el-thumbnails/';
         if (!\is_dir($thumbBase)) {
             @\mkdir($thumbBase, 0777, true);
@@ -137,6 +139,7 @@ class FileManager extends Controller
                     'accessControl' => 'access',
                 ];
             }
+
             // Documentation for connector options:
             // https://github.com/Studio-42/elFinder/wiki/Connector-configuration-options
             $opts = [

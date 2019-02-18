@@ -2,7 +2,6 @@
 declare(strict_types=1);
 
 /*
- * Copyright 2018 by Michael Zapf.
  * Licensed under MIT. See file /LICENSE.
  */
 
@@ -16,12 +15,12 @@ use App\Service\ConnectCodeGeneratorInterface;
 use App\Service\SchedulerService;
 use App\Service\ScreenAssociation;
 use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\RouterInterface;
 
-class HeartbeatController extends Controller
+class HeartbeatController extends AbstractController
 {
     const JSONP_DUMMY = 'REPLACE_JSONP_CALLBACK_DUMMY';
 
@@ -112,6 +111,7 @@ class HeartbeatController extends Controller
             $presentationUrl = $request->getScheme() . '://' . $request->getHttpHost() .
                 $this->router->generate('presentation', ['id' => $presentationId]);
         }
+
         return $this->json([
             'status'           => 'ok',
             'screen_status'    => $is_assoc ? 'registered' : 'not_registered',

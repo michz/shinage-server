@@ -1,4 +1,9 @@
 <?php
+declare(strict_types=1);
+
+/*
+ * Licensed under MIT. See file /LICENSE.
+ */
 
 namespace shinage\server\behat\Setup;
 
@@ -10,9 +15,7 @@ use Doctrine\ORM\EntityManagerInterface;
 
 class ScreenContext implements Context
 {
-    /**
-     * @var EntityManagerInterface
-     */
+    /** @var EntityManagerInterface */
     private $entityManager;
 
     /**
@@ -24,9 +27,9 @@ class ScreenContext implements Context
     }
 
     /**
-     * @Given /^There is a screen with guid "([^"]*)"$/
+     * @Given There is a screen with guid :guid
      */
-    public function thereIsAScreenWithGuid(string $guid)
+    public function thereIsAScreenWithGuid(string $guid): void
     {
         $screen = new Screen();
         $screen->setGuid($guid);
@@ -38,11 +41,10 @@ class ScreenContext implements Context
         $this->entityManager->flush();
     }
 
-     // * @Given The screen :screen belongs to an arbitrary user
     /**
-     * @Given /^(The screen "[^"]+") belongs to an arbitrary user$/
+     * @Given The screen :screen belongs to an arbitrary user
      */
-    public function theScreenBelongsToAnArbitraryUser(Screen $screen)
+    public function theScreenBelongsToAnArbitraryUser(Screen $screen): void
     {
         $user = new User();
         $user->setName('Owner of ' . $screen->getGuid());
@@ -57,6 +59,45 @@ class ScreenContext implements Context
         $association->setUser($user);
         $association->setScreen($screen);
         $this->entityManager->persist($association);
+        $this->entityManager->flush();
+    }
+
+    /**
+     * @Given The screen :screen belongs to user :user
+     */
+    public function theScreenBelongsToUser(Screen $screen, User $user): void
+    {
+        $association = new ScreenAssociation();
+        $association->setRoles(['view_screenshot', 'manage', 'schedule']);
+        $association->setUser($user);
+        $association->setScreen($screen);
+        $this->entityManager->persist($association);
+        $this->entityManager->flush();
+    }
+
+    /**
+     * @Given The user :user has the right to :role for the screen :screen
+     * @Given The organization :user has the right to :role for the screen :screen
+     */
+    public function theUserHasTheRightToForTheScreen(Screen $screen, string $role, User $user): void
+    {
+        $repo = $this->entityManager->getRepository(ScreenAssociation::class);
+        $association = $repo->findOneBy(['user' => $user, 'screen' => $screen]);
+
+        if (null === $association) {
+            $association = new ScreenAssociation();
+            $this->entityManager->persist($association);
+            $association->setRoles([]);
+            $association->setUser($user);
+            $association->setScreen($screen);
+        }
+
+        $associationRoles = $association->getRoles();
+        if (false === \in_array($role, $associationRoles)) {
+            $associationRoles[] = $role;
+        }
+
+        $association->setRoles($associationRoles);
         $this->entityManager->flush();
     }
 }

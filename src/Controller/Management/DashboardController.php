@@ -2,7 +2,6 @@
 declare(strict_types=1);
 
 /*
- * Copyright 2018 by Michael Zapf.
  * Licensed under MIT. See file /LICENSE.
  */
 
@@ -11,12 +10,12 @@ namespace App\Controller\Management;
 use App\Entity\Screen;
 use App\Exceptions\NoScreenGivenException;
 use App\Repository\ScreenRepository;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
-class DashboardController extends Controller
+class DashboardController extends AbstractController
 {
     /** @var ScreenRepository */
     private $screenRepository;

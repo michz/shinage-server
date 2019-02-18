@@ -2,7 +2,6 @@
 declare(strict_types=1);
 
 /*
- * Copyright 2018 by Michael Zapf.
  * Licensed under MIT. See file /LICENSE.
  */
 
@@ -57,6 +56,7 @@ class MirrorPresentation
         if (empty($lastModifiedRaw)) {
             return new \DateTime('now');
         }
+
         return new \DateTime($lastModifiedRaw[0]);
     }
 

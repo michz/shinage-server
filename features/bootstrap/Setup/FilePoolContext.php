@@ -2,7 +2,6 @@
 declare(strict_types=1);
 
 /*
- * Copyright 2018 by Michael Zapf.
  * Licensed under MIT. See file /LICENSE.
  */
 
@@ -44,12 +43,12 @@ class FilePoolContext implements Context
     /**
      * @Given /^In the pool the user "([^"]*)" has a file "([^"]*)" with content "([^"]*)"$/
      */
-    public function inThePoolTheUserHasAFileWithContent(string $userName, string $name, string $content)
+    public function inThePoolTheUserHasAFileWithContent(string $userName, string $name, string $content): void
     {
         $user = $this->entityManager->getRepository(User::class)->findOneBy(['username' => $userName]);
         $id = $user->getId();
 
-        $fullPath = $this->basePath . '/user-' . $id  . '/' . $name;
+        $fullPath = $this->basePath . '/user-' . $id . '/' . $name;
         $path = dirname($fullPath);
         $this->createFolderRecursively($path);
 
@@ -61,7 +60,7 @@ class FilePoolContext implements Context
     /**
      * @Given /^(this pool file) has the last modified timestamp "([^"]*)"$/
      */
-    public function thisFileHasTheLastModifiedTimestamp(string $poolFile, string $date)
+    public function thisFileHasTheLastModifiedTimestamp(string $poolFile, string $date): void
     {
         touch($poolFile, strtotime($date));
     }
