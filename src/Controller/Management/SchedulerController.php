@@ -14,12 +14,12 @@ use App\Repository\ScreenRepository;
 use App\Service\ScheduleCollisionHandlerInterface;
 use Doctrine\ORM\EntityManager;
 use JMS\Serializer\SerializerInterface;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
-class SchedulerController extends Controller
+class SchedulerController extends AbstractController
 {
     /** @var TokenStorageInterface */
     private $tokenStorage;

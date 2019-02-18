@@ -11,7 +11,7 @@ use App\Controller\Api\Exception\AccessDeniedException;
 use App\Entity\User;
 use App\Service\FilePoolPermissionCheckerInterface;
 use App\Service\Pool\VirtualPathResolverInterface;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\File\Exception\FileNotFoundException;
 use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\HttpFoundation\Request;
@@ -20,7 +20,7 @@ use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
-class FilesController extends Controller
+class FilesController extends AbstractController
 {
     /** @var FilePoolPermissionCheckerInterface */
     private $filePoolPermissionChecker;

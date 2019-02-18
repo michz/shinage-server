@@ -9,10 +9,10 @@ namespace App\Controller\Management\Screens;
 
 use App\Entity\Screen;
 use Doctrine\ORM\EntityManager;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 
-class ScreenOfflineController extends Controller
+class ScreenOfflineController extends AbstractController
 {
     public function indexAction(string $guid): Response
     {

@@ -15,12 +15,12 @@ use App\Service\ConnectCodeGeneratorInterface;
 use App\Service\SchedulerService;
 use App\Service\ScreenAssociation;
 use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\RouterInterface;
 
-class HeartbeatController extends Controller
+class HeartbeatController extends AbstractController
 {
     const JSONP_DUMMY = 'REPLACE_JSONP_CALLBACK_DUMMY';
 

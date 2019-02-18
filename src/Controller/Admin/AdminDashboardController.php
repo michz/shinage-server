@@ -8,10 +8,10 @@ declare(strict_types=1);
 namespace App\Controller\Admin;
 
 use mztx\TodoBundle\Service\TodoList;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 
-class AdminDashboardController extends Controller
+class AdminDashboardController extends AbstractController
 {
     /** @var TodoList */
     private $todoList;

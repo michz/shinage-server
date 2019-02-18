@@ -13,12 +13,12 @@ use App\Service\SchedulerService;
 use App\Service\ScreenAssociation;
 use App\Service\UrlBuilderInterface;
 use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 
-class CurrentForController extends Controller
+class CurrentForController extends AbstractController
 {
     /** @var SchedulerService */
     private $scheduler;

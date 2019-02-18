@@ -9,11 +9,11 @@ namespace App\Controller\Management\Screens;
 
 use App\Entity\Screen;
 use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
-class ScreenScheduleController extends Controller
+class ScreenScheduleController extends AbstractController
 {
     /** @var EntityManagerInterface */
     private $entityManager;

@@ -11,11 +11,11 @@ use App\Entity\Screen;
 use App\Entity\User;
 use App\Repository\ScreenRepository;
 use App\Service\UrlBuilderInterface;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
-class PreviewController extends Controller
+class PreviewController extends AbstractController
 {
     const PLAYER_URL_BASE = 'https://player.shinage.org/player.html?current_presentation_url=';
 

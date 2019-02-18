@@ -8,10 +8,10 @@ declare(strict_types=1);
 namespace App\Controller\Admin;
 
 use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 
-class ScreenController extends Controller
+class ScreenController extends AbstractController
 {
     /** @var EntityManagerInterface */
     private $entityManager;

@@ -13,7 +13,7 @@ use App\Entity\User;
 use App\Presentation\PresentationTypeRegistryInterface;
 use App\Service\SchedulerService;
 use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\FormType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
@@ -25,7 +25,7 @@ use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInt
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\Translation\TranslatorInterface;
 
-class PresentationsController extends Controller
+class PresentationsController extends AbstractController
 {
     /** @var PresentationTypeRegistryInterface */
     private $presentationTypeRegistry;

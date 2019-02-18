@@ -10,11 +10,11 @@ namespace App\Controller\Presentation;
 use App\Entity\Presentation;
 use App\Presentation\AnyPresentationRendererInterface;
 use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
-class RenderPresentationController extends Controller
+class RenderPresentationController extends AbstractController
 {
     /** @var EntityManagerInterface */
     private $entityManager;

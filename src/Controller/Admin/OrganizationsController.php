@@ -7,10 +7,10 @@ declare(strict_types=1);
 
 namespace App\Controller\Admin;
 
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 
-class OrganizationsController extends Controller
+class OrganizationsController extends AbstractController
 {
     public function indexAction(): Response
     {

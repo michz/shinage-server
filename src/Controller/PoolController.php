@@ -10,7 +10,7 @@ namespace App\Controller;
 use App\Service\FilePoolUrlBuilder;
 use App\Service\PathConcatenatorInterface;
 use App\Service\Pool\VirtualPathResolverInterface;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\File\Exception\AccessDeniedException;
 use Symfony\Component\HttpFoundation\File\Exception\FileNotFoundException;
 use Symfony\Component\HttpFoundation\File\File;
@@ -18,7 +18,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 
-class PoolController extends Controller
+class PoolController extends AbstractController
 {
     /** @var FilePoolUrlBuilder */
     private $filePoolUrlBuilder;
