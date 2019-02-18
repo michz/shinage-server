@@ -37,3 +37,57 @@ Feature: In order to manage the schedule
     And I delete the remembered item of the schedule
     And I get the schedule
     Then I can see that the schedule is empty
+
+  Scenario: I can see an including collision is handled
+    Given I use the api key "testapikey"
+    When I schedule the presentation "testpres1" on screen "screen1" from "2035-02-06 10:00:00" to "2035-02-06 18:00:00"
+    And I schedule the presentation "testpres2" on screen "screen1" from "2035-02-06 08:00:00" to "2035-02-06 20:00:00"
+    And I get the schedule
+    Then I should see that the schedule contains exactly "1" item
+    And I should see the presentation "testpres2" scheduled on screen "screen1" from "2035-02-06 08:00:00" to "2035-02-06 20:00:00"
+
+  Scenario: I can see an tiling collision is handled
+    Given I use the api key "testapikey"
+    When I schedule the presentation "testpres1" on screen "screen1" from "2035-02-06 10:00:00" to "2035-02-06 18:00:00"
+    And I schedule the presentation "testpres2" on screen "screen1" from "2035-02-06 12:00:00" to "2035-02-06 14:00:00"
+    And I get the schedule
+    Then I should see that the schedule contains exactly "3" item
+    And I should see the presentation "testpres1" scheduled on screen "screen1" from "2035-02-06 10:00:00" to "2035-02-06 12:00:00"
+    And I should see the presentation "testpres1" scheduled on screen "screen1" from "2035-02-06 14:00:00" to "2035-02-06 18:00:00"
+    And I should see the presentation "testpres2" scheduled on screen "screen1" from "2035-02-06 12:00:00" to "2035-02-06 14:00:00"
+
+  Scenario: I can see an ending overlapping collision is handled
+    Given I use the api key "testapikey"
+    When I schedule the presentation "testpres1" on screen "screen1" from "2035-02-06 10:00:00" to "2035-02-06 18:00:00"
+    And I schedule the presentation "testpres2" on screen "screen1" from "2035-02-06 12:00:00" to "2035-02-06 20:00:00"
+    And I get the schedule
+    Then I should see that the schedule contains exactly "2" item
+    And I should see the presentation "testpres1" scheduled on screen "screen1" from "2035-02-06 10:00:00" to "2035-02-06 12:00:00"
+    And I should see the presentation "testpres2" scheduled on screen "screen1" from "2035-02-06 12:00:00" to "2035-02-06 20:00:00"
+
+  Scenario: I can see a starting overlapping collision is handled
+    Given I use the api key "testapikey"
+    When I schedule the presentation "testpres1" on screen "screen1" from "2035-02-06 10:00:00" to "2035-02-06 18:00:00"
+    And I schedule the presentation "testpres2" on screen "screen1" from "2035-02-06 08:00:00" to "2035-02-06 12:00:00"
+    And I get the schedule
+    Then I should see that the schedule contains exactly "2" item
+    And I should see the presentation "testpres1" scheduled on screen "screen1" from "2035-02-06 12:00:00" to "2035-02-06 18:00:00"
+    And I should see the presentation "testpres2" scheduled on screen "screen1" from "2035-02-06 08:00:00" to "2035-02-06 12:00:00"
+
+  Scenario: I can see an ending edge collision is handled
+    Given I use the api key "testapikey"
+    When I schedule the presentation "testpres1" on screen "screen1" from "2035-02-06 10:00:00" to "2035-02-06 18:00:00"
+    And I schedule the presentation "testpres2" on screen "screen1" from "2035-02-06 12:00:00" to "2035-02-06 18:00:00"
+    And I get the schedule
+    Then I should see that the schedule contains exactly "2" item
+    And I should see the presentation "testpres1" scheduled on screen "screen1" from "2035-02-06 10:00:00" to "2035-02-06 12:00:00"
+    And I should see the presentation "testpres2" scheduled on screen "screen1" from "2035-02-06 12:00:00" to "2035-02-06 18:00:00"
+
+  Scenario: I can see a starting edge collision is handled
+    Given I use the api key "testapikey"
+    When I schedule the presentation "testpres1" on screen "screen1" from "2035-02-06 10:00:00" to "2035-02-06 18:00:00"
+    And I schedule the presentation "testpres2" on screen "screen1" from "2035-02-06 10:00:00" to "2035-02-06 14:00:00"
+    And I get the schedule
+    Then I should see that the schedule contains exactly "2" item
+    And I should see the presentation "testpres1" scheduled on screen "screen1" from "2035-02-06 14:00:00" to "2035-02-06 18:00:00"
+    And I should see the presentation "testpres2" scheduled on screen "screen1" from "2035-02-06 10:00:00" to "2035-02-06 14:00:00"
