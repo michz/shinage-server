@@ -44,9 +44,10 @@ Feature: In order to manage presentations remotely
     And The user "apitester@shinage.test" has a presentation of type "slideshow" and title "testpres"
     When I update the presentation "testpres" with settings:
       """
-      {}
+      {"slides":[{"title":"NewSlideWithTestString"},{"title":"AnotherNewSlideWithTestString"}]}
       """
-    Then I should get a No Content response
+    Then I can see that the api request was successful
+    And I can see that the presentation contains a slide with title "NewSlideWithTestString"
 
   Scenario: I can update an existing presentation and see that it changed
     Given I use the api key "testapikey"
