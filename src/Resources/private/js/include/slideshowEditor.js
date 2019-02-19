@@ -71,7 +71,13 @@ window.SlideshowEditor = {
         // Write properties in slide settings pane
         for (var property in slide) {
             if (slide.hasOwnProperty(property)) {
-                $("#tabSlide .settings input[name=" + property + "]", this.container).val(slide[property]);
+                var value = slide[property];
+                var input = $("#tabSlide .settings input[name=" + property + "]", this.container);
+                if (input.data('transformer')) {
+                    value = this[input.data('transformer') + 'Get'](value);
+                }
+
+                input.val(value);
             }
         }
 
@@ -91,10 +97,22 @@ window.SlideshowEditor = {
         if (this.selectedSlide === null) {
             return;
         }
+
         var key = $(e.currentTarget).attr('name');
         var value = $(e.currentTarget).val();
+        if ($(e.currentTarget).data('transformer')) {
+            value = this[$(e.currentTarget).data('transformer') + 'Set'](value);
+        }
+
         this.selectedSlide[key] = value;
         this.saveSlides();
+    },
+    transformMillisecondsGet: function (value) {
+        return Number.parseFloat(value) / 1000.0;
+    },
+    transformMillisecondsSet: function (value) {
+        value = value.replace(/,/g, '.');
+        return Number.parseFloat(value) * 1000;
     },
     appendSlide: function (slide) {
         var slideDiv = $("#prototypes .prototype.slide." + slide.type, this.container).clone();
