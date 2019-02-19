@@ -59,11 +59,11 @@ class FilePool
             throw new \RuntimeException('Data pool base path not found.');
         }
 
-        $path = $realBasePath . '/' . $user->getUserType() . '-' . $user->getId();
+        $path = $realBasePath . '/user-' . $user->getId();
         self::createPathIfNeeded($path);
         return [
             'real' => $path,
-            'virtual' => $realBasePath . '/' . $user->getUserType() . ':' . $user->getEmail(),
+            'virtual' => $realBasePath . '/' . $user->getEmail(),
         ];
     }
 
