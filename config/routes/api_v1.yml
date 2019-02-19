@@ -1,7 +1,7 @@
 api-v1-files-get:
   path: /files/{path}
   controller: App\Controller\Api\v1\FilesController:getAction
-  methods: [ GET ]
+  methods: [ GET, HEAD ]
   requirements:
     path: ".+"
 
