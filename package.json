@@ -2,7 +2,7 @@
   "dependencies": {
     "codemirror": "^5.42.0",
     "del": "^3.0.0",
-    "fullcalendar": "^3.9.0",
+    "fullcalendar": "^3.10.0",
     "gulp": "^3.9.1",
     "gulp-clean-css": "^3.10.0",
     "gulp-concat": "^2.6.1",
