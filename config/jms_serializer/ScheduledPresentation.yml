@@ -4,18 +4,28 @@ App\Entity\ScheduledPresentation:
     id:
       type: integer
       expose: true
+      groups: ['Default', 'ui', 'api']
     scheduled_start:
       serialized_name: start
       type: "DateTime<'Y-m-d H:i:s'>"
       expose: true
+      groups: ['Default', 'ui', 'api']
     scheduled_end:
       serialized_name: end
       type: "DateTime<'Y-m-d H:i:s'>"
       expose: true
+      groups: ['Default', 'ui', 'api']
+    presentation:
+      expose: true
+      type: "App\\Entity\\Presentation"
+      groups: ['ui']
+
   virtual_properties:
     presentation_id:
       serialized_name: presentation
       exp: object.getPresentation().getId()
+      groups: ['api']
     screen_prop:
       serialized_name: screen
       exp: object.getScreen().getGuid()
+      groups: ['Default', 'ui', 'api']

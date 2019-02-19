@@ -11,6 +11,7 @@ use App\Controller\Api\Exception\AccessDeniedException;
 use App\Entity\Presentation;
 use App\Entity\User;
 use Doctrine\ORM\EntityManagerInterface;
+use JMS\Serializer\SerializationContext;
 use JMS\Serializer\SerializerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -61,7 +62,11 @@ class PresentationsController extends AbstractController
         $presentations = $queryBuilder->getQuery()->execute();
 
         return new Response(
-            $this->serializer->serialize($presentations, 'json'),
+            $this->serializer->serialize(
+                $presentations,
+                'json',
+                SerializationContext::create()->setGroups(['api'])
+            ),
             200,
             [
                 'Content-Type' => 'application/json; charset=UTF-8',
@@ -79,7 +84,11 @@ class PresentationsController extends AbstractController
         $this->denyAccessUnlessGranted('get', $presentation);
 
         return new Response(
-            $this->serializer->serialize($presentation, 'json'),
+            $this->serializer->serialize(
+                $presentation,
+                'json',
+                SerializationContext::create()->setGroups(['api'])
+            ),
             200,
             [
                 'Content-Type' => 'application/json; charset=UTF-8',
@@ -110,7 +119,11 @@ class PresentationsController extends AbstractController
         $this->entityManager->flush();
 
         return new Response(
-            $this->serializer->serialize($presentation, 'json'),
+            $this->serializer->serialize(
+                $presentation,
+                'json',
+                SerializationContext::create()->setGroups(['api'])
+            ),
             200,
             [
                 'Content-Type' => 'application/json; charset=UTF-8',
