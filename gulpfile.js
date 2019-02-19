@@ -63,7 +63,7 @@ var playerPaths = {
         'node_modules/jquery/dist/jquery.js',
         'node_modules/reveal.js/lib/js/head.min.js',
         'node_modules/reveal.js/js/reveal.js',
-        'shinage-client.js',
+//        'shinage-client.js',
     ],
     css: [
         'node_modules/reset-css/reset.css',
@@ -105,9 +105,10 @@ gulp.task('copy4', function() {
     return gulp.src('node_modules/reveal.js/**')
         .pipe(gulp.dest(revealDistPath + '/'));
 });
-gulp.task('copy', ['copy1','copy2a','copy2b','copy3','copy4']);
 
-gulp.task('less', ['copy'], function() {
+gulp.task('copy', gulp.parallel('copy1','copy2a','copy2b','copy3','copy4'));
+
+gulp.task('less', function() {
     return gulp.src(paths.lessMain)
         .pipe(development(sourcemaps.init()))
         .pipe(less())
@@ -116,7 +117,7 @@ gulp.task('less', ['copy'], function() {
         .pipe(gulp.dest(distPath));
 });
 
-gulp.task('css', ['copy', 'less'], function() {
+gulp.task('css', gulp.series('less', function() {
     var finalPaths = paths.css;
     finalPaths.push(distPath + '/less.css');
     return gulp.src(finalPaths)
@@ -125,9 +126,9 @@ gulp.task('css', ['copy', 'less'], function() {
         .pipe(concat('all.min.css'))
         .pipe(development(sourcemaps.write()))
         .pipe(gulp.dest(distPath));
-});
+}));
 
-gulp.task('libraryJs', ['copy'], function() {
+gulp.task('libraryJs', function() {
     return gulp.src(paths.libraryJs)
         .pipe(development(sourcemaps.init()))
         .pipe(uglify())
@@ -136,7 +137,7 @@ gulp.task('libraryJs', ['copy'], function() {
         .pipe(gulp.dest(distPath));
 });
 
-gulp.task('js', [], function() {
+gulp.task('js', function() {
     return gulp.src(paths.js)
         .pipe(development(sourcemaps.init()))
         .pipe(uglify())
@@ -145,7 +146,7 @@ gulp.task('js', [], function() {
         .pipe(gulp.dest(distPath));
 });
 
-gulp.task('player-css', ['copy'], function() {
+gulp.task('player-css', function() {
     return gulp.src(playerPaths.css)
         .pipe(development(sourcemaps.init()))
         .pipe(clean_css({rebaseTo: './public/assets'}))
@@ -154,7 +155,7 @@ gulp.task('player-css', ['copy'], function() {
         .pipe(gulp.dest(distPath));
 });
 
-gulp.task('player-js', ['copy'], function() {
+gulp.task('player-js', function() {
     return gulp.src(playerPaths.js)
         .pipe(development(sourcemaps.init()))
         .pipe(uglify())
@@ -163,7 +164,18 @@ gulp.task('player-js', ['copy'], function() {
         .pipe(gulp.dest(distPath));
 });
 
-gulp.task('default', ['copy', 'less', 'css', 'libraryJs', 'js', 'player-css', 'player-js']);
+gulp.task('default',
+    gulp.series(
+        'copy',
+        gulp.parallel(
+            'css',
+            'libraryJs',
+            'js',
+            'player-css',
+            'player-js'
+        )
+    )
+);
 
 gulp.task('eslint', () => {
     return gulp.src(esLintPaths)
@@ -174,8 +186,8 @@ gulp.task('eslint', () => {
 
 // Rerun the task when a file changes
 gulp.task('watch', function() {
-  gulp.watch(paths.js, ['js']);
-  gulp.watch(paths.css, ['css']);
-  gulp.watch(paths.lessSrc, ['less', 'css']);
+  gulp.watch(paths.js, gulp.parallel(['js']));
+  gulp.watch(paths.css, gulp.parallel(['css']));
+  gulp.watch(paths.lessSrc, gulp.parallel(['less', 'css']));
 });
 
