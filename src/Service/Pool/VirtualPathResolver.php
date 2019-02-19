@@ -24,12 +24,10 @@ class VirtualPathResolver implements VirtualPathResolverInterface
 
     public function replaceVirtualBasePath(string $path): string
     {
-        $result = \preg_match('#^/?(?P<type>user|organization):(?P<mail>[^/]+)/(?P<path>.*)#', $path, $matches);
-
+        $result = \preg_match('#^/?(?P<mail>[^/]+)/(?P<path>.*)#', $path, $matches);
         if (0 < $result) {
             $mail = $matches['mail'];
-            //$cleanPath = $matches['path'];
-            $type = $matches['type'];
+            $relativePath = $matches['path'];
 
             /** @var User $user */
             $user = $this->entityManager->getRepository(User::class)->findOneBy(['email' => $mail]);
@@ -37,7 +35,7 @@ class VirtualPathResolver implements VirtualPathResolverInterface
                 throw new AccessDeniedException();
             }
 
-            return \preg_replace('/' . $type . '\:([^\/]+)/i', $type . '-' . $user->getId(), $path);
+            return 'user-' . $user->getId() . '/' . $relativePath;
         }
 
         return $path;
