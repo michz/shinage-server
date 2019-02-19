@@ -72,7 +72,12 @@
                 if (vars[i].match("^view")) {
                     tmpView = vars[i].substring(5);
                 }
+                if (vars[i].match("^selectedScreen")) {
+                    this.setSelectedScreen(vars[i].substring(15));
+                }
             }
+
+            // @TODO visible screens
 
             $('.calendar', this.element).fullCalendar({
                 header: {
@@ -84,13 +89,9 @@
                 locale: 'de',
                 defaultView: tmpView,
                 defaultDate: today,
-                viewRender: function (view) {
-                    var moment = view.start;
-                    if (moment) {
-                        window.location.hash = 'year=' + moment.format('YYYY') + '&month=' + moment.format('M') +
-                            '&day=' + moment.format('DD') + '&view=' + view.name;
-                    }
-                },
+                viewRender: $.proxy(function (view) {
+                    this.setUrl(view);
+                }, this),
                 navLinks: true,     // can click day/week names to navigate views
                 editable: true,
                 eventLimit: true,   // allow "more" link when too many events
@@ -125,6 +126,7 @@
             $('.sched-screen-list .item', this.element).on("click", $.proxy(function (e) {
                 $('.sched-screen-list .item', this.element).removeClass('selected');
                 $(e.currentTarget).addClass('selected');
+                this.setUrl($('.calendar', this.element).fullCalendar('getView'));
             }, this));
             $('.sched-screen-list .item .selector', this.element).on("click", $.proxy(function (e) {
                 var button = $(e.currentTarget).parent();
@@ -158,6 +160,17 @@
             }, this));
 
             this.initCreateDialog();
+        },
+        setUrl: function (view) {
+            var moment = view.start;
+            if (moment) {
+                window.location.hash =
+                    'year=' + moment.format('YYYY') +
+                    '&month=' + moment.format('M') +
+                    '&day=' + moment.format('DD') +
+                    '&view=' + view.name +
+                    '&selectedScreen=' + $(this.getSelectedScreen()).data('guid');
+            }
         },
         addEventSource: function (screen, id) {
             var colset = this.screen_colors[$(screen).data('color-set')];
@@ -207,6 +220,11 @@
         },
         getSelectedScreen: function () {
             return $('.sched-screen-list .selected', this.element).get(0);
+        },
+        setSelectedScreen: function (guid) {
+            $('.sched-screen-list [data^="' + guid + '"]', this.element).removeClass('selected');
+            $('.sched-screen-list [data="' + guid + '"]', this.element).addClass('selected');
+            return this;
         },
         setScreenColor: function (screen) {
             var col = this.screen_colors[$(screen).data('color-set')];
