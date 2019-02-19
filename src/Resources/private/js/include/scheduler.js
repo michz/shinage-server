@@ -58,22 +58,21 @@
             var today = moment();
             var tmpView = 'agendaWeek';
             var vars = window.location.hash.split("&");
-            for (var i = 0; i < vars.length; i++) {
-                if (vars[i].match("^#year")) {
-                    today.year(vars[i].substring(6));
+            for (var url_i = 0; url_i < vars.length; url_i++) {
+                if (vars[url_i].match("^#year")) {
+                    today.year(vars[url_i].substring(6));
                 }
-                if (vars[i].match("^month")) {
-                    //tmpMonth = vars[i].substring(6) - 1;
-                    today.month(vars[i].substring(6));
+                if (vars[url_i].match("^month")) {
+                    today.month(vars[url_i].substring(6));
                 }
-                if (vars[i].match("^day")) {
-                    today.day(vars[i].substring(4));
+                if (vars[url_i].match("^day")) {
+                    today.day(vars[url_i].substring(4));
                 }
-                if (vars[i].match("^view")) {
-                    tmpView = vars[i].substring(5);
+                if (vars[url_i].match("^view")) {
+                    tmpView = vars[url_i].substring(5);
                 }
-                if (vars[i].match("^selectedScreen")) {
-                    this.setSelectedScreen(vars[i].substring(15));
+                if (vars[url_i].match("^selectedScreen")) {
+                    this.setSelectedScreen(vars[url_i].substring(15));
                 }
             }
 
