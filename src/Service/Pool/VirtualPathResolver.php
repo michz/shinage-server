@@ -24,7 +24,7 @@ class VirtualPathResolver implements VirtualPathResolverInterface
 
     public function replaceVirtualBasePath(string $path): string
     {
-        $result = \preg_match('#^/?(?P<mail>[^/]+)/(?P<path>.*)#', $path, $matches);
+        $result = \preg_match('#^/?(?P<mail>[^/]+@[^/]+)/(?P<path>.*)#', $path, $matches);
         if (0 < $result) {
             $mail = $matches['mail'];
             $relativePath = $matches['path'];

@@ -42,10 +42,10 @@ class VirtualPathResolverSpec extends ObjectBehavior
         EntityRepository $repository,
         User $user
     ) {
-        $path = '/user:test/file/there.txt';
+        $path = 'test@test.test/file/there.txt';
 
         $repository
-            ->findOneBy(Argument::exact(['email' => 'test']))
+            ->findOneBy(Argument::exact(['email' => 'test@test.test']))
             ->willReturn($user);
 
         $user
@@ -57,14 +57,14 @@ class VirtualPathResolverSpec extends ObjectBehavior
 
         $this
             ->replaceVirtualBasePath($path)
-            ->shouldReturn('/user-5/file/there.txt');
+            ->shouldReturn('user-5/file/there.txt');
     }
 
     public function it_can_replace_organization(
         EntityRepository $repository,
         User $user
     ) {
-        $path = '/organization:test2@test.test/file/there.txt';
+        $path = 'test2@test.test/file/there.txt';
 
         $repository
             ->findOneBy(Argument::exact(['email' => 'test2@test.test']))
@@ -79,14 +79,14 @@ class VirtualPathResolverSpec extends ObjectBehavior
 
         $this
             ->replaceVirtualBasePath($path)
-            ->shouldReturn('/organization-7/file/there.txt');
+            ->shouldReturn('user-7/file/there.txt');
     }
 
     public function it_can_leave_untouched(
         EntityRepository $repository,
         User $user
     ) {
-        $path = '/user-test/file/there.txt';
+        $path = 'user-test/file/there.txt';
 
         $repository
             ->findOneBy(Argument::any())
@@ -98,6 +98,6 @@ class VirtualPathResolverSpec extends ObjectBehavior
 
         $this
             ->replaceVirtualBasePath($path)
-            ->shouldReturn('/user-test/file/there.txt');
+            ->shouldReturn('user-test/file/there.txt');
     }
 }
