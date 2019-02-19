@@ -55,6 +55,25 @@
     // Avoid Plugin.prototype conflicts
     $.extend(Plugin.prototype, {
         init: function () {
+            var today = moment();
+            var tmpView = 'agendaWeek';
+            var vars = window.location.hash.split("&");
+            for (var i = 0; i < vars.length; i++) {
+                if (vars[i].match("^#year")) {
+                    today.year(vars[i].substring(6));
+                }
+                if (vars[i].match("^month")) {
+                    //tmpMonth = vars[i].substring(6) - 1;
+                    today.month(vars[i].substring(6));
+                }
+                if (vars[i].match("^day")) {
+                    today.day(vars[i].substring(4));
+                }
+                if (vars[i].match("^view")) {
+                    tmpView = vars[i].substring(5);
+                }
+            }
+
             $('.calendar', this.element).fullCalendar({
                 header: {
                     left: 'prev,next today',
@@ -63,8 +82,15 @@
                 },
                 height: 'auto',
                 locale: 'de',
-                //defaultDate: '2016-12-12',
-                defaultView: 'agendaWeek',
+                defaultView: tmpView,
+                defaultDate: today,
+                viewRender: function (view) {
+                    var moment = view.start;
+                    if (moment) {
+                        window.location.hash = 'year=' + moment.format('YYYY') + '&month=' + moment.format('M') +
+                            '&day=' + moment.format('DD') + '&view=' + view.name;
+                    }
+                },
                 navLinks: true,     // can click day/week names to navigate views
                 editable: true,
                 eventLimit: true,   // allow "more" link when too many events
