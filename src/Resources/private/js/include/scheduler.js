@@ -55,6 +55,29 @@
     // Avoid Plugin.prototype conflicts
     $.extend(Plugin.prototype, {
         init: function () {
+            var today = moment();
+            var tmpView = 'agendaWeek';
+            var vars = window.location.hash.split("&");
+            for (var url_i = 0; url_i < vars.length; url_i++) {
+                if (vars[url_i].match("^#year")) {
+                    today.year(vars[url_i].substring(6));
+                }
+                if (vars[url_i].match("^month")) {
+                    today.month(vars[url_i].substring(6));
+                }
+                if (vars[url_i].match("^day")) {
+                    today.day(vars[url_i].substring(4));
+                }
+                if (vars[url_i].match("^view")) {
+                    tmpView = vars[url_i].substring(5);
+                }
+                if (vars[url_i].match("^selectedScreen")) {
+                    this.setSelectedScreen(vars[url_i].substring(15));
+                }
+            }
+
+            // @TODO visible screens
+
             $('.calendar', this.element).fullCalendar({
                 header: {
                     left: 'prev,next today',
@@ -63,8 +86,11 @@
                 },
                 height: 'auto',
                 locale: 'de',
-                //defaultDate: '2016-12-12',
-                defaultView: 'agendaWeek',
+                defaultView: tmpView,
+                defaultDate: today,
+                viewRender: $.proxy(function (view) {
+                    this.setUrl(view);
+                }, this),
                 navLinks: true,     // can click day/week names to navigate views
                 editable: true,
                 eventLimit: true,   // allow "more" link when too many events
@@ -99,6 +125,7 @@
             $('.sched-screen-list .item', this.element).on("click", $.proxy(function (e) {
                 $('.sched-screen-list .item', this.element).removeClass('selected');
                 $(e.currentTarget).addClass('selected');
+                this.setUrl($('.calendar', this.element).fullCalendar('getView'));
             }, this));
             $('.sched-screen-list .item .selector', this.element).on("click", $.proxy(function (e) {
                 var button = $(e.currentTarget).parent();
@@ -132,6 +159,17 @@
             }, this));
 
             this.initCreateDialog();
+        },
+        setUrl: function (view) {
+            var moment = view.start;
+            if (moment) {
+                window.location.hash =
+                    'year=' + moment.format('YYYY') +
+                    '&month=' + moment.format('M') +
+                    '&day=' + moment.format('DD') +
+                    '&view=' + view.name +
+                    '&selectedScreen=' + $(this.getSelectedScreen()).data('guid');
+            }
         },
         addEventSource: function (screen, id) {
             var colset = this.screen_colors[$(screen).data('color-set')];
@@ -181,6 +219,11 @@
         },
         getSelectedScreen: function () {
             return $('.sched-screen-list .selected', this.element).get(0);
+        },
+        setSelectedScreen: function (guid) {
+            $('.sched-screen-list [data^="' + guid + '"]', this.element).removeClass('selected');
+            $('.sched-screen-list [data="' + guid + '"]', this.element).addClass('selected');
+            return this;
         },
         setScreenColor: function (screen) {
             var col = this.screen_colors[$(screen).data('color-set')];
