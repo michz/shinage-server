@@ -6,6 +6,7 @@ Shinage Server
 [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/michz/shinage-server/badges/quality-score.png)](https://scrutinizer-ci.com/g/michz/shinage-server/)
 [![Open Source Love png1](https://badges.frapsoft.com/os/v1/open-source.png?v=103)](https://github.com/ellerbrock/open-source-badges/)
 
+
 Introduction
 ------------
 
@@ -38,8 +39,6 @@ Prerequisites
   on this machine.
 
 
-
-
 Installation
 ------------
 * This guide assumes that `composer` is installed globally.
@@ -48,7 +47,8 @@ Installation
 * Please check (and install) the [Prerequisites](#Prerequisites).
 * Clone this repository.
 * Change to the freshly cloned directory. (Something like `cd shinage-server` )
-* Run `composer install`
+* Run `composer install --no-dev`
+* Create a `.env` file containing configuration and credentials (for example see `.env.dist`).
 * Run `php bin/console doctrine:schema:update --force`
 * To create a first user run:  
   `php bin/console fos:user:create --super-admin`
@@ -65,13 +65,29 @@ Installation
 
 Development
 -----------
-* Follow the [Installation steps above](#Installation).
-* Executing `php bin/console server:start`  will run the built-in
-  webserver on loopback device (`127.0.0.1` or `::1`) on port `8000`.
-* You can even run the webserver on a specific device/address and port:  
-  `php bin/console server:start 192.168.0.1:8080`.  
-  For details see Symfony's [How to Use PHP's built-in Web Server](http://symfony.com/doc/current/setup/built_in_web_server.html).
+* Follow the [Installation steps above](#Installation),
+  but do a `composer install` instead of `composer install --no-dev`.
+* There are two ways of running the application for development:
+  * Executing `php bin/console server:start`  will run the built-in
+    webserver on loopback device (`127.0.0.1` or `::1`) on port `8000`.
+    You can even run the webserver on a specific device/address and port:  
+    `php bin/console server:start 192.168.0.1:8080`.  
+    
+    For details see Symfony's [How to Use PHP's built-in Web Server](http://symfony.com/doc/current/setup/built_in_web_server.html).
 
+  * For better testing (including sending mails) you can use a ready-to-go docker based development environment:
+    `bin/devEnv.sh start`.
+    For this you need a working `docker` and `docker-composer` installation.
+    The relevant ports are mapped to host ports and printed to console during startup.
+    For example you can open the web interface via `http://localhost:8001/` or `https://localhost:44301`.
+    
+    In the docker development environment there is a working [Mailhog](https://github.com/mailhog/MailHog) installation
+    that catches all mails sent via PHP `mail()` function in the php container.
+    
+  * If you use the docker based environment
+    it is important to understand that must commands have to be executed *inside* the php container.
+    There is a tiny helper script that executes the necessary `docker exec` command at `bin/runInDev.sh`.
+    For example to call the Symfony console you have to run `bin/runInDev.sh bin/console`.
 
 
 Contributing
@@ -82,6 +98,3 @@ Feel free to file issues, fork and/or create pull requests.
 License
 -------
 MIT, see also file `LICENSE`.
-
-
-
