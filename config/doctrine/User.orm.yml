@@ -22,6 +22,25 @@ App\Entity\User:
       length: 200
       unique: false
       nullable: false
+    emailAuthEnabled:
+      type: boolean
+      unique: false
+      nullable: false
+      default: false
+    emailAuthCode:
+      type: string
+      length: 6
+      unique: false
+      nullable: true
+    totpSecret:
+      type: string
+      length: 200
+      unique: false
+      nullable: true
+    backupCodes:
+      type: json_array
+      unique: false
+      nullable: true
   manyToMany:
     users:
       targetEntity: App\Entity\User

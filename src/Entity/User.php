@@ -12,8 +12,11 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\EntityManagerInterface;
 use FOS\UserBundle\Model\User as BaseUser;
+use Scheb\TwoFactorBundle\Model\BackupCodeInterface;
+use Scheb\TwoFactorBundle\Model\Email\TwoFactorInterface as TwoFactorEmailInterface;
+use Scheb\TwoFactorBundle\Model\Google\TwoFactorInterface as TwoFactorGoogleInterface;
 
-class User extends BaseUser
+class User extends BaseUser implements TwoFactorEmailInterface, TwoFactorGoogleInterface, BackupCodeInterface
 {
     /** @var int */
     protected $id;
@@ -35,6 +38,18 @@ class User extends BaseUser
 
     /** @var string */
     protected $plainPassword;
+
+    /** @var bool */
+    private $emailAuthEnabled;
+
+    /** @var null|string */
+    private $emailAuthCode;
+
+    /** @var null|string[] */
+    private $backupCodes;
+
+    /** @var null|string */
+    private $totpSecret;
 
     public function __construct()
     {
@@ -195,5 +210,58 @@ class User extends BaseUser
     public function removeUser(self $user): void
     {
         $this->users->removeElement($user);
+    }
+
+    public function isEmailAuthEnabled(): bool
+    {
+        return $this->emailAuthEnabled;
+    }
+
+    public function getEmailAuthRecipient(): string
+    {
+        return $this->getEmail();
+    }
+
+    public function getEmailAuthCode(): string
+    {
+        return $this->emailAuthCode;
+    }
+
+    public function setEmailAuthCode(string $authCode): void
+    {
+        $this->emailAuthCode = $authCode;
+    }
+
+    public function isBackupCode(string $code): bool
+    {
+        return null !== $this->backupCodes && \in_array($code, $this->backupCodes);
+    }
+
+    public function invalidateBackupCode(string $code): void
+    {
+        $key = \array_search($code, $this->backupCodes);
+        if (false !== $key) {
+            unset($this->backupCodes[$key]);
+        }
+    }
+
+    public function isGoogleAuthenticatorEnabled(): bool
+    {
+        return null !== $this->totpSecret;
+    }
+
+    public function getGoogleAuthenticatorUsername(): string
+    {
+        return $this->getEmail();
+    }
+
+    public function getGoogleAuthenticatorSecret(): string
+    {
+        return $this->totpSecret ?: '';
+    }
+
+    public function setGoogleAuthenticatorSecret(?string $secret): void
+    {
+        $this->totpSecret = $secret;
     }
 }

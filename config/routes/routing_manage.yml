@@ -1,3 +1,7 @@
+# 2fa
+_2fa:
+  resource: ./scheb_two_factor.yaml
+
 _account:
   prefix: /account
   resource: ./manage/account.yml
