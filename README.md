@@ -18,9 +18,9 @@ It's based on [Symfony 4](http://symfony.com/).
 Hosted
 ------
 If you don't want to care about stuff like servers and security
- we can provide the fully functionally hosted solution for you.
- No knowledge about servers or programming needed.
- Please contact us!
+we can provide the fully functionally hosted solution for you.
+No knowledge about servers or programming needed.
+Please contact us!
 
 
 Prerequisites
