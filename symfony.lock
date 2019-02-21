@@ -179,6 +179,9 @@
     "knplabs/knp-menu-bundle": {
         "version": "v2.2.1"
     },
+    "lcobucci/jwt": {
+        "version": "3.2.5"
+    },
     "monolog/monolog": {
         "version": "1.23.0"
     },
@@ -266,6 +269,15 @@
     "roave/security-advisories": {
         "version": "dev-master"
     },
+    "scheb/two-factor-bundle": {
+        "version": "3.16",
+        "recipe": {
+            "repo": "github.com/symfony/recipes-contrib",
+            "branch": "master",
+            "version": "3.16",
+            "ref": "b5789cd9710e2ee555bf361079b991068a0f640b"
+        }
+    },
     "sebastian/comparator": {
         "version": "3.0.2"
     },
@@ -292,6 +304,9 @@
     },
     "slevomat/coding-standard": {
         "version": "4.8.5"
+    },
+    "sonata-project/google-authenticator": {
+        "version": "2.2.0"
     },
     "squizlabs/php_codesniffer": {
         "version": "3.0",
