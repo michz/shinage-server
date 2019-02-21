@@ -1,8 +1,10 @@
 Shinage Server
 ==============
 
+[![MIT license](https://img.shields.io/badge/License-MIT-blue.png)](https://lbesson.mit-license.org/)
 [![Build Status](https://travis-ci.org/michz/shinage-server.svg?branch=master)](https://travis-ci.org/michz/shinage-server)
 [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/michz/shinage-server/badges/quality-score.png)](https://scrutinizer-ci.com/g/michz/shinage-server/)
+[![Open Source Love png1](https://badges.frapsoft.com/os/v1/open-source.png?v=103)](https://github.com/ellerbrock/open-source-badges/)
 
 Introduction
 ------------
