@@ -2,7 +2,7 @@ ARG PHP_VERSION
 
 FROM php:$PHP_VERSION-fpm-alpine
 
-# persistent / runtime deps
+# build time dependencies
 ENV PHPIZE_DEPS \
     autoconf \
     cmake \
@@ -14,23 +14,33 @@ ENV PHPIZE_DEPS \
     make \
     git \
     pkgconf \
-    re2c
+    re2c \
+    libxml2-dev
 
+# persistent dependencies
 # inspired by https://github.com/prooph/docker-files/blob/master/php/7.1-fpm
-RUN set -xe \
-    && apk add --no-cache --virtual .persistent-deps \
+RUN set -ex \
+       &&  apk add --no-cache \
         bash \
-        icu-dev \
-        libxml2-dev \
-        libzip-dev \
         mysql-client \
-        gzip
+        gzip \
+        icu \
+        libzip-dev \
+        freetype-dev \
+        libjpeg-turbo-dev \
+        libpng-dev \
+        icu-dev
 
-RUN set -xe \
+RUN set -ex \
     && apk add --no-cache --virtual .build-deps \
         $PHPIZE_DEPS \
     && docker-php-ext-configure bcmath --enable-bcmath \
-    && docker-php-ext-configure intl --enable-intl \
+    && docker-php-ext-configure gd \
+        --with-gd \
+        --with-freetype-dir=/usr/include \
+        --with-png-dir=/usr/include \
+        --with-jpeg-dir=/usr/include \
+    && docker-php-ext-configure intl --enable-intl  \
     && docker-php-ext-configure pcntl --enable-pcntl \
     && docker-php-ext-configure pdo_mysql --with-pdo-mysql \
     && docker-php-ext-configure mbstring --enable-mbstring \
@@ -39,6 +49,7 @@ RUN set -xe \
     && docker-php-ext-configure zip --enable-zip --with-libzip \
     && docker-php-ext-install \
         bcmath \
+        gd \
         intl \
         pcntl \
         pdo_mysql \
