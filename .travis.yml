@@ -4,6 +4,13 @@ php:
   - '7.2'
   - '7.3'
 
+addons:
+  apt:
+    sources:
+      - mysql-5.7-trusty
+    packages:
+      - mysql-server
+
 cache:
   directories:
     - $HOME/.composer/cache/files
