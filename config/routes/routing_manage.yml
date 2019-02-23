@@ -2,6 +2,10 @@
 _2fa:
   resource: ./scheb_two_factor.yaml
 
+_qr:
+  prefix: /qr
+  resource: '@EndroidQrCodeBundle/Resources/config/routes.yaml'
+
 _account:
   prefix: /account
   resource: ./manage/account.yml

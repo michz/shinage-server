@@ -1,0 +1,46 @@
+Two Factor Authentification: Zweifaktor-Authentifizierung (2FA)
+Google Authenticator / TOTP: Google Authenticator / TOTP
+Disable Google Authenticator: Google Authenticator / TOTP deaktivieren
+Enable Google Authenticator: Google Authenticator / TOTP aktivieren
+Backup Codes: Ersatzcodes
+
+Mail: E-Mail
+Disable Mail: E-Mail deaktivieren
+Enable Mail: E-Mail aktivieren
+
+totp_description: |
+  Beim Login werden Sie nach Eingabe des Passworts aufgefordert, einen Einmal-Code einzugeben.
+  Dieser wird nach dem Standard
+  <a target="_blank" href="https://de.wikipedia.org/wiki/Time-based_One-time_Password_Algorithmus">TOTP</a>
+  üblicherweise von einer App auf Ihrem Smartphone generiert. Dies kann z.B. der
+  <a target="_blank" href="https://play.google.com/store/apps/details?id=com.google.android.apps.authenticator2&hl=de">Google Authenticator</a>
+  sein, oder z.B. die freie Alternative
+  <a target="_blank" href="https://play.google.com/store/apps/details?id=org.fedorahosted.freeotp&hl=de">FreeOTP</a>.
+mail_description: |
+  Beim Login wird Ihnen nach Eingabe des Passworts per E-Mail ein sechsstelliger Einmal-Code zugeschickt.
+  Diesen müssen Sie auf der darauf folgenden Seite angeben, um den Login abzuschließen.
+backup_code_description: |
+  Mit Ersatzcodes ist der Login immer möglich, selbst wenn Sie keine TOTP-Codes mehr generieren
+  und/oder keine Code-E-Mails mehr empfangen können.
+  Dies kann z.B. dann der Fall sein, wenn Sie ihr Smartphone verlieren oder sich Ihre E-Mail-Adresse ändert.<br>
+  <b>Sie sollten diese Codes auf jeden Fall an einem sicheren Ort aufbewahren.</b><br>
+  Jeder Code kann nur einmal verwendet werden und wir danach gelöscht.
+  Sie sollten deshalb wirklich nur für Notfälle verwendet werden.
+
+Init TOTP authentication: Authenticator-App einrichten
+Code1: Code 1
+Code2: Code 2
+Submit: Aktivieren
+
+totp_init_description: |
+  Scannen Sie mit Ihrer Authenticator-App den nebenstehenden QR-Code.
+  Anschließend geben Sie bitte zwei nacheinander von der App generierte Codes unten ein,
+  um zu prüfen, ob die Konfiguration korrekt übernommen wurde.
+
+totp_init_error_wrong_code: Die eingegebenen Codes stimmen leider nicht. Bitte kontrollieren Sie ggf. die Uhrzeit auf Ihrem Smartphone.
+totp_init_error_invalid: Bitte füllen Sie beide Felder aus.
+totp_init_error_same_code: Bitte geben Sie zwei verschiedene, nacheinander generierte Codes ein.
+
+Deactivate two factor authentication: Zweifaktor-Authentifizierung deaktiveren
+deactivate_2fa_description: Soll die gewählte Zweifaktor-Authentifizierung wirklich deaktivieren werden?
+

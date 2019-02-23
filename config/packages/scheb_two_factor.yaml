@@ -6,7 +6,7 @@ scheb_two_factor:
     email:
         enabled: true
         digits: 6
-        sender_email: no-reply@shinage.org
+        sender_email: '%env(MAILER_FROM)%'
         sender_name: Shinage Two-Factor Authentification
         template: security/2fa_form.html.twig
 
@@ -16,5 +16,5 @@ scheb_two_factor:
     google:
         enabled: true
         server_name: Shinage
-        issuer: Shinage Login
+        issuer: Shinage
         template: security/2fa_form.html.twig

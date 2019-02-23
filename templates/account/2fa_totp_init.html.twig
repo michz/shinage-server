@@ -1,0 +1,10 @@
+{% trans_default_domain 'AccountSecurity' %}
+
+<img class="image" src="{{ qr_code_path(qrData) }}">
+<div class="description">
+    <p>{{ 'totp_init_description'|trans }}</p>
+
+    {{ form(form) }}
+
+    <div id="totp-init-error-container"></div>
+</div>

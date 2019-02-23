@@ -4,11 +4,10 @@
     <div class="ui main container">
         <div class="login-form">
             <h3 class="ui top attached block header">
-                {# @TODO use translatable #}
-                Bestätigungs-Code
+                {{ 'Two factor authentification'|trans }}
             </h3>
 
-            <div class="ui bottom attached segment">
+            <div class="ui middle attached segment">
                 <div id="flash-container">
                     {# Authentication errors #}
                     {% if authenticationError %}
@@ -19,20 +18,12 @@
                 </div>
 
                 <form action="{{ path("2fa_login_check") }}" method="post">
-                    {# Let the user select the authentication method #}
-                    <p>
-                        {{ "scheb_two_factor.choose_provider"|trans }}:
-                        {% for provider in availableTwoFactorProviders %}
-                            <a href="{{ path("2fa_login", {"preferProvider": provider}) }}">{{ provider }}</a>
-                        {% endfor %}
-                    </p>
-
                     <form class="form" action="{{ path("2fa_login_check") }}" method="post">
                         <div class="ui labeled fluid input">
                             <div class="ui label">
                                 {{ 'Security Code'|trans }}
                             </div>
-                            <input id="_auth_code" type="text" autocomplete="off" name="{{ authCodeParameterName }}" />
+                            <input id="_auth_code" type="text" pattern="\d*" autocomplete="off" autofocus="autofocus" name="{{ authCodeParameterName }}" />
                         </div>
 
                         {% if displayTrustedOption %}
@@ -52,6 +43,22 @@
                         </div>
                     </form>
                 </form>
+            </div>
+            <div class="ui bottom attached segment">
+                {# Let the user select the authentication method #}
+                <p>{{ "scheb_two_factor.choose_provider"|trans }}:</p>
+                <div class="ui fluid vertical labeled icon basic buttons">
+                    {% for provider in availableTwoFactorProviders %}
+                        <a class="ui button" href="{{ path("2fa_login", {"preferProvider": provider}) }}">
+                            {% if provider == twoFactorProvider %}
+                                <i class="angle right icon"></i>
+                            {% else %}
+                                <i class="icon"></i>
+                            {% endif %}
+                            {{ provider|trans([], '2fa_providers') }}
+                        </a>
+                    {% endfor %}
+                </div>
             </div>
         </div>
     </div>

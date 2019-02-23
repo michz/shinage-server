@@ -217,6 +217,11 @@ class User extends BaseUser implements TwoFactorEmailInterface, TwoFactorGoogleI
         return $this->emailAuthEnabled;
     }
 
+    public function setEmailAuthEnabled(bool $enable): void
+    {
+        $this->emailAuthEnabled = $enable;
+    }
+
     public function getEmailAuthRecipient(): string
     {
         return $this->getEmail();
@@ -230,6 +235,22 @@ class User extends BaseUser implements TwoFactorEmailInterface, TwoFactorGoogleI
     public function setEmailAuthCode(string $authCode): void
     {
         $this->emailAuthCode = $authCode;
+    }
+
+    /**
+     * @return string[]
+     */
+    public function getBackupCodes(): array
+    {
+        return $this->backupCodes;
+    }
+
+    /**
+     * @param string[] $codes
+     */
+    public function setBackupCodes(array $codes): void
+    {
+        $this->backupCodes = $codes;
     }
 
     public function isBackupCode(string $code): bool

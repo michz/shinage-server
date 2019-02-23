@@ -1,0 +1,159 @@
+{% extends 'account/account.html.twig' %}
+{% trans_default_domain 'AccountSecurity' %}
+
+{% block account_main %}
+    <h3 class="ui top attached block header">
+        {{ 'Two Factor Authentification'|trans }}
+    </h3>
+    <div class="ui middle attached segment">
+        <h3>{{ 'Google Authenticator / TOTP'|trans }}</h3>
+        <p>{{ 'totp_description'|trans|raw }}</p>
+
+        {% if totp_enabled %}
+            <p><a href="{{ path('account-security-disable-totp-auth') }}" class="ui red button ask-before">{{ 'Disable Google Authenticator'|trans }}</a></p>
+        {% else %}
+            <p><a id="init-totp-link" class="ui green button">{{ 'Enable Google Authenticator'|trans }}</a></p>
+        {% endif %}
+    </div>
+    <div class="ui middle attached segment">
+        <h3>{{ 'Mail'|trans }}</h3>
+        <p>{{ 'mail_description'|trans|raw }}</p>
+
+        {% if mail_enabled %}
+            <p><a href="{{ path('account-security-toggle-mail-auth') }}?enable=0" class="ui red button ask-before">{{ 'Disable Mail'|trans }}</a></p>
+        {% else %}
+            <p><a href="{{ path('account-security-toggle-mail-auth') }}?enable=1" class="ui green button">{{ 'Enable Mail'|trans }}</a></p>
+        {% endif %}
+    </div>
+    <div class="ui bottom attached segment">
+        <h3>{{ 'Backup Codes'|trans }}</h3>
+        <p>{{ 'backup_code_description'|trans|raw }}</p>
+
+        <div class="ui segment">
+            <div class="ui styled accordion">
+                <div class="title">
+                    <i class="dropdown icon"></i>
+                    {{ 'Backup Codes'|trans }}
+                </div>
+                <div class="content">
+                    <div class="codes">
+                        {% for backup_code in backup_codes %}
+                            {{ backup_code }}<br>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="ui modal" id="init-totp-modal">
+        <div class="header">{{ 'Init TOTP authentication'|trans }}</div>
+        <div class="ui dimmable image content">
+            <div class="ui active inverted dimmer">
+                <div class="ui loader"></div>
+            </div>
+        </div>
+        <div class="actions">
+            <div class="ui cancel button">{{ 'Cancel'|trans([], 'messages') }}</div>
+            <div class="ui primary approve button">{{ 'Submit'|trans() }}</div>
+        </div>
+    </div>
+    <div class="ui basic modal" id="deactivate-2fa-modal">
+        <div class="ui icon header">
+            <i class="exclamation triangle icon"></i>
+            {{ 'Deactivate two factor authentication'|trans }}
+        </div>
+        <div class="content">
+            <p>{{ 'deactivate_2fa_description'|trans }}</p>
+        </div>
+        <div class="actions">
+            <div class="ui cancel button">{{ 'No (cancel)'|trans([], 'messages') }}</div>
+            <div class="ui primary approve button">{{ 'Yes'|trans([], 'messages') }}</div>
+        </div>
+    </div>
+{% endblock %}
+
+
+{% block scripts %}
+    <script>
+        // Accordion for hiding backup codes
+        $('.ui.accordion').accordion();
+
+        // Modal for deactivating TOTP or mail
+        $('#deactivate-2fa-modal').modal({'closable': false});
+        $('.ask-before').on('click', function (e) {
+            var $link = $(e.currentTarget);
+            var $modal = $('#deactivate-2fa-modal');
+            $modal.modal('setting', 'onApprove', function () {
+                window.location = $link.prop('href');
+            });
+            $modal.modal('show');
+            e.preventDefault();
+            return false;
+        });
+
+        // Modal for activating TOTP
+        $('#init-totp-modal').modal({
+            onApprove: function () {
+                $('#init-totp-modal .content form').submit();
+                return false;
+            },
+            onHidden: function () {
+                $('#init-totp-modal .content').html($('#init-totp-modal .content').data('defaultContent'));
+            }
+        });
+        $('#init-totp-link').on('click', function () {
+            $('#init-totp-modal').modal('show');
+
+            $.ajax({
+                method: 'get',
+                url: '{{ path('account-security-init-totp-auth') }}',
+                success: function (data) {
+                    // Remember default modal content
+                    $('#init-totp-modal .content').data('defaultContent', $('#init-totp-modal .content').html());
+
+                    // Update modal content
+                    $('#init-totp-modal .content').html(data);
+
+                    // Add form events
+                    $('#init-totp-modal .content form input').each(function () {
+                        $(this).keypress(function (e) {
+                            if(10 === e.which || 13 === e.which) {
+                                $(this.form).trigger('submit');
+                            }
+                        });
+                    });
+                    $('#init-totp-modal .content form').on('submit', function (e) {
+                        var $form = $(e.currentTarget);
+                        $('.actions .approve', $(e.currentTarget).closest('.modal')).addClass('loading disabled');
+                        $.ajax({
+                            url: '{{ path('account-security-complete-totp-auth') }}',
+                            method: $form.attr('method'),
+                            data: $form.serialize(),
+                            success: function (data) {
+                                location.reload();
+                            },
+                            error: function (jqXHR) {
+                                if ('wrong_code' === jqXHR.responseText) {
+                                    $('#totp-init-error-container').html('<div class="ui negative message">{{ 'totp_init_error_wrong_code'|trans }}</div>');
+                                } else if ('same_code' === jqXHR.responseText) {
+                                    $('#totp-init-error-container').html('<div class="ui negative message">{{ 'totp_init_error_same_code'|trans }}</div>');
+                                } else {
+                                    $('#totp-init-error-container').html('<div class="ui negative message">{{ 'totp_init_error_invalid'|trans }}</div>');
+                                }
+                            },
+                            complete: function () {
+                                $('#init-totp-modal .actions .approve').removeClass('loading disabled');
+                            }
+                        });
+                        e.preventDefault();
+                        return false;
+                    });
+                },
+                error: function () {
+                    $('#init-totp-modal .content').html('Sorry, an error occurred.');
+                }
+            });
+        });
+    </script>
+{% endblock %}
