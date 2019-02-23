@@ -32,6 +32,7 @@ class SecurityController extends AbstractController
 
     /** @var GoogleAuthenticatorInterface */
     private $googleAuthenticatorTwoFactorProvider;
+
     /** @var SessionInterface */
     private $session;
 
@@ -120,8 +121,7 @@ class SecurityController extends AbstractController
                     // Problem -> reset to old secret and abort
                     $this->entityManager->refresh($user);
                     return new Response('same_code', 500);
-                } elseif (
-                    $this->googleAuthenticatorTwoFactorProvider->checkCode($user, $code1) &&
+                } elseif ($this->googleAuthenticatorTwoFactorProvider->checkCode($user, $code1) &&
                     $this->googleAuthenticatorTwoFactorProvider->checkCode($user, $code2)
                 ) {
                     // Everything fine!
@@ -200,7 +200,7 @@ class SecurityController extends AbstractController
 
         $code = '';
         for ($i = 0; $i < $length; ++$i) {
-            $code .= $chars[\rand(0, $charCount - 1)];
+            $code .= $chars[\random_int(0, $charCount - 1)];
         }
 
         return $code;
