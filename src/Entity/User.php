@@ -40,7 +40,7 @@ class User extends BaseUser implements TwoFactorEmailInterface, TwoFactorGoogleI
     protected $plainPassword;
 
     /** @var bool */
-    private $emailAuthEnabled;
+    private $emailAuthEnabled = false;
 
     /** @var null|string */
     private $emailAuthCode;
