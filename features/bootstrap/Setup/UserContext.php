@@ -88,4 +88,14 @@ class UserContext implements Context
         $organization->getUsers()->add($user);
         $this->entityManager->flush();
     }
+
+    /**
+     * @Given The user :user has two factor authentication disabled at all
+     */
+    public function theUserHasTwoFactorAuthenticationDisabledAtAll(User $user): void
+    {
+        $user->setEmailAuthEnabled(false);
+        $user->setGoogleAuthenticatorSecret(null);
+        $this->entityManager->flush();
+    }
 }

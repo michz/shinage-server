@@ -1,3 +1,8 @@
 Saved successfully: Erfolgreich gespeichert
 Failed saving: Speichern fehlgeschlagen
 Saving...: Speichern...
+
+2fa_totp_activated_successfully: Zweifaktor-Authentifizierung mittels TOTP wurde erfolgreich aktiviert.
+2fa_totp_deactivated_successfully: Zweifaktor-Authentifizierung mittels TOTP wurde erfolgreich deaktiviert.
+2fa_mail_activated_successfully: Zweifaktor-Authentifizierung mittels E-Mail wurde erfolgreich aktiviert.
+2fa_mail_deactivated_successfully: Zweifaktor-Authentifizierung mittels E-Mail wurde erfolgreich deaktiviert.

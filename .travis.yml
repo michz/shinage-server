@@ -4,6 +4,13 @@ php:
   - '7.2'
   - '7.3'
 
+addons:
+  apt:
+    sources:
+      - mysql-5.7-trusty
+    packages:
+      - mysql-server
+
 cache:
   directories:
     - $HOME/.composer/cache/files
@@ -15,6 +22,7 @@ before_script:
   - phpenv config-rm xdebug.ini
   - mysql -e 'CREATE DATABASE shinage_test;'
   - cp .env.travis .env
+  - cp .env.travis .env.test
   - composer install --no-scripts
   - npm install
   - NODE_ENV=production ./node_modules/.bin/gulp
@@ -42,12 +50,13 @@ after_failure:
 
 before_deploy:
   - mkdir ./build
-  - rm -f .scrutinizer.yml .travis.yml .gitignore .web-server-pid
+  - rm -f .scrutinizer.yml .travis.yml .gitignore .web-server-pid .env .env.* .eslintrc
+  - rm -f bin/devEnv.sh bin/runInDev.sh
   - rm -f easy-coding-standard.yml package* behat.yml codeception.yml install-git-hooks.php phpspec.yml gulpfile.js
-  - rm -rf node_modules/  var/cache/dev/ var/cache/test/ var/session/dev/ var/session/test/ .git/ etc/ features/ git-hooks/ vendor
+  - rm -rf node_modules/  var/cache/dev/ var/cache/test/ var/session/dev/ var/session/test/ .git/ etc/ features/ git-hooks/ vendor/ spec/ data/pool/*
   - echo "${TRAVIS_BRANCH}" > REVISION
   - composer install --no-scripts --no-dev
-  - tar --exclude="./build" --exclude="./var/logs/*.log" --transform 's,^\./,,' -czf ./build/shinage-server-release.tar.gz .
+  - tar --exclude="./build" --exclude="./var/log/*.log" --transform 's,^\./,,' -czf ./build/shinage-server-release.tar.gz .
 
 deploy:
   provider: releases

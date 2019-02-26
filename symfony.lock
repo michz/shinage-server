@@ -1,4 +1,7 @@
 {
+    "bacon/bacon-qr-code": {
+        "version": "2.0.0"
+    },
     "behat/behat": {
         "version": "v3.5.0"
     },
@@ -28,6 +31,9 @@
     },
     "container-interop/container-interop": {
         "version": "1.2.0"
+    },
+    "dasprid/enum": {
+        "version": "1.0.0"
     },
     "doctrine/annotations": {
         "version": "1.0",
@@ -113,6 +119,15 @@
     "eloquent/pathogen": {
         "version": "0.6.1"
     },
+    "endroid/installer": {
+        "version": "1.0.8"
+    },
+    "endroid/qr-code": {
+        "version": "3.5.2"
+    },
+    "endroid/qr-code-bundle": {
+        "version": "3.3.3"
+    },
     "fabpot/goutte": {
         "version": "v3.2.3"
     },
@@ -173,14 +188,23 @@
             "ref": "fe60ce509ef04a3f40da96e3979bc8d9b13b2372"
         }
     },
+    "khanamiryan/qrcode-detector-decoder": {
+        "version": "1.0.2"
+    },
     "knplabs/knp-menu": {
         "version": "2.3.0"
     },
     "knplabs/knp-menu-bundle": {
         "version": "v2.2.1"
     },
+    "lcobucci/jwt": {
+        "version": "3.2.5"
+    },
     "monolog/monolog": {
         "version": "1.23.0"
+    },
+    "myclabs/php-enum": {
+        "version": "1.6.6"
     },
     "mztx/shinage-player-bundle": {
         "version": "v0.1.1"
@@ -266,6 +290,15 @@
     "roave/security-advisories": {
         "version": "dev-master"
     },
+    "scheb/two-factor-bundle": {
+        "version": "3.16",
+        "recipe": {
+            "repo": "github.com/symfony/recipes-contrib",
+            "branch": "master",
+            "version": "3.16",
+            "ref": "b5789cd9710e2ee555bf361079b991068a0f640b"
+        }
+    },
     "sebastian/comparator": {
         "version": "3.0.2"
     },
@@ -292,6 +325,9 @@
     },
     "slevomat/coding-standard": {
         "version": "4.8.5"
+    },
+    "sonata-project/google-authenticator": {
+        "version": "2.2.0"
     },
     "squizlabs/php_codesniffer": {
         "version": "3.0",

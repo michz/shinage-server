@@ -62,3 +62,7 @@ services:
   shinage.server.behat.context.presentation_editors:
     class: shinage\server\behat\PresentationEditorsContext
     tags: ["fob.context_service"]
+
+  shinage.server.behat.context.account_security:
+    class: shinage\server\behat\AccountSecurityContext
+    tags: ["fob.context_service"]

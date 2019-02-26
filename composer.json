@@ -49,7 +49,9 @@
     "symfony/orm-pack": "^1.0",
     "symfony/asset": "^4.1",
     "symfony/expression-language": "^4.1",
-    "sensio/framework-extra-bundle": "^5.2"
+    "sensio/framework-extra-bundle": "^5.2",
+    "scheb/two-factor-bundle": "^3.17",
+    "endroid/qr-code-bundle": "^3.3"
   },
   "require-dev": {
     "symfony/phpunit-bridge": "^3.0",

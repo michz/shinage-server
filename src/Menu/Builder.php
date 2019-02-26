@@ -38,6 +38,7 @@ class Builder
         $menu->setChildrenAttribute('class', 'nav navbar-nav');
 
         $menu->addChild('User', ['route' => 'account-edit']);
+        $menu->addChild('Security', ['route' => 'account-security']);
         $menu->addChild('Organizations', ['route' => 'account-organizations']);
 
         return $menu;

@@ -6,6 +6,26 @@ account-edit:
   path: /edit
   controller: App\Controller\Account\AccountController::editAction
 
+account-security:
+  path: /security
+  controller: App\Controller\Account\SecurityController::indexAction
+
+account-security-toggle-mail-auth:
+  path: /security/toggle-mail-auth
+  controller: App\Controller\Account\SecurityController::toggleMailAuthAction
+
+account-security-disable-totp-auth:
+  path: /security/disable-totp-auth
+  controller: App\Controller\Account\SecurityController::disableTotpAuthAction
+
+account-security-init-totp-auth:
+  path: /security/init-totp-auth
+  controller: App\Controller\Account\SecurityController::initTotpAuthAction
+
+account-security-complete-totp-auth:
+  path: /security/complete-totp-auth
+  controller: App\Controller\Account\SecurityController::completeTotpAuthAction
+
 account-organizations:
   path: /organizations
   controller: App\Controller\Account\AccountController::orgaAction

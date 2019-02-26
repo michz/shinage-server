@@ -1,0 +1,66 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <div class="ui main container">
+        <div class="login-form">
+            <h3 class="ui top attached block header">
+                {{ 'Two factor authentification'|trans }}
+            </h3>
+
+            <div class="ui middle attached segment">
+                <div id="flash-container">
+                    {# Authentication errors #}
+                    {% if authenticationError %}
+                        <div class="ui negative message">
+                            {{ authenticationError|trans(authenticationErrorData) }}
+                        </div>
+                    {% endif %}
+                </div>
+
+                <form action="{{ path("2fa_login_check") }}" method="post">
+                    <form class="form" action="{{ path("2fa_login_check") }}" method="post">
+                        <div class="ui labeled fluid input">
+                            <div class="ui label">
+                                {{ 'Security Code'|trans }}
+                            </div>
+                            <input id="_auth_code" type="text" pattern="\d*" autocomplete="off" autofocus="autofocus" name="{{ authCodeParameterName }}" />
+                        </div>
+
+                        {% if displayTrustedOption %}
+                            <div class="ui fluid input">
+                                <label for="_trusted"><input id="_trusted" type="checkbox" name="{{ trustedParameterName }}" /> {{ "scheb_two_factor.trusted"|trans }}</label>
+                            </div>
+                        {% endif %}
+
+                        {% if isCsrfProtectionEnabled %}
+                            <input type="hidden" name="{{ csrfParameterName }}" value="{{ csrf_token(csrfTokenId) }}">
+                        {% endif %}
+
+                        <div class="ui basic center aligned segment">
+                            <input class="ui primary button" type="submit" value="{{ "scheb_two_factor.login"|trans }}" />
+
+                            <a class="ui button" href="{{ path("fos_user_security_logout") }}">{{ "scheb_two_factor.cancel"|trans }}</a>
+                        </div>
+                    </form>
+                </form>
+            </div>
+            <div class="ui bottom attached segment">
+                {# Let the user select the authentication method #}
+                <p>{{ "scheb_two_factor.choose_provider"|trans }}:</p>
+                <div class="ui fluid vertical labeled icon basic buttons">
+                    {% for provider in availableTwoFactorProviders %}
+                        <a class="ui button" href="{{ path("2fa_login", {"preferProvider": provider}) }}">
+                            {% if provider == twoFactorProvider %}
+                                <i class="angle right icon"></i>
+                            {% else %}
+                                <i class="icon"></i>
+                            {% endif %}
+                            {{ provider|trans([], '2fa_providers') }}
+                        </a>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
