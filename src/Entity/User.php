@@ -229,7 +229,7 @@ class User extends BaseUser implements TwoFactorEmailInterface, TwoFactorGoogleI
 
     public function getEmailAuthCode(): string
     {
-        return $this->emailAuthCode;
+        return $this->emailAuthCode ?: '';
     }
 
     public function setEmailAuthCode(string $authCode): void
@@ -242,7 +242,7 @@ class User extends BaseUser implements TwoFactorEmailInterface, TwoFactorGoogleI
      */
     public function getBackupCodes(): array
     {
-        return $this->backupCodes;
+        return $this->backupCodes ?: [];
     }
 
     /**
@@ -260,6 +260,10 @@ class User extends BaseUser implements TwoFactorEmailInterface, TwoFactorGoogleI
 
     public function invalidateBackupCode(string $code): void
     {
+        if (null === $this->backupCodes) {
+            return;
+        }
+
         $key = \array_search($code, $this->backupCodes);
         if (false !== $key) {
             unset($this->backupCodes[$key]);

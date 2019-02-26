@@ -71,7 +71,7 @@ class SecurityController extends AbstractController
         return $this->redirectToRoute('account-security');
     }
 
-    public function initTotpAuthAction(Request $request): Response
+    public function initTotpAuthAction(): Response
     {
         /** @var User $user */
         $user = $this->tokenStorage->getToken()->getUser();
