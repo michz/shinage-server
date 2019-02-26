@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 /*
  * Licensed under MIT. See file /LICENSE.
@@ -10,11 +11,10 @@ use Webmozart\Assert\Assert;
 
 class AccountSecurityContext extends \Behat\MinkExtension\Context\RawMinkContext
 {
-
     /**
      * @When I click on the `enable mail auth` button
      */
-    public function iClickOnTheEnableMailAuthButton()
+    public function iClickOnTheEnableMailAuthButton(): void
     {
         $this->getSession()->getPage()->find('css', '[data-qa="button-enable-2fa-mail"]')->click();
     }
@@ -22,7 +22,7 @@ class AccountSecurityContext extends \Behat\MinkExtension\Context\RawMinkContext
     /**
      * @Then I should see that two factor authentication via totp is disabled
      */
-    public function iShouldSeeThatTwoFactorAuthenticationViaTotpIsDisabled()
+    public function iShouldSeeThatTwoFactorAuthenticationViaTotpIsDisabled(): void
     {
         Assert::notNull($this->getSession()->getPage()->find('css', '[data-qa="button-enable-2fa-totp"]'));
     }
@@ -30,7 +30,7 @@ class AccountSecurityContext extends \Behat\MinkExtension\Context\RawMinkContext
     /**
      * @Then I should see that two factor authentication via mail is disabled
      */
-    public function iShouldSeeThatTwoFactorAuthenticationViaMailIsDisabled()
+    public function iShouldSeeThatTwoFactorAuthenticationViaMailIsDisabled(): void
     {
         Assert::notNull($this->getSession()->getPage()->find('css', '[data-qa="button-enable-2fa-mail"]'));
     }
@@ -38,7 +38,7 @@ class AccountSecurityContext extends \Behat\MinkExtension\Context\RawMinkContext
     /**
      * @Then I should see that two factor authentication via mail is enabled
      */
-    public function iShouldSeeThatTwoFactorAuthenticationViaMailIsEnabled()
+    public function iShouldSeeThatTwoFactorAuthenticationViaMailIsEnabled(): void
     {
         Assert::null($this->getSession()->getPage()->find('css', '[data-qa="button-enable-2fa-mail"]'));
         Assert::notNull($this->getSession()->getPage()->find('css', '[data-qa="button-disable-2fa-mail"]'));

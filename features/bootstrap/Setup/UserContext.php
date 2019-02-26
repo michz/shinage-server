@@ -92,7 +92,7 @@ class UserContext implements Context
     /**
      * @Given The user :user has two factor authentication disabled at all
      */
-    public function theUserHasTwoFactorAuthenticationDisabledAtAll(User $user)
+    public function theUserHasTwoFactorAuthenticationDisabledAtAll(User $user): void
     {
         $user->setEmailAuthEnabled(false);
         $user->setGoogleAuthenticatorSecret(null);
