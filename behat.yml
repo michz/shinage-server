@@ -42,6 +42,22 @@ default:
 
         - behat.mink
 
+    account_features:
+      paths:
+        - "%paths.base%/features/Management/Account"
+      contexts_services:
+        - shinage.server.behat.context.hook.purge
+
+        - shinage.server.behat.context.transform.user
+
+        - shinage.server.behat.context.setup.user
+        - shinage.server.behat.context.account_security
+        - shinage.server.behat.context.general_webpages
+        - shinage.server.behat.context.login
+        - shinage.server.behat.context.presentation_editors
+
+        - behat.mink
+
     api_v1_features:
       paths:
         - "%paths.base%/features/Api/v1"

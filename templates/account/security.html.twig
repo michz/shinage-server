@@ -10,9 +10,23 @@
         <p>{{ 'totp_description'|trans|raw }}</p>
 
         {% if totp_enabled %}
-            <p><a href="{{ path('account-security-disable-totp-auth') }}" class="ui red button ask-before">{{ 'Disable Google Authenticator'|trans }}</a></p>
+            <p>
+                <a href="{{ path('account-security-disable-totp-auth') }}"
+                   class="ui red button ask-before"
+                   data-qa="button-disable-2fa-totp"
+                >
+                    {{ 'Disable Google Authenticator'|trans }}
+                </a>
+            </p>
         {% else %}
-            <p><a id="init-totp-link" class="ui green button">{{ 'Enable Google Authenticator'|trans }}</a></p>
+            <p>
+                <a id="init-totp-link"
+                   class="ui green button"
+                   data-qa="button-enable-2fa-totp"
+                >
+                    {{ 'Enable Google Authenticator'|trans }}
+                </a>
+            </p>
         {% endif %}
     </div>
     <div class="ui middle attached segment">
@@ -20,9 +34,23 @@
         <p>{{ 'mail_description'|trans|raw }}</p>
 
         {% if mail_enabled %}
-            <p><a href="{{ path('account-security-toggle-mail-auth') }}?enable=0" class="ui red button ask-before">{{ 'Disable Mail'|trans }}</a></p>
+            <p>
+                <a href="{{ path('account-security-toggle-mail-auth') }}?enable=0"
+                   class="ui red button ask-before"
+                   data-qa="button-disable-2fa-mail"
+                >
+                    {{ 'Disable Mail'|trans }}
+                </a>
+            </p>
         {% else %}
-            <p><a href="{{ path('account-security-toggle-mail-auth') }}?enable=1" class="ui green button">{{ 'Enable Mail'|trans }}</a></p>
+            <p>
+                <a href="{{ path('account-security-toggle-mail-auth') }}?enable=1"
+                   class="ui green button"
+                   data-qa="button-enable-2fa-mail"
+                >
+                    {{ 'Enable Mail'|trans }}
+                </a>
+            </p>
         {% endif %}
     </div>
     <div class="ui bottom attached segment">
