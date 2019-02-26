@@ -22,6 +22,7 @@ before_script:
   - phpenv config-rm xdebug.ini
   - mysql -e 'CREATE DATABASE shinage_test;'
   - cp .env.travis .env
+  - cp .env.travis .env.test
   - composer install --no-scripts
   - npm install
   - NODE_ENV=production ./node_modules/.bin/gulp
