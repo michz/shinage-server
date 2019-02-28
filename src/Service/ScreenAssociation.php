@@ -70,30 +70,16 @@ class ScreenAssociation
     }
 
     /**
-     * @param string   $owner (format: "user:<id>" or "orga:<id>")
      * @param string[] $roles
      *
      * @deprecated
      */
-    public function associateByString(Screen $screen, string $owner, array $roles): ScreenAssociationEntity
+    public function associateByString(Screen $screen, int $owner, array $roles): ScreenAssociationEntity
     {
         $assoc = new ScreenAssociationEntity();
         $assoc->setScreen($screen);
         $assoc->setRoles($roles);
-
-        $aOwner = explode(':', $owner);
-        switch ($aOwner[0]) {
-            case 'user':
-            case 'orga':
-                $assoc->setUser($this->entityManager->find('App:User', $aOwner[1]));
-                break;
-            default:
-                // Error above. Use current user as default.
-                // TODO{s:0} Throw error?
-                $user = $this->tokenStorage->getToken()->getUser();
-                $assoc->setUser($user);
-                break;
-        }
+        $assoc->setUser($this->entityManager->find('App:User', $owner));
 
         $this->entityManager->persist($assoc);
         $this->entityManager->flush();
