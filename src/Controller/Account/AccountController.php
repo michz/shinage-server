@@ -29,7 +29,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Encoder\EncoderFactoryInterface;
-use Symfony\Component\Translation\TranslatorInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 class AccountController extends AbstractController
 {
@@ -339,6 +339,7 @@ class AccountController extends AbstractController
         $apiKey->generateAndSetCode();
 
         // @TODO Debug: Standardrollen entfernen und konfigurierbar machen
+        // @TODO Diese Rollen werden bisher nicht beachtet
         $apiKey->setRoles(['FILE_UPLOAD']);
 
         $this->entityManager->persist($apiKey);
