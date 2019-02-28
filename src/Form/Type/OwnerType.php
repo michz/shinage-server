@@ -59,19 +59,7 @@ class OwnerType extends AbstractType
                 FormEvents::SUBMIT,
                 function (FormEvent $event): void {
                     $entity = $this->entity;
-                    $owner = $event->getData();
-
-                    $aOwner = explode(':', $owner);
-                    switch ($aOwner[0]) {
-                        case 'user':
-                            $entity->setOwner($this->em->find('App:User', $aOwner[1]));
-                            break;
-                        default:
-                            // Error above. Use current user as default.
-                            $user = $this->tokenStorage->getToken()->getUser();
-                            $entity->setOwner($user);
-                            break;
-                    }
+                    $entity->setOwner($this->em->find('App:User', (int) $event->getData()));
                 }
             );
         }
@@ -84,11 +72,11 @@ class OwnerType extends AbstractType
         /** @var User $user */
         $user = $this->tokenStorage->getToken()->getUser();
 
-        $choices = ['me' => $user->getUserType() . ':' . $user->getId()];
+        $choices = ['me' => $user->getId()];
 
         /** @var User $orga */
         foreach ($user->getOrganizations() as $orga) {
-            $choices['Organisation: ' . $orga->getName()] = $orga->getUserType() . ':' . $orga->getId();
+            $choices['Organisation: ' . $orga->getName()] = $orga->getId();
         }
 
         $resolver->setRequired('ownable');

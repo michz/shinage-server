@@ -75,11 +75,11 @@ class User extends BaseUser implements TwoFactorEmailInterface, TwoFactorGoogleI
     {
         // @TODO Remove from here and move to own service
         $r = [];
-        $r[] = $this->getUserType() . '-' . $this->id;
+        $r[] = 'user-' . $this->id;
 
         $orgas = $this->getOrganizations();
         foreach ($orgas as $orga) { /* @var User $orga */
-            $r[] = $orga->getUserType() . '-' . $orga->getId();
+            $r[] = 'user-' . $orga->getId();
         }
 
         return $r;
