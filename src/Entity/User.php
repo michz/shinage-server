@@ -110,12 +110,6 @@ class User extends BaseUser implements TwoFactorEmailInterface, TwoFactorGoogleI
         return false;
     }
 
-    public static function generateToken(): string
-    {
-        // @TODO Remove from here and move to own service
-        return \rtrim(\strtr(\base64_encode(\random_bytes(32)), '+/', '-_'), '=');
-    }
-
     public function setUserType(string $userType): self
     {
         $this->userType = $userType;

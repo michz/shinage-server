@@ -8,6 +8,7 @@ declare(strict_types=1);
 namespace App\Controller\Security;
 
 use App\Entity\User;
+use App\Service\ConfirmationTokenGeneratorInterface;
 use FOS\UserBundle\Doctrine\UserManager;
 use FOS\UserBundle\Model\UserInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -19,9 +20,17 @@ use Symfony\Component\HttpFoundation\Request;
 
 class RegistrationController extends AbstractController
 {
+    /** @var ConfirmationTokenGeneratorInterface */
+    private $confirmationTokenGenerator;
+
+    public function __construct(
+        ConfirmationTokenGeneratorInterface $confirmationTokenGenerator
+    ) {
+        $this->confirmationTokenGenerator = $confirmationTokenGenerator;
+    }
+
     public function indexAction(Request $request): \Symfony\Component\HttpFoundation\Response
     {
-        //$rep = $this->getDoctrine()->getRepository('App:Screen');
         $user = new User();
         /** @var UserManager $userManager */
         $userManager = $this->get('fos_user.user_manager');
@@ -53,7 +62,7 @@ class RegistrationController extends AbstractController
                 } else {
                     // good news: email is not used yet, register user
                     $user->setPlainPassword($form->get('password')->getData());
-                    $user->setConfirmationToken(User::generateToken());
+                    $user->setConfirmationToken($this->confirmationTokenGenerator->generateConfirmationToken());
                     $userManager->updateUser($user, true);
 
                     $this->addFlash(
