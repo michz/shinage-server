@@ -55,7 +55,7 @@ class SchedulerController extends AbstractController
         // screens that are associated to the user or to its organizations
         $screens = $this->screenRepository->getScreensForUser($user);
 
-        $count = count($screens);
+        $count = \count($screens);
 
         // no screens found
         if ($count < 1) {

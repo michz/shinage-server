@@ -38,14 +38,14 @@ class FilePoolPermissionChecker implements FilePoolPermissionCheckerInterface
 
     public function mayUserAccessPath(User $user, string $path): bool
     {
-        $splittedPath = explode('/', $path, 2);
+        $splittedPath = \explode('/', $path, 2);
         $root = $splittedPath[0];
         if (false === $this->mayUserAccessRoot($user, $root)) {
             return false;
         }
 
         if ('/' === $path[0]) {
-            $path = substr($path, 1);
+            $path = \substr($path, 1);
         }
 
         return $this->pathChecker->inAllowedBasePaths(

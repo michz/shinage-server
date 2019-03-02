@@ -65,14 +65,14 @@ class DashboardController extends AbstractController
         // get screenshot path
         $basepath = $this->getParameter('path_screenshots');
         $file_path = $basepath . '/' . $screen->getGuid() . '.png';
-        if (!is_file($file_path)) {
+        if (!\is_file($file_path)) {
             $file_path = $this->getParameter('kernel.root_dir') . '/Resources/private/img/nopic-de.svg';
         }
 
         $file = new File($file_path);
         $response = new Response();
         $response->headers->set('Content-Type', $file->getMimeType());
-        $response->setContent(file_get_contents($file->getRealPath()));
+        $response->setContent(\file_get_contents($file->getRealPath()));
         return $response;
     }
 }

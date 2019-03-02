@@ -49,7 +49,7 @@ class PurgeContext implements Context
         $folders = [];
         foreach ($this->poolFiles as $poolFile) {
             if (\is_file($poolFile)) {
-                @unlink($poolFile);
+                @\unlink($poolFile);
             } elseif (\is_dir($poolFile)) {
                 $folders[] = $poolFile;
             }
@@ -64,7 +64,7 @@ class PurgeContext implements Context
     private function purgePoolFolders(array $folders): void
     {
         foreach ($folders as $folder) {
-            @rmdir($folder);
+            @\rmdir($folder);
             // @TODO recursive
         }
     }

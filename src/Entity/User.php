@@ -87,8 +87,8 @@ class User extends BaseUser implements TwoFactorEmailInterface, TwoFactorGoogleI
     public function isPoolFileAllowed(string $path): bool
     {
         // @TODO Remove from here and move to own service
-        $file = ltrim($path, "/\r\n\t ");
-        $base = substr($file, 0, strpos($file, '/'));
+        $file = \ltrim($path, "/\r\n\t ");
+        $base = \substr($file, 0, \strpos($file, '/'));
         return \in_array($base, $this->getAllowedPoolPaths(), true);
     }
 
@@ -113,7 +113,7 @@ class User extends BaseUser implements TwoFactorEmailInterface, TwoFactorGoogleI
     public static function generateToken(): string
     {
         // @TODO Remove from here and move to own service
-        return rtrim(strtr(base64_encode(random_bytes(32)), '+/', '-_'), '=');
+        return \rtrim(\strtr(\base64_encode(\random_bytes(32)), '+/', '-_'), '=');
     }
 
     public function setUserType(string $userType): self

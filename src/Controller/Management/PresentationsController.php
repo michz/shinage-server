@@ -153,7 +153,7 @@ class PresentationsController extends AbstractController
             return new Response('Only owner can edit title.', 403);
         }
 
-        $presentation->setTitle(trim($newTitle));
+        $presentation->setTitle(\trim($newTitle));
         $this->entityManager->flush();
 
         return new Response('', 204);

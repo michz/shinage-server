@@ -33,7 +33,7 @@ class SlideDeserializerSubscriber implements EventSubscriberInterface
         $type = $data['type'];
         $slideClass = '\\App\\Presentation\\Slideshow\\Slides\\' . $type . 'Slide';
 
-        if (!class_exists($slideClass)) {
+        if (!\class_exists($slideClass)) {
             throw new \RuntimeException('Slide type not found: ' . $type);
         }
 

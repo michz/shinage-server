@@ -35,11 +35,11 @@ class PathChecker implements PathCheckerInterface
             }
 
             // Now add a trailing slash to base (if not yet done) and check for substring match
-            if ('/' !== substr($realBasePath, -1)) {
+            if ('/' !== \substr($realBasePath, -1)) {
                 $realBasePath .= '/';
             }
 
-            if (0 === strpos($realTarget, $realBasePath)) {
+            if (0 === \strpos($realTarget, $realBasePath)) {
                 return true;
             }
         }

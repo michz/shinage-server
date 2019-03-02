@@ -56,7 +56,7 @@ class UserContext implements Context
      */
     public function theUserHasTheRoles(User $user, string $roles): void
     {
-        $rolesArray = explode(',', $roles);
+        $rolesArray = \explode(',', $roles);
         foreach ($rolesArray as $role) {
             $user->addRole($role);
         }

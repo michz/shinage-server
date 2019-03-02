@@ -180,7 +180,7 @@ class SecurityController extends AbstractController
     {
         $flush = false;
         $backupCodes = $user->getBackupCodes() ?: [];
-        while (self::BACKUP_CODE_COUNT > count($backupCodes)) {
+        while (self::BACKUP_CODE_COUNT > \count($backupCodes)) {
             $flush = true;
             $backupCodes[] = $this->createRandomBackupCode(self::BACKUP_CODE_LENGTH);
         }

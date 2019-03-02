@@ -23,14 +23,14 @@ class VersionChecker
     public function getVersion(): string
     {
         $filename = $this->rootPath . '/REVISION';
-        if (file_exists($filename)) {
-            return trim(file_get_contents($filename));
+        if (\file_exists($filename)) {
+            return \trim(\file_get_contents($filename));
         }
 
         $exitCode = 0;
 
         // try to get exact tag
-        $r = exec('git describe --tags --abbrev=0', $output, $exitCode);
+        $r = \exec('git describe --tags --abbrev=0', $output, $exitCode);
         if (0 === $exitCode) {
             return $r;
         }
@@ -42,7 +42,7 @@ class VersionChecker
     public function getBranch(): string
     {
         $exitCode = 0;
-        $branch = exec('git rev-parse --abbrev-ref HEAD', $output, $exitCode);
+        $branch = \exec('git rev-parse --abbrev-ref HEAD', $output, $exitCode);
         if (0 === $exitCode) {
             return $branch;
         }
@@ -53,7 +53,7 @@ class VersionChecker
     public function getCommit(): string
     {
         $exitCode = 0;
-        $commit = exec('git rev-parse HEAD', $output, $exitCode);
+        $commit = \exec('git rev-parse HEAD', $output, $exitCode);
         if (0 === $exitCode) {
             return $commit;
         }

@@ -42,12 +42,12 @@ class SchedulerService
                         p.screen = :screen
                     ORDER BY p.scheduled_start ASC'
         )
-            ->setParameter('now', date('Y-m-d H:i:s'))
+            ->setParameter('now', \date('Y-m-d H:i:s'))
             ->setParameter('screen', $screen);
 
         $results = $query->getResult();
 
-        if (count($results) > 0) {
+        if (\count($results) > 0) {
             /** @var ScheduledPresentation $p */
             $p = $results[0];
             return $p->getPresentation();
@@ -64,7 +64,7 @@ class SchedulerService
         $splash->setId(0);
         $splash->setType('splash');
         $splash->setSettings('{}');
-        $splash->setLastModified(new \DateTime(gmdate('Y-m-d 00:00:00')));
+        $splash->setLastModified(new \DateTime(\gmdate('Y-m-d 00:00:00')));
         return $splash;
     }
 

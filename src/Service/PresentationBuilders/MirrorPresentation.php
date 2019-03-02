@@ -34,7 +34,7 @@ class MirrorPresentation
      */
     public function buildPresentation(PresentationInterface $presentation)
     {
-        $settings = json_decode($presentation->getSettings());
+        $settings = \json_decode($presentation->getSettings());
         $this->checkValid($presentation);
 
         $url = $settings->url;
@@ -42,12 +42,12 @@ class MirrorPresentation
             $url .= '?callback=REPLACE_JSONP_CALLBACK_DUMMY';
         }
 
-        return file_get_contents($url);
+        return \file_get_contents($url);
     }
 
     public function getLastModified(PresentationInterface $presentation): \DateTime
     {
-        $settings = json_decode($presentation->getSettings());
+        $settings = \json_decode($presentation->getSettings());
         $this->checkValid($presentation);
 
         $client = new \GuzzleHttp\Client();
@@ -62,7 +62,7 @@ class MirrorPresentation
 
     protected function checkValid(PresentationInterface $presentation): void
     {
-        $settings = json_decode($presentation->getSettings());
+        $settings = \json_decode($presentation->getSettings());
         if (!isset($settings->url)) {
             throw new \Exception('Presentation invalid.');
         }

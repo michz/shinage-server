@@ -22,13 +22,13 @@ class FilePool
         $this->base = $basepath;
 
         // test if path exists
-        if (!is_dir($basepath)) {
-            mkdir($basepath, 0700, true);
+        if (!\is_dir($basepath)) {
+            \mkdir($basepath, 0700, true);
         }
 
         // if not: try to create
         // test if it exists now; if not: Exception
-        if (!is_dir($basepath)) {
+        if (!\is_dir($basepath)) {
             throw new Exception('FilePool path does not exist and cannot be created.');
         }
     }
@@ -54,7 +54,7 @@ class FilePool
      */
     public function getPathForUser(User $user): array
     {
-        $realBasePath = realpath($this->base);
+        $realBasePath = \realpath($this->base);
         if (false === $realBasePath) {
             throw new \RuntimeException('Data pool base path not found.');
         }
@@ -69,31 +69,31 @@ class FilePool
 
     public function getFileTree(string $base, bool $displayHidden = false): PoolDirectory
     {
-        $filename = substr($base, strrpos($base, '/') + 1);
+        $filename = \substr($base, \strrpos($base, '/') + 1);
 
         $dir = new PoolDirectory($filename, $base);
         $files = &$dir->getContents();
 
-        if ($handle = opendir($base)) {
-            while (false !== ($entry = readdir($handle))) {
+        if ($handle = \opendir($base)) {
+            while (false !== ($entry = \readdir($handle))) {
                 // ignore . and ..
                 if ('.' == $entry || '..' == $entry) {
                     continue;
                 }
 
                 // ignore hidden files
-                if (!$displayHidden && '.' == substr($entry, 0, 1)) {
+                if (!$displayHidden && '.' == \substr($entry, 0, 1)) {
                     continue;
                 }
 
-                if (is_dir($base . '/' . $entry)) {
+                if (\is_dir($base . '/' . $entry)) {
                     $files[] = $this->getFileTree($base . '/' . $entry, $displayHidden);
-                } elseif (is_file($base . '/' . $entry)) {
+                } elseif (\is_file($base . '/' . $entry)) {
                     $files[] = new PoolFile($entry, $base . '/' . $entry);
                 }
             }
 
-            closedir($handle);
+            \closedir($handle);
         }
 
         return $dir;
@@ -101,8 +101,8 @@ class FilePool
 
     public static function createPathIfNeeded(string $path): void
     {
-        if (!is_dir($path)) {
-            mkdir($path, 0700);
+        if (!\is_dir($path)) {
+            \mkdir($path, 0700);
         }
     }
 }

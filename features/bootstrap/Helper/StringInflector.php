@@ -15,16 +15,16 @@ class StringInflector
 {
     public static function nameToCode(string $value): string
     {
-        return str_replace([' ', '-'], '_', $value);
+        return \str_replace([' ', '-'], '_', $value);
     }
 
     public static function nameToLowercaseCode(string $value): string
     {
-        return strtolower(self::nameToCode($value));
+        return \strtolower(self::nameToCode($value));
     }
 
     public static function nameToUppercaseCode(string $value): string
     {
-        return strtoupper(self::nameToCode($value));
+        return \strtoupper(self::nameToCode($value));
     }
 }

@@ -109,7 +109,7 @@ class FilesController extends AbstractController
 
     public function putAction(Request $request, string $path): Response
     {
-        if ('/' === substr($path, -1)) {
+        if ('/' === \substr($path, -1)) {
             throw new BadRequestHttpException('File name looks like a directory.');
         }
 
@@ -139,12 +139,12 @@ class FilesController extends AbstractController
         $fullPath = $this->getFullPath($path);
 
         if (\is_dir($fullPath)) {
-            $deleted = @rmdir($fullPath);
+            $deleted = @\rmdir($fullPath);
             if (false === $deleted) {
                 throw new BadRequestHttpException('Directory not empty.');
             }
         } elseif (\is_file($fullPath)) {
-            $deleted = @unlink($fullPath);
+            $deleted = @\unlink($fullPath);
             if (false === $deleted) {
                 throw new BadRequestHttpException('File could not be deleted.');
             }
@@ -159,7 +159,7 @@ class FilesController extends AbstractController
     {
         /** @var User $user */
         $user = $this->tokenStorage->getToken()->getUser();
-        if (false === is_a($user, User::class)) {
+        if (false === \is_a($user, User::class)) {
             throw new AccessDeniedException('Not logged in.');
         }
 

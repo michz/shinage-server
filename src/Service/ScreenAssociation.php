@@ -53,7 +53,7 @@ class ScreenAssociation
         $associations = $queryBuilder->getQuery()->execute();
         /** @var \App\Entity\ScreenAssociation $association */
         foreach ($associations as $association) {
-            if (in_array($attribute, $association->getRoles())) {
+            if (\in_array($attribute, $association->getRoles())) {
                 return true;
             }
         }
@@ -66,7 +66,7 @@ class ScreenAssociation
         $rep = $this->entityManager->getRepository('App:ScreenAssociation');
         $assoc = $rep->findBy(['screen' => $screen->getGuid()]);
 
-        return count($assoc) > 0;
+        return \count($assoc) > 0;
     }
 
     /**

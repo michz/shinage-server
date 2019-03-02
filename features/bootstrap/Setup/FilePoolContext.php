@@ -49,10 +49,10 @@ class FilePoolContext implements Context
         $id = $user->getId();
 
         $fullPath = $this->basePath . '/user-' . $id . '/' . $name;
-        $path = dirname($fullPath);
+        $path = \dirname($fullPath);
         $this->createFolderRecursively($path);
 
-        file_put_contents($fullPath, $content);
+        \file_put_contents($fullPath, $content);
         $this->sharedStorage->set(StringInflector::nameToCode('pool-file'), $fullPath);
         $this->purgeContext->addPurgablePoolFile($fullPath);
     }
@@ -62,7 +62,7 @@ class FilePoolContext implements Context
      */
     public function thisFileHasTheLastModifiedTimestamp(string $poolFile, string $date): void
     {
-        touch($poolFile, strtotime($date));
+        \touch($poolFile, \strtotime($date));
     }
 
     private function createFolderRecursively(string $folderPath): void
@@ -71,12 +71,12 @@ class FilePoolContext implements Context
             return;
         }
 
-        $parent = dirname($folderPath);
+        $parent = \dirname($folderPath);
 
         // create parent folder
         $this->createFolderRecursively($parent);
 
-        mkdir($folderPath, 0777, false);
+        \mkdir($folderPath, 0777, false);
         $this->purgeContext->addPurgablePoolFile($folderPath);
     }
 }

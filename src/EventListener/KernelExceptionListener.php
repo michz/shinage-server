@@ -28,7 +28,7 @@ class KernelExceptionListener
 
     public function onKernelException(GetResponseForExceptionEvent $event): void
     {
-        if (0 !== strpos($event->getRequest()->getPathInfo(), '/api/')) {
+        if (0 !== \strpos($event->getRequest()->getPathInfo(), '/api/')) {
             return;
         }
 

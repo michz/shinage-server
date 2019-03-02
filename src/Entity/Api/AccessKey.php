@@ -34,16 +34,16 @@ class AccessKey
      */
     public function generateAndSetCode(): self
     {
-        $code = sprintf(
+        $code = \sprintf(
             '%04x%04x%04x%04x%04x%04x%04x%04x',
-            random_int(0, 0xffff),
-            random_int(0, 0xffff),
-            random_int(0, 0xffff),
-            random_int(0, 0xffff),
-            random_int(0, 0xffff),
-            random_int(0, 0xffff),
-            random_int(0, 0xffff),
-            random_int(0, 0xffff)
+            \random_int(0, 0xffff),
+            \random_int(0, 0xffff),
+            \random_int(0, 0xffff),
+            \random_int(0, 0xffff),
+            \random_int(0, 0xffff),
+            \random_int(0, 0xffff),
+            \random_int(0, 0xffff),
+            \random_int(0, 0xffff)
         );
         $this->setCode($code);
         return $this;
@@ -51,7 +51,7 @@ class AccessKey
 
     public function getRolesReadable(): string
     {
-        return implode(', ', $this->getRoles());
+        return \implode(', ', $this->getRoles());
     }
 
     public function getId(): ?int

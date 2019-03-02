@@ -66,7 +66,7 @@ class PresentationContext implements Context
         // reload entity as it has been changed
         $this->entityManager->refresh($screen);
 
-        $diff = abs((new \DateTime())->getTimestamp() - $screen->getLastConnect()->getTimestamp());
+        $diff = \abs((new \DateTime())->getTimestamp() - $screen->getLastConnect()->getTimestamp());
         Assert::lessThan($diff, 5);
     }
 }
