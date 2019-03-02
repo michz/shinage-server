@@ -10,7 +10,6 @@ namespace App\Entity;
 use App\UserType;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
-use Doctrine\ORM\EntityManagerInterface;
 use FOS\UserBundle\Model\User as BaseUser;
 use Scheb\TwoFactorBundle\Model\BackupCodeInterface;
 use Scheb\TwoFactorBundle\Model\Email\TwoFactorInterface as TwoFactorEmailInterface;
@@ -109,37 +108,6 @@ class User extends BaseUser implements TwoFactorEmailInterface, TwoFactorGoogleI
         }
 
         return false;
-    }
-
-    /**
-     * @return PresentationInterface[]|array
-     *
-     * @deprecated
-     *
-     * @TODO Move this to own service. Entity should be thin.
-     */
-    public function getPresentations(EntityManagerInterface $em): array
-    {
-        // @TODO Remove from here and move to own service
-        $user = $this;
-        $rep = $em->getRepository('App:Presentation');
-        $pres = [];
-
-        $pres_user = $rep->findBy(['owner' => $user]);
-
-        foreach ($pres_user as $p) {
-            $pres['me'][] = $p;
-        }
-
-        $orgas = $user->getOrganizations();
-        foreach ($orgas as $orga) { /** @var User $orga */
-            $pres_orga = $rep->findBy(['owner' => $orga]);
-            foreach ($pres_orga as $p) {
-                $pres[$orga->getName()][] = $p;
-            }
-        }
-
-        return $pres;
     }
 
     public static function generateToken(): string

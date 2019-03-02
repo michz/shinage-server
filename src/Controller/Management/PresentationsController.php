@@ -11,6 +11,7 @@ use App\Entity\Presentation;
 use App\Entity\PresentationInterface;
 use App\Entity\User;
 use App\Presentation\PresentationTypeRegistryInterface;
+use App\Repository\PresentationsRepository;
 use App\Service\SchedulerService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -23,7 +24,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
-use Symfony\Component\Translation\TranslatorInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 class PresentationsController extends AbstractController
 {
@@ -45,13 +46,17 @@ class PresentationsController extends AbstractController
     /** @var FormFactoryInterface */
     private $formFactory;
 
+    /** @var PresentationsRepository */
+    private $presentationsRepository;
+
     public function __construct(
         PresentationTypeRegistryInterface $presentationTypeRegistry,
         SchedulerService $scheduler,
         TokenStorageInterface $tokenStorage,
         TranslatorInterface $translator,
         EntityManagerInterface $entityManager,
-        FormFactoryInterface $formFactory
+        FormFactoryInterface $formFactory,
+        PresentationsRepository $presentationsRepository
     ) {
         $this->presentationTypeRegistry = $presentationTypeRegistry;
         $this->scheduler = $scheduler;
@@ -59,6 +64,7 @@ class PresentationsController extends AbstractController
         $this->translator = $translator;
         $this->entityManager = $entityManager;
         $this->formFactory = $formFactory;
+        $this->presentationsRepository = $presentationsRepository;
     }
 
     public function managePresentationsAction(): Response
@@ -66,10 +72,10 @@ class PresentationsController extends AbstractController
         // @TODO Security
         $user = $this->tokenStorage->getToken()->getUser();
 
-        $pres = $this->getPresentationsForUser($user);
+        $presentations = $this->presentationsRepository->getPresentationsForsUser($user);
 
         return $this->render('manage/presentations/pres-main.html.twig', [
-            'presentations' => $pres,
+            'presentations' => $presentations,
         ]);
     }
 
@@ -175,14 +181,6 @@ class PresentationsController extends AbstractController
     }
 
     /**
-     * @return array|PresentationInterface[]
-     */
-    public function getPresentationsForUser(User $user): array
-    {
-        return $user->getPresentations($this->entityManager);
-    }
-
-    /**
      * @param array|string[] $types
      *
      * @return array|string[]
@@ -190,7 +188,7 @@ class PresentationsController extends AbstractController
     protected function getTypeChoices(array $types): array
     {
         $ret = [];
-        foreach (array_keys($types) as $type) {
+        foreach (\array_keys($types) as $type) {
             $ret[$type] = $type;
         }
 
