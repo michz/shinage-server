@@ -6,3 +6,14 @@ Saving...: Speichern...
 2fa_totp_deactivated_successfully: Zweifaktor-Authentifizierung mittels TOTP wurde erfolgreich deaktiviert.
 2fa_mail_activated_successfully: Zweifaktor-Authentifizierung mittels E-Mail wurde erfolgreich aktiviert.
 2fa_mail_deactivated_successfully: Zweifaktor-Authentifizierung mittels E-Mail wurde erfolgreich deaktiviert.
+
+registration:
+  success: |
+    Willkommen! Bitte bestätige nun deine E-Mail-Adresse.
+    Dazu haben wir dir eine E-Mail geschickt, in der du auf den Link klicken musst.
+    Anschließend kannst du dich hier einloggen.
+  failed: Die Registrierung war leider nicht möglich. Vielleicht war eine der Eingaben nicht korrekt?
+  mail_already_in_use: Die genannte E-Mail-Adresse wird leider bereits genutzt. Bitte verwende eine andere oder nutze die Passwort-vergessen-Funktion.
+  confirmation:
+    code_not_found: Zu dem Bestätigungscode konnte leider kein Benutzer gefunden werden.
+    success: Vielen Dank! Dein Konto ist nun freigeschaltet und du kannst dich einloggen.

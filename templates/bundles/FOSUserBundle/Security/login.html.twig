@@ -1,10 +1,8 @@
 {% extends "@FOSUser/layout.html.twig" %}
 
-
 {% block fos_user_content %}
     <h3 class="ui top attached block header">
-        {# @TODO use translatable #}
-        Einloggen
+        {{ 'Login'|trans }}
     </h3>
 
     <div class="ui bottom attached segment">

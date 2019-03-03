@@ -2,7 +2,14 @@ registration:
   path: /
   controller: App\Controller\Security\RegistrationController:indexAction
 
-
 registration-confirm:
   path: /confirm/{confirmationToken}
   controller: App\Controller\Security\RegistrationController:confirmAction
+
+fos_user_registration_check_email:
+  path: /check-email
+  controller: fos_user.registration.controller:checkEmailAction
+
+fos_user_registration_confirmed:
+  path: /confirmed
+  controller: fos_user.registration.controller:confirmedAction
