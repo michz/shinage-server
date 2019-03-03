@@ -5,7 +5,10 @@
         {{ 'Login'|trans }}
     </h3>
 
-    <div class="ui bottom attached segment">
+    <div class="ui middle attached segment">
         {{ include('@FOSUser/Security/login_content.html.twig') }}
+    </div>
+    <div class="ui bottom attached segment">
+        <a href="{{ path('fos_user_resetting_request') }}">{{ 'Forgot password'|trans }}</a>
     </div>
 {% endblock fos_user_content %}
