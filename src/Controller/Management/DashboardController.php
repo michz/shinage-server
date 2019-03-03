@@ -10,31 +10,31 @@ namespace App\Controller\Management;
 use App\Entity\Screen;
 use App\Exceptions\NoScreenGivenException;
 use App\Repository\ScreenRepository;
+use App\Security\LoggedInUserRepositoryInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 class DashboardController extends AbstractController
 {
     /** @var ScreenRepository */
     private $screenRepository;
 
-    /** @var TokenStorageInterface */
-    private $tokenStorage;
+    /** @var LoggedInUserRepositoryInterface */
+    private $loggedInUserRepository;
 
     public function __construct(
         ScreenRepository $screenRepository,
-        TokenStorageInterface $tokenStorage
+        LoggedInUserRepositoryInterface $loggedInUserRepository
     ) {
         $this->screenRepository = $screenRepository;
-        $this->tokenStorage = $tokenStorage;
+        $this->loggedInUserRepository = $loggedInUserRepository;
     }
 
     public function dashboardAction(): Response
     {
         // user that is logged in
-        $user = $this->tokenStorage->getToken()->getUser();
+        $user = $this->loggedInUserRepository->getLoggedInUserOrDenyAccess();
 
         // screens that are associated to the user or to its organizations
         $screens = $this->screenRepository->getScreensForUser($user);

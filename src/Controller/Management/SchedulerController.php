@@ -12,6 +12,7 @@ use App\Entity\ScheduledPresentation;
 use App\Entity\Screen;
 use App\Repository\PresentationsRepository;
 use App\Repository\ScreenRepository;
+use App\Security\LoggedInUserRepositoryInterface;
 use App\Service\ScheduleCollisionHandlerInterface;
 use Doctrine\ORM\EntityManagerInterface;
 use JMS\Serializer\SerializationContext;
@@ -19,15 +20,11 @@ use JMS\Serializer\SerializerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 class SchedulerController extends AbstractController
 {
     /** @var EntityManagerInterface */
     private $entityManager;
-
-    /** @var TokenStorageInterface */
-    private $tokenStorage;
 
     /** @var ScreenRepository */
     private $screenRepository;
@@ -41,26 +38,29 @@ class SchedulerController extends AbstractController
     /** @var PresentationsRepository */
     private $presentationsRepository;
 
+    /** @var LoggedInUserRepositoryInterface */
+    private $loggedInUserRepository;
+
     public function __construct(
         EntityManagerInterface $entityManager,
-        TokenStorageInterface $tokenStorage,
         ScreenRepository $screenRepository,
         SerializerInterface $serializer,
         ScheduleCollisionHandlerInterface $collisionHandler,
-        PresentationsRepository $presentationsRepository
+        PresentationsRepository $presentationsRepository,
+        LoggedInUserRepositoryInterface $loggedInUserRepository
     ) {
         $this->entityManager = $entityManager;
-        $this->tokenStorage = $tokenStorage;
         $this->screenRepository = $screenRepository;
         $this->serializer = $serializer;
         $this->collisionHandler = $collisionHandler;
         $this->presentationsRepository = $presentationsRepository;
+        $this->loggedInUserRepository = $loggedInUserRepository;
     }
 
     public function schedulerAction(): Response
     {
         // user that is logged in
-        $user = $this->tokenStorage->getToken()->getUser();
+        $user = $this->loggedInUserRepository->getLoggedInUserOrDenyAccess();
 
         // screens that are associated to the user or to its organizations
         $screens = $this->screenRepository->getScreensForUser($user);

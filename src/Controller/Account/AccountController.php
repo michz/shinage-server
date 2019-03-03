@@ -10,6 +10,7 @@ namespace App\Controller\Account;
 use App\Entity\Api\AccessKey;
 use App\Entity\User;
 use App\Form\ApiKeyForm;
+use App\Security\LoggedInUserRepositoryInterface;
 use App\UserType;
 use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
 use Doctrine\ORM\EntityManagerInterface;
@@ -27,7 +28,6 @@ use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Encoder\EncoderFactoryInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
@@ -35,9 +35,6 @@ class AccountController extends AbstractController
 {
     /** @var EntityManagerInterface */
     private $entityManager;
-
-    /** @var TokenStorageInterface */
-    private $tokenStorage;
 
     /** @var UserManagerInterface */
     private $userManager;
@@ -51,20 +48,23 @@ class AccountController extends AbstractController
     /** @var EncoderFactoryInterface */
     private $encoderFactory;
 
+    /** @var LoggedInUserRepositoryInterface */
+    private $loggedInUserRepository;
+
     public function __construct(
         EntityManagerInterface $entityManager,
-        TokenStorageInterface $tokenStorage,
         UserManagerInterface $userManager,
         TranslatorInterface $translator,
         FormFactoryInterface $formFactory,
-        EncoderFactoryInterface $encoderFactory
+        EncoderFactoryInterface $encoderFactory,
+        LoggedInUserRepositoryInterface $loggedInUserRepository
     ) {
         $this->entityManager = $entityManager;
-        $this->tokenStorage = $tokenStorage;
         $this->userManager = $userManager;
         $this->translator = $translator;
         $this->formFactory = $formFactory;
         $this->encoderFactory = $encoderFactory;
+        $this->loggedInUserRepository = $loggedInUserRepository;
     }
 
     public function indexAction(): RedirectResponse
@@ -75,7 +75,7 @@ class AccountController extends AbstractController
     public function editAction(Request $request): Response
     {
         /** @var User $user */
-        $user = $this->tokenStorage->getToken()->getUser();
+        $user = $this->loggedInUserRepository->getLoggedInUserOrDenyAccess();
 
         $form = $this->formFactory->createNamedBuilder('form1name', FormType::class, $user)
             ->add('email', EmailType::class)
@@ -172,8 +172,7 @@ class AccountController extends AbstractController
 
     public function orgaAction(Request $request): Response
     {
-        /** @var User $user */
-        $user = $this->tokenStorage->getToken()->getUser();
+        $user = $this->loggedInUserRepository->getLoggedInUserOrDenyAccess();
 
         $orga_new = new User();
         $orga_new->setUserType(UserType::USER_TYPE_ORGA);
@@ -219,8 +218,7 @@ class AccountController extends AbstractController
 
     public function orgaLeaveAction(int $id): RedirectResponse
     {
-        /** @var User $user */
-        $user = $this->tokenStorage->getToken()->getUser();
+        $user = $this->loggedInUserRepository->getLoggedInUserOrDenyAccess();
 
         $organization = $this->entityManager->find(User::class, $id);
         $user->removeOrganization($organization);
@@ -233,9 +231,8 @@ class AccountController extends AbstractController
 
     public function orgaAddUserAction(Request $request): RedirectResponse
     {
-        /** @var User $user */
         /** @var User $user_new */
-        $user = $this->tokenStorage->getToken()->getUser();
+        $user = $this->loggedInUserRepository->getLoggedInUserOrDenyAccess();
         $rep = $this->entityManager->getRepository('App:User');
         $user_new = $rep->findOneBy(['email' => $request->get('email')]);
         $orga = $this->entityManager->find(User::class, $request->get('organization'));
@@ -274,8 +271,7 @@ class AccountController extends AbstractController
         int $orga_id,
         int $user_id
     ): RedirectResponse {
-        /** @var User $user */
-        $user = $this->tokenStorage->getToken()->getUser();
+        $user = $this->loggedInUserRepository->getLoggedInUserOrDenyAccess();
 
         $organization = $this->entityManager->find(User::class, $orga_id);
         $user_other = $this->entityManager->find(User::class, $user_id);
@@ -297,8 +293,7 @@ class AccountController extends AbstractController
 
     public function deleteApiKeyAction(Request $request, int $id): RedirectResponse
     {
-        /** @var User $user */
-        $user = $this->tokenStorage->getToken()->getUser();
+        $user = $this->loggedInUserRepository->getLoggedInUserOrDenyAccess();
 
         $key = $this->entityManager->find('App:Api\AccessKey', $id);
         if ($key->getOwner() === $user || $user->getOrganizations()->contains($key->getOwner())) {

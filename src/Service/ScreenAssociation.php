@@ -11,20 +11,16 @@ use App\Entity\Screen;
 use App\Entity\ScreenAssociation as ScreenAssociationEntity;
 use App\Entity\User;
 use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 class ScreenAssociation
 {
     /** @var EntityManagerInterface */
     protected $entityManager;
 
-    /** @var TokenStorageInterface */
-    protected $tokenStorage;
-
-    public function __construct(EntityManagerInterface $em, TokenStorageInterface $tokenStorage)
-    {
-        $this->entityManager = $em;
-        $this->tokenStorage = $tokenStorage;
+    public function __construct(
+        EntityManagerInterface $entityManager
+    ) {
+        $this->entityManager = $entityManager;
     }
 
     public function isUserAllowed(Screen $screen, User $user): bool

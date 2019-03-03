@@ -11,6 +11,7 @@ use App\Entity\Presentation;
 use App\Entity\Screen;
 use App\Entity\User;
 use App\Repository\PresentationsRepository;
+use App\Security\LoggedInUserRepositoryInterface;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -19,7 +20,6 @@ use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 class ScreenDataController extends AbstractController
@@ -30,17 +30,17 @@ class ScreenDataController extends AbstractController
     /** @var PresentationsRepository */
     private $presentationsRepository;
 
-    /** @var TokenStorageInterface */
-    private $tokenStorage;
+    /** @var LoggedInUserRepositoryInterface */
+    private $loggedInUserRepository;
 
     public function __construct(
         EntityManagerInterface $entityManager,
         PresentationsRepository $presentationsRepository,
-        TokenStorageInterface $tokenStorage
+        LoggedInUserRepositoryInterface $loggedInUserRepository
     ) {
         $this->entityManager = $entityManager;
         $this->presentationsRepository = $presentationsRepository;
-        $this->tokenStorage = $tokenStorage;
+        $this->loggedInUserRepository = $loggedInUserRepository;
     }
 
     public function indexAction(Request $request, string $guid): Response
@@ -94,7 +94,7 @@ class ScreenDataController extends AbstractController
      */
     private function getPresentationsChoices(): array
     {
-        $user = $this->tokenStorage->getToken()->getUser();
+        $user = $this->loggedInUserRepository->getLoggedInUserOrDenyAccess();
         if (false === $user instanceof User) {
             throw new AccessDeniedException(
                 'Presentations of user could not be fetched as no valid user was found in session.'

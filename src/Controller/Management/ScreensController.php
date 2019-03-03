@@ -13,6 +13,7 @@ use App\Entity\ScreenAssociation as ScreenAssociationEntity;
 use App\Entity\User;
 use App\Form\CreateVirtualScreenForm;
 use App\Repository\ScreenRepository;
+use App\Security\LoggedInUserRepositoryInterface;
 use App\Service\SchedulerService;
 use App\Service\ScreenAssociation;
 use Doctrine\ORM\EntityManagerInterface;
@@ -23,15 +24,11 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Routing\RouterInterface;
-use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 class ScreensController extends AbstractController
 {
     /** @var EntityManagerInterface */
     private $entityManager;
-
-    /** @var TokenStorageInterface */
-    private $tokenStorage;
 
     /** @var SchedulerService */
     private $scheduler;
@@ -45,26 +42,28 @@ class ScreensController extends AbstractController
     /** @var RouterInterface */
     private $router;
 
+    /** @var LoggedInUserRepositoryInterface */
+    private $loggedInUserRepository;
+
     public function __construct(
         EntityManagerInterface $entityManager,
-        TokenStorageInterface $tokenStorage,
         SchedulerService $scheduler,
         ScreenRepository $screenRepository,
         ScreenAssociation $screenAssociation,
-        RouterInterface $router
+        RouterInterface $router,
+        LoggedInUserRepositoryInterface $loggedInUserRepository
     ) {
         $this->entityManager = $entityManager;
-        $this->tokenStorage = $tokenStorage;
         $this->scheduler = $scheduler;
         $this->screenRepository = $screenRepository;
         $this->screenAssociation = $screenAssociation;
         $this->router = $router;
+        $this->loggedInUserRepository = $loggedInUserRepository;
     }
 
     public function indexAction(Request $request): Response
     {
-        /** @var User $user user that is logged in */
-        $user = $this->tokenStorage->getToken()->getUser();
+        $user = $this->loggedInUserRepository->getLoggedInUserOrDenyAccess();
 
         // @TODO{s:5} Standardpräsentation pro Screen einstellen
 
@@ -112,7 +111,7 @@ class ScreensController extends AbstractController
 
     public function connectAction(Request $request): RedirectResponse
     {
-        $user = $this->tokenStorage->getToken()->getUser();
+        $user = $this->loggedInUserRepository->getLoggedInUserOrDenyAccess();
         $rep = $this->entityManager->getRepository('App:Screen');
 
         $code   = $request->get('connect_code');
@@ -120,11 +119,13 @@ class ScreensController extends AbstractController
 
         $screens = $rep->findBy(['connect_code' => $code]);
         if (0 === \count($screens)) {
+            // @TODO Translate
             $this->addFlash('error', 'Die Anzeige konnte leider nicht hinzugefügt werden.');
             return $this->redirectToRoute('management-screens');
         }
 
-        $screen = $screens[0]; /* @var Screen $screen */
+        /* @var Screen $screen */
+        $screen = $screens[0];
 
         $screen->setConnectCode('');
         $this->entityManager->persist($screen);
@@ -143,19 +144,11 @@ class ScreensController extends AbstractController
         $this->entityManager->persist($assoc);
         $this->entityManager->flush();
 
+        // @TODO translate
         $this->addFlash('success', 'Die Anzeige wurde erfolgreich hinzugefügt.');
         return $this->redirectToRoute('management-screens');
     }
 
-    /**
-     * Handles the create-form submission.
-     *
-     * @throws \InvalidArgumentException
-     * @throws \OutOfBoundsException
-     * @throws \LogicException
-     * @throws \Doctrine\ORM\ORMInvalidArgumentException
-     * @throws \Doctrine\ORM\OptimisticLockException
-     */
     protected function handleCreateVirtualScreen(Request $request, Form $createForm): void
     {
         if ('POST' !== $request->getMethod() || !$request->request->has($createForm->getName())) {
@@ -184,6 +177,7 @@ class ScreensController extends AbstractController
             ['schedule', 'manage', 'view_screenshot']
         );
 
+        // @TODO translate
         $this->addFlash('success', 'Die virtuelle Anzeige wurde erstellt.');
     }
 }

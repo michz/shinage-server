@@ -8,7 +8,7 @@ declare(strict_types=1);
 namespace App\Controller\Api\v1;
 
 use App\Controller\Api\Exception\AccessDeniedException;
-use App\Entity\User;
+use App\Security\LoggedInUserRepositoryInterface;
 use App\Service\FilePoolPermissionCheckerInterface;
 use App\Service\Pool\VirtualPathResolverInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -18,18 +18,17 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
-use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 class FilesController extends AbstractController
 {
     /** @var FilePoolPermissionCheckerInterface */
     private $filePoolPermissionChecker;
 
-    /** @var TokenStorageInterface */
-    private $tokenStorage;
-
     /** @var VirtualPathResolverInterface */
     private $virtualPathResolver;
+
+    /** @var LoggedInUserRepositoryInterface */
+    private $loggedInUserRepository;
 
     /** @var string */
     private $filePoolBasePath;
@@ -38,13 +37,13 @@ class FilesController extends AbstractController
 
     public function __construct(
         FilePoolPermissionCheckerInterface $filePoolPermissionChecker,
-        TokenStorageInterface $tokenStorage,
         VirtualPathResolverInterface $virtualPathResolver,
+        LoggedInUserRepositoryInterface $loggedInUserRepository,
         string $filePoolBasePath
     ) {
         $this->filePoolPermissionChecker = $filePoolPermissionChecker;
-        $this->tokenStorage = $tokenStorage;
         $this->virtualPathResolver = $virtualPathResolver;
+        $this->loggedInUserRepository = $loggedInUserRepository;
         $this->filePoolBasePath = $filePoolBasePath;
     }
 
@@ -157,11 +156,7 @@ class FilesController extends AbstractController
 
     private function checkPathPermissions(string $path): void
     {
-        /** @var User $user */
-        $user = $this->tokenStorage->getToken()->getUser();
-        if (false === \is_a($user, User::class)) {
-            throw new AccessDeniedException('Not logged in.');
-        }
+        $user = $this->loggedInUserRepository->getLoggedInUserOrDenyAccess();
 
         if (false === $this->filePoolPermissionChecker->mayUserAccessPath($user, $path)) {
             throw new AccessDeniedException();

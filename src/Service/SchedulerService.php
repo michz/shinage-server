@@ -12,27 +12,20 @@ use App\Entity\PresentationInterface;
 use App\Entity\ScheduledPresentation;
 use App\Entity\Screen;
 use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 class SchedulerService
 {
     /** @var EntityManagerInterface */
-    protected $em;
+    protected $entityManager;
 
-    /** @var TokenStorageInterface */
-    protected $tokenStorage;
-
-    public function __construct(EntityManagerInterface $em, TokenStorageInterface $tokenStorage)
+    public function __construct(EntityManagerInterface $entityManager)
     {
-        $this->em = $em;
-        $this->tokenStorage = $tokenStorage;
+        $this->entityManager = $entityManager;
     }
 
     public function getCurrentPresentation(Screen $screen, bool $fallbackToDefault = true): ?PresentationInterface
     {
-        $em = $this->em;
-
-        $query = $em->createQuery(
+        $query = $this->entityManager->createQuery(
             'SELECT p
                     FROM App:ScheduledPresentation p
                     WHERE
@@ -81,11 +74,11 @@ class SchedulerService
      */
     public function deleteAllScheduledPresentationsForPresentation(PresentationInterface $presentation): void
     {
-        $q = $this->em->createQuery(
+        $q = $this->entityManager->createQuery(
             'delete from App:ScheduledPresentation p where p.presentation = :presentation'
         );
         $q->setParameter('presentation', $presentation);
         $q->execute();
-        $this->em->flush();
+        $this->entityManager->flush();
     }
 }
