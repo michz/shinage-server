@@ -26,9 +26,13 @@ shinage_register:
 _fos_user_security:
   resource: "@FOSUserBundle/Resources/config/routing/security.xml"
 
-_fos_user_profile:
-  prefix: /profile
-  resource: "@FOSUserBundle/Resources/config/routing/profile.xml"
+fos_user_profile_show:
+  path: /profile
+  controller: Symfony\Bundle\FrameworkBundle\Controller\RedirectController::redirectAction
+  defaults:
+    route: management-dashboard
+    permanent: false
+    keepQueryParams: false
 
 _fos_user_resetting:
   prefix: /resetting
