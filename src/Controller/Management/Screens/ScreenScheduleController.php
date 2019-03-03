@@ -8,6 +8,7 @@ declare(strict_types=1);
 namespace App\Controller\Management\Screens;
 
 use App\Entity\Screen;
+use App\Repository\PresentationsRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
@@ -21,12 +22,17 @@ class ScreenScheduleController extends AbstractController
     /** @var TokenStorageInterface */
     private $tokenStorage;
 
+    /** @var PresentationsRepository */
+    private $presentationsRepository;
+
     public function __construct(
         EntityManagerInterface $entityManager,
-        TokenStorageInterface $tokenStorage
+        TokenStorageInterface $tokenStorage,
+        PresentationsRepository $presentationsRepository
     ) {
         $this->entityManager = $entityManager;
         $this->tokenStorage = $tokenStorage;
+        $this->presentationsRepository = $presentationsRepository;
     }
 
     public function indexAction(string $guid): Response
@@ -36,7 +42,7 @@ class ScreenScheduleController extends AbstractController
 
         return $this->render('manage/screens/schedule.html.twig', [
             'screen' => $screen,
-            'presentations' => $user->getPresentations($this->entityManager),
+            'presentations' => $this->presentationsRepository->getPresentationsForsUser($user),
         ]);
     }
 }

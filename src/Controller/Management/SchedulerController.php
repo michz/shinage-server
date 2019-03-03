@@ -10,9 +10,10 @@ namespace App\Controller\Management;
 use App\Entity\Presentation;
 use App\Entity\ScheduledPresentation;
 use App\Entity\Screen;
+use App\Repository\PresentationsRepository;
 use App\Repository\ScreenRepository;
 use App\Service\ScheduleCollisionHandlerInterface;
-use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\EntityManagerInterface;
 use JMS\Serializer\SerializationContext;
 use JMS\Serializer\SerializerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -22,6 +23,9 @@ use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInt
 
 class SchedulerController extends AbstractController
 {
+    /** @var EntityManagerInterface */
+    private $entityManager;
+
     /** @var TokenStorageInterface */
     private $tokenStorage;
 
@@ -34,23 +38,29 @@ class SchedulerController extends AbstractController
     /** @var ScheduleCollisionHandlerInterface */
     private $collisionHandler;
 
+    /** @var PresentationsRepository */
+    private $presentationsRepository;
+
     public function __construct(
+        EntityManagerInterface $entityManager,
         TokenStorageInterface $tokenStorage,
         ScreenRepository $screenRepository,
         SerializerInterface $serializer,
-        ScheduleCollisionHandlerInterface $collisionHandler
+        ScheduleCollisionHandlerInterface $collisionHandler,
+        PresentationsRepository $presentationsRepository
     ) {
+        $this->entityManager = $entityManager;
         $this->tokenStorage = $tokenStorage;
         $this->screenRepository = $screenRepository;
         $this->serializer = $serializer;
         $this->collisionHandler = $collisionHandler;
+        $this->presentationsRepository = $presentationsRepository;
     }
 
     public function schedulerAction(): Response
     {
         // user that is logged in
         $user = $this->tokenStorage->getToken()->getUser();
-        $em = $this->getDoctrine()->getManager();
 
         // screens that are associated to the user or to its organizations
         $screens = $this->screenRepository->getScreensForUser($user);
@@ -66,15 +76,14 @@ class SchedulerController extends AbstractController
         return $this->render('manage/schedule.html.twig', [
             'screens' => $screens,
             'screens_count' => $count,
-            'presentations' => $user->getPresentations($em),
+            'presentations' => $this->presentationsRepository->getPresentationsForsUser($user),
         ]);
     }
 
     public function getScheduleAction(Request $request): Response
     {
         $guid = $request->get('screen');
-        $em = $this->getDoctrine()->getManager();
-        $screen = $em->find(Screen::class, $guid);
+        $screen = $this->entityManager->find(Screen::class, $guid);
 
         // parse start and end time
         $start = new \DateTime($request->get('start'), new \DateTimeZone('UTC'));
@@ -88,7 +97,7 @@ class SchedulerController extends AbstractController
             $sf = $start->format('Y-m-d H:i:s');
             $su = $end->format('Y-m-d H:i:s');
 
-            $query = $em->createQuery(
+            $query = $this->entityManager->createQuery(
                 'SELECT p
                     FROM App:ScheduledPresentation p
                     WHERE
@@ -116,8 +125,7 @@ class SchedulerController extends AbstractController
     public function addScheduledAction(Request $request): Response
     {
         $guid   = $request->get('screen');
-        $em     = $this->getDoctrine()->getManager();
-        $screen = $em->find(Screen::class, $guid);
+        $screen = $this->entityManager->find(Screen::class, $guid);
 
         // Check if user is allowed to see/edit screen
         $this->denyAccessUnlessGranted('schedule', $screen);
@@ -126,7 +134,7 @@ class SchedulerController extends AbstractController
         $end    = new \DateTime($request->get('end'), new \DateTimeZone('UTC'));
 
         $pres_id = $request->get('presentation');
-        $pres   = $em->find(Presentation::class, $pres_id);
+        $pres   = $this->entityManager->find(Presentation::class, $pres_id);
 
         $s = new ScheduledPresentation();
         $s->setScheduledStart($start);
@@ -134,26 +142,25 @@ class SchedulerController extends AbstractController
         $s->setScreen($screen);
         $s->setPresentation($pres);
 
-        $em->persist($s);
-        $em->flush(); // just for sure
+        $this->entityManager->persist($s);
+        $this->entityManager->flush(); // just for sure
 
         $this->collisionHandler->handleCollisions($s);
-        $em->flush();
+        $this->entityManager->flush();
 
         return $this->json(['status' => 'ok']);
     }
 
     public function changeScheduledAction(Request $request): Response
     {
-        $em = $this->getDoctrine()->getManager(); /** @var EntityManager $em */
         $id = $request->get('id');
 
         $start  = new \DateTime($request->get('start'), new \DateTimeZone('UTC'));
         $end    = new \DateTime($request->get('end'), new \DateTimeZone('UTC'));
         $guid   = $request->get('screen');
-        $screen = $em->find(Screen::class, $guid);
+        $screen = $this->entityManager->find(Screen::class, $guid);
         /** @var ScheduledPresentation $s */
-        $s      = $em->find(ScheduledPresentation::class, $id);
+        $s      = $this->entityManager->find(ScheduledPresentation::class, $id);
 
         // Check if user is allowed to see/edit screen
         $this->denyAccessUnlessGranted('schedule', $screen);
@@ -162,11 +169,11 @@ class SchedulerController extends AbstractController
         $s->setScheduledEnd($end);
         $s->setScreen($screen);
 
-        $em->persist($s);
-        $em->flush(); // just for sure
+        $this->entityManager->persist($s);
+        $this->entityManager->flush(); // just for sure
 
         $this->collisionHandler->handleCollisions($s);
-        $em->flush();
+        $this->entityManager->flush();
 
         return $this->json(['status' => 'ok']);
     }
@@ -174,17 +181,16 @@ class SchedulerController extends AbstractController
     public function deleteScheduledAction(Request $request): Response
     {
         $id = $request->get('id');
-        $em = $this->getDoctrine()->getManager(); /** @var EntityManager $em */
 
         /** @var ScheduledPresentation $s */
-        $s = $em->find(ScheduledPresentation::class, $id);
+        $s = $this->entityManager->find(ScheduledPresentation::class, $id);
         $screen = $s->getScreen();
 
         // Check if user is allowed to see/edit screen
         $this->denyAccessUnlessGranted('schedule', $screen);
 
-        $em->remove($s);
-        $em->flush();
+        $this->entityManager->remove($s);
+        $this->entityManager->flush();
 
         return $this->json(['status' => 'ok']);
     }
