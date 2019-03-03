@@ -17,4 +17,4 @@
       And I fill the field "_password" with "test2password"
       And I click on the button "_submit"
       Then I should be on page "/login" again
-      And I should see an error flash message
+      And I should see an error message

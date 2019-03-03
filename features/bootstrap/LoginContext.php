@@ -105,11 +105,11 @@ class LoginContext extends \Behat\MinkExtension\Context\RawMinkContext
     }
 
     /**
-     * @Given /^I should see an error flash message$/
+     * @Given /^I should see an error message$/
      */
-    public function iShouldSeeAnErrorFlashMessage(): void
+    public function iShouldSeeAnErrorMessage(): void
     {
-        $elem = $this->getSession()->getPage()->find('css', '.flash-error');
+        $elem = $this->getSession()->getPage()->find('css', '.negative.message');
         if (null === $elem) {
             throw new \Exception('I cannot see error message.');
         }
