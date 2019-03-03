@@ -9,8 +9,9 @@ namespace App\Controller\Management;
 
 use App\Entity\Presentation;
 use App\Entity\PresentationInterface;
-use App\Entity\User;
 use App\Presentation\PresentationTypeRegistryInterface;
+use App\Repository\PresentationsRepository;
+use App\Security\LoggedInUserRepositoryInterface;
 use App\Service\SchedulerService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -21,9 +22,8 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
-use Symfony\Component\Translation\TranslatorInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 class PresentationsController extends AbstractController
 {
@@ -32,9 +32,6 @@ class PresentationsController extends AbstractController
 
     /** @var SchedulerService */
     private $scheduler;
-
-    /** @var TokenStorageInterface */
-    private $tokenStorage;
 
     /** @var TranslatorInterface */
     private $translator;
@@ -45,37 +42,43 @@ class PresentationsController extends AbstractController
     /** @var FormFactoryInterface */
     private $formFactory;
 
+    /** @var PresentationsRepository */
+    private $presentationsRepository;
+
+    /** @var LoggedInUserRepositoryInterface */
+    private $loggedInUserRepository;
+
     public function __construct(
         PresentationTypeRegistryInterface $presentationTypeRegistry,
         SchedulerService $scheduler,
-        TokenStorageInterface $tokenStorage,
         TranslatorInterface $translator,
         EntityManagerInterface $entityManager,
-        FormFactoryInterface $formFactory
+        FormFactoryInterface $formFactory,
+        PresentationsRepository $presentationsRepository,
+        LoggedInUserRepositoryInterface $loggedInUserRepository
     ) {
         $this->presentationTypeRegistry = $presentationTypeRegistry;
         $this->scheduler = $scheduler;
-        $this->tokenStorage = $tokenStorage;
         $this->translator = $translator;
         $this->entityManager = $entityManager;
         $this->formFactory = $formFactory;
+        $this->presentationsRepository = $presentationsRepository;
+        $this->loggedInUserRepository = $loggedInUserRepository;
     }
 
     public function managePresentationsAction(): Response
     {
-        // @TODO Security
-        $user = $this->tokenStorage->getToken()->getUser();
-
-        $pres = $this->getPresentationsForUser($user);
+        $user = $this->loggedInUserRepository->getLoggedInUserOrDenyAccess();
+        $presentations = $this->presentationsRepository->getPresentationsForsUser($user);
 
         return $this->render('manage/presentations/pres-main.html.twig', [
-            'presentations' => $pres,
+            'presentations' => $presentations,
         ]);
     }
 
     public function createPresentationAction(Request $request): Response
     {
-        $user = $this->tokenStorage->getToken()->getUser();
+        $user = $this->loggedInUserRepository->getLoggedInUserOrDenyAccess();
 
         $presentation = new Presentation();
         $presentation->setType('slideshow');
@@ -110,9 +113,7 @@ class PresentationsController extends AbstractController
     {
         /** @var PresentationInterface $presentation */
         $presentation = $this->entityManager->find('App:Presentation', $presentationId);
-
-        /** @var User $user */
-        $user = $this->tokenStorage->getToken()->getUser();
+        $user = $this->loggedInUserRepository->getLoggedInUserOrDenyAccess();
         if (!$user->isPresentationAllowed($presentation)) {
             throw new AccessDeniedException('User is not allowed to access presentation.');
         }
@@ -134,7 +135,7 @@ class PresentationsController extends AbstractController
 
     public function savePresentationTitle(Request $request): Response
     {
-        $user = $this->tokenStorage->getToken()->getUser();
+        $user = $this->loggedInUserRepository->getLoggedInUserOrDenyAccess();
         $presentationId = $request->get('subject');
         $newTitle = $request->get('value');
 
@@ -147,7 +148,7 @@ class PresentationsController extends AbstractController
             return new Response('Only owner can edit title.', 403);
         }
 
-        $presentation->setTitle(trim($newTitle));
+        $presentation->setTitle(\trim($newTitle));
         $this->entityManager->flush();
 
         return new Response('', 204);
@@ -155,7 +156,7 @@ class PresentationsController extends AbstractController
 
     public function savePresentationNotes(Request $request): Response
     {
-        $user = $this->tokenStorage->getToken()->getUser();
+        $user = $this->loggedInUserRepository->getLoggedInUserOrDenyAccess();
         $presentationId = $request->get('subject');
         $newDescription = $request->get('value');
 
@@ -175,14 +176,6 @@ class PresentationsController extends AbstractController
     }
 
     /**
-     * @return array|PresentationInterface[]
-     */
-    public function getPresentationsForUser(User $user): array
-    {
-        return $user->getPresentations($this->entityManager);
-    }
-
-    /**
      * @param array|string[] $types
      *
      * @return array|string[]
@@ -190,7 +183,7 @@ class PresentationsController extends AbstractController
     protected function getTypeChoices(array $types): array
     {
         $ret = [];
-        foreach (array_keys($types) as $type) {
+        foreach (\array_keys($types) as $type) {
             $ret[$type] = $type;
         }
 

@@ -44,7 +44,7 @@ class ApiV1ClientContext implements Context
             'x-api-token' => $this->apiKey,
         ];
 
-        $headers = array_merge($defaultHeaders, $customHeaders);
+        $headers = \array_merge($defaultHeaders, $customHeaders);
 
         $client = new Client();
         $this->responseObject = $client->request(

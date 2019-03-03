@@ -8,6 +8,7 @@ declare(strict_types=1);
 namespace App\Controller\Account;
 
 use App\Entity\User;
+use App\Security\LoggedInUserRepositoryInterface;
 use Doctrine\ORM\EntityManagerInterface;
 use Scheb\TwoFactorBundle\Security\TwoFactor\Provider\Google\GoogleAuthenticatorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -17,7 +18,6 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
-use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 class SecurityController extends AbstractController
 {
@@ -27,31 +27,30 @@ class SecurityController extends AbstractController
     /** @var EntityManagerInterface */
     private $entityManager;
 
-    /** @var TokenStorageInterface */
-    private $tokenStorage;
-
     /** @var GoogleAuthenticatorInterface */
     private $googleAuthenticatorTwoFactorProvider;
 
     /** @var SessionInterface */
     private $session;
 
+    /** @var LoggedInUserRepositoryInterface */
+    private $loggedInUserRepository;
+
     public function __construct(
         EntityManagerInterface $entityManager,
-        TokenStorageInterface $tokenStorage,
         GoogleAuthenticatorInterface $googleAuthenticatorTwoFactorProvider,
-        SessionInterface $session
+        SessionInterface $session,
+        LoggedInUserRepositoryInterface $loggedInUserRepository
     ) {
         $this->entityManager = $entityManager;
-        $this->tokenStorage = $tokenStorage;
         $this->googleAuthenticatorTwoFactorProvider = $googleAuthenticatorTwoFactorProvider;
         $this->session = $session;
+        $this->loggedInUserRepository = $loggedInUserRepository;
     }
 
     public function indexAction(): Response
     {
-        /** @var User $user */
-        $user = $this->tokenStorage->getToken()->getUser();
+        $user = $this->loggedInUserRepository->getLoggedInUserOrDenyAccess();
 
         return $this->render('account/security.html.twig', [
             'totp_enabled' => $user->isGoogleAuthenticatorEnabled(),
@@ -62,8 +61,7 @@ class SecurityController extends AbstractController
 
     public function disableTotpAuthAction(): Response
     {
-        /** @var User $user */
-        $user = $this->tokenStorage->getToken()->getUser();
+        $user = $this->loggedInUserRepository->getLoggedInUserOrDenyAccess();
         $user->setGoogleAuthenticatorSecret(null);
         $this->entityManager->flush();
 
@@ -73,8 +71,7 @@ class SecurityController extends AbstractController
 
     public function initTotpAuthAction(): Response
     {
-        /** @var User $user */
-        $user = $this->tokenStorage->getToken()->getUser();
+        $user = $this->loggedInUserRepository->getLoggedInUserOrDenyAccess();
 
         $initForm = $this->getInitTotpForm();
 
@@ -98,8 +95,7 @@ class SecurityController extends AbstractController
 
     public function completeTotpAuthAction(Request $request): Response
     {
-        /** @var User $user */
-        $user = $this->tokenStorage->getToken()->getUser();
+        $user = $this->loggedInUserRepository->getLoggedInUserOrDenyAccess();
 
         $newSecret = $this->session->get('newTotpSecret');
         if (null === $newSecret) {
@@ -157,8 +153,7 @@ class SecurityController extends AbstractController
 
     public function toggleMailAuthAction(Request $request): Response
     {
-        /** @var User $user */
-        $user = $this->tokenStorage->getToken()->getUser();
+        $user = $this->loggedInUserRepository->getLoggedInUserOrDenyAccess();
 
         if ($request->get('enable') && '1' === $request->get('enable')) {
             $user->setEmailAuthEnabled(true);
@@ -180,7 +175,7 @@ class SecurityController extends AbstractController
     {
         $flush = false;
         $backupCodes = $user->getBackupCodes() ?: [];
-        while (self::BACKUP_CODE_COUNT > count($backupCodes)) {
+        while (self::BACKUP_CODE_COUNT > \count($backupCodes)) {
             $flush = true;
             $backupCodes[] = $this->createRandomBackupCode(self::BACKUP_CODE_LENGTH);
         }

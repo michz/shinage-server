@@ -8,6 +8,7 @@ declare(strict_types=1);
 namespace App\Form\Type;
 
 use App\Entity\User;
+use App\Security\LoggedInUserRepositoryInterface;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
@@ -15,24 +16,25 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 // @TODO I think this can be refactored and simplified.
 class OwnerType extends AbstractType
 {
     /** @var EntityManagerInterface */
-    protected $em;
-
-    /** @var TokenStorageInterface */
-    protected $tokenStorage;
+    protected $entityManager;
 
     /** @var mixed */
     protected $entity;
 
-    public function __construct(EntityManagerInterface $em, TokenStorageInterface $tokenStorage)
-    {
-        $this->em = $em;
-        $this->tokenStorage = $tokenStorage;
+    /** @var LoggedInUserRepositoryInterface */
+    private $loggedInUserRepository;
+
+    public function __construct(
+        EntityManagerInterface $entityManager,
+        LoggedInUserRepositoryInterface $loggedInUserRepository
+    ) {
+        $this->entityManager = $entityManager;
+        $this->loggedInUserRepository = $loggedInUserRepository;
     }
 
     /**
@@ -59,7 +61,7 @@ class OwnerType extends AbstractType
                 FormEvents::SUBMIT,
                 function (FormEvent $event): void {
                     $entity = $this->entity;
-                    $entity->setOwner($this->em->find('App:User', (int) $event->getData()));
+                    $entity->setOwner($this->entityManager->find('App:User', (int) $event->getData()));
                 }
             );
         }
@@ -70,7 +72,7 @@ class OwnerType extends AbstractType
         // TODO{s:0} Unterscheiden ob Admin oder normaler Nutzer
         // normal user
         /** @var User $user */
-        $user = $this->tokenStorage->getToken()->getUser();
+        $user = $this->loggedInUserRepository->getLoggedInUserOrDenyAccess();
 
         $choices = ['me' => $user->getId()];
 

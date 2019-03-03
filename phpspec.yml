@@ -1,4 +1,4 @@
-formatter.name: pretty
+formatter.name: progress
 suites:
   shinage_server_suite:
     namespace: App

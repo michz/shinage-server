@@ -11,6 +11,6 @@ class PathConcatenator implements PathConcatenatorInterface
 {
     public function concatTwo(string $left, string $right): string
     {
-        return rtrim($left, '/\\') . DIRECTORY_SEPARATOR . ltrim($right, '/\\');
+        return \rtrim($left, '/\\') . DIRECTORY_SEPARATOR . \ltrim($right, '/\\');
     }
 }

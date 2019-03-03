@@ -8,8 +8,8 @@ declare(strict_types=1);
 namespace App\Controller\Management;
 
 use App\Entity\Screen;
-use App\Entity\User;
 use App\Repository\ScreenRepository;
+use App\Security\LoggedInUserRepositoryInterface;
 use App\Service\UrlBuilderInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -25,20 +25,22 @@ class PreviewController extends AbstractController
     /** @var UrlBuilderInterface */
     private $urlBuilder;
 
+    /** @var LoggedInUserRepositoryInterface */
+    private $loggedInUserRepository;
+
     public function __construct(
         ScreenRepository $screenRepository,
-        UrlBuilderInterface $urlBuilder
+        UrlBuilderInterface $urlBuilder,
+        LoggedInUserRepositoryInterface $loggedInUserRepository
     ) {
         $this->screenRepository = $screenRepository;
         $this->urlBuilder = $urlBuilder;
+        $this->loggedInUserRepository = $loggedInUserRepository;
     }
 
     public function previewAction(Request $request): Response
     {
-        /** @var User $user user that is logged in */
-        $user = $this->get('security.token_storage')->getToken()->getUser();
-
-        // screens that are associated to the user or to its organizations
+        $user = $this->loggedInUserRepository->getLoggedInUserOrDenyAccess();
         $screens = $this->screenRepository->getScreensForUser($user);
 
         return $this->render('manage/preview.html.twig', [

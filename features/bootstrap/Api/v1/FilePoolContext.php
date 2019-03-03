@@ -40,7 +40,7 @@ class FilePoolContext implements Context
             'get',
             'files' . $path,
             null,
-            ['if-modified-since' => \gmdate('D, d M Y G:i:s T', strtotime($date))]
+            ['if-modified-since' => \gmdate('D, d M Y G:i:s T', \strtotime($date))]
         );
     }
 
@@ -53,7 +53,7 @@ class FilePoolContext implements Context
             throw new \Exception('Invalid API response: ' . $this->apiV1ClientContext->getResponseBody());
         }
 
-        if ('directory' === $type && '/' !== substr($content, -1)) {
+        if ('directory' === $type && '/' !== \substr($content, -1)) {
             $content .= '/';
         }
 
@@ -74,7 +74,7 @@ class FilePoolContext implements Context
             throw new \Exception('Invalid API response: ' . $this->apiV1ClientContext->getResponseBody());
         }
 
-        if ('directory' === $type && '/' !== substr($content, -1)) {
+        if ('directory' === $type && '/' !== \substr($content, -1)) {
             $content .= '/';
         }
 

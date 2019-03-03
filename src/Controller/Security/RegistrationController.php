@@ -8,23 +8,51 @@ declare(strict_types=1);
 namespace App\Controller\Security;
 
 use App\Entity\User;
-use FOS\UserBundle\Doctrine\UserManager;
+use App\Service\ConfirmationTokenGeneratorInterface;
 use FOS\UserBundle\Model\UserInterface;
+use FOS\UserBundle\Model\UserManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\Form\Extension\Core\Type\RepeatedType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 class RegistrationController extends AbstractController
 {
+    /** @var ConfirmationTokenGeneratorInterface */
+    private $confirmationTokenGenerator;
+
+    /** @var UserManagerInterface */
+    private $userManager;
+
+    /** @var TranslatorInterface */
+    private $translator;
+
+    /** @var \Swift_Mailer */
+    private $mailer;
+
+    /** @var string */
+    private $mailSender;
+
+    public function __construct(
+        ConfirmationTokenGeneratorInterface $confirmationTokenGenerator,
+        UserManagerInterface $userManager,
+        TranslatorInterface $translator,
+        \Swift_Mailer $mailer,
+        string $mailSender
+    ) {
+        $this->confirmationTokenGenerator = $confirmationTokenGenerator;
+        $this->userManager = $userManager;
+        $this->translator = $translator;
+        $this->mailer = $mailer;
+        $this->mailSender = $mailSender;
+    }
+
     public function indexAction(Request $request): \Symfony\Component\HttpFoundation\Response
     {
-        //$rep = $this->getDoctrine()->getRepository('App:Screen');
         $user = new User();
-        /** @var UserManager $userManager */
-        $userManager = $this->get('fos_user.user_manager');
 
         $form = $this->createFormBuilder($user)
             ->add('email', EmailType::class)
@@ -44,29 +72,31 @@ class RegistrationController extends AbstractController
         if ($form->isSubmitted()) {
             if ($form->isValid()) {
                 // check if there is already a user with same email
-                $oldUser = $userManager->findUserByEmail($user->getEmail());
+                $oldUser = $this->userManager->findUserByEmail($user->getEmail());
                 if (null !== $oldUser) {
                     $this->addFlash(
                         'error',
-                        'Die genannte E-Mail-Adresse wird leider bereits genutzt.'
+                        'registration.mail_already_in_use'
                     );
                 } else {
                     // good news: email is not used yet, register user
                     $user->setPlainPassword($form->get('password')->getData());
-                    $user->setConfirmationToken(User::generateToken());
-                    $userManager->updateUser($user, true);
+                    $user->setConfirmationToken($this->confirmationTokenGenerator->generateConfirmationToken());
+                    $this->userManager->updateUser($user, true);
 
                     $this->addFlash(
                         'success',
-                        'Willkommen! Bitte bestätige nun deine E-Mail-Adresse.'
+                        'registration.success'
                     );
 
                     $this->sendRegistrationMail($user);
+
+                    return $this->redirectToRoute('fos_user_security_login');
                 }
             } else {
                 $this->addFlash(
                     'error',
-                    'Die Registrierung war leider nicht möglich. Vielleicht war eine der Eingaben nicht korrekt?'
+                    'registration.failed'
                 );
             }
         }
@@ -78,32 +108,30 @@ class RegistrationController extends AbstractController
 
     public function confirmAction(string $confirmationToken): \Symfony\Component\HttpFoundation\RedirectResponse
     {
-        /** @var UserManager $userManager */
-        $userManager = $this->get('fos_user.user_manager');
-        $user = $userManager->findUserByConfirmationToken($confirmationToken);
+        $user = $this->userManager->findUserByConfirmationToken($confirmationToken);
 
         if (null === $user) {
             $this->addFlash(
                 'error',
-                'Zu dem Bestätigungscode konnte leider kein Benutzer gefunden werden.'
+                'registration.confirmation.code_not_found'
             );
             return $this->redirectToRoute('fos_user_security_login');
         }
 
         $user->setEnabled(true);
-        $userManager->updateUser($user);
+        $this->userManager->updateUser($user);
         $this->addFlash(
             'success',
-            'Vielen Dank! Dein Konto ist nun freigeschaltet und du kannst dich einloggen.'
+            'success'
         );
         return $this->redirectToRoute('fos_user_security_login');
     }
 
     public function sendRegistrationMail(UserInterface $user): void
     {
-        $message = \Swift_Message::newInstance()
-            ->setSubject($this->get('translator')->trans('SubjectRegistrationMail'))
-            ->setFrom($this->getParameter('mailer_from'))
+        $message = $this->mailer->createMessage()
+            ->setSubject($this->translator->trans('SubjectRegistrationMail'))
+            ->setFrom($this->mailSender)
             ->setTo($user->getEmail())
             ->setBody(
                 $this->renderView(
@@ -119,6 +147,6 @@ class RegistrationController extends AbstractController
                 ),
                 'text/plain'
             );
-        $this->get('mailer')->send($message);
+        $this->mailer->send($message);
     }
 }

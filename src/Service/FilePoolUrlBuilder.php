@@ -38,13 +38,13 @@ class FilePoolUrlBuilder
     public function getAbsolutePath(string $filePath, string $userRoot = ''): string
     {
         $relative = $this->pathConcatenator->concatTwo($userRoot, $filePath);
-        $absolute = realpath($this->pathConcatenator->concatTwo($this->basePath, $relative));
+        $absolute = \realpath($this->pathConcatenator->concatTwo($this->basePath, $relative));
         if (false === $absolute) {
             throw new FileNotFoundException($relative);
         }
 
-        $absoluteBase = realpath($this->basePath);
-        if (0 !== strpos($absolute, $absoluteBase)) {
+        $absoluteBase = \realpath($this->basePath);
+        if (0 !== \strpos($absolute, $absoluteBase)) {
             throw new AccessDeniedException($relative);
         }
 

@@ -122,6 +122,8 @@ services:
 
         location: after_declare_strict
 
+    # Leading slash before internal functions
+    PhpCsFixer\Fixer\FunctionNotation\NativeFunctionInvocationFixer: ~
 
 parameters:
     skip:

@@ -25,7 +25,7 @@ class ApiRoleRegistry
 
     public function registerRole(string $role): self
     {
-        if (array_key_exists($role, $this->roles)) {
+        if (\array_key_exists($role, $this->roles)) {
             throw new \RuntimeException('Role ' . $role . ' already registered.');
         }
 

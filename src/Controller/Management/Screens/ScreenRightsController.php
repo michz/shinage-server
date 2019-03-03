@@ -78,7 +78,7 @@ class ScreenRightsController extends AbstractController
 
     private function findUserByMail(string $mail): ?User
     {
-        $mail = trim($mail);
+        $mail = \trim($mail);
         $repo = $this->entityManager->getRepository(User::class);
         return $repo->findOneBy(['email' => $mail]);
     }

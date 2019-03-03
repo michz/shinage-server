@@ -8,19 +8,19 @@ declare(strict_types=1);
 namespace App\Controller\Management;
 
 use App\Entity\User;
+use App\Security\LoggedInUserRepositoryInterface;
 use App\Service\FilePool;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
-use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 class FileManager extends AbstractController
 {
-    /** @var TokenStorageInterface */
-    private $tokenStorage;
+    /** @var LoggedInUserRepositoryInterface */
+    private $loggedInUserRepository;
 
     /** @var FilePool */
     private $filePool;
@@ -29,11 +29,11 @@ class FileManager extends AbstractController
     private $poolPath;
 
     public function __construct(
-        TokenStorageInterface $tokenStorage,
+        LoggedInUserRepositoryInterface $loggedInUserRepository,
         FilePool $filePool,
         string $poolPath
     ) {
-        $this->tokenStorage = $tokenStorage;
+        $this->loggedInUserRepository = $loggedInUserRepository;
         $this->filePool = $filePool;
         $this->poolPath = $poolPath;
     }
@@ -46,7 +46,7 @@ class FileManager extends AbstractController
     public function downloadAction(string $file): Response
     {
         // @TODO replace by PoolController
-        $user = $this->tokenStorage->getToken()->getUser();
+        $user = $this->loggedInUserRepository->getLoggedInUserOrDenyAccess();
         /** @var User $user */
 
         // check if user is allowed to see presentation
@@ -79,7 +79,7 @@ class FileManager extends AbstractController
         $path = $realPoolPath . '/.el-thumbnails/' . $base . '/' . $file;
 
         /** @var User $user */
-        $user = $this->tokenStorage->getToken()->getUser();
+        $user = $this->loggedInUserRepository->getLoggedInUserOrDenyAccess();
 
         // check if user is allowed to see presentation
         if (!$user->isPoolFileAllowed($base . '/' . $file)) {
@@ -107,7 +107,7 @@ class FileManager extends AbstractController
 
         $response = new StreamedResponse();
         $response->setCallback(function (): void {
-            $user = $this->tokenStorage->getToken()->getUser();
+            $user = $this->loggedInUserRepository->getLoggedInUserOrDenyAccess();
 
             // get root directories
             $paths = $this->filePool->getUserPaths($user);

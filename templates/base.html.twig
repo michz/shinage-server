@@ -52,9 +52,9 @@
         <script>
             $.notify.defaults({ autoHideDelay: 2000, showDuration: 250 });
 
-            {% for label, messages in app.flashes %}
+            {% for type, messages in app.session.flashbag.all() %}
                 {% for message in messages %}
-                    $.notify("{{ message|trans([], 'flashes') }}", { className: '{{ label }}', autoHideDelay: 10000 });
+                    $.notify("{{ message|trans([], 'flashes')|escape('js') }}", { className: '{{ type }}', autoHideDelay: 10000 });
                 {% endfor %}
             {% endfor %}
         </script>

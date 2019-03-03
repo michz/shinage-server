@@ -10,6 +10,7 @@ namespace App\Controller\Api\v1;
 use App\Controller\Api\Exception\AccessDeniedException;
 use App\Entity\Presentation;
 use App\Entity\User;
+use App\Security\LoggedInUserRepositoryInterface;
 use Doctrine\ORM\EntityManagerInterface;
 use JMS\Serializer\SerializationContext;
 use JMS\Serializer\SerializerInterface;
@@ -17,33 +18,31 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
-use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 class PresentationsController extends AbstractController
 {
-    /** @var TokenStorageInterface */
-    private $tokenStorage;
-
     /** @var EntityManagerInterface */
     private $entityManager;
 
     /** @var SerializerInterface */
     private $serializer;
 
+    /** @var LoggedInUserRepositoryInterface */
+    private $loggedInUserRepository;
+
     public function __construct(
-        TokenStorageInterface $tokenStorage,
         EntityManagerInterface $entityManager,
-        SerializerInterface $serializer
+        SerializerInterface $serializer,
+        LoggedInUserRepositoryInterface $loggedInUserRepository
     ) {
-        $this->tokenStorage = $tokenStorage;
         $this->entityManager = $entityManager;
         $this->serializer = $serializer;
+        $this->loggedInUserRepository = $loggedInUserRepository;
     }
 
     public function listAction(): Response
     {
-        /** @var User $user */
-        $user = $this->tokenStorage->getToken()->getUser();
+        $user = $this->loggedInUserRepository->getLoggedInUserOrDenyAccess();
 
         $queryBuilder = $this->entityManager->createQueryBuilder();
 
@@ -101,7 +100,7 @@ class PresentationsController extends AbstractController
         /** @var Presentation $presentation */
         $presentation = $this->serializer->deserialize($request->getContent(), Presentation::class, 'json');
 
-        $user = $this->tokenStorage->getToken()->getUser();
+        $user = $this->loggedInUserRepository->getLoggedInUserOrDenyAccess();
         if (false === ($user instanceof User)) {
             throw new AccessDeniedException('User could not be loaded to be set as owner.');
         }

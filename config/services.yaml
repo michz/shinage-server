@@ -8,6 +8,7 @@ parameters:
   path_screenshots: '%kernel.root_dir%/../data/screenshots/'
   path_pool: '%kernel.root_dir%/../data/pool/'
   env(SHINAGE_ONLINE_PLAYER_BASE_URL): 'https://player.shinage.org/player.html?current_presentation_url='
+  env(MAIL_DEFAULT_SENDER): 'dev@shinage.test'
 
 services:
   # default configuration for services in *this* file
@@ -41,15 +42,19 @@ services:
   App\Controller\Api\v1\FilesController:
     arguments:
       $filePoolPermissionChecker: '@App\Service\FilePoolPermissionChecker'
-      $tokenStorage: '@security.token_storage'
       $virtualPathResolver: '@App\Service\Pool\VirtualPathResolver'
+      $loggedInUserRepository: '@App\Security\LoggedInUserRepository'
       $filePoolBasePath: '%path_pool%'
 
   App\Controller\Management\FileManager:
     arguments:
-      $tokenStorage: '@security.token_storage'
+      $loggedInUserRepository: '@App\Security\LoggedInUserRepository'
       $filePool: '@App\Service\FilePool'
       $poolPath: '%path_pool%'
+
+  App\Controller\Security\RegistrationController:
+    arguments:
+      $mailSender: '%env(MAIL_DEFAULT_SENDER)%'
 
   # @TODO own file?
   App\Security\Authentication\Provider\ApiTokenProvider:
@@ -193,12 +198,6 @@ services:
       $basePath: "%path_pool%"
       $router: "@router"
 
-  App\EventListener\RegistrationListener:
-    arguments:
-      $router: "@router.default"
-    tags:
-      - { name: kernel.event_subscriber }
-
   App\EventListener\KernelExceptionListener:
     arguments:
       - '%kernel.environment%'
@@ -208,15 +207,12 @@ services:
 
   App\Form\Type\OwnerType:
     arguments:
-      $em: "@doctrine.orm.default_entity_manager"
-      $tokenStorage: "@security.token_storage"
+      $entityManager: '@doctrine.orm.default_entity_manager'
+      $loggedInUserRepository: '@App\Security\LoggedInUserRepository'
     tags:
       - { name: form.type }
 
   App\Form\ApiKeyForm:
-    arguments:
-      $em: "@doctrine.orm.default_entity_manager"
-      $tokenStorage: "@security.token_storage"
     tags:
       - { name: form.type }
 

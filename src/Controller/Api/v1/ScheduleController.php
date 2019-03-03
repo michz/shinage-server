@@ -11,6 +11,7 @@ use App\Entity\Presentation;
 use App\Entity\ScheduledPresentation;
 use App\Entity\Screen;
 use App\Entity\ScreenAssociation;
+use App\Security\LoggedInUserRepository;
 use App\Service\ScheduleCollisionHandlerInterface;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Query\Expr;
@@ -22,13 +23,9 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
-use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 class ScheduleController extends AbstractController
 {
-    /** @var TokenStorageInterface */
-    private $tokenStorage;
-
     /** @var EntityManagerInterface */
     private $entityManager;
 
@@ -38,16 +35,19 @@ class ScheduleController extends AbstractController
     /** @var ScheduleCollisionHandlerInterface */
     private $collisionHandler;
 
+    /** @var LoggedInUserRepository */
+    private $loggedInUserRepository;
+
     public function __construct(
-        TokenStorageInterface $tokenStorage,
         EntityManagerInterface $entityManager,
         SerializerInterface $serializer,
-        ScheduleCollisionHandlerInterface $collisionHandler
+        ScheduleCollisionHandlerInterface $collisionHandler,
+        LoggedInUserRepository $loggedInUserRepository
     ) {
-        $this->tokenStorage = $tokenStorage;
         $this->entityManager = $entityManager;
         $this->serializer = $serializer;
         $this->collisionHandler = $collisionHandler;
+        $this->loggedInUserRepository = $loggedInUserRepository;
     }
 
     public function listAction(): Response
@@ -189,7 +189,7 @@ class ScheduleController extends AbstractController
      */
     private function getAllowedUserIds(): array
     {
-        $user = $this->tokenStorage->getToken()->getUser();
+        $user = $this->loggedInUserRepository->getLoggedInUserOrDenyAccess();
 
         $allowedIds = [$user->getId()];
         foreach ($user->getOrganizations() as $organization) {

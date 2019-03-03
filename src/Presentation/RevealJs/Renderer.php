@@ -129,7 +129,7 @@ class Renderer implements PresentationRendererInterface
 
     private function replaceVirtualUrls(string $data): string
     {
-        return str_replace(self::POOL_VIRTUAL_BASE_URL, $this->baseUrl, $data);
+        return \str_replace(self::POOL_VIRTUAL_BASE_URL, $this->baseUrl, $data);
     }
 
     private function getDefaultRevealSettings(): string

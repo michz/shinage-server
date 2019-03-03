@@ -18,10 +18,8 @@
         {% endfor %}
     </select>
     <select name="presentation" id="presentation-prototype">
-        {% for instance in presentations %}
-            {% for presentation in instance %}
-                <option value="{{ presentation.getId() }}">{{ presentation.getTitle() }}</option>
-            {% endfor %}
+        {% for presentation in presentations %}
+            <option value="{{ presentation.getId() }}">{{ presentation.getTitle() }}</option>
         {% endfor %}
     </select>
 </div>
