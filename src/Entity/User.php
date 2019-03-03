@@ -69,6 +69,8 @@ class User extends BaseUser implements TwoFactorEmailInterface, TwoFactorGoogleI
 
     /**
      * @return string[]|array
+     *
+     * @deprecated
      */
     public function getAllowedPoolPaths(): array
     {
@@ -84,6 +86,9 @@ class User extends BaseUser implements TwoFactorEmailInterface, TwoFactorGoogleI
         return $r;
     }
 
+    /**
+     * {@deprecated}
+     */
     public function isPoolFileAllowed(string $path): bool
     {
         // @TODO Remove from here and move to own service
@@ -92,6 +97,9 @@ class User extends BaseUser implements TwoFactorEmailInterface, TwoFactorGoogleI
         return \in_array($base, $this->getAllowedPoolPaths(), true);
     }
 
+    /**
+     * {@deprecated}
+     */
     public function isPresentationAllowed(PresentationInterface $presentation): bool
     {
         // @TODO Remove from here and move to own service
