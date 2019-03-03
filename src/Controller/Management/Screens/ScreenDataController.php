@@ -56,9 +56,9 @@ class ScreenDataController extends AbstractController
 
             $form = $this->createFormBuilder($screen, ['translation_domain' => 'ScreenSettings'])
                 ->add('name', TextType::class)
-                ->add('location', TextType::class)
-                ->add('adminc', TextType::class)
-                ->add('notes', TextareaType::class)
+                ->add('location', TextType::class, ['required' => false, 'empty_data' => ''])
+                ->add('adminc', TextType::class, ['required' => false, 'empty_data' => ''])
+                ->add('notes', TextareaType::class, ['required' => false, 'empty_data' => ''])
                 ->add('defaultPresentation', EntityType::class, [
                     'class' => Presentation::class,
                     'choices' => $this->getPresentationsChoices(),
