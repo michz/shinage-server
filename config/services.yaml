@@ -42,13 +42,13 @@ services:
   App\Controller\Api\v1\FilesController:
     arguments:
       $filePoolPermissionChecker: '@App\Service\FilePoolPermissionChecker'
-      $tokenStorage: '@security.token_storage'
       $virtualPathResolver: '@App\Service\Pool\VirtualPathResolver'
+      $loggedInUserRepository: '@App\Security\LoggedInUserRepository'
       $filePoolBasePath: '%path_pool%'
 
   App\Controller\Management\FileManager:
     arguments:
-      $tokenStorage: '@security.token_storage'
+      $loggedInUserRepository: '@App\Security\LoggedInUserRepository'
       $filePool: '@App\Service\FilePool'
       $poolPath: '%path_pool%'
 
@@ -207,15 +207,12 @@ services:
 
   App\Form\Type\OwnerType:
     arguments:
-      $em: "@doctrine.orm.default_entity_manager"
-      $tokenStorage: "@security.token_storage"
+      $entityManager: '@doctrine.orm.default_entity_manager'
+      $loggedInUserRepository: '@App\Security\LoggedInUserRepository'
     tags:
       - { name: form.type }
 
   App\Form\ApiKeyForm:
-    arguments:
-      $em: "@doctrine.orm.default_entity_manager"
-      $tokenStorage: "@security.token_storage"
     tags:
       - { name: form.type }
 
