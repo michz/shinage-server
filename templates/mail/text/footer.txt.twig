@@ -1,0 +1,6 @@
+{% trans_default_domain 'mail' %}
+
+
+--
+
+{{ 'base.footer'|trans({'%url_homepage%': url('homepage')})|striptags|raw}}

@@ -1,0 +1,24 @@
+registration:
+  intro: |
+    <b>Herzlich willkommen bei Shinage!</b>
+    <br><br>
+    Vielen Dank für deine Registrierung.
+
+  link:
+    before: |
+      Bitte bestätige nun noch deine E-Mail-Adresse, um deine Registrierung abzuschließen.<br>
+      Klicke dazu bitte auf folgenden Link oder kopiere ihn in die Adresszeile deines Browsers:
+
+    after: |
+      Anschließend kannst du dich in deinem neuen Konto einloggen.
+
+  outro: |
+    Hast du diese Mail unerwartet erhalten oder hast du dich nicht bei Shinage angemeldet?<br>
+    Dann kannst du sie ignorieren, deine E-Mail-Adresse wird dann nach einer gewissen Zeit
+    automatisch wieder aus unserer Datenbank entfernt.
+
+
+base:
+  footer: |
+    Diese E-Mail wurde automatisch von <a href="https://github.com/michz/shinage-server">Shinage Digital Signage</a> erstellt.<br>
+    Link zur Benutzeroberfläche der Installation: <a href="%url_homepage%">%url_homepage%</a> .

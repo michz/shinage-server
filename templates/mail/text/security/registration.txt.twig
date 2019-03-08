@@ -1,0 +1,13 @@
+{% extends 'mail/text/base.txt.twig' %}
+{% trans_default_domain 'mail' %}
+
+{% block body %}
+{{ 'registration.intro'|trans|striptags|raw }}
+
+{{ 'registration.link.before'|trans|striptags|raw }}
+{{ absolute_url(path('registration-confirm', { confirmationToken: user.getConfirmationToken() })) }}
+
+{{ 'registration.link.after'|trans|striptags|raw }}
+
+{{ 'registration.outro'|trans|striptags|raw }}
+{% endblock %}
