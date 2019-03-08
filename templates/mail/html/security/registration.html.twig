@@ -1,0 +1,14 @@
+{% extends 'mail/html/base.html.twig' %}
+{% trans_default_domain 'mail' %}
+
+{% block body %}
+    {{ 'registration.intro'|trans|raw }}
+    <br><br><br>
+    {{ 'registration.link.before'|trans|raw }}
+    <br><br>
+    <a href="{{ absolute_url(path('registration-confirm', { confirmationToken: user.getConfirmationToken() })) }}">{{ absolute_url(path('registration-confirm', { confirmationToken: user.getConfirmationToken() })) }}</a>
+    <br><br>
+    {{ 'registration.link.after'|trans|raw }}
+    <br><br><br>
+    {{ 'registration.outro'|trans|raw }}
+{% endblock %}

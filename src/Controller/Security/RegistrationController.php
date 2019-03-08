@@ -135,14 +135,14 @@ class RegistrationController extends AbstractController
             ->setTo($user->getEmail())
             ->setBody(
                 $this->renderView(
-                    'mail/de/registration.html.twig',
+                    'mail/html/security/registration.html.twig',
                     ['user' => $user]
                 ),
                 'text/html'
             )
             ->addPart(
                 $this->renderView(
-                    'mail/de/registration.txt.twig',
+                    'mail/text/security/registration.txt.twig',
                     ['user' => $user]
                 ),
                 'text/plain'
