@@ -112,7 +112,8 @@ class AccountController extends AbstractController
                 // @TODO Localize Flash messages
                 if ($form->isSubmitted()) {
                     if ($form->isValid()) {
-                        $this->userManager->updateUser($user, true);
+                        $this->userManager->updateUser($user);
+                        $this->entityManager->flush();
                         $this->addFlash('success', 'Die Änderungen wurden gespeichert.');
                     } else {
                         $this->addFlash(
@@ -149,7 +150,8 @@ class AccountController extends AbstractController
                                 // everythin seems ok, now set password and save
                                 $user->setPlainPassword($pw);
 
-                                $this->userManager->updateUser($user, true);
+                                $this->userManager->updateUser($user);
+                                $this->entityManager->flush();
                                 $this->addFlash('success', 'Das Passwort wurde erfolgreich geändert.');
                             }
                         }
@@ -189,7 +191,7 @@ class AccountController extends AbstractController
                 $orga_new->setPassword('');
                 $orga_new->setPlainPassword('');
                 try {
-                    $this->userManager->updateUser($orga_new, true);
+                    $this->userManager->updateUser($orga_new);
                     $this->entityManager->flush();
                     $user->addOrganization($orga_new);
                     $this->userManager->updateUser($user);

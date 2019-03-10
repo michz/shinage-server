@@ -9,17 +9,11 @@ namespace App\Security\Voters;
 
 use App\Entity\Presentation;
 use App\Entity\User;
-use App\Service\ScreenAssociation;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\Voter;
 
 class PresentationVoter extends Voter
 {
-    public function __construct(ScreenAssociation $screenAssociation)
-    {
-        $this->screenAssociation = $screenAssociation;
-    }
-
     /**
      * {@inheritdoc}
      */

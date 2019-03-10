@@ -83,6 +83,7 @@ class SchedulerController extends AbstractController
     public function getScheduleAction(Request $request): Response
     {
         $guid = $request->get('screen');
+        /** @var Screen|null $screen */
         $screen = $this->entityManager->find(Screen::class, $guid);
 
         // parse start and end time
@@ -90,7 +91,7 @@ class SchedulerController extends AbstractController
         $end = new \DateTime($request->get('end'), new \DateTimeZone('UTC'));
 
         $sched = [];
-        if ($screen) {
+        if (null !== $screen) {
             // Check if user is allowed to see/edit screen
             $this->denyAccessUnlessGranted('schedule', $screen);
 
