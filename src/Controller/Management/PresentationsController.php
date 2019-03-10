@@ -22,7 +22,6 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 class PresentationsController extends AbstractController
@@ -113,10 +112,9 @@ class PresentationsController extends AbstractController
     {
         /** @var PresentationInterface $presentation */
         $presentation = $this->entityManager->find('App:Presentation', $presentationId);
-        $user = $this->loggedInUserRepository->getLoggedInUserOrDenyAccess();
-        if (!$user->isPresentationAllowed($presentation)) {
-            throw new AccessDeniedException('User is not allowed to access presentation.');
-        }
+
+        // Check role based access rights
+        $this->denyAccessUnlessGranted('delete', $presentation);
 
         // delete scheduled presentations
         $this->scheduler->deleteAllScheduledPresentationsForPresentation($presentation);
