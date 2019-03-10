@@ -48,8 +48,6 @@ services:
 
   App\Controller\Management\FileManager:
     arguments:
-      $loggedInUserRepository: '@App\Security\LoggedInUserRepository'
-      $filePool: '@App\Service\FilePool'
       $poolPath: '%path_pool%'
 
   App\Controller\Security\RegistrationController:

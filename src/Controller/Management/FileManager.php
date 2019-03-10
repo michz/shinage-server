@@ -10,6 +10,7 @@ namespace App\Controller\Management;
 use App\Entity\User;
 use App\Security\LoggedInUserRepositoryInterface;
 use App\Service\FilePool;
+use App\Service\FilePoolPermissionCheckerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\HttpFoundation\Response;
@@ -25,16 +26,21 @@ class FileManager extends AbstractController
     /** @var FilePool */
     private $filePool;
 
+    /** @var FilePoolPermissionCheckerInterface */
+    private $filePoolPermissionChecker;
+
     /** @var string */
     private $poolPath;
 
     public function __construct(
         LoggedInUserRepositoryInterface $loggedInUserRepository,
         FilePool $filePool,
+        FilePoolPermissionCheckerInterface $filePoolPermissionChecker,
         string $poolPath
     ) {
         $this->loggedInUserRepository = $loggedInUserRepository;
         $this->filePool = $filePool;
+        $this->filePoolPermissionChecker = $filePoolPermissionChecker;
         $this->poolPath = $poolPath;
     }
 
@@ -46,11 +52,11 @@ class FileManager extends AbstractController
     public function downloadAction(string $file): Response
     {
         // @TODO replace by PoolController
-        $user = $this->loggedInUserRepository->getLoggedInUserOrDenyAccess();
         /** @var User $user */
+        $user = $this->loggedInUserRepository->getLoggedInUserOrDenyAccess();
 
         // check if user is allowed to see presentation
-        if (!$user->isPoolFileAllowed($file)) {
+        if (false === $this->filePoolPermissionChecker->mayUserAccessPath($user, $file)) {
             throw new AccessDeniedException();
         }
 
@@ -82,7 +88,7 @@ class FileManager extends AbstractController
         $user = $this->loggedInUserRepository->getLoggedInUserOrDenyAccess();
 
         // check if user is allowed to see presentation
-        if (!$user->isPoolFileAllowed($base . '/' . $file)) {
+        if (false === $this->filePoolPermissionChecker->mayUserAccessPath($user, $base . '/' . $file)) {
             throw new AccessDeniedException();
         }
 
