@@ -1,0 +1,14 @@
+{% extends 'mail/html/base.html.twig' %}
+{% trans_default_domain 'mail' %}
+
+{% block body %}
+    {{ '2fa_code.intro'|trans|raw }}
+    <br><br><br>
+    {{ '2fa_code.code.before'|trans|raw }}
+    <br><br>
+    <p class="2fa-code" style="font-family: Courier, 'Courier New', monospace;">{{ code }}</p>
+    <br><br>
+    {{ '2fa_code.code.after'|trans|raw }}
+    <br><br><br>
+    {{ '2fa_code.outro'|trans|raw }}
+{% endblock %}

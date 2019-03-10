@@ -9,6 +9,7 @@ scheb_two_factor:
         sender_email: '%env(MAILER_FROM)%'
         sender_name: Shinage Two-Factor Authentification
         template: security/2fa_form.html.twig
+        mailer: 'App\Security\TwoFactorCodeMailer'
 
     backup_codes:
         enabled: true

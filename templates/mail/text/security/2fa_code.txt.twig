@@ -1,0 +1,16 @@
+{% extends 'mail/text/base.txt.twig' %}
+{% trans_default_domain 'mail' %}
+
+{% block body %}
+{{ '2fa_code.intro'|trans|striptags|raw }}
+
+
+{{ '2fa_code.code.before'|trans|striptags|raw }}
+
+{{ code }}
+
+{{ '2fa_code.code.after'|trans|striptags|raw }}
+
+
+{{ '2fa_code.outro'|trans|striptags|raw }}
+{% endblock %}

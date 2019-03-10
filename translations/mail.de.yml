@@ -17,6 +17,20 @@ registration:
     Dann kannst du sie ignorieren, deine E-Mail-Adresse wird dann nach einer gewissen Zeit
     automatisch wieder aus unserer Datenbank entfernt.
 
+2fa_code:
+  intro: |
+    Hallo,
+
+  code:
+    before: |
+      hier ist dein Login-Code:
+
+    after: |
+      Bitte gib ihn beim Login ein.
+
+  outro: |
+    Shinage
+
 
 base:
   footer: |
