@@ -9,6 +9,7 @@ namespace App\Controller\Security;
 
 use App\Entity\User;
 use App\Service\ConfirmationTokenGeneratorInterface;
+use Doctrine\ORM\EntityManagerInterface;
 use FOS\UserBundle\Model\UserInterface;
 use FOS\UserBundle\Model\UserManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -21,6 +22,9 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 
 class RegistrationController extends AbstractController
 {
+    /** @var EntityManagerInterface */
+    private $entityManager;
+
     /** @var ConfirmationTokenGeneratorInterface */
     private $confirmationTokenGenerator;
 
@@ -37,12 +41,14 @@ class RegistrationController extends AbstractController
     private $mailSender;
 
     public function __construct(
+        EntityManagerInterface $entityManager,
         ConfirmationTokenGeneratorInterface $confirmationTokenGenerator,
         UserManagerInterface $userManager,
         TranslatorInterface $translator,
         \Swift_Mailer $mailer,
         string $mailSender
     ) {
+        $this->entityManager = $entityManager;
         $this->confirmationTokenGenerator = $confirmationTokenGenerator;
         $this->userManager = $userManager;
         $this->translator = $translator;
@@ -82,7 +88,8 @@ class RegistrationController extends AbstractController
                     // good news: email is not used yet, register user
                     $user->setPlainPassword($form->get('password')->getData());
                     $user->setConfirmationToken($this->confirmationTokenGenerator->generateConfirmationToken());
-                    $this->userManager->updateUser($user, true);
+                    $this->userManager->updateUser($user);
+                    $this->entityManager->flush();
 
                     $this->addFlash(
                         'success',
