@@ -8,7 +8,8 @@ parameters:
   path_screenshots: '%kernel.root_dir%/../data/screenshots/'
   path_pool: '%kernel.root_dir%/../data/pool/'
   env(SHINAGE_ONLINE_PLAYER_BASE_URL): 'https://player.shinage.org/player.html?current_presentation_url='
-  env(MAIL_DEFAULT_SENDER): 'dev@shinage.test'
+  env(MAIL_DEFAULT_SENDER_MAIL): 'dev@shinage.test'
+  env(MAIL_DEFAULT_SENDER_NAME): 'Shinage Digital Signage'
 
 services:
   # default configuration for services in *this* file
@@ -52,7 +53,8 @@ services:
 
   App\Controller\Security\RegistrationController:
     arguments:
-      $mailSender: '%env(MAIL_DEFAULT_SENDER)%'
+      $mailSenderMail: '%env(MAIL_DEFAULT_SENDER_MAIL)%'
+      $mailSenderName: '%env(MAIL_DEFAULT_SENDER_NAME)%'
 
   # @TODO own file?
   App\Security\Authentication\Provider\ApiTokenProvider:
@@ -222,3 +224,8 @@ services:
   App\Service\VersionChecker:
     arguments:
       $rootPath: "%kernel.root_dir%/../"
+
+  App\Security\TwoFactorCodeMailer:
+    arguments:
+      $senderMail: '%env(MAIL_DEFAULT_SENDER_MAIL)%'
+      $senderName: '%env(MAIL_DEFAULT_SENDER_NAME)%'

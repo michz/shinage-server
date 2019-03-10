@@ -38,7 +38,10 @@ class RegistrationController extends AbstractController
     private $mailer;
 
     /** @var string */
-    private $mailSender;
+    private $mailSenderMail;
+
+    /** @var string */
+    private $mailSenderName;
 
     public function __construct(
         EntityManagerInterface $entityManager,
@@ -46,14 +49,16 @@ class RegistrationController extends AbstractController
         UserManagerInterface $userManager,
         TranslatorInterface $translator,
         \Swift_Mailer $mailer,
-        string $mailSender
+        string $mailSenderMail,
+        string $mailSenderName
     ) {
         $this->entityManager = $entityManager;
         $this->confirmationTokenGenerator = $confirmationTokenGenerator;
         $this->userManager = $userManager;
         $this->translator = $translator;
         $this->mailer = $mailer;
-        $this->mailSender = $mailSender;
+        $this->mailSenderMail = $mailSenderMail;
+        $this->mailSenderName = $mailSenderName;
     }
 
     public function indexAction(Request $request): \Symfony\Component\HttpFoundation\Response
@@ -138,7 +143,7 @@ class RegistrationController extends AbstractController
     {
         $message = $this->mailer->createMessage()
             ->setSubject($this->translator->trans('SubjectRegistrationMail'))
-            ->setFrom($this->mailSender)
+            ->setFrom([$this->mailSenderMail => $this->mailSenderName])
             ->setTo($user->getEmail())
             ->setBody(
                 $this->renderView(
