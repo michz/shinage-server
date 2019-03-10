@@ -67,57 +67,6 @@ class User extends BaseUser implements TwoFactorEmailInterface, TwoFactorGoogleI
         return parent::setEmail($email);
     }
 
-    /**
-     * @return string[]|array
-     *
-     * @deprecated
-     */
-    public function getAllowedPoolPaths(): array
-    {
-        // @TODO Remove from here and move to own service
-        $r = [];
-        $r[] = 'user-' . $this->id;
-
-        $orgas = $this->getOrganizations();
-        foreach ($orgas as $orga) { /* @var User $orga */
-            $r[] = 'user-' . $orga->getId();
-        }
-
-        return $r;
-    }
-
-    /**
-     * {@deprecated}
-     */
-    public function isPoolFileAllowed(string $path): bool
-    {
-        // @TODO Remove from here and move to own service
-        $file = \ltrim($path, "/\r\n\t ");
-        $base = \substr($file, 0, \strpos($file, '/'));
-        return \in_array($base, $this->getAllowedPoolPaths(), true);
-    }
-
-    /**
-     * {@deprecated}
-     */
-    public function isPresentationAllowed(PresentationInterface $presentation): bool
-    {
-        // @TODO Remove from here and move to own service
-
-        if ($presentation->getOwner() === $this) {
-            return true;
-        }
-
-        $orgas = $this->getOrganizations();
-        foreach ($orgas as $orga) { /** @var User $orga */
-            if ($presentation->getOwner() === $orga) {
-                return true;
-            }
-        }
-
-        return false;
-    }
-
     public function setUserType(string $userType): self
     {
         $this->userType = $userType;
