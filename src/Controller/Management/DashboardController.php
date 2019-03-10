@@ -11,12 +11,16 @@ use App\Entity\Screen;
 use App\Exceptions\NoScreenGivenException;
 use App\Repository\ScreenRepository;
 use App\Security\LoggedInUserRepositoryInterface;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\HttpFoundation\Response;
 
 class DashboardController extends AbstractController
 {
+    /** @var EntityManagerInterface */
+    private $entityManager;
+
     /** @var ScreenRepository */
     private $screenRepository;
 
@@ -24,9 +28,11 @@ class DashboardController extends AbstractController
     private $loggedInUserRepository;
 
     public function __construct(
+        EntityManagerInterface $entityManager,
         ScreenRepository $screenRepository,
         LoggedInUserRepositoryInterface $loggedInUserRepository
     ) {
+        $this->entityManager = $entityManager;
         $this->screenRepository = $screenRepository;
         $this->loggedInUserRepository = $loggedInUserRepository;
     }
@@ -53,10 +59,9 @@ class DashboardController extends AbstractController
 
     public function previewAction(string $screen_guid): Response
     {
-        $em = $this->getDoctrine()->getManager();
-
-        $screen = $em->find(Screen::class, $screen_guid); /** @var Screen $screen */
-        if (!$screen) {
+        /** @var Screen|null $screen */
+        $screen = $this->entityManager->find(Screen::class, $screen_guid);
+        if (null === $screen) {
             throw new NoScreenGivenException();
         }
 
