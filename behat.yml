@@ -24,6 +24,7 @@ default:
         - shinage.server.behat.context.transform.user
 
         - shinage.server.behat.context.login
+        - shinage.server.behat.context.registration
         - shinage.server.behat.context.setup.user
         - shinage.server.behat.context.general_webpages
 

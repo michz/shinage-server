@@ -8,6 +8,7 @@ declare(strict_types=1);
 namespace shinage\server\behat\Setup;
 
 use App\Entity\Api\AccessKey;
+use App\Entity\RegistrationCode;
 use App\Entity\User;
 use Behat\Behat\Context\Context;
 use Doctrine\ORM\EntityManagerInterface;
@@ -96,6 +97,26 @@ class UserContext implements Context
     {
         $user->setEmailAuthEnabled(false);
         $user->setGoogleAuthenticatorSecret(null);
+        $this->entityManager->flush();
+    }
+
+    /**
+     * @Given There is a registration code :code
+     * @Given There is a registration code :code that is valid until :validUntil
+     */
+    public function thereIsARegistrationCode(string $code, \DateTime $validUntil = null): void
+    {
+        if (null === $validUntil) {
+            $validUntil = new \DateTime();
+            $validUntil->add(new \DateInterval('P10Y'));
+        }
+
+        $registrationCode = new RegistrationCode();
+        $registrationCode->setCode($code);
+        $registrationCode->setValidUntil($validUntil);
+        $registrationCode->setCreatedDate(new \DateTime());
+
+        $this->entityManager->persist($registrationCode);
         $this->entityManager->flush();
     }
 }

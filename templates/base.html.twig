@@ -52,12 +52,20 @@
         <script>
             $.notify.defaults({ autoHideDelay: 2000, showDuration: 250 });
 
+            {% set hiddenFlashes = '' %}
             {% for type, messages in app.session.flashbag.all() %}
                 {% for message in messages %}
                     $.notify("{{ message|trans([], 'flashes')|escape('js') }}", { className: '{{ type }}', autoHideDelay: 10000 });
-                {% endfor %}
+
+                {% set hiddenFlash %}
+                    <div class="hidden flash {{ type }}">{{ message|trans([], 'flashes') }}</div>
+                {% endset %}
+                {% set hiddenFlashes = hiddenFlashes ~ hiddenFlash %}
+            {% endfor %}
             {% endfor %}
         </script>
+
+        {{ hiddenFlashes|raw }}
 
         {% block scripts %}{% endblock %}
 

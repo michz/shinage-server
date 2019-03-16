@@ -7,6 +7,7 @@ declare(strict_types=1);
 
 namespace App\Controller\Security;
 
+use App\Entity\RegistrationCode;
 use App\Entity\User;
 use App\Service\ConfirmationTokenGeneratorInterface;
 use Doctrine\ORM\EntityManagerInterface;
@@ -17,6 +18,9 @@ use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\Form\Extension\Core\Type\RepeatedType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Form\FormError;
+use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
@@ -66,6 +70,7 @@ class RegistrationController extends AbstractController
         $user = new User();
 
         $form = $this->createFormBuilder($user)
+            ->add('registrationCode', TextType::class, ['mapped' => false])
             ->add('email', EmailType::class)
             ->add('password', RepeatedType::class, [
                 'type' => PasswordType::class,
@@ -81,6 +86,9 @@ class RegistrationController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted()) {
+            $this->validateRegistrationCode($form->get('registrationCode'));
+            // @TODO Assign automatically to organization if one is set in registration code entity.
+
             if ($form->isValid()) {
                 // check if there is already a user with same email
                 $oldUser = $this->userManager->findUserByEmail($user->getEmail());
@@ -95,6 +103,7 @@ class RegistrationController extends AbstractController
                     $user->setConfirmationToken($this->confirmationTokenGenerator->generateConfirmationToken());
                     $this->userManager->updateUser($user);
                     $this->entityManager->flush();
+                    $this->invalidateRegistrationCode($form->get('registrationCode'));
 
                     $this->addFlash(
                         'success',
@@ -139,7 +148,7 @@ class RegistrationController extends AbstractController
         return $this->redirectToRoute('fos_user_security_login');
     }
 
-    public function sendRegistrationMail(UserInterface $user): void
+    private function sendRegistrationMail(UserInterface $user): void
     {
         $message = $this->mailer->createMessage()
             ->setSubject($this->translator->trans('SubjectRegistrationMail'))
@@ -160,5 +169,22 @@ class RegistrationController extends AbstractController
                 'text/plain'
             );
         $this->mailer->send($message);
+    }
+
+    private function validateRegistrationCode(FormInterface $formElement): void
+    {
+        $code = $this->entityManager->find(RegistrationCode::class, $formElement->getData());
+        if (null === $code) {
+            $formElement->addError(
+                new FormError($this->translator->trans('registration_code_invalid', [], 'validators'))
+            );
+        }
+    }
+
+    private function invalidateRegistrationCode(FormInterface $formElement): void
+    {
+        $code = $this->entityManager->find(RegistrationCode::class, $formElement->getData());
+        $this->entityManager->remove($code);
+        $this->entityManager->flush();
     }
 }
