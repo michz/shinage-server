@@ -41,4 +41,16 @@ class RegistrationContext extends \Behat\MinkExtension\Context\RawMinkContext
 
         throw new \Exception('User is not in organization as expected.');
     }
+
+    /**
+     * @Then The user :user should not be in organization :organization
+     */
+    public function theUserShouldNotBeInOrganization(User $user, User $organization): void
+    {
+        foreach ($user->getOrganizations() as $userOrga) {
+            if ($userOrga->getId() === $organization->getId()) {
+                throw new \Exception('User is in organization but was expected *not* to be.');
+            }
+        }
+    }
 }

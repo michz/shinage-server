@@ -9,6 +9,7 @@ namespace App\Controller\Security;
 
 use App\Entity\RegistrationCode;
 use App\Entity\User;
+use App\Repository\UserRepositoryInterface;
 use App\Service\ConfirmationTokenGeneratorInterface;
 use Doctrine\ORM\EntityManagerInterface;
 use FOS\UserBundle\Model\UserInterface;
@@ -41,6 +42,9 @@ class RegistrationController extends AbstractController
     /** @var \Swift_Mailer */
     private $mailer;
 
+    /** @var UserRepositoryInterface */
+    private $userRepository;
+
     /** @var string */
     private $mailSenderMail;
 
@@ -53,6 +57,7 @@ class RegistrationController extends AbstractController
         UserManagerInterface $userManager,
         TranslatorInterface $translator,
         \Swift_Mailer $mailer,
+        UserRepositoryInterface $userRepository,
         string $mailSenderMail,
         string $mailSenderName
     ) {
@@ -61,6 +66,7 @@ class RegistrationController extends AbstractController
         $this->userManager = $userManager;
         $this->translator = $translator;
         $this->mailer = $mailer;
+        $this->userRepository = $userRepository;
         $this->mailSenderMail = $mailSenderMail;
         $this->mailSenderName = $mailSenderName;
     }
@@ -102,6 +108,7 @@ class RegistrationController extends AbstractController
                     $user->setPlainPassword($form->get('password')->getData());
                     $user->setConfirmationToken($this->confirmationTokenGenerator->generateConfirmationToken());
 
+                    $this->assignUserToOrganizationsByMailHost($user);
                     if (null !== $registrationCode && null !== $registrationCode->getAssignOrganization()) {
                         $user->addOrganization($registrationCode->getAssignOrganization());
                     }
@@ -178,10 +185,15 @@ class RegistrationController extends AbstractController
 
     private function validateAndGetRegistrationCode(FormInterface $formElement): ?RegistrationCode
     {
+        $now = new \DateTime();
         $code = $this->entityManager->find(RegistrationCode::class, $formElement->getData());
         if (null === $code) {
             $formElement->addError(
                 new FormError($this->translator->trans('registration_code_invalid', [], 'validators'))
+            );
+        } elseif ($now > $code->getValidUntil()) {
+            $formElement->addError(
+                new FormError($this->translator->trans('registration_code_expired', [], 'validators'))
             );
         }
 
@@ -193,5 +205,16 @@ class RegistrationController extends AbstractController
         $code = $this->entityManager->find(RegistrationCode::class, $formElement->getData());
         $this->entityManager->remove($code);
         $this->entityManager->flush();
+    }
+
+    private function assignUserToOrganizationsByMailHost(User $user): void
+    {
+        $mailHost = \substr($user->getEmail(), \strpos($user->getEmail(), '@') + 1);
+        $organizations = $this->userRepository->findOrganizationsByMailHost($mailHost);
+        foreach ($organizations as $organization) {
+            if ($organization->isOrgaAssignAutomaticallyByMailHost()) {
+                $user->addOrganization($organization);
+            }
+        }
     }
 }

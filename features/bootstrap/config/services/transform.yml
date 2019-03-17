@@ -19,3 +19,6 @@ services:
     tags: ["fob.context_service"]
     arguments:
       - "@__symfony_shared__.doctrine.orm.entity_manager"
+  shinage.server.behat.context.transform.date_time:
+    class: shinage\server\behat\Transform\DateTimeTransformerContext
+    tags: ["fob.context_service"]

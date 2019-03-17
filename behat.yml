@@ -21,6 +21,7 @@ default:
       contexts_services:
         - shinage.server.behat.context.hook.purge
 
+        - shinage.server.behat.context.transform.date_time
         - shinage.server.behat.context.transform.user
 
         - shinage.server.behat.context.login

@@ -119,18 +119,18 @@ class UserContext implements Context
 
     /**
      * @Given There is a registration code :code
-     * @Given There is a registration code :code that is valid until :validUntil
+     * @Given There is a registration code :code that is valid until :until
      */
-    public function thereIsARegistrationCode(string $code, \DateTime $validUntil = null): void
+    public function thereIsARegistrationCode(string $code, \DateTime $until = null): void
     {
-        if (null === $validUntil) {
-            $validUntil = new \DateTime();
-            $validUntil->add(new \DateInterval('P10Y'));
+        if (null === $until) {
+            $until = new \DateTime();
+            $until->add(new \DateInterval('P10Y'));
         }
 
         $registrationCode = new RegistrationCode();
         $registrationCode->setCode($code);
-        $registrationCode->setValidUntil($validUntil);
+        $registrationCode->setValidUntil($until);
         $registrationCode->setCreatedDate(new \DateTime());
 
         $this->entityManager->persist($registrationCode);
@@ -152,6 +152,15 @@ class UserContext implements Context
         $registrationCode->setAssignOrganization($organization);
 
         $this->entityManager->persist($registrationCode);
+        $this->entityManager->flush();
+    }
+
+    /**
+     * @Given The organization :organization has automatically assignment by mail host enabled
+     */
+    public function theOrganizationHasAutomaticallyAssignmentByMailHostEnabled(User $organization): void
+    {
+        $organization->setOrgaAssignAutomaticallyByMailHost(true);
         $this->entityManager->flush();
     }
 }
