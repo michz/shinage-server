@@ -36,6 +36,12 @@ account-orga-leave:
   requirements:
     id: \d+
 
+account-set-orga-add-users-automatically-based-on-mail-host:
+  path: /organizations/set-orga-add-users-automatically-based-on-mail-host/{id}
+  controller: App\Controller\Account\AccountController::orgaSetAddUsersAutomaticallyBasedOnMailHostAction
+  requirements:
+    id: \d+
+
 account-orga-add-user:
   path: /organizations/add-user
   controller: App\Controller\Account\AccountController::orgaAddUserAction

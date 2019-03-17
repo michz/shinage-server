@@ -49,6 +49,22 @@
                     </div>
                 </form>
             </div>
+            <div class="ui middle attached dimmable segment">
+                <div class="ui inverted dimmer">
+                    <div class="ui loader"></div>
+                </div>
+                <div class="ui toggle checkbox">
+                    <input
+                            type="checkbox"
+                            name="public"
+                            {% if orga.orgaAssignAutomaticallyByMailHost %}checked="checked"{% endif %}
+                            data-on-toggle-action="{{ path('account-set-orga-add-users-automatically-based-on-mail-host', {'id': orga.getId()}) }}"
+                    >
+                    <label>
+                        {{ 'AddUsersAutomaticallyBasedOnMailHost'|trans }}
+                    </label>
+                </div>
+            </div>
             <div class="ui bottom attached segment">
                 <a class="leave ui red button" data-name="{{ orga.getName() }}" href="{{ path('account-orga-leave', {'id': orga.getId()}) }}">
                     {{ 'LeaveThisOrga'|trans }}
@@ -99,6 +115,21 @@
                     return false;
                 }
                 return true;
+            });
+
+            $('[data-on-toggle-action]').on('change', function () {
+                var $that = $(this);
+                $(this).closest('.dimmable').find('.dimmer').dimmer('show');
+                $.ajax({
+                    method: 'post',
+                    url: $(this).data('onToggleAction'),
+                    data: {
+                        state: $(this).is(":checked") ? 1 : 0
+                    },
+                    complete: function () {
+                        $that.closest('.dimmable').find('.dimmer').dimmer('hide');
+                    }
+                });
             });
         });
     </script>

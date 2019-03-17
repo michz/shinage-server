@@ -62,6 +62,8 @@ LeaveThisOrga: Diese Organisation verlassen
 AddMember: Mitglied hinzufügen
 ApiKeys: API-Schlüssel
 CreateApiKeys: API-Schlüssel erstellen
+AddUsersAutomaticallyBasedOnMailHost: |
+  Benutzer, die sich mit einer E-Mail-Adresse mit dem selben Host neu registrieren, automatisch dieser Organization hinzufügen.
 
 Yes: Ja
 No (cancel): Nein (abbrechen)
