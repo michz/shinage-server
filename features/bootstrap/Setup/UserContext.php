@@ -53,6 +53,23 @@ class UserContext implements Context
     }
 
     /**
+     * @Given There is an organization :organizationName
+     */
+    public function thereIsAnOrganization(string $organizationName): void
+    {
+        $user = new User();
+        $user->setUsername($organizationName);
+        $user->setEmail($organizationName);
+        $user->setPlainPassword('nopasswordfororganizations');
+        $user->setEnabled(true);
+        $user->setUserType('organization');
+
+        $this->userManager->updatePassword($user);
+        $this->userManager->updateCanonicalFields($user);
+        $this->userManager->updateUser($user);
+    }
+
+    /**
      * @Given The user :user has the roles :roles
      */
     public function theUserHasTheRoles(User $user, string $roles): void
@@ -115,6 +132,24 @@ class UserContext implements Context
         $registrationCode->setCode($code);
         $registrationCode->setValidUntil($validUntil);
         $registrationCode->setCreatedDate(new \DateTime());
+
+        $this->entityManager->persist($registrationCode);
+        $this->entityManager->flush();
+    }
+
+    /**
+     * @Given There is a registration code :code belonging to organization :organization
+     */
+    public function thereIsARegistrationCodeBelongingToOrganization(string $code, User $organization): void
+    {
+        $validUntil = new \DateTime();
+        $validUntil->add(new \DateInterval('P10Y'));
+
+        $registrationCode = new RegistrationCode();
+        $registrationCode->setCode($code);
+        $registrationCode->setValidUntil($validUntil);
+        $registrationCode->setCreatedDate(new \DateTime());
+        $registrationCode->setAssignOrganization($organization);
 
         $this->entityManager->persist($registrationCode);
         $this->entityManager->flush();

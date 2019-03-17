@@ -7,6 +7,7 @@ declare(strict_types=1);
 
 namespace shinage\server\behat;
 
+use App\Entity\User;
 use Webmozart\Assert\Assert;
 
 class RegistrationContext extends \Behat\MinkExtension\Context\RawMinkContext
@@ -25,5 +26,19 @@ class RegistrationContext extends \Behat\MinkExtension\Context\RawMinkContext
     public function iShouldSeeThatTheRegistrationWasNotSuccessful(): void
     {
         Assert::true($this->getSession()->getPage()->has('css', '.hidden.flash.error'));
+    }
+
+    /**
+     * @Then The user :user should be in organization :organization
+     */
+    public function theUserShouldBeInOrganization(User $user, User $organization): void
+    {
+        foreach ($user->getOrganizations() as $userOrga) {
+            if ($userOrga->getId() === $organization->getId()) {
+                return;
+            }
+        }
+
+        throw new \Exception('User is not in organization as expected.');
     }
 }

@@ -86,8 +86,8 @@ class RegistrationController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted()) {
-            $this->validateRegistrationCode($form->get('registrationCode'));
-            // @TODO Assign automatically to organization if one is set in registration code entity.
+            $registrationCodeField = $form->get('registrationCode');
+            $registrationCode = $this->validateAndGetRegistrationCode($registrationCodeField);
 
             if ($form->isValid()) {
                 // check if there is already a user with same email
@@ -101,9 +101,14 @@ class RegistrationController extends AbstractController
                     // good news: email is not used yet, register user
                     $user->setPlainPassword($form->get('password')->getData());
                     $user->setConfirmationToken($this->confirmationTokenGenerator->generateConfirmationToken());
+
+                    if (null !== $registrationCode && null !== $registrationCode->getAssignOrganization()) {
+                        $user->addOrganization($registrationCode->getAssignOrganization());
+                    }
+
                     $this->userManager->updateUser($user);
                     $this->entityManager->flush();
-                    $this->invalidateRegistrationCode($form->get('registrationCode'));
+                    $this->invalidateRegistrationCode($registrationCodeField);
 
                     $this->addFlash(
                         'success',
@@ -171,7 +176,7 @@ class RegistrationController extends AbstractController
         $this->mailer->send($message);
     }
 
-    private function validateRegistrationCode(FormInterface $formElement): void
+    private function validateAndGetRegistrationCode(FormInterface $formElement): ?RegistrationCode
     {
         $code = $this->entityManager->find(RegistrationCode::class, $formElement->getData());
         if (null === $code) {
@@ -179,6 +184,8 @@ class RegistrationController extends AbstractController
                 new FormError($this->translator->trans('registration_code_invalid', [], 'validators'))
             );
         }
+
+        return $code;
     }
 
     private function invalidateRegistrationCode(FormInterface $formElement): void
