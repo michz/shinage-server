@@ -41,6 +41,13 @@ App\Entity\User:
       type: json_array
       unique: false
       nullable: true
+    orgaAssignAutomaticallyByMailHost:
+      type: boolean
+      unique: false
+      nullable: false
+      default: false
+      column: auto_assign_by_mailhost
+
   manyToMany:
     users:
       targetEntity: App\Entity\User

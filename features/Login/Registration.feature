@@ -4,7 +4,7 @@ Feature: As an interested user
   I want to be able to register
 
   Background:
-    Given There is an organization "Test-Orga1"
+    Given There is an organization "test-orga1@orga1.test"
 
   Scenario: I can register with a registration code
     Given There is a registration code "code123456789"
@@ -43,7 +43,7 @@ Feature: As an interested user
     Then I should see that the registration was not successful
 
   Scenario: I can register with a registration code and belong to its organization
-    Given There is a registration code "orgacode1" belonging to organization "Test-Orga1"
+    Given There is a registration code "orgacode1" belonging to organization "test-orga1@orga1.test"
     When I am on page "/register"
     And I fill the field "form[registrationCode]" with "orgacode1"
     And I fill the field "form[email]" with "testusername3@test.test"
@@ -51,4 +51,16 @@ Feature: As an interested user
     And I fill the field "form[password][second]" with "testpassword"
     And I click on the button "form[save]"
     Then I should see that the registration was successful
-    And The user "testusername3@test.test" should be in organization "Test-Orga1"
+    And The user "testusername3@test.test" should be in organization "test-orga1@orga1.test"
+
+  Scenario: I can register and be assigned automatically to organization by mail host
+    Given There is a registration code "code4"
+    And The organization "test-orga1@orga1.test" has automatically assignment by mail host enabled
+    When I am on page "/register"
+    And I fill the field "form[registrationCode]" with "code4"
+    And I fill the field "form[email]" with "testusername4@orga1.test"
+    And I fill the field "form[password][first]" with "testpassword"
+    And I fill the field "form[password][second]" with "testpassword"
+    And I click on the button "form[save]"
+    Then I should see that the registration was successful
+    And The user "testusername4@test.test" should be in organization "test-orga1@orga1.test"

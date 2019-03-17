@@ -50,6 +50,9 @@ class User extends BaseUser implements TwoFactorEmailInterface, TwoFactorGoogleI
     /** @var null|string */
     private $totpSecret;
 
+    /** @var bool */
+    private $orgaAssignAutomaticallyByMailHost = false;
+
     public function __construct()
     {
         parent::__construct();
@@ -207,5 +210,15 @@ class User extends BaseUser implements TwoFactorEmailInterface, TwoFactorGoogleI
     public function setGoogleAuthenticatorSecret(?string $secret): void
     {
         $this->totpSecret = $secret;
+    }
+
+    public function isOrgaAssignAutomaticallyByMailHost(): bool
+    {
+        return $this->orgaAssignAutomaticallyByMailHost;
+    }
+
+    public function setOrgaAssignAutomaticallyByMailHost(bool $orgaAssignAutomaticallyByMailHost): void
+    {
+        $this->orgaAssignAutomaticallyByMailHost = $orgaAssignAutomaticallyByMailHost;
     }
 }
