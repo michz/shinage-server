@@ -1,2 +1,4 @@
 PasswordsMustMatch: Die eingebebenen Passwörter müssen übereinstimmen.
 
+registration_code_invalid: Der eingegebene Registrierungscode ist leider nicht gültig.
+registration_code_expired: Der eingegebene Registrierungscode ist leider abgelaufen.

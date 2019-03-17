@@ -8,6 +8,7 @@ declare(strict_types=1);
 namespace shinage\server\behat\Setup;
 
 use App\Entity\Api\AccessKey;
+use App\Entity\RegistrationCode;
 use App\Entity\User;
 use Behat\Behat\Context\Context;
 use Doctrine\ORM\EntityManagerInterface;
@@ -45,6 +46,23 @@ class UserContext implements Context
         $user->setEmail($userName);
         $user->setPlainPassword($password);
         $user->setEnabled(true);
+
+        $this->userManager->updatePassword($user);
+        $this->userManager->updateCanonicalFields($user);
+        $this->userManager->updateUser($user);
+    }
+
+    /**
+     * @Given There is an organization :organizationName
+     */
+    public function thereIsAnOrganization(string $organizationName): void
+    {
+        $user = new User();
+        $user->setUsername($organizationName);
+        $user->setEmail($organizationName);
+        $user->setPlainPassword('nopasswordfororganizations');
+        $user->setEnabled(true);
+        $user->setUserType('organization');
 
         $this->userManager->updatePassword($user);
         $this->userManager->updateCanonicalFields($user);
@@ -96,6 +114,53 @@ class UserContext implements Context
     {
         $user->setEmailAuthEnabled(false);
         $user->setGoogleAuthenticatorSecret(null);
+        $this->entityManager->flush();
+    }
+
+    /**
+     * @Given There is a registration code :code
+     * @Given There is a registration code :code that is valid until :until
+     */
+    public function thereIsARegistrationCode(string $code, \DateTime $until = null): void
+    {
+        if (null === $until) {
+            $until = new \DateTime();
+            $until->add(new \DateInterval('P10Y'));
+        }
+
+        $registrationCode = new RegistrationCode();
+        $registrationCode->setCode($code);
+        $registrationCode->setValidUntil($until);
+        $registrationCode->setCreatedDate(new \DateTime());
+
+        $this->entityManager->persist($registrationCode);
+        $this->entityManager->flush();
+    }
+
+    /**
+     * @Given There is a registration code :code belonging to organization :organization
+     */
+    public function thereIsARegistrationCodeBelongingToOrganization(string $code, User $organization): void
+    {
+        $validUntil = new \DateTime();
+        $validUntil->add(new \DateInterval('P10Y'));
+
+        $registrationCode = new RegistrationCode();
+        $registrationCode->setCode($code);
+        $registrationCode->setValidUntil($validUntil);
+        $registrationCode->setCreatedDate(new \DateTime());
+        $registrationCode->setAssignOrganization($organization);
+
+        $this->entityManager->persist($registrationCode);
+        $this->entityManager->flush();
+    }
+
+    /**
+     * @Given The organization :organization has automatically assignment by mail host enabled
+     */
+    public function theOrganizationHasAutomaticallyAssignmentByMailHostEnabled(User $organization): void
+    {
+        $organization->setOrgaAssignAutomaticallyByMailHost(true);
         $this->entityManager->flush();
     }
 }

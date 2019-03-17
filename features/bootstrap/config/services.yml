@@ -55,6 +55,10 @@ services:
       - "@__symfony_shared__.session"
       - "main"
 
+  shinage.server.behat.context.registration:
+    class: shinage\server\behat\RegistrationContext
+    tags: ["fob.context_service"]
+
   shinage.server.behat.context.general_webpages:
     class: shinage\server\behat\GeneralWebpagesContext
     tags: ["fob.context_service"]

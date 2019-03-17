@@ -231,6 +231,23 @@ class AccountController extends AbstractController
         return $this->redirectToRoute('account-organizations');
     }
 
+    public function orgaSetAddUsersAutomaticallyBasedOnMailHostAction(Request $request, int $id): Response
+    {
+        $user = $this->loggedInUserRepository->getLoggedInUserOrDenyAccess();
+        $orga = $this->entityManager->find(User::class, $id);
+
+        // check if user is allowed to edit organization
+        if (!$user->getOrganizations()->contains($orga)) {
+            // @TODO Translate
+            $this->addFlash('error', 'Sie dürfen diese Organisation leider nicht bearbeiten.');
+            return $this->redirectToRoute('account-organizations');
+        }
+
+        $orga->setOrgaAssignAutomaticallyByMailHost((bool) $request->get('state'));
+        $this->entityManager->flush();
+        return $this->redirectToRoute('account-organizations');
+    }
+
     public function orgaAddUserAction(Request $request): RedirectResponse
     {
         /** @var User $user_new */
@@ -241,16 +258,19 @@ class AccountController extends AbstractController
 
         // check if user is allowed to edit organization
         if (!$user->getOrganizations()->contains($orga)) {
+            // @TODO Translate
             $this->addFlash('error', 'Sie dürfen diese Organisation leider nicht bearbeiten.');
             return $this->redirectToRoute('account-organizations');
         }
 
         if (!$user_new) {
+            // @TODO Translate
             $this->addFlash('error', 'Es wurde kein Benutzer mit der angegebenen E-Mail-Adresse gefunden.');
             return $this->redirectToRoute('account-organizations');
         }
 
         if ($user_new->getOrganizations()->contains($orga)) {
+            // @TODO Translate
             $this->addFlash('notice', 'Der Benutzer (' . $user_new->getEmail() .
                 ') ist bereits Mitglied der Organisation (' . $orga->getName() . ').');
             return $this->redirectToRoute('account-organizations');
