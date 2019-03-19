@@ -1,0 +1,15 @@
+head:
+    code: Code
+    createdDate: Erstellt am
+    validUntil: Gültig bis
+    createdBy: Erstellt von
+    assignOrga: Organisation zuordnen
+    actions: Aktionen
+
+actions:
+    header: Neue Codes erstellen
+    createGenerate: Generiere einen Code zufällig
+    code: Code eingeben
+    create: Speichern
+    count: Anzahl
+    createGenerateMultiple: Generiere mehrere zufällig

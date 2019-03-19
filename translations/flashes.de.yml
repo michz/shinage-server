@@ -17,3 +17,16 @@ registration:
   confirmation:
     code_not_found: Zu dem Bestätigungscode konnte leider kein Benutzer gefunden werden.
     success: Vielen Dank! Dein Konto ist nun freigeschaltet und du kannst dich einloggen.
+
+admin:
+  codes:
+    saved_code: Code erfolgreich gespeichert
+    generated_code: Code erfolgreich generiert
+    generated_codes: Codes erfolgreich generiert
+    deleted: Code gelöscht
+    too_many_codes_given: Es wurden mehr Codes als maximal möglich angegeben, deshalb wurden weniger Codes generiert.
+    could_not_create: Der Code konnte nicht generiert werden.
+    could_not_save: Der Code konnte nicht gespeichert werden. (Evtl. existiert er schon?)
+    too_short: Der eingebene Code ist zu kurz. Er muss mindestens 6 Zeichen lang sein.
+    invalid_characters: Der eingebene Code enthält ungültige Zeichen. Er darf nur Buchstaben, Ziffern, Bindestriche - und Unterstriche enthalten.
+    could_not_delete: Code konnte nicht gelöscht werden
