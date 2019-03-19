@@ -13,3 +13,25 @@ admin-screens:
 admin-organizations:
   path: /organizations
   controller: App\Controller\Admin\OrganizationsController::indexAction
+
+admin-invitation-codes:
+  path: /invitation-codes
+  controller: App\Controller\Admin\InvitationCodesController::indexAction
+
+admin-invitation-create-one:
+  path: /invitation-codes/create/one
+  controller: App\Controller\Admin\InvitationCodesController::createOneAction
+
+admin-invitation-create-generate-one:
+  path: /invitation-codes/create/generateOne
+  controller: App\Controller\Admin\InvitationCodesController::createGenerateOneAction
+
+admin-invitation-create-generate-multiple:
+  path: /invitation-codes/create/generateMultiple
+  controller: App\Controller\Admin\InvitationCodesController::createGenerateMultipleAction
+
+admin-invitation-delete:
+  path: /invitation-codes/delete/{codeData}
+  controller: App\Controller\Admin\InvitationCodesController::deleteAction
+  requirements:
+    codeData: .+

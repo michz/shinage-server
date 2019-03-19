@@ -30,7 +30,7 @@ class RegistrationCodeFactory implements RegistrationCodeFactoryInterface
         $this->genericCodeGenerator = $genericCodeGenerator;
     }
 
-    public function create(User $assignOrganization): RegistrationCode
+    public function create(?User $assignOrganization): RegistrationCode
     {
         $now = new \DateTime();
         $validUntil = new \DateTime();
@@ -45,7 +45,7 @@ class RegistrationCodeFactory implements RegistrationCodeFactoryInterface
             $code->setCreatedBy($user);
         }
 
-        $code->setValidUntil(new \DateTime('@'));
+        $code->setValidUntil($validUntil);
         $code->setCode($this->genericCodeGenerator->generate(self::CODE_LENGTH));
 
         return $code;

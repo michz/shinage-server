@@ -1,0 +1,64 @@
+{% extends 'base.html.twig' %}
+{% trans_default_domain 'AdminInvitationCodes' %}
+
+{% block body %}
+
+    <div class="ui main container">
+
+        <table class="ui celled table">
+            <thead>
+                <tr>
+                    <th>{{ 'head.code'|trans }}</th>
+                    <th>{{ 'head.validUntil'|trans }}</th>
+                    <th>{{ 'head.createdDate'|trans }}</th>
+                    <th>{{ 'head.createdBy'|trans }}</th>
+                    <th>{{ 'head.assignOrga'|trans }}</th>
+                    <th>{{ 'head.actions'|trans }}</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for code in codes %}
+                    <tr>
+                        <td data-label="{{ 'head.code'|trans }}">{{ code.code }}</td>
+                        <td data-label="{{ 'head.validUntil'|trans }}">{{ code.validUntil.format('Y-m-d H:i:s') }}</td>
+                        <td data-label="{{ 'head.createdDate'|trans }}">{{ code.createdDate.format('Y-m-d H:i:s') }}</td>
+                        <td data-label="{{ 'head.createdBy'|trans }}">{{ code.createdBy }}</td>
+                        <td data-label="{{ 'head.assignOrga'|trans }}">{{ code.assignOrganization }}</td>
+                        <td data-label="{{ 'head.actions'|trans }}">
+                            <a class="ui red labeled icon button" href="{{ path('admin-invitation-delete', { codeData: code.code }) }}">
+                                <i class="icon trash"></i>
+                                {{ 'Remove'|trans([], 'messages') }}
+                            </a>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+        <div class="ui top attached block header">
+            {{ 'actions.header'|trans }}
+        </div>
+        <div class="ui middle attached segment">
+            <form method="post" action="{{ path('admin-invitation-create-generate-one') }}">
+                <button class="ui button" type="submit">{{ 'actions.createGenerate'|trans }}</button>
+            </form>
+        </div>
+        <div class="ui middle attached segment">
+            <form method="post" action="{{ path('admin-invitation-create-one') }}">
+                <div class="ui action input">
+                    <input name="code" type="text" placeholder="{{ 'actions.code'|trans }}">
+                    <button class="ui button" type="submit">{{ 'actions.create'|trans }}</button>
+                </div>
+            </form>
+        </div>
+        <div class="ui bottom attached segment">
+            <form method="post" action="{{ path('admin-invitation-create-generate-multiple') }}">
+                <div class="ui action input">
+                    <input name="count" type="text" placeholder="{{ 'actions.count'|trans }}">
+                    <button class="ui button" type="submit">{{ 'actions.createGenerateMultiple'|trans }}</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+{% endblock %}

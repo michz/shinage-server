@@ -12,5 +12,5 @@ use App\Entity\User;
 
 interface RegistrationCodeFactoryInterface
 {
-    public function create(User $assignOrganization): RegistrationCode;
+    public function create(?User $assignOrganization): RegistrationCode;
 }
