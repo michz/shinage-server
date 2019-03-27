@@ -32,8 +32,10 @@ services:
     links:
       - mariadb
       - mailhog
+      - redis
     depends_on:
       - mariadb
+      - redis
 
   mariadb:
     image: mariadb:${MARIADB_VERSION}
@@ -43,6 +45,11 @@ services:
       - MYSQL_DATABASE=${PROJECT_NAME}
     ports:
       - "${MARIADB_PORT}:3306"
+
+  redis:
+    image: redis:5-alpine
+    ports:
+      - "${REDIS_PORT}:6379"
 
   mailhog:
     image: mailhog/mailhog:latest

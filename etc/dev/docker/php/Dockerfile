@@ -17,6 +17,10 @@ ENV PHPIZE_DEPS \
     re2c \
     libxml2-dev
 
+# Use a more local mirror as the CDN is sometimes terribly slow
+RUN echo http://mirror1.hs-esslingen.de/pub/Mirrors/alpine/v3.9/main > /etc/apk/repositories; \
+    echo http://mirror1.hs-esslingen.de/pub/Mirrors/alpine/v3.9/community >> /etc/apk/repositories
+
 # persistent dependencies
 # inspired by https://github.com/prooph/docker-files/blob/master/php/7.1-fpm
 RUN set -ex \
@@ -57,6 +61,9 @@ RUN set -ex \
         soap \
         xml \
         zip \
+    && pecl install -o -f redis \
+    && rm -rf /tmp/pear \
+    && docker-php-ext-enable redis \
     && apk del .build-deps
 #    && pecl install xdebug-2.6.0 \
 #    && docker-php-ext-enable xdebug \

@@ -18,6 +18,7 @@ It's based on [Symfony 4](http://symfony.com/).
 
 Hosted
 ------
+
 If you don't want to care about stuff like servers and security
 we can provide the fully functionally hosted solution for you.
 No knowledge about servers or programming needed.
@@ -26,6 +27,7 @@ Please contact us!
 
 Prerequisites
 -------------
+
 * A machine with a running PHP installation (7.1 or newer)
   with mysql support, libgd and terminal access.
 * MySQL-Server (local or remote).  
@@ -41,6 +43,7 @@ Prerequisites
 
 Installation
 ------------
+
 * This guide assumes that `composer` is installed globally.
   (If yours is installed somewhere locally, 
    replace `composer` by something like `php /path/to/composer.phar` )
@@ -65,6 +68,7 @@ Installation
 
 Development
 -----------
+
 * Follow the [Installation steps above](#Installation),
   but do a `composer install` instead of `composer install --no-dev`.
 * There are two ways of running the application for development:
@@ -90,11 +94,28 @@ Development
     For example to call the Symfony console you have to run `bin/runInDev.sh bin/console`.
 
 
+Containerize me
+---------------
+
+If you are brave you can run this server application in a container based setup (for example using Docker).
+The development environment uses a bunch of docker containers,
+including a redis container for decentralized efficient session storage.
+So if you want to, try your luck.
+
+Some notes:
+
+* Remember to use a centralized session storage (for example Redis, memcached, ...)
+* The `/data` directory has to be in sync between all nodes. Use a network storage (nfs), 
+  another shared storage mechanism or at least sync the files in realtime (discouraged)! 
+
+
 Contributing
 ------------
+
 Feel free to file issues, fork and/or create pull requests.
 
 
 License
 -------
+
 MIT, see also file `LICENSE`.
