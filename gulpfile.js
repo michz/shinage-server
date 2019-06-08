@@ -61,7 +61,8 @@ var paths = {
 var playerPaths = {
     js: [
         'node_modules/jquery/dist/jquery.js',
-        'node_modules/reveal.js/lib/js/head.min.js',
+        'node_modules/reveal.js/lib/js/html5shiv.js',
+        'node_modules/reveal.js/lib/js/promise.js',
         'node_modules/reveal.js/js/reveal.js',
 //        'shinage-client.js',
     ],
