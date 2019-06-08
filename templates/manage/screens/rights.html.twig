@@ -65,7 +65,7 @@
             </form>
         </div>
         <div class="actions">
-            <div class="ui cancel button">{{ 'Cancel'|trans }}</div>
+            <div class="ui cancel deny button">{{ 'Cancel'|trans }}</div>
             <div class="ui primary approve disabled button">{{ 'Save'|trans }}</div>
         </div>
     </div>
@@ -76,7 +76,7 @@
         $('#add-modal').modal({
             detachable: true,
             onDeny: function () {
-                $('form', this).reset();
+                $('form', this).trigger('reset');
             },
             onApprove: function () {
                 $('form', this).submit();
