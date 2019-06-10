@@ -65,13 +65,14 @@ class PresentationsController extends AbstractController
         $this->loggedInUserRepository = $loggedInUserRepository;
     }
 
-    public function managePresentationsAction(): Response
+    public function managePresentationsAction(string $viewMode = 'large'): Response
     {
         $user = $this->loggedInUserRepository->getLoggedInUserOrDenyAccess();
         $presentations = $this->presentationsRepository->getPresentationsForsUser($user);
 
         return $this->render('manage/presentations/pres-main.html.twig', [
             'presentations' => $presentations,
+            'viewMode' => $viewMode,
         ]);
     }
 

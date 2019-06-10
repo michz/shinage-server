@@ -33,8 +33,10 @@ management-dashboard-preview:
     screen_guid: '.+'  # TODO
 
 management-presentations:
-  path: /presentations
+  path: /presentations/list/{viewMode}
   controller: App\Controller\Management\PresentationsController::managePresentationsAction
+  defaults:
+    viewMode: 'large'
 
 management-presentations-create:
   path: /presentations/create
