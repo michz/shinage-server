@@ -68,6 +68,7 @@
                         <th>{{ "Title"|trans }}</th>
                         <th>{{ "Type"|trans }}</th>
                         <th>{{ "Last modified"|trans }}</th>
+                        <th>{{ "Owner"|trans }}</th>
                         <th></th>
                     </tr>
                 </thead>
@@ -81,7 +82,10 @@
                                 <i class="ui icon {{ presentation.type|trans([], 'PresentationTypesIcons') }}"></i> {{ presentation.type|trans([], 'PresentationTypes') }}
                             </td>
                             <td data-label="{{ "Last modified"|trans }}">
-                                {{ 'Last modified'|trans }}: {{ presentation.lastModified|date('d.m.Y H:i') }}
+                                {{ presentation.lastModified|date('d.m.Y H:i') }}
+                            </td>
+                            <td data-label="{{ "Owner"|trans }}">
+                                {{ presentation.owner }}
                             </td>
                             <td>
                                 <a class="ui labeled icon button default" href="{{ path("presentation-editor-" ~ presentation.type, { presentationId: presentation.id })  }}">
