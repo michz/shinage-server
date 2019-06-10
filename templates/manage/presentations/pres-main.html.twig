@@ -10,47 +10,104 @@
                 <i class="icon plus"></i>
                 {{ "Create Presentation"|trans }}
             </a>
+
+            <div class="ui icon buttons">
+                <a href="{{ path('management-presentations', {viewMode: 'large'} ) }}" class="ui {% if 'large' == viewMode %}active{% endif %} button">
+                    <i class="id card outline icon"></i>
+                </a>
+                <a href="{{ path('management-presentations', {viewMode: 'table'} ) }}" class="ui {% if 'table' == viewMode %}active{% endif %} button">
+                    <i class="table icon"></i>
+                </a>
+            </div>
         </div>
         <!--
         TODO{s:5}: Präsentationen zwischen Benutzer und Organisationen verschieben
         -->
 
-        {% for presentation in presentations %}
-            <h2
-                    id="title-{{ presentation.id }}"
-                    class="ui top attached block header"
-                    data-content-editable="true"
-                    data-content-editable-save-callback="{{ path('presentation-save-title') }}"
-                    data-content-editable-subject="{{ presentation.id }}"
-                    data-content-editable-allow-newline="false"
-            >{{ presentation.title }}</h2>
-            <div class="ui middle attached segment row slide">
-                <p
+        {% if 'large' == viewMode %}
+            {% for presentation in presentations %}
+                <h2
+                        id="title-{{ presentation.id }}"
+                        class="ui top attached block header"
                         data-content-editable="true"
-                        data-content-editable-save-callback="{{ path('presentation-save-notes') }}"
+                        data-content-editable-save-callback="{{ path('presentation-save-title') }}"
                         data-content-editable-subject="{{ presentation.id }}"
-                        data-content-editable-allow-newline="true"
-                >{{ presentation.notes }}</p>
-            </div>
-            <div class="ui middle attached segment row horizontal segments">
+                        data-content-editable-allow-newline="false"
+                >{{ presentation.title }}</h2>
                 <div class="ui middle attached segment row slide">
-                    <p><i class="ui icon {{ presentation.type|trans([], 'PresentationTypesIcons') }}"></i> {{ presentation.type|trans([], 'PresentationTypes') }}</p>
+                    <p
+                            data-content-editable="true"
+                            data-content-editable-save-callback="{{ path('presentation-save-notes') }}"
+                            data-content-editable-subject="{{ presentation.id }}"
+                            data-content-editable-allow-newline="true"
+                    >{{ presentation.notes }}</p>
                 </div>
-                <div class="ui middle attached segment row slide">
-                    <p>{{ 'Last modified'|trans }}: {{ presentation.lastModified|date('d.m.Y H:i') }}</p>
+                <div class="ui middle attached segment row horizontal segments">
+                    <div class="ui middle attached segment row slide">
+                        <p><i class="ui icon {{ presentation.type|trans([], 'PresentationTypesIcons') }}"></i> {{ presentation.type|trans([], 'PresentationTypes') }}</p>
+                    </div>
+                    <div class="ui middle attached segment row slide">
+                        <p>{{ 'Last modified'|trans }}: {{ presentation.lastModified|date('d.m.Y H:i') }}</p>
+                    </div>
                 </div>
-            </div>
-            <div class="ui bottom attached segment">
-                <a class="ui labeled icon button default" href="{{ path("presentation-editor-" ~ presentation.type, { presentationId: presentation.id })  }}">
-                    <i class="icon pencil"></i>
-                    {{ "Edit Presentation"|trans }}
-                </a>
-                <a class="ui labeled icon button red btnDeletePresentation" href="{{ path("presentation-delete", { presentationId: presentation.id })  }}">
-                    <i class="icon trash"></i>
-                    {{ "Delete Presentation"|trans }}
-                </a>
-            </div>
-        {% endfor %}
+                <div class="ui bottom attached segment">
+                    <a class="ui labeled icon button default" href="{{ path("presentation-editor-" ~ presentation.type, { presentationId: presentation.id })  }}">
+                        <i class="icon pencil"></i>
+                        {{ "Edit Presentation"|trans }}
+                    </a>
+                    <a class="ui labeled icon button red btnDeletePresentation" href="{{ path("presentation-delete", { presentationId: presentation.id })  }}">
+                        <i class="icon trash"></i>
+                        {{ "Delete Presentation"|trans }}
+                    </a>
+                </div>
+            {% endfor %}
+        {% elseif 'table' == viewMode %}
+            <table class="ui celled table">
+                <thead>
+                    <tr>
+                        <th>{{ "Title"|trans }}</th>
+                        <th>{{ "Type"|trans }}</th>
+                        <th>{{ "Last modified"|trans }}</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for presentation in presentations %}
+                        <tr>
+                            <td data-label="{{ "Title"|trans }}">
+                                {{ presentation.title }}
+                            </td>
+                            <td data-label="{{ "Type"|trans }}">
+                                <i class="ui icon {{ presentation.type|trans([], 'PresentationTypesIcons') }}"></i> {{ presentation.type|trans([], 'PresentationTypes') }}
+                            </td>
+                            <td data-label="{{ "Last modified"|trans }}">
+                                {{ 'Last modified'|trans }}: {{ presentation.lastModified|date('d.m.Y H:i') }}
+                            </td>
+                            <td>
+                                <a class="ui labeled icon button default" href="{{ path("presentation-editor-" ~ presentation.type, { presentationId: presentation.id })  }}">
+                                    <i class="icon pencil"></i>
+                                    {{ "Edit Presentation"|trans }}
+                                </a>
+                                <a class="ui labeled icon button red btnDeletePresentation" href="{{ path("presentation-delete", { presentationId: presentation.id })  }}">
+                                    <i class="icon trash"></i>
+                                    {{ "Delete Presentation"|trans }}
+                                </a>
+                            </td>
+                        </tr>
+                        <!--
+                        <div class="ui middle attached segment row slide">
+                            <p
+                                    data-content-editable="true"
+                                    data-content-editable-save-callback="{{ path('presentation-save-notes') }}"
+                                    data-content-editable-subject="{{ presentation.id }}"
+                                    data-content-editable-allow-newline="true"
+                            >{{ presentation.notes }}</p>
+                        </div>
+                        -->
+                    {% endfor %}
+                </tbody>
+            </table>
+        {% endif %}
     </div>
 
     <div class="ui modal" id="deletePresentationDialog">
