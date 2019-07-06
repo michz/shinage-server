@@ -1,60 +1,60 @@
 account:
   path: /
-  controller: App\Controller\Account\AccountController::indexAction
+  controller: App\Controller\Management\Account\AccountController::indexAction
 
 account-edit:
   path: /edit
-  controller: App\Controller\Account\AccountController::editAction
+  controller: App\Controller\Management\Account\AccountController::editAction
 
 account-security:
   path: /security
-  controller: App\Controller\Account\SecurityController::indexAction
+  controller: App\Controller\Management\Account\SecurityController::indexAction
 
 account-security-toggle-mail-auth:
   path: /security/toggle-mail-auth
-  controller: App\Controller\Account\SecurityController::toggleMailAuthAction
+  controller: App\Controller\Management\Account\SecurityController::toggleMailAuthAction
 
 account-security-disable-totp-auth:
   path: /security/disable-totp-auth
-  controller: App\Controller\Account\SecurityController::disableTotpAuthAction
+  controller: App\Controller\Management\Account\SecurityController::disableTotpAuthAction
 
 account-security-init-totp-auth:
   path: /security/init-totp-auth
-  controller: App\Controller\Account\SecurityController::initTotpAuthAction
+  controller: App\Controller\Management\Account\SecurityController::initTotpAuthAction
 
 account-security-complete-totp-auth:
   path: /security/complete-totp-auth
-  controller: App\Controller\Account\SecurityController::completeTotpAuthAction
+  controller: App\Controller\Management\Account\SecurityController::completeTotpAuthAction
 
 account-organizations:
   path: /organizations
-  controller: App\Controller\Account\AccountController::orgaAction
+  controller: App\Controller\Management\Account\AccountController::orgaAction
 
 account-orga-leave:
   path: /organizations/leave/{id}
-  controller: App\Controller\Account\AccountController::orgaLeaveAction
+  controller: App\Controller\Management\Account\AccountController::orgaLeaveAction
   requirements:
     id: \d+
 
 account-set-orga-add-users-automatically-based-on-mail-host:
   path: /organizations/set-orga-add-users-automatically-based-on-mail-host/{id}
-  controller: App\Controller\Account\AccountController::orgaSetAddUsersAutomaticallyBasedOnMailHostAction
+  controller: App\Controller\Management\Account\AccountController::orgaSetAddUsersAutomaticallyBasedOnMailHostAction
   requirements:
     id: \d+
 
 account-orga-add-user:
   path: /organizations/add-user
-  controller: App\Controller\Account\AccountController::orgaAddUserAction
+  controller: App\Controller\Management\Account\AccountController::orgaAddUserAction
 
 account-orga-remove:
   path: /organizations/remove/{orga_id}/{user_id}
-  controller: App\Controller\Account\AccountController::orgaRemoveAction
+  controller: App\Controller\Management\Account\AccountController::orgaRemoveAction
   requirements:
     orga_id: \d+
     user_id: \d+
 
 account-delete-apikey:
   path: /delete-api-key/{id}
-  controller: App\Controller\Account\AccountController::deleteApiKeyAction
+  controller: App\Controller\Management\Account\AccountController::deleteApiKeyAction
   requirements:
     id: .+
