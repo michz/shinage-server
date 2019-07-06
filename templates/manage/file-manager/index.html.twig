@@ -7,7 +7,6 @@
         </div>
 
         <div id="elfinder"></div>
-        <p>&nbsp;</p>
         <div class="ui message"><i class="attention icon"></i><strong>{{ "Warning"|trans }}</strong>: {{ "Files uploaded here are accessible without authentication"|trans }}.</div>
     </div>
 
@@ -15,6 +14,7 @@
 
 {% block scripts %}
     <script>
+        var $container = $('.ui.main.container');
         var options = {
             url  : '{{ path('management-files-connector') }}',
             i18nBaseUrl : '{{ url('homepage', {}, false) }}vendor/studio-42/elfinder/js/i18n',
@@ -76,8 +76,20 @@
                     width : 640,  // Set default width/height voor quicklook
                     height : 480
                 }
-            }
+            },
+
+            height:  $container.height() - 40
         };
-        $('#elfinder').elfinder(options);
+        var $elfinder = $('#elfinder').elfinder(options);
+
+        //var options = {resizable:true, height:  $window.height() };
+        //$('#elfinder').elfinder(options);
+
+        $container.resize(function () {
+            var win_height = $container.height();
+            if ($elfinder.options.height != win_height) {
+                $elfinder.resize('auto', win_height - 40);
+            }
+        });
     </script>
 {% endblock %}
