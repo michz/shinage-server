@@ -82,9 +82,6 @@
         };
         var $elfinder = $('#elfinder').elfinder(options);
 
-        //var options = {resizable:true, height:  $window.height() };
-        //$('#elfinder').elfinder(options);
-
         $container.resize(function () {
             var win_height = $container.height();
             if ($elfinder.options.height != win_height) {
