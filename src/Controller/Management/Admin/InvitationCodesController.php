@@ -5,7 +5,7 @@ declare(strict_types=1);
  * Licensed under MIT. See file /LICENSE.
  */
 
-namespace App\Controller\Admin;
+namespace App\Controller\Management\Admin;
 
 use App\Entity\RegistrationCode;
 use App\Factory\RegistrationCodeFactoryInterface;

@@ -5,7 +5,7 @@ declare(strict_types=1);
  * Licensed under MIT. See file /LICENSE.
  */
 
-namespace App\Controller\Account;
+namespace App\Controller\Management\Account;
 
 use App\Entity\User;
 use App\Security\LoggedInUserRepositoryInterface;

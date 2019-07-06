@@ -1,6 +1,6 @@
 {
   "dependencies": {
-    "codemirror": "^5.47.0",
+    "codemirror": "^5.48.0",
     "del": "^3.0.0",
     "fullcalendar": "^3.10.0",
     "gulp": "^4.0.2",
