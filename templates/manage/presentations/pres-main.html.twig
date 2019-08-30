@@ -62,7 +62,7 @@
                 </div>
             {% endfor %}
         {% elseif 'table' == viewMode %}
-            <table class="ui celled table">
+            <table class="ui sortable celled table">
                 <thead>
                     <tr>
                         <th>{{ "Title"|trans }}</th>
@@ -147,6 +147,8 @@
                 e.preventDefault();
                 return false;
             });
+
+            $('.sortable.table').tablesort();
         });
     </script>
 {% endblock %}

@@ -1,8 +1,8 @@
 {
   "dependencies": {
-    "codemirror": "^5.48.0",
+    "codemirror": "^5.48.4",
     "del": "^3.0.0",
-    "fullcalendar": "^3.10.0",
+    "fullcalendar": "^3.10.1",
     "gulp": "^4.0.2",
     "gulp-clean-css": "^3.10.0",
     "gulp-concat": "^2.6.1",
