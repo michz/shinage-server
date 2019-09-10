@@ -12,13 +12,6 @@ management-screen-data:
   requirements:
     guid: "[^/]*"
 
-management-screen-data-save:
-  path: /{guid}/save_data
-  controller: App\Controller\Management\Screens\ScreenDataController:saveDataAction
-  requirements:
-    guid: "[^/]*"
-
-
 management-screen-offline:
   path: /{guid}/offline
   controller: App\Controller\Management\Screens\ScreenOfflineController:indexAction
@@ -50,5 +43,11 @@ management-screen-rights-remove:
 management-screen-schedule:
   path: /{guid}/schedule
   controller: App\Controller\Management\Screens\ScreenScheduleController:indexAction
+  requirements:
+    guid: "[^/]*"
+
+management-screen-alarming:
+  path: /{guid}/alarming
+  controller: App\Controller\Management\Screens\ScreenAlarmingController:indexAction
   requirements:
     guid: "[^/]*"

@@ -101,6 +101,19 @@ class Builder
             ]);
         }
 
+        if ($this->authorizationChecker->isGranted('manage', $screen)) {
+            $menu->addChild('Alarming', [
+                'route' => 'management-screen-alarming',
+                'routeParameters' => ['guid' => $guid],
+            ]);
+        } else {
+            $menu->addChild('Alarming', [
+                'route' => '',
+                'routeParameters' => [],
+                'attributes' => ['class' => 'disabled item'],
+            ]);
+        }
+
         return $menu;
     }
 }

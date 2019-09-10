@@ -15,6 +15,7 @@ Organization: Organisation
 Connect: Verbinden
 Create: Erstellen
 Remove: Entfernen
+InvitationCodes: Einladungs-Codes
 
 Owner: Besitzer
 User: Benutzer
@@ -33,6 +34,7 @@ Screen Settings: Anzeigeeinstellungen
 Common: Allgemein
 Rights: Berechtigungen
 Offline: Offline
+Alarming: Alarmierung
 Users with access to this screen: Berechtigungen für diese Anzeige
 Add further rights: Weitere Berechtigung hinzufügen
 
