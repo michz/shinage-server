@@ -229,3 +229,8 @@ services:
     arguments:
       $senderMail: '%env(MAIL_DEFAULT_SENDER_MAIL)%'
       $senderName: '%env(MAIL_DEFAULT_SENDER_NAME)%'
+
+  App\Command\CheckAndAlarmScreensCommand:
+    arguments:
+      $senderMail: '%env(MAIL_DEFAULT_SENDER_MAIL)%'
+      $senderName: '%env(MAIL_DEFAULT_SENDER_NAME)%'
