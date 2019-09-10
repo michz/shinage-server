@@ -12,6 +12,12 @@
 /var/sessions/*
 !var/sessions/.gitkeep
 !var/SymfonyRequirements.php
+!/var/spool
+/var/spool/*
+!/var/spool/.gitkeep
+!/var/spool/default
+/var/spool/default/*
+!/var/spool/default/.gitkeep
 /vendor/
 /public/assets/
 /public/semantic-ui-css/
@@ -47,7 +53,7 @@ tests/_output/*
 ###> symfony/framework-bundle ###
 /.env
 /public/bundles/
-/var/
+#/var/
 /vendor/
 ###< symfony/framework-bundle ###
 
