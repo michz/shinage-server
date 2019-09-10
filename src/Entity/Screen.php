@@ -39,6 +39,15 @@ class Screen
     /** @var PresentationInterface */
     protected $current_presentation = null;
 
+    /** @var bool */
+    protected $alarming_enabled = false;
+
+    /** @var string */
+    protected $alarming_mail_targets = '';
+
+    /** @var int */
+    protected $alarming_connection_threshold = 30;
+
     public function setGuid(string $guid): self
     {
         $this->guid = $guid;
@@ -156,5 +165,38 @@ class Screen
     public function getCurrentPresentation(): ?PresentationInterface
     {
         return $this->current_presentation;
+    }
+
+    public function isAlarmingEnabled(): bool
+    {
+        return $this->alarming_enabled;
+    }
+
+    public function setAlarmingEnabled(bool $alarming_enabled): self
+    {
+        $this->alarming_enabled = $alarming_enabled;
+        return $this;
+    }
+
+    public function getAlarmingMailTargets(): string
+    {
+        return $this->alarming_mail_targets;
+    }
+
+    public function setAlarmingMailTargets(string $alarming_mail_targets): self
+    {
+        $this->alarming_mail_targets = $alarming_mail_targets;
+        return $this;
+    }
+
+    public function getAlarmingConnectionThreshold(): int
+    {
+        return $this->alarming_connection_threshold;
+    }
+
+    public function setAlarmingConnectionThreshold(int $alarming_connection_threshold): self
+    {
+        $this->alarming_connection_threshold = $alarming_connection_threshold;
+        return $this;
     }
 }
