@@ -8,7 +8,6 @@ declare(strict_types=1);
 namespace App\Controller\Management\Screens;
 
 use App\Entity\Screen;
-use App\Security\LoggedInUserRepositoryInterface;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
@@ -24,15 +23,10 @@ class ScreenAlarmingController extends AbstractController
     /** @var EntityManagerInterface */
     private $entityManager;
 
-    /** @var LoggedInUserRepositoryInterface */
-    private $loggedInUserRepository;
-
     public function __construct(
-        EntityManagerInterface $entityManager,
-        LoggedInUserRepositoryInterface $loggedInUserRepository
+        EntityManagerInterface $entityManager
     ) {
         $this->entityManager = $entityManager;
-        $this->loggedInUserRepository = $loggedInUserRepository;
     }
 
     public function indexAction(Request $request, string $guid): Response
