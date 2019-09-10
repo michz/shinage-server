@@ -28,3 +28,4 @@ Feature: As a cli user
     When I run the alarming cron job
     Then I should see a new mail to "test@shinage.test"
 
+    #@TODO Add a feature to test notification period

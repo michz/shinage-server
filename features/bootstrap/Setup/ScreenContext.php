@@ -100,4 +100,51 @@ class ScreenContext implements Context
         $association->setRoles($associationRoles);
         $this->entityManager->flush();
     }
+
+    /**
+     * @Given The screen :screen has alarming disabled
+     */
+    public function theScreenHasAlarmingDisabled(Screen $screen)
+    {
+        $screen->setAlarmingEnabled(false);
+        $this->entityManager->flush();
+    }
+
+    /**
+     * @Given The screen :screen has alarming enabled
+     */
+    public function theScreenHasAlarmingEnabled(Screen $screen)
+    {
+        $screen->setAlarmingEnabled(true);
+        $this->entityManager->flush();
+    }
+
+    /**
+     * @Given The screen :screen has the last connection alarming threshold set to :threshold minutes
+     */
+    public function theScreenHasTheLastConnectionAlarmingThresholdSetToMinutes(Screen $screen, int $threshold)
+    {
+        $screen->setAlarmingConnectionThreshold($threshold);
+        $this->entityManager->flush();
+    }
+
+    /**
+     * @Given The screen :screen has last connected :ago minutes ago
+     */
+    public function theScreenHasLastConnectedMinutesAgo(Screen $screen, int $ago)
+    {
+        $lastConnect = new \DateTime();
+        $lastConnect->sub(new \DateInterval('PT' . $ago . 'M'));
+        $screen->setLastConnect($lastConnect);
+        $this->entityManager->flush();
+    }
+
+    /**
+     * @Given The screen :screen has the alarming mail address set to :target
+     */
+    public function theScreenHasTheAlarmingMailAddressSetTo(Screen $screen, string $target)
+    {
+        $screen->setAlarmingMailTargets($target);
+        $this->entityManager->flush();
+    }
 }
