@@ -41,7 +41,7 @@ class MailContext extends \Behat\MinkExtension\Context\RawMinkContext
         return $finder;
     }
 
-    public function getMail($file): \Swift_Message
+    public function getMail(string $file): \Swift_Message
     {
         return \unserialize(\file_get_contents($file));
     }
@@ -49,7 +49,7 @@ class MailContext extends \Behat\MinkExtension\Context\RawMinkContext
     /**
      * @Then I should not see any new mails
      */
-    public function iShouldNotSeeAnyNewMails()
+    public function iShouldNotSeeAnyNewMails(): void
     {
         $mails = $this->getSpooledEmails();
         Assert::count($mails, 0);
@@ -58,7 +58,7 @@ class MailContext extends \Behat\MinkExtension\Context\RawMinkContext
     /**
      * @Then I should see a new mail to :to
      */
-    public function iShouldSeeANewMailTo(string $to)
+    public function iShouldSeeANewMailTo(string $to): void
     {
         $mails = $this->getSpooledEmails();
         foreach ($mails as $mail) {
@@ -67,7 +67,7 @@ class MailContext extends \Behat\MinkExtension\Context\RawMinkContext
             if (\array_key_exists($to, $mail->getTo()) ||
                 \array_key_exists($to, $mail->getCc()) ||
                 \array_key_exists($to, $mail->getBcc())) {
-                return true;
+                return;
             }
         }
 

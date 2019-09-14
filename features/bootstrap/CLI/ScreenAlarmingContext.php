@@ -15,9 +15,6 @@ use Symfony\Component\HttpKernel\KernelInterface;
 
 class ScreenAlarmingContext implements Context
 {
-    /** @var KernelInterface */
-    private $kernel;
-
     /** @var Application */
     private $application;
 
@@ -29,13 +26,12 @@ class ScreenAlarmingContext implements Context
     ) {
         $this->application = new Application($kernel);
         $this->output = new BufferedOutput();
-        $this->kernel = $kernel;
     }
 
     /**
      * @When I run the alarming cron job
      */
-    public function iRunTheAlarmingCronJob()
+    public function iRunTheAlarmingCronJob(): void
     {
         $command = 'screens:check-and-alarm';
         $input = new ArgvInput(['console', $command, '--env=test']);
