@@ -10,6 +10,9 @@ namespace shinage\server\behat\Hook;
 use Behat\Behat\Context\Context;
 use Doctrine\Common\DataFixtures\Purger\ORMPurger;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\Filesystem\Filesystem;
+use Symfony\Component\Finder\Finder;
+use Symfony\Component\HttpFoundation\File\File;
 
 /*
  * Inspired by Sylius ( see https://sylius.com ).
@@ -22,12 +25,15 @@ class PurgeContext implements Context
     /** @var array|string[] */
     private $poolFiles = [];
 
-    /**
-     * @param EntityManagerInterface $entityManager
-     */
-    public function __construct(EntityManagerInterface $entityManager)
-    {
+    /** @var string */
+    private $mailSpoolPath;
+
+    public function __construct(
+        EntityManagerInterface $entityManager,
+        string $mailSpoolPath
+    ) {
         $this->entityManager = $entityManager;
+        $this->mailSpoolPath = $mailSpoolPath;
     }
 
     /**
@@ -39,6 +45,7 @@ class PurgeContext implements Context
         $purger = new ORMPurger($this->entityManager);
         $purger->purge();
         $this->entityManager->clear();
+        $this->purgeMailSpool();
     }
 
     /**
@@ -56,6 +63,7 @@ class PurgeContext implements Context
         }
 
         $this->purgePoolFolders($folders);
+        $this->purgeMailSpool();
     }
 
     /**
@@ -72,5 +80,23 @@ class PurgeContext implements Context
     public function addPurgablePoolFile(string $path): void
     {
         $this->poolFiles[] = $path;
+    }
+
+    public function purgeMailSpool(): void
+    {
+        $filesystem = new Filesystem();
+        $finder = $this->getSpooledEmails();
+
+        /** @var File $file */
+        foreach ($finder as $file) {
+            $filesystem->remove($file->getRealPath());
+        }
+    }
+
+    public function getSpooledEmails(): Finder
+    {
+        $finder = new Finder();
+        $finder->files()->in($this->mailSpoolPath);
+        return $finder;
     }
 }

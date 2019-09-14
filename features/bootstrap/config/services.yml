@@ -13,6 +13,7 @@ services:
     tags: ["fob.context_service"]
     arguments:
       - "@__symfony_shared__.doctrine.orm.entity_manager"
+      - "%__symfony_shared__.swiftmailer.spool.default.file.path%"
 
   shinage.server.behat.context.api.v1.file_pool:
     class: shinage\server\behat\Api\v1\FilePoolContext
@@ -70,3 +71,15 @@ services:
   shinage.server.behat.context.account_security:
     class: shinage\server\behat\AccountSecurityContext
     tags: ["fob.context_service"]
+
+  shinage.server.behat.context.mail:
+    class: shinage\server\behat\MailContext
+    tags: ["fob.context_service"]
+    arguments:
+      - "%__symfony_shared__.swiftmailer.spool.default.file.path%"
+
+  shinage.server.behat.context.cli.screen_alarming:
+    class: shinage\server\behat\CLI\ScreenAlarmingContext
+    tags: ["fob.context_service"]
+    arguments:
+      - "@__symfony_shared__.kernel"

@@ -1,2 +1,6 @@
 swiftmailer:
     disable_delivery: true
+    spool:
+        type: file
+        path: '%kernel.root_dir%/../var/spool'
+    delivery_addresses: ~
