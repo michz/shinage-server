@@ -12,6 +12,13 @@ services:
             - "http://127.0.0.1:8000"
             # @TODO Make it somehow autoconfigured
 
+    Tests\Behat\Hook\PurgeContext:
+        arguments:
+            - "@doctrine.orm.entity_manager"
+            - "%swiftmailer.spool.default.file.path%"
+            # @TODO Make it somehow autoconfigured
+
+
     #shinage\server\behat\:
     #    resource: '../features/bootstrap/*'
     #    exclude: '../features/bootstrap/bootstrap.php'

@@ -4,7 +4,7 @@ default:
       paths:
         - "%paths.base%/features/ScreenRemoteApi"
       contexts:
-        - shinage.server.behat.context.hook.purge
+        - Tests\Behat\Hook\PurgeContext
 
         - shinage.server.behat.context.transform.presentation
         - shinage.server.behat.context.transform.screen
@@ -19,7 +19,7 @@ default:
       paths:
         - "%paths.base%/features/Login"
       contexts:
-        - shinage.server.behat.context.hook.purge
+        - Tests\Behat\Hook\PurgeContext
 
         - shinage.server.behat.context.transform.date_time
         - shinage.server.behat.context.transform.user
@@ -33,7 +33,7 @@ default:
       paths:
         - "%paths.base%/features/PresentationEditors"
       contexts:
-        - shinage.server.behat.context.hook.purge
+        - Tests\Behat\Hook\PurgeContext
 
         - shinage.server.behat.context.transform.user
 
@@ -48,7 +48,7 @@ default:
       paths:
         - "%paths.base%/features/Management/Account"
       contexts:
-        - shinage.server.behat.context.hook.purge
+        - Tests\Behat\Hook\PurgeContext
 
         - shinage.server.behat.context.transform.user
 
@@ -64,7 +64,7 @@ default:
       paths:
         - "%paths.base%/features/Api/v1"
       contexts:
-        - shinage.server.behat.context.hook.purge
+        - Tests\Behat\Hook\PurgeContext
 
         - shinage.server.behat.context.transform.shared_storage
         - shinage.server.behat.context.transform.presentation
@@ -86,7 +86,7 @@ default:
       paths:
         - "%paths.base%/features/CLI"
       contexts:
-        - shinage.server.behat.context.hook.purge
+        - Tests\Behat\Hook\PurgeContext
 
         - shinage.server.behat.context.transform.shared_storage
         - shinage.server.behat.context.transform.presentation

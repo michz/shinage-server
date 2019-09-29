@@ -5,7 +5,7 @@ declare(strict_types=1);
  * Licensed under MIT. See file /LICENSE.
  */
 
-namespace shinage\server\behat\Hook;
+namespace Tests\Behat\Hook;
 
 use Behat\Behat\Context\Context;
 use Doctrine\Common\DataFixtures\Purger\ORMPurger;

@@ -11,7 +11,7 @@ use App\Entity\User;
 use Behat\Behat\Context\Context;
 use Doctrine\ORM\EntityManagerInterface;
 use shinage\server\behat\Helper\StringInflector;
-use shinage\server\behat\Hook\PurgeContext;
+use Tests\Behat\Hook\PurgeContext;
 use shinage\server\behat\Service\SharedStorage;
 
 class FilePoolContext implements Context

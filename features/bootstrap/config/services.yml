@@ -10,11 +10,11 @@ services:
   behat.mink:
     class: Behat\MinkExtension\Context\MinkContext
 
-  shinage.server.behat.context.hook.purge:
-    class: shinage\server\behat\Hook\PurgeContext
-    arguments:
-      - "@doctrine.orm.entity_manager"
-      - "%swiftmailer.spool.default.file.path%"
+#  shinage.server.behat.context.hook.purge:
+#    class: shinage\server\behat\Hook\PurgeContext
+#    arguments:
+#      - "@doctrine.orm.entity_manager"
+#      - "%swiftmailer.spool.default.file.path%"
 
   shinage.server.behat.context.api.v1.file_pool:
     class: shinage\server\behat\Api\v1\FilePoolContext
