@@ -5,29 +5,6 @@ services:
   behat.mink:
     class: Behat\MinkExtension\Context\MinkContext
 
-#  shinage.server.behat.context.hook.purge:
-#    class: shinage\server\behat\Hook\PurgeContext
-#    arguments:
-#      - "@doctrine.orm.entity_manager"
-#      - "%swiftmailer.spool.default.file.path%"
-
-  shinage.server.behat.context.api.v1.file_pool:
-    class: shinage\server\behat\Api\v1\FilePoolContext
-    arguments:
-      - '@Tests\Behat\Client\ApiV1ClientContext'
-
-  shinage.server.behat.context.api.v1.presentations:
-    class: shinage\server\behat\Api\v1\PresentationsContext
-    arguments:
-      - '@Tests\Behat\Client\ApiV1ClientContext'
-      - "@doctrine.orm.entity_manager"
-
-  shinage.server.behat.context.api.v1.schedule:
-    class: shinage\server\behat\Api\v1\ScheduleContext
-    arguments:
-      - '@Tests\Behat\Client\ApiV1ClientContext'
-      - "@doctrine.orm.entity_manager"
-
   shinage.server.behat.context.heartbeat:
     class: shinage\server\behat\HeartbeatContext
     arguments:

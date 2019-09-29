@@ -73,9 +73,9 @@ default:
 
         - Tests\Behat\Client\ApiV1ClientContext
 
-        - shinage.server.behat.context.api.v1.file_pool
-        - shinage.server.behat.context.api.v1.presentations
-        - shinage.server.behat.context.api.v1.schedule
+        - Tests\Behat\Api\v1\FilePoolContext
+        - Tests\Behat\Api\v1\PresentationsContext
+        - Tests\Behat\Api\v1\ScheduleContext
         - Tests\Behat\Setup\FilePoolContext
         - Tests\Behat\Setup\PresentationsContext
         - Tests\Behat\Setup\ScreenContext

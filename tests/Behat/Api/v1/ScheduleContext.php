@@ -5,7 +5,7 @@ declare(strict_types=1);
  * Licensed under MIT. See file /LICENSE.
  */
 
-namespace shinage\server\behat\Api\v1;
+namespace Tests\Behat\Api\v1;
 
 use App\Entity\Presentation;
 use App\Entity\ScheduledPresentation;
