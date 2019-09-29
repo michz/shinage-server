@@ -18,6 +18,13 @@ services:
             - "%swiftmailer.spool.default.file.path%"
             # @TODO Make it somehow autoconfigured
 
+    Tests\Behat\Setup\FilePoolContext:
+        arguments:
+            - '@doctrine.orm.entity_manager'
+            - '@Tests\Behat\Service\SharedStorage'
+            - '@Tests\Behat\Hook\PurgeContext'
+            - '%path_pool%'
+
 
     #shinage\server\behat\:
     #    resource: '../features/bootstrap/*'

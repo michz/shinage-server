@@ -9,8 +9,8 @@ default:
         - Tests\Behat\Transform\PresentationTransformerContext
         - Tests\Behat\Transform\ScreenTransformerContext
 
-        - shinage.server.behat.context.setup.presentations
-        - shinage.server.behat.context.setup.screen
+        - Tests\Behat\Setup\PresentationsContext
+        - Tests\Behat\Setup\ScreenContext
         - shinage.server.behat.context.heartbeat
 
         - shinage.server.behat.context.presentation
@@ -26,7 +26,7 @@ default:
 
         - shinage.server.behat.context.login
         - shinage.server.behat.context.registration
-        - shinage.server.behat.context.setup.user
+        - Tests\Behat\Setup\UserContext
         - shinage.server.behat.context.general_webpages
 
     presentation_editor_features:
@@ -37,7 +37,7 @@ default:
 
         - Tests\Behat\Transform\UserTransformerContext
 
-        - shinage.server.behat.context.setup.user
+        - Tests\Behat\Setup\UserContext
         - shinage.server.behat.context.login
         - shinage.server.behat.context.general_webpages
         - shinage.server.behat.context.presentation_editors
@@ -52,7 +52,7 @@ default:
 
         - Tests\Behat\Transform\UserTransformerContext
 
-        - shinage.server.behat.context.setup.user
+        - Tests\Behat\Setup\UserContext
         - shinage.server.behat.context.account_security
         - shinage.server.behat.context.general_webpages
         - shinage.server.behat.context.login
@@ -76,10 +76,10 @@ default:
         - shinage.server.behat.context.api.v1.file_pool
         - shinage.server.behat.context.api.v1.presentations
         - shinage.server.behat.context.api.v1.schedule
-        - shinage.server.behat.context.setup.file_pool
-        - shinage.server.behat.context.setup.presentations
-        - shinage.server.behat.context.setup.screen
-        - shinage.server.behat.context.setup.user
+        - Tests\Behat\Setup\FilePoolContext
+        - Tests\Behat\Setup\PresentationsContext
+        - Tests\Behat\Setup\ScreenContext
+        - Tests\Behat\Setup\UserContext
         - shinage.server.behat.context.general_webpages
 
     cli_features:
@@ -95,7 +95,7 @@ default:
 
         - shinage.server.behat.context.cli.screen_alarming
 
-        - shinage.server.behat.context.setup.screen
+        - Tests\Behat\Setup\ScreenContext
         - shinage.server.behat.context.mail
         - shinage.server.behat.context.general_webpages
 
