@@ -5,7 +5,7 @@ declare(strict_types=1);
  * Licensed under MIT. See file /LICENSE.
  */
 
-namespace shinage\server\behat\Transform;
+namespace Tests\Behat\Transform;
 
 use Behat\Behat\Context\Context;
 use shinage\server\behat\Helper\StringInflector;
@@ -15,7 +15,7 @@ use shinage\server\behat\Service\SharedStorageInterface;
  * This file is inspried by Sylius. Thanks for fantastic open source software!
  * See: https://github.com/Sylius/Sylius/blob/master/src/Sylius/Behat/Service/SharedStorage.php
  */
-class SharedStorageContext implements Context
+class SharedStorageTransformerContext implements Context
 {
     /** @var SharedStorageInterface */
     private $sharedStorage;

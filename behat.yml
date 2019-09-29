@@ -6,8 +6,8 @@ default:
       contexts:
         - Tests\Behat\Hook\PurgeContext
 
-        - shinage.server.behat.context.transform.presentation
-        - shinage.server.behat.context.transform.screen
+        - Tests\Behat\Transform\PresentationTransformerContext
+        - Tests\Behat\Transform\ScreenTransformerContext
 
         - shinage.server.behat.context.setup.presentations
         - shinage.server.behat.context.setup.screen
@@ -21,8 +21,8 @@ default:
       contexts:
         - Tests\Behat\Hook\PurgeContext
 
-        - shinage.server.behat.context.transform.date_time
-        - shinage.server.behat.context.transform.user
+        - Tests\Behat\Transform\DateTimeTransformerContext
+        - Tests\Behat\Transform\UserTransformerContext
 
         - shinage.server.behat.context.login
         - shinage.server.behat.context.registration
@@ -35,7 +35,7 @@ default:
       contexts:
         - Tests\Behat\Hook\PurgeContext
 
-        - shinage.server.behat.context.transform.user
+        - Tests\Behat\Transform\UserTransformerContext
 
         - shinage.server.behat.context.setup.user
         - shinage.server.behat.context.login
@@ -50,7 +50,7 @@ default:
       contexts:
         - Tests\Behat\Hook\PurgeContext
 
-        - shinage.server.behat.context.transform.user
+        - Tests\Behat\Transform\UserTransformerContext
 
         - shinage.server.behat.context.setup.user
         - shinage.server.behat.context.account_security
@@ -66,10 +66,10 @@ default:
       contexts:
         - Tests\Behat\Hook\PurgeContext
 
-        - shinage.server.behat.context.transform.shared_storage
-        - shinage.server.behat.context.transform.presentation
-        - shinage.server.behat.context.transform.screen
-        - shinage.server.behat.context.transform.user
+        - Tests\Behat\Transform\SharedStorageTransformerContext
+        - Tests\Behat\Transform\PresentationTransformerContext
+        - Tests\Behat\Transform\ScreenTransformerContext
+        - Tests\Behat\Transform\UserTransformerContext
 
         - Tests\Behat\Client\ApiV1ClientContext
 
@@ -88,10 +88,10 @@ default:
       contexts:
         - Tests\Behat\Hook\PurgeContext
 
-        - shinage.server.behat.context.transform.shared_storage
-        - shinage.server.behat.context.transform.presentation
-        - shinage.server.behat.context.transform.screen
-        - shinage.server.behat.context.transform.user
+        - Tests\Behat\Transform\SharedStorageTransformerContext
+        - Tests\Behat\Transform\PresentationTransformerContext
+        - Tests\Behat\Transform\ScreenTransformerContext
+        - Tests\Behat\Transform\UserTransformerContext
 
         - shinage.server.behat.context.cli.screen_alarming
 

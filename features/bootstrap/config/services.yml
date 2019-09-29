@@ -1,7 +1,6 @@
 imports:
   - "services/services.yml"
   - "services/setup.yml"
-  - "services/transform.yml"
 
 services:
   _defaults:
