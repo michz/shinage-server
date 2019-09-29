@@ -17,7 +17,7 @@ services:
     class: shinage\server\behat\Setup\FilePoolContext
     arguments:
     - "@doctrine.orm.entity_manager"
-    - "@shinage.server.behat.service.shared_storage"
+    - '@Tests\Behat\Service\SharedStorage'
     - '@Tests\Behat\Hook\PurgeContext'
     - "%path_pool%"
 
@@ -25,4 +25,4 @@ services:
     class: shinage\server\behat\Setup\PresentationsContext
     arguments:
     - "@doctrine.orm.entity_manager"
-    - "@shinage.server.behat.service.shared_storage"
+    - '@Tests\Behat\Service\SharedStorage'

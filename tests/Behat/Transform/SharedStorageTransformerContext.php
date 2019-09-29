@@ -9,7 +9,7 @@ namespace Tests\Behat\Transform;
 
 use Behat\Behat\Context\Context;
 use shinage\server\behat\Helper\StringInflector;
-use shinage\server\behat\Service\SharedStorageInterface;
+use Tests\Behat\Service\SharedStorageInterface;
 
 /*
  * This file is inspried by Sylius. Thanks for fantastic open source software!

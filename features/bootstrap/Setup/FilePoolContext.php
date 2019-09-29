@@ -12,7 +12,7 @@ use Behat\Behat\Context\Context;
 use Doctrine\ORM\EntityManagerInterface;
 use shinage\server\behat\Helper\StringInflector;
 use Tests\Behat\Hook\PurgeContext;
-use shinage\server\behat\Service\SharedStorage;
+use Tests\Behat\Service\SharedStorage;
 
 class FilePoolContext implements Context
 {

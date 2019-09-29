@@ -13,7 +13,7 @@ use App\Entity\Screen;
 use App\Entity\User;
 use Behat\Behat\Context\Context;
 use Doctrine\ORM\EntityManagerInterface;
-use shinage\server\behat\Service\SharedStorage;
+use Tests\Behat\Service\SharedStorage;
 
 class PresentationsContext implements Context
 {

@@ -1,5 +1,4 @@
 imports:
-  - "services/services.yml"
   - "services/setup.yml"
 
 services:
