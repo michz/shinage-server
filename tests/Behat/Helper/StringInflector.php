@@ -5,7 +5,7 @@ declare(strict_types=1);
  * Licensed under MIT. See file /LICENSE.
  */
 
-namespace shinage\server\behat\Helper;
+namespace Tests\Behat\Helper;
 
 /*
  * This file is inspired by Sylius. Thanks for fantastic open source software!

@@ -10,7 +10,7 @@ namespace shinage\server\behat\Setup;
 use App\Entity\User;
 use Behat\Behat\Context\Context;
 use Doctrine\ORM\EntityManagerInterface;
-use shinage\server\behat\Helper\StringInflector;
+use Tests\Behat\Helper\StringInflector;
 use Tests\Behat\Hook\PurgeContext;
 use Tests\Behat\Service\SharedStorage;
 

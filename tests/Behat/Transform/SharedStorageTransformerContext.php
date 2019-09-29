@@ -8,7 +8,7 @@ declare(strict_types=1);
 namespace Tests\Behat\Transform;
 
 use Behat\Behat\Context\Context;
-use shinage\server\behat\Helper\StringInflector;
+use Tests\Behat\Helper\StringInflector;
 use Tests\Behat\Service\SharedStorageInterface;
 
 /*
