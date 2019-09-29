@@ -5,7 +5,7 @@ declare(strict_types=1);
  * Licensed under MIT. See file /LICENSE.
  */
 
-namespace shinage\server\behat\CLI;
+namespace Tests\Behat\CLI;
 
 use Behat\Behat\Context\Context;
 use Symfony\Bundle\FrameworkBundle\Console\Application;

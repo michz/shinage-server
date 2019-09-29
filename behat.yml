@@ -93,7 +93,7 @@ default:
         - Tests\Behat\Transform\ScreenTransformerContext
         - Tests\Behat\Transform\UserTransformerContext
 
-        - shinage.server.behat.context.cli.screen_alarming
+        - Tests\Behat\CLI\ScreenAlarmingContext
 
         - Tests\Behat\Setup\ScreenContext
         - shinage.server.behat.context.mail

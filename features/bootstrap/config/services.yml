@@ -39,8 +39,3 @@ services:
     class: shinage\server\behat\MailContext
     arguments:
       - "%swiftmailer.spool.default.file.path%"
-
-  shinage.server.behat.context.cli.screen_alarming:
-    class: shinage\server\behat\CLI\ScreenAlarmingContext
-    arguments:
-      - "@kernel"
