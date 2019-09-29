@@ -11,7 +11,7 @@ use App\Entity\Presentation;
 use Behat\Behat\Context\Context;
 use Behat\Gherkin\Node\PyStringNode;
 use Doctrine\ORM\EntityManagerInterface;
-use shinage\server\behat\Service\ApiV1ClientContext;
+use Tests\Behat\Client\ApiV1ClientContext;
 use Webmozart\Assert\Assert;
 
 class PresentationsContext implements Context

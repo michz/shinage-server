@@ -4,8 +4,13 @@ services:
         autowire: true
         autoconfigure: true
 
-    #App\Tests\Behat\:
-    #    resource: '../tests/Behat/*'
+    Tests\Behat\:
+        resource: '../tests/Behat/*'
+
+    Tests\Behat\Client\ApiV1ClientContext:
+        arguments:
+            - "http://127.0.0.1:8000"
+            # @TODO Make it somehow autoconfigured
 
     #shinage\server\behat\:
     #    resource: '../features/bootstrap/*'

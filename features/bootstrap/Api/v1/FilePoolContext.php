@@ -9,7 +9,7 @@ namespace shinage\server\behat\Api\v1;
 
 use Behat\Behat\Context\Context;
 use Behat\Gherkin\Node\PyStringNode;
-use shinage\server\behat\Service\ApiV1ClientContext;
+use Tests\Behat\Client\ApiV1ClientContext;
 use Webmozart\Assert\Assert;
 
 class FilePoolContext implements Context

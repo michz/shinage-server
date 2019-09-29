@@ -19,18 +19,18 @@ services:
   shinage.server.behat.context.api.v1.file_pool:
     class: shinage\server\behat\Api\v1\FilePoolContext
     arguments:
-      - "@shinage.server.behat.service.api_v1_client"
+      - '@Tests\Behat\Client\ApiV1ClientContext'
 
   shinage.server.behat.context.api.v1.presentations:
     class: shinage\server\behat\Api\v1\PresentationsContext
     arguments:
-      - "@shinage.server.behat.service.api_v1_client"
+      - '@Tests\Behat\Client\ApiV1ClientContext'
       - "@doctrine.orm.entity_manager"
 
   shinage.server.behat.context.api.v1.schedule:
     class: shinage\server\behat\Api\v1\ScheduleContext
     arguments:
-      - "@shinage.server.behat.service.api_v1_client"
+      - '@Tests\Behat\Client\ApiV1ClientContext'
       - "@doctrine.orm.entity_manager"
 
   shinage.server.behat.context.heartbeat:

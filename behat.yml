@@ -71,7 +71,7 @@ default:
         - shinage.server.behat.context.transform.screen
         - shinage.server.behat.context.transform.user
 
-        - shinage.server.behat.service.api_v1_client
+        - Tests\Behat\Client\ApiV1ClientContext
 
         - shinage.server.behat.context.api.v1.file_pool
         - shinage.server.behat.context.api.v1.presentations

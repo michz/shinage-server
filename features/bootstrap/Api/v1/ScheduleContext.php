@@ -12,7 +12,7 @@ use App\Entity\ScheduledPresentation;
 use App\Entity\Screen;
 use Behat\Behat\Context\Context;
 use Doctrine\ORM\EntityManagerInterface;
-use shinage\server\behat\Service\ApiV1ClientContext;
+use Tests\Behat\Client\ApiV1ClientContext;
 use Webmozart\Assert\Assert;
 
 class ScheduleContext implements Context
