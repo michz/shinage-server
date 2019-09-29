@@ -5,7 +5,7 @@ declare(strict_types=1);
  * Licensed under MIT. See file /LICENSE.
  */
 
-namespace shinage\server\behat;
+namespace Tests\Behat\Gui;
 
 use App\Entity\User;
 use Webmozart\Assert\Assert;

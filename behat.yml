@@ -11,9 +11,9 @@ default:
 
         - Tests\Behat\Setup\PresentationsContext
         - Tests\Behat\Setup\ScreenContext
-        - shinage.server.behat.context.heartbeat
+        - Tests\Behat\HeartbeatContext
 
-        - shinage.server.behat.context.presentation
+        - Tests\Behat\Gui\PresentationContext
 
     login_features:
       paths:
@@ -24,10 +24,10 @@ default:
         - Tests\Behat\Transform\DateTimeTransformerContext
         - Tests\Behat\Transform\UserTransformerContext
 
-        - shinage.server.behat.context.login
-        - shinage.server.behat.context.registration
+        - Tests\Behat\Gui\LoginContext
+        - Tests\Behat\Gui\RegistrationContext
         - Tests\Behat\Setup\UserContext
-        - shinage.server.behat.context.general_webpages
+        - Tests\Behat\Gui\GeneralWebpagesContext
 
     presentation_editor_features:
       paths:
@@ -38,9 +38,9 @@ default:
         - Tests\Behat\Transform\UserTransformerContext
 
         - Tests\Behat\Setup\UserContext
-        - shinage.server.behat.context.login
-        - shinage.server.behat.context.general_webpages
-        - shinage.server.behat.context.presentation_editors
+        - Tests\Behat\Gui\LoginContext
+        - Tests\Behat\Gui\GeneralWebpagesContext
+        - Tests\Behat\Gui\PresentationEditorsContext
 
         - behat.mink
 
@@ -53,10 +53,10 @@ default:
         - Tests\Behat\Transform\UserTransformerContext
 
         - Tests\Behat\Setup\UserContext
-        - shinage.server.behat.context.account_security
-        - shinage.server.behat.context.general_webpages
-        - shinage.server.behat.context.login
-        - shinage.server.behat.context.presentation_editors
+        - Tests\Behat\Gui\AccountSecurityContext
+        - Tests\Behat\Gui\GeneralWebpagesContext
+        - Tests\Behat\Gui\LoginContext
+        - Tests\Behat\Gui\PresentationEditorsContext
 
         - behat.mink
 
@@ -80,7 +80,7 @@ default:
         - Tests\Behat\Setup\PresentationsContext
         - Tests\Behat\Setup\ScreenContext
         - Tests\Behat\Setup\UserContext
-        - shinage.server.behat.context.general_webpages
+        - Tests\Behat\Gui\GeneralWebpagesContext
 
     cli_features:
       paths:
@@ -96,8 +96,8 @@ default:
         - Tests\Behat\CLI\ScreenAlarmingContext
 
         - Tests\Behat\Setup\ScreenContext
-        - shinage.server.behat.context.mail
-        - shinage.server.behat.context.general_webpages
+        - Tests\Behat\MailContext
+        - Tests\Behat\Gui\GeneralWebpagesContext
 
   extensions:
     Behat\MinkExtension:

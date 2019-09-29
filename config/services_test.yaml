@@ -25,13 +25,21 @@ services:
             - '@Tests\Behat\Hook\PurgeContext'
             - '%path_pool%'
 
+    Tests\Behat\Gui\LoginContext:
+        arguments:
+            - "@fos_user.user_manager"
+            - "@session"
+            - "main"
 
-    #shinage\server\behat\:
-    #    resource: '../features/bootstrap/*'
-    #    exclude: '../features/bootstrap/bootstrap.php'
+    Tests\Behat\MailContext:
+        arguments:
+            - "%swiftmailer.spool.default.file.path%"
 
-imports:
-    - "../features/bootstrap/config/services.yml"
+    Symfony\Component\BrowserKit\Client:
+        alias: test.client
+
+    behat.mink:
+        class: Behat\MinkExtension\Context\MinkContext
 
     # If you need to access services in a test, create an alias
     # and then fetch that alias from the container. As a convention,

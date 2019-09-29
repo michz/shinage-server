@@ -5,7 +5,7 @@ declare(strict_types=1);
  * Licensed under MIT. See file /LICENSE.
  */
 
-namespace shinage\server\behat;
+namespace Tests\Behat;
 
 use Behat\Behat\Context\Context;
 use Symfony\Component\BrowserKit\Client;
