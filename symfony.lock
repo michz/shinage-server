@@ -131,12 +131,6 @@
     "fabpot/goutte": {
         "version": "v3.2.3"
     },
-    "friends-of-behat/context-service-extension": {
-        "version": "v1.2.0"
-    },
-    "friends-of-behat/cross-container-extension": {
-        "version": "v1.1.0"
-    },
     "friends-of-behat/symfony-extension": {
         "version": "v1.3.0"
     },
@@ -499,6 +493,9 @@
     },
     "symfony/property-access": {
         "version": "v4.1.6"
+    },
+    "symfony/proxy-manager-bridge": {
+        "version": "v4.3.4"
     },
     "symfony/routing": {
         "version": "4.0",

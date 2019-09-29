@@ -1,24 +1,22 @@
 services:
+  _defaults:
+    public: true
+
   shinage.server.behat.context.transform.shared_storage:
     class: shinage\server\behat\Transform\SharedStorageContext
-    tags: ["fob.context_service"]
     arguments:
       - "@shinage.server.behat.service.shared_storage"
   shinage.server.behat.context.transform.presentation:
     class: shinage\server\behat\Transform\PresentationTransformerContext
-    tags: ["fob.context_service"]
     arguments:
-      - "@__symfony_shared__.doctrine.orm.entity_manager"
+      - "@doctrine.orm.entity_manager"
   shinage.server.behat.context.transform.screen:
     class: shinage\server\behat\Transform\ScreenTransformerContext
-    tags: ["fob.context_service"]
     arguments:
-      - "@__symfony_shared__.doctrine.orm.entity_manager"
+      - "@doctrine.orm.entity_manager"
   shinage.server.behat.context.transform.user:
     class: shinage\server\behat\Transform\UserTransformerContext
-    tags: ["fob.context_service"]
     arguments:
-      - "@__symfony_shared__.doctrine.orm.entity_manager"
+      - "@doctrine.orm.entity_manager"
   shinage.server.behat.context.transform.date_time:
     class: shinage\server\behat\Transform\DateTimeTransformerContext
-    tags: ["fob.context_service"]

@@ -4,82 +4,71 @@ imports:
   - "services/transform.yml"
 
 services:
+  _defaults:
+    public: true
+
   behat.mink:
     class: Behat\MinkExtension\Context\MinkContext
-    tags: ["fob.context_service"]
 
   shinage.server.behat.context.hook.purge:
     class: shinage\server\behat\Hook\PurgeContext
-    tags: ["fob.context_service"]
     arguments:
-      - "@__symfony_shared__.doctrine.orm.entity_manager"
-      - "%__symfony_shared__.swiftmailer.spool.default.file.path%"
+      - "@doctrine.orm.entity_manager"
+      - "%swiftmailer.spool.default.file.path%"
 
   shinage.server.behat.context.api.v1.file_pool:
     class: shinage\server\behat\Api\v1\FilePoolContext
-    tags: ["fob.context_service"]
     arguments:
       - "@shinage.server.behat.service.api_v1_client"
 
   shinage.server.behat.context.api.v1.presentations:
     class: shinage\server\behat\Api\v1\PresentationsContext
-    tags: ["fob.context_service"]
     arguments:
       - "@shinage.server.behat.service.api_v1_client"
-      - "@__symfony_shared__.doctrine.orm.entity_manager"
+      - "@doctrine.orm.entity_manager"
 
   shinage.server.behat.context.api.v1.schedule:
     class: shinage\server\behat\Api\v1\ScheduleContext
-    tags: ["fob.context_service"]
     arguments:
       - "@shinage.server.behat.service.api_v1_client"
-      - "@__symfony_shared__.doctrine.orm.entity_manager"
+      - "@doctrine.orm.entity_manager"
 
   shinage.server.behat.context.heartbeat:
     class: shinage\server\behat\HeartbeatContext
-    tags: ["fob.context_service"]
     arguments:
-      - "@__symfony__.test.client"
+      - "@test.client"
 
   shinage.server.behat.context.presentation:
     class: shinage\server\behat\PresentationContext
-    tags: ["fob.context_service"]
     arguments:
-      - "@__symfony_shared__.doctrine.orm.entity_manager"
-      - "@__symfony__.test.client"
+      - "@doctrine.orm.entity_manager"
+      - "@test.client"
 
   shinage.server.behat.context.login:
     class: shinage\server\behat\LoginContext
-    tags: ["fob.context_service"]
     arguments:
-      - "@__symfony_shared__.fos_user.user_manager"
-      - "@__symfony_shared__.session"
+      - "@fos_user.user_manager"
+      - "@session"
       - "main"
 
   shinage.server.behat.context.registration:
     class: shinage\server\behat\RegistrationContext
-    tags: ["fob.context_service"]
 
   shinage.server.behat.context.general_webpages:
     class: shinage\server\behat\GeneralWebpagesContext
-    tags: ["fob.context_service"]
 
   shinage.server.behat.context.presentation_editors:
     class: shinage\server\behat\PresentationEditorsContext
-    tags: ["fob.context_service"]
 
   shinage.server.behat.context.account_security:
     class: shinage\server\behat\AccountSecurityContext
-    tags: ["fob.context_service"]
 
   shinage.server.behat.context.mail:
     class: shinage\server\behat\MailContext
-    tags: ["fob.context_service"]
     arguments:
-      - "%__symfony_shared__.swiftmailer.spool.default.file.path%"
+      - "%swiftmailer.spool.default.file.path%"
 
   shinage.server.behat.context.cli.screen_alarming:
     class: shinage\server\behat\CLI\ScreenAlarmingContext
-    tags: ["fob.context_service"]
     arguments:
-      - "@__symfony_shared__.kernel"
+      - "@kernel"

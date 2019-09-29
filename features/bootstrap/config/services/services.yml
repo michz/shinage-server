@@ -1,9 +1,13 @@
 services:
+  _defaults:
+    public: true
+
   shinage.server.behat.service.shared_storage:
     class: shinage\server\behat\Service\SharedStorage
 
   shinage.server.behat.service.api_v1_client:
     class: shinage\server\behat\Service\ApiV1ClientContext
-    tags: ["fob.context_service"]
     arguments:
-      - "%__behat__.mink.base_url%"
+      - "http://127.0.0.1:8000"
+      # @TODO make this configurable/automatic again!
+      #       old does not work any more: "%mink.base_url%"

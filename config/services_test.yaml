@@ -1,6 +1,18 @@
 services:
     _defaults:
         public: true
+        autowire: true
+        autoconfigure: true
+
+    #App\Tests\Behat\:
+    #    resource: '../tests/Behat/*'
+
+    #shinage\server\behat\:
+    #    resource: '../features/bootstrap/*'
+    #    exclude: '../features/bootstrap/bootstrap.php'
+
+imports:
+    - "../features/bootstrap/config/services.yml"
 
     # If you need to access services in a test, create an alias
     # and then fetch that alias from the container. As a convention,

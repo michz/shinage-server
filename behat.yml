@@ -3,7 +3,7 @@ default:
     screen_remote_api_features:
       paths:
         - "%paths.base%/features/ScreenRemoteApi"
-      contexts_services:
+      contexts:
         - shinage.server.behat.context.hook.purge
 
         - shinage.server.behat.context.transform.presentation
@@ -18,7 +18,7 @@ default:
     login_features:
       paths:
         - "%paths.base%/features/Login"
-      contexts_services:
+      contexts:
         - shinage.server.behat.context.hook.purge
 
         - shinage.server.behat.context.transform.date_time
@@ -32,7 +32,7 @@ default:
     presentation_editor_features:
       paths:
         - "%paths.base%/features/PresentationEditors"
-      contexts_services:
+      contexts:
         - shinage.server.behat.context.hook.purge
 
         - shinage.server.behat.context.transform.user
@@ -47,7 +47,7 @@ default:
     account_features:
       paths:
         - "%paths.base%/features/Management/Account"
-      contexts_services:
+      contexts:
         - shinage.server.behat.context.hook.purge
 
         - shinage.server.behat.context.transform.user
@@ -63,7 +63,7 @@ default:
     api_v1_features:
       paths:
         - "%paths.base%/features/Api/v1"
-      contexts_services:
+      contexts:
         - shinage.server.behat.context.hook.purge
 
         - shinage.server.behat.context.transform.shared_storage
@@ -85,7 +85,7 @@ default:
     cli_features:
       paths:
         - "%paths.base%/features/CLI"
-      contexts_services:
+      contexts:
         - shinage.server.behat.context.hook.purge
 
         - shinage.server.behat.context.transform.shared_storage
@@ -107,13 +107,7 @@ default:
           goutte: ~
 
     FriendsOfBehat\SymfonyExtension:
+      bootstrap: features/bootstrap/bootstrap.php
       kernel:
-        bootstrap: features/bootstrap/bootstrap.php
         path: src/Kernel.php
         class: 'App\Kernel'
-
-    FriendsOfBehat\ContextServiceExtension:
-       imports:
-           - "features/bootstrap/config/services.yml"
-
-    FriendsOfBehat\CrossContainerExtension: ~
