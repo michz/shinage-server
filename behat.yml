@@ -42,7 +42,7 @@ default:
         - Tests\Behat\Gui\GeneralWebpagesContext
         - Tests\Behat\Gui\PresentationEditorsContext
 
-        - behat.mink
+        - Behat\MinkExtension\Context\MinkContext
 
     account_features:
       paths:
@@ -58,7 +58,7 @@ default:
         - Tests\Behat\Gui\LoginContext
         - Tests\Behat\Gui\PresentationEditorsContext
 
-        - behat.mink
+        - Behat\MinkExtension\Context\MinkContext
 
     api_v1_features:
       paths:
