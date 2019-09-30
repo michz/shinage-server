@@ -9,31 +9,25 @@ services:
 
     Tests\Behat\Client\ApiV1ClientContext:
         arguments:
-            - "http://127.0.0.1:8000"
+            $baseUrl: "http://127.0.0.1:8000"
             # @TODO Make it somehow autoconfigured
 
     Tests\Behat\Hook\PurgeContext:
         arguments:
-            - "@doctrine.orm.entity_manager"
-            - "%swiftmailer.spool.default.file.path%"
-            # @TODO Make it somehow autoconfigured
+            $mailSpoolPath: "%swiftmailer.spool.default.file.path%"
 
     Tests\Behat\Setup\FilePoolContext:
         arguments:
-            - '@doctrine.orm.entity_manager'
-            - '@Tests\Behat\Service\SharedStorage'
-            - '@Tests\Behat\Hook\PurgeContext'
-            - '%path_pool%'
+            $basePath: '%path_pool%'
 
     Tests\Behat\Gui\LoginContext:
         arguments:
-            - "@fos_user.user_manager"
-            - "@session"
-            - "main"
+            $session: "@session"
+            $firewallName: "main"
 
     Tests\Behat\MailContext:
         arguments:
-            - "%swiftmailer.spool.default.file.path%"
+            $spoolDir: "%swiftmailer.spool.default.file.path%"
 
     Symfony\Component\BrowserKit\Client:
         alias: test.client
