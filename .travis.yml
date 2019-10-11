@@ -32,7 +32,8 @@ before_script:
   - php bin/console server:start 127.0.0.1:8000 --env=test
 
 script:
-  - ./vendor/bin/ecs check src/ features/bootstrap/
+  - composer validate --no-check-all --strict
+  - ./vendor/bin/ecs check src/ tests/
   - ./node_modules/.bin/gulp eslint
   - ./bin/console lint:yaml config/
   - ./bin/console lint:yaml src/
@@ -53,9 +54,10 @@ before_deploy:
   - rm -f .scrutinizer.yml .travis.yml .gitignore .web-server-pid .env .env.* .eslintrc
   - rm -f bin/devEnv.sh bin/runInDev.sh
   - rm -f easy-coding-standard.yml package* behat.yml codeception.yml install-git-hooks.php phpspec.yml gulpfile.js
-  - rm -rf node_modules/  var/cache/dev/ var/cache/test/ var/session/dev/ var/session/test/ .git/ etc/ features/ git-hooks/ vendor/ spec/ data/pool/*
+  - rm -rf node_modules/  var/cache/dev/ var/cache/test/ var/session/dev/ var/session/test/ .git/ etc/ features/ tests/ git-hooks/ vendor/ spec/ data/pool/*
   - echo "${TRAVIS_BRANCH}" > REVISION
   - composer install --no-scripts --no-dev
+  - composer dump-autoload --classmap-authoritative
   - tar --exclude="./build" --exclude="./var/log/*.log" --transform 's,^\./,,' -czf ./build/shinage-server-release.tar.gz .
 
 deploy:

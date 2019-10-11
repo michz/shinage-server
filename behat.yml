@@ -3,117 +3,113 @@ default:
     screen_remote_api_features:
       paths:
         - "%paths.base%/features/ScreenRemoteApi"
-      contexts_services:
-        - shinage.server.behat.context.hook.purge
+      contexts:
+        - Tests\Behat\Hook\PurgeContext
 
-        - shinage.server.behat.context.transform.presentation
-        - shinage.server.behat.context.transform.screen
+        - Tests\Behat\Transform\PresentationTransformerContext
+        - Tests\Behat\Transform\ScreenTransformerContext
 
-        - shinage.server.behat.context.setup.presentations
-        - shinage.server.behat.context.setup.screen
-        - shinage.server.behat.context.heartbeat
+        - Tests\Behat\Setup\PresentationsContext
+        - Tests\Behat\Setup\ScreenContext
+        - Tests\Behat\HeartbeatContext
 
-        - shinage.server.behat.context.presentation
+        - Tests\Behat\Gui\PresentationContext
 
     login_features:
       paths:
         - "%paths.base%/features/Login"
-      contexts_services:
-        - shinage.server.behat.context.hook.purge
+      contexts:
+        - Tests\Behat\Hook\PurgeContext
 
-        - shinage.server.behat.context.transform.date_time
-        - shinage.server.behat.context.transform.user
+        - Tests\Behat\Transform\DateTimeTransformerContext
+        - Tests\Behat\Transform\UserTransformerContext
 
-        - shinage.server.behat.context.login
-        - shinage.server.behat.context.registration
-        - shinage.server.behat.context.setup.user
-        - shinage.server.behat.context.general_webpages
+        - Tests\Behat\Gui\LoginContext
+        - Tests\Behat\Gui\RegistrationContext
+        - Tests\Behat\Setup\UserContext
+        - Tests\Behat\Gui\GeneralWebpagesContext
 
     presentation_editor_features:
       paths:
         - "%paths.base%/features/PresentationEditors"
-      contexts_services:
-        - shinage.server.behat.context.hook.purge
+      contexts:
+        - Tests\Behat\Hook\PurgeContext
 
-        - shinage.server.behat.context.transform.user
+        - Tests\Behat\Transform\UserTransformerContext
 
-        - shinage.server.behat.context.setup.user
-        - shinage.server.behat.context.login
-        - shinage.server.behat.context.general_webpages
-        - shinage.server.behat.context.presentation_editors
+        - Tests\Behat\Setup\UserContext
+        - Tests\Behat\Gui\LoginContext
+        - Tests\Behat\Gui\GeneralWebpagesContext
+        - Tests\Behat\Gui\PresentationEditorsContext
 
-        - behat.mink
+        - Behat\MinkExtension\Context\MinkContext
 
     account_features:
       paths:
         - "%paths.base%/features/Management/Account"
-      contexts_services:
-        - shinage.server.behat.context.hook.purge
+      contexts:
+        - Tests\Behat\Hook\PurgeContext
 
-        - shinage.server.behat.context.transform.user
+        - Tests\Behat\Transform\UserTransformerContext
 
-        - shinage.server.behat.context.setup.user
-        - shinage.server.behat.context.account_security
-        - shinage.server.behat.context.general_webpages
-        - shinage.server.behat.context.login
-        - shinage.server.behat.context.presentation_editors
+        - Tests\Behat\Setup\UserContext
+        - Tests\Behat\Gui\AccountSecurityContext
+        - Tests\Behat\Gui\GeneralWebpagesContext
+        - Tests\Behat\Gui\LoginContext
+        - Tests\Behat\Gui\PresentationEditorsContext
 
-        - behat.mink
+        - Behat\MinkExtension\Context\MinkContext
 
     api_v1_features:
       paths:
         - "%paths.base%/features/Api/v1"
-      contexts_services:
-        - shinage.server.behat.context.hook.purge
+      contexts:
+        - Tests\Behat\Hook\PurgeContext
 
-        - shinage.server.behat.context.transform.shared_storage
-        - shinage.server.behat.context.transform.presentation
-        - shinage.server.behat.context.transform.screen
-        - shinage.server.behat.context.transform.user
+        - Tests\Behat\Transform\SharedStorageTransformerContext
+        - Tests\Behat\Transform\PresentationTransformerContext
+        - Tests\Behat\Transform\ScreenTransformerContext
+        - Tests\Behat\Transform\UserTransformerContext
 
-        - shinage.server.behat.service.api_v1_client
+        - Tests\Behat\Client\ApiV1ClientContext
 
-        - shinage.server.behat.context.api.v1.file_pool
-        - shinage.server.behat.context.api.v1.presentations
-        - shinage.server.behat.context.api.v1.schedule
-        - shinage.server.behat.context.setup.file_pool
-        - shinage.server.behat.context.setup.presentations
-        - shinage.server.behat.context.setup.screen
-        - shinage.server.behat.context.setup.user
-        - shinage.server.behat.context.general_webpages
+        - Tests\Behat\Api\v1\FilePoolContext
+        - Tests\Behat\Api\v1\PresentationsContext
+        - Tests\Behat\Api\v1\ScheduleContext
+        - Tests\Behat\Setup\FilePoolContext
+        - Tests\Behat\Setup\PresentationsContext
+        - Tests\Behat\Setup\ScreenContext
+        - Tests\Behat\Setup\UserContext
+        - Tests\Behat\Gui\GeneralWebpagesContext
 
     cli_features:
       paths:
         - "%paths.base%/features/CLI"
-      contexts_services:
-        - shinage.server.behat.context.hook.purge
+      contexts:
+        - Tests\Behat\Hook\PurgeContext
 
-        - shinage.server.behat.context.transform.shared_storage
-        - shinage.server.behat.context.transform.presentation
-        - shinage.server.behat.context.transform.screen
-        - shinage.server.behat.context.transform.user
+        - Tests\Behat\Transform\SharedStorageTransformerContext
+        - Tests\Behat\Transform\PresentationTransformerContext
+        - Tests\Behat\Transform\ScreenTransformerContext
+        - Tests\Behat\Transform\UserTransformerContext
 
-        - shinage.server.behat.context.cli.screen_alarming
+        - Tests\Behat\CLI\ScreenAlarmingContext
 
-        - shinage.server.behat.context.setup.screen
-        - shinage.server.behat.context.mail
-        - shinage.server.behat.context.general_webpages
+        - Tests\Behat\Setup\ScreenContext
+        - Tests\Behat\MailContext
+        - Tests\Behat\Gui\GeneralWebpagesContext
 
   extensions:
     Behat\MinkExtension:
       base_url:  'http://localhost:8000'
       sessions:
-        default:
-          goutte: ~
+        symfony:
+          symfony: ~
+#        default:
+#          goutte: ~
 
     FriendsOfBehat\SymfonyExtension:
+      bootstrap: features/bootstrap/bootstrap.php
       kernel:
-        bootstrap: features/bootstrap/bootstrap.php
         path: src/Kernel.php
         class: 'App\Kernel'
-
-    FriendsOfBehat\ContextServiceExtension:
-       imports:
-           - "features/bootstrap/config/services.yml"
-
-    FriendsOfBehat\CrossContainerExtension: ~

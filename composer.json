@@ -63,9 +63,7 @@
     "behat/behat": "^3.4",
     "behat/mink-extension": "^2.2",
     "behat/mink-goutte-driver": "^1.2",
-    "friends-of-behat/symfony-extension": "^1.2",
-    "friends-of-behat/context-service-extension": "^1.2",
-    "friends-of-behat/cross-container-extension": "^1.1",
+    "friends-of-behat/symfony-extension": "^2.0",
     "symplify/easy-coding-standard": "^4.3",
     "onurb/doctrine-yuml-bundle": "^1.1",
     "symfony/profiler-pack": "^1.0"
