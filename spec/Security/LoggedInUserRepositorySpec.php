@@ -10,6 +10,7 @@ use App\Entity\User;
 use App\Security\LoggedInUserRepository;
 use App\Security\LoggedInUserRepositoryInterface;
 use PhpSpec\ObjectBehavior;
+use Psr\Log\LoggerInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
@@ -17,9 +18,10 @@ use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 class LoggedInUserRepositorySpec extends ObjectBehavior
 {
     public function let(
-        TokenStorageInterface $tokenStorage
+        TokenStorageInterface $tokenStorage,
+        LoggerInterface $logger
     ): void {
-        $this->beConstructedWith($tokenStorage);
+        $this->beConstructedWith($tokenStorage, $logger);
     }
 
     public function it_is_initializable(): void
@@ -55,6 +57,8 @@ class LoggedInUserRepositorySpec extends ObjectBehavior
         TokenInterface $token,
         User $user
     ): void {
+        // @TODO By now this works because it fails on "instanceof User", not on isEnabled check. Fix this.
+
         $tokenStorage
             ->getToken()
             ->willReturn($token);
