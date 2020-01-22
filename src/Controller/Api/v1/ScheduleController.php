@@ -10,11 +10,10 @@ namespace App\Controller\Api\v1;
 use App\Entity\Presentation;
 use App\Entity\ScheduledPresentation;
 use App\Entity\Screen;
-use App\Entity\ScreenAssociation;
+use App\Repository\ScheduleRepositoryInterface;
 use App\Security\LoggedInUserRepository;
 use App\Service\ScheduleCollisionHandlerInterface;
 use Doctrine\ORM\EntityManagerInterface;
-use Doctrine\ORM\Query\Expr;
 use JMS\Serializer\DeserializationContext;
 use JMS\Serializer\SerializationContext;
 use JMS\Serializer\SerializerInterface;
@@ -38,44 +37,54 @@ class ScheduleController extends AbstractController
     /** @var LoggedInUserRepository */
     private $loggedInUserRepository;
 
+    /** @var ScheduleRepositoryInterface */
+    private $scheduleRepository;
+
     public function __construct(
         EntityManagerInterface $entityManager,
         SerializerInterface $serializer,
         ScheduleCollisionHandlerInterface $collisionHandler,
-        LoggedInUserRepository $loggedInUserRepository
+        LoggedInUserRepository $loggedInUserRepository,
+        ScheduleRepositoryInterface $scheduleRepository
     ) {
         $this->entityManager = $entityManager;
         $this->serializer = $serializer;
         $this->collisionHandler = $collisionHandler;
         $this->loggedInUserRepository = $loggedInUserRepository;
+        $this->scheduleRepository = $scheduleRepository;
     }
 
-    public function listAction(): Response
+    public function listAction(Request $request): Response
     {
-        $queryBuilder = $this->entityManager->createQueryBuilder();
+        // @TODO If identified by Screen, then check only for this screen, not for all screens that the user is allowed to see
+
+        $scheduledPresentationsQuery = $this->scheduleRepository->reset();
+
+        if ($request->get('from')) {
+            try {
+                $from = new \DateTime($request->get('from'));
+                $scheduledPresentationsQuery->addFromConstraint($from);
+            } catch (\Throwable $e) {
+                throw new BadRequestHttpException('Could not parse "from" parameter.');
+            }
+        } else {
+            // If now from is given, start at "now" to reduce database load.
+            $scheduledPresentationsQuery->addFromConstraint(new \DateTime());
+        }
+
+        if ($request->get('until')) {
+            try {
+                $until = new \DateTime($request->get('until'));
+                $scheduledPresentationsQuery->addUntilConstraint($until);
+            } catch (\Throwable $e) {
+                throw new BadRequestHttpException('Could not parse "until" parameter.');
+            }
+        }
 
         $users = $this->getAllowedUserIds();
-
-        $queryBuilder
-            ->select('sp')
-            ->from(ScheduledPresentation::class, 'sp')
-            ->join(
-                Screen::class,
-                's',
-                Expr\Join::WITH,
-                $queryBuilder->expr()->eq('sp.screen', 's.guid')
-            )
-            ->innerJoin(
-                ScreenAssociation::class,
-                'association',
-                Expr\Join::WITH,
-                $queryBuilder->expr()->eq('association.screen', 's.guid')
-            )
-            ->where($queryBuilder->expr()->gte('sp.scheduled_end', ':scheduled_end'))
-            ->andWhere($queryBuilder->expr()->in('association.user', $users))
-            ->setParameter('scheduled_end', (new \DateTime())->format('Y-m-d H:i:s'));
-
-        $scheduledPresentations = $queryBuilder->getQuery()->execute();
+        $scheduledPresentations = $scheduledPresentationsQuery
+            ->addUsersByIdsConstraint($users)
+            ->getResults();
 
         return new Response(
             $this->serializer->serialize(

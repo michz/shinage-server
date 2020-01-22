@@ -43,6 +43,39 @@ class ScheduleContext implements Context
     }
 
     /**
+     * @When I get the schedule from :from
+     */
+    public function iGetTheScheduleFrom(string $from): void
+    {
+        $this->apiV1ClientContext->executeRequest(
+            'get',
+            'schedule?from=' . $from
+        );
+    }
+
+    /**
+     * @When I get the schedule until :until
+     */
+    public function iGetTheScheduleUntil(string $until): void
+    {
+        $this->apiV1ClientContext->executeRequest(
+            'get',
+            'schedule?until=' . $until
+        );
+    }
+
+    /**
+     * @When I get the schedule from :from until :until
+     */
+    public function iGetTheScheduleFromUntil(string $from, string $until): void
+    {
+        $this->apiV1ClientContext->executeRequest(
+            'get',
+            'schedule?from=' . $from . '&until=' . $until
+        );
+    }
+
+    /**
      * @When I schedule the presentation :presentation on screen :screen from :from to :to
      */
     public function iScheduleThePresentationOnScreenFromTo(
@@ -106,7 +139,7 @@ class ScheduleContext implements Context
     public function iShouldSeeThatTheScheduleContainsExactlyItem(int $count): void
     {
         $schedule = \json_decode($this->apiV1ClientContext->getResponseBody());
-        Assert::eq(\count($schedule), $count, 'The number of scheduled items does not match the expected.');
+        Assert::eq(\count($schedule), $count, 'The number of scheduled items (%s) does not match the expected (%2$s).');
     }
 
     /**
