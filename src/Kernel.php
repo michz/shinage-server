@@ -8,6 +8,7 @@ declare(strict_types=1);
 namespace App;
 
 use App\DependencyInjection\Compiler\PresentationTypeCompilerPass;
+use App\Security\Factory\ApiScreenFactory;
 use App\Security\Factory\ApiTokenFactory;
 use Symfony\Bundle\FrameworkBundle\Kernel\MicroKernelTrait;
 use Symfony\Component\Config\Loader\LoaderInterface;
@@ -91,5 +92,6 @@ class Kernel extends BaseKernel
 
         $extension = $container->getExtension('security');
         $extension->addSecurityListenerFactory(new ApiTokenFactory());
+        $extension->addSecurityListenerFactory(new ApiScreenFactory());
     }
 }

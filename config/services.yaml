@@ -62,6 +62,9 @@ services:
   #        arguments:
   #            $cachePool: '@cache.app'
 
+  App\Security\Authentication\Provider\ApiScreenProvider:
+    public: false
+
   App\Security\Firewall\ApiUserListener:
     public: false
     arguments:
@@ -69,11 +72,24 @@ services:
       - '@security.authentication.manager'
       - '@app.repository.api_access_key'
 
+  App\Security\Firewall\ApiScreenListener:
+    public: false
+    arguments:
+      - '@security.token_storage'
+      - '@security.authentication.manager'
+      - '@app.repository.screen'
+
   app.repository.api_access_key:
     class: Doctrine\ORM\EntityRepository
     factory: ['@doctrine.orm.entity_manager', getRepository]
     arguments:
       - 'App\Entity\Api\AccessKey'
+
+  app.repository.screen:
+    class: Doctrine\ORM\EntityRepository
+    factory: ['@doctrine.orm.entity_manager', getRepository]
+    arguments:
+      - 'App\Entity\Screen'
 
 
   App\Menu\Builder:

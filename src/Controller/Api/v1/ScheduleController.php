@@ -12,6 +12,7 @@ use App\Entity\ScheduledPresentation;
 use App\Entity\Screen;
 use App\Repository\ScheduleRepositoryInterface;
 use App\Security\LoggedInUserRepository;
+use App\Security\VolatileScreenUser;
 use App\Service\ScheduleCollisionHandlerInterface;
 use Doctrine\ORM\EntityManagerInterface;
 use JMS\Serializer\DeserializationContext;
@@ -22,6 +23,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 class ScheduleController extends AbstractController
 {
@@ -40,24 +42,27 @@ class ScheduleController extends AbstractController
     /** @var ScheduleRepositoryInterface */
     private $scheduleRepository;
 
+    /** @var TokenStorageInterface */
+    private $tokenStorage;
+
     public function __construct(
         EntityManagerInterface $entityManager,
         SerializerInterface $serializer,
         ScheduleCollisionHandlerInterface $collisionHandler,
         LoggedInUserRepository $loggedInUserRepository,
-        ScheduleRepositoryInterface $scheduleRepository
+        ScheduleRepositoryInterface $scheduleRepository,
+        TokenStorageInterface $tokenStorage
     ) {
         $this->entityManager = $entityManager;
         $this->serializer = $serializer;
         $this->collisionHandler = $collisionHandler;
         $this->loggedInUserRepository = $loggedInUserRepository;
         $this->scheduleRepository = $scheduleRepository;
+        $this->tokenStorage = $tokenStorage;
     }
 
     public function listAction(Request $request): Response
     {
-        // @TODO If identified by Screen, then check only for this screen, not for all screens that the user is allowed to see
-
         $scheduledPresentationsQuery = $this->scheduleRepository->reset();
 
         if ($request->get('from')) {
@@ -81,10 +86,16 @@ class ScheduleController extends AbstractController
             }
         }
 
-        $users = $this->getAllowedUserIds();
-        $scheduledPresentations = $scheduledPresentationsQuery
-            ->addUsersByIdsConstraint($users)
-            ->getResults();
+        // If identified by Screen, check only for this screen; otherwise all screens the given user is allowed
+        $user = $this->tokenStorage->getToken()->getUser();
+        if ($user instanceof VolatileScreenUser) {
+            $scheduledPresentationsQuery->addScreenConstraint($user->getScreen());
+        } else {
+            $users = $this->getAllowedUserIds();
+            $scheduledPresentationsQuery->addUsersByIdsConstraint($users);
+        }
+
+        $scheduledPresentations = $scheduledPresentationsQuery->getResults();
 
         return new Response(
             $this->serializer->serialize(

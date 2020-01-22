@@ -8,6 +8,7 @@ declare(strict_types=1);
 namespace App\Security\Voters;
 
 use App\Entity\Screen;
+use App\Security\VolatileScreenUser;
 use App\Service\ScreenAssociation;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\Voter;
@@ -35,6 +36,11 @@ class ScreenVoter extends Voter
      */
     protected function voteOnAttribute($attribute, $subject, TokenInterface $token)
     {
-        return $this->screenAssociation->isUserAllowedTo($subject, $token->getUser(), $attribute);
+        $user = $token->getUser();
+        if ($user instanceof VolatileScreenUser) {
+            return $user->getScreen() === $subject;
+        }
+
+        return $this->screenAssociation->isUserAllowedTo($subject, $user, $attribute);
     }
 }

@@ -16,6 +16,7 @@ security:
       pattern: ^/api/v1
       stateless: true
       apitoken: true
+      apiscreen: true
     main:
       pattern: ^/
       form_login:
