@@ -55,18 +55,21 @@
     // Avoid Plugin.prototype conflicts
     $.extend(Plugin.prototype, {
         init: function () {
-            var today = moment();
+            var todayYear = moment().year();
+            var todayMonth = moment().month();
+            var todayDay = moment().date();
+
             var tmpView = 'agendaWeek';
             var vars = window.location.hash.split("&");
             for (var url_i = 0; url_i < vars.length; url_i++) {
                 if (vars[url_i].match("^#year")) {
-                    today.year(vars[url_i].substring(6));
+                    todayYear = Number.parseInt(vars[url_i].substring(6), 10);
                 }
                 if (vars[url_i].match("^month")) {
-                    today.month(vars[url_i].substring(6));
+                    todayMonth = Number.parseInt(vars[url_i].substring(6), 10) - 1;
                 }
                 if (vars[url_i].match("^day")) {
-                    today.day(vars[url_i].substring(4));
+                    todayDay = Number.parseInt(vars[url_i].substring(4), 10);
                 }
                 if (vars[url_i].match("^view")) {
                     tmpView = vars[url_i].substring(5);
@@ -75,6 +78,11 @@
                     this.setSelectedScreen(vars[url_i].substring(15));
                 }
             }
+
+            var today = moment();
+            today.year(todayYear);
+            today.month(todayMonth);
+            today.date(todayDay);
 
             // @TODO visible screens
 
