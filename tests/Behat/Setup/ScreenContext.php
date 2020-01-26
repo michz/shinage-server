@@ -55,7 +55,7 @@ class ScreenContext implements Context
         $this->entityManager->flush();
 
         $association = new ScreenAssociation();
-        $association->setRoles(['view_screenshot', 'manage', 'schedule']);
+        $association->setRoles(['view_screenshot', 'manage', 'schedule.get', 'schedule.put', 'schedule.delete']);
         $association->setUser($user);
         $association->setScreen($screen);
         $this->entityManager->persist($association);
@@ -68,7 +68,7 @@ class ScreenContext implements Context
     public function theScreenBelongsToUser(Screen $screen, User $user): void
     {
         $association = new ScreenAssociation();
-        $association->setRoles(['view_screenshot', 'manage', 'schedule']);
+        $association->setRoles(['view_screenshot', 'manage', 'schedule.get', 'schedule.put', 'schedule.delete']);
         $association->setUser($user);
         $association->setScreen($screen);
         $this->entityManager->persist($association);

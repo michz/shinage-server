@@ -46,8 +46,20 @@
                 </div>
                 <div class="ui field segment">
                     <div class="ui checkbox">
-                        <input type="checkbox" name="roles[]" value="schedule" id="checkbox-schedule">
-                        <label for="checkbox-schedule">{{ 'schedule'|trans([], 'ScreenRoles') }}</label>
+                        <input type="checkbox" name="roles[]" value="schedule.get" id="checkbox-schedule">
+                        <label for="checkbox-schedule">{{ 'schedule.get'|trans([], 'ScreenRoles') }}</label>
+                    </div>
+                </div>
+                <div class="ui field segment">
+                    <div class="ui checkbox">
+                        <input type="checkbox" name="roles[]" value="schedule.put" id="checkbox-schedule">
+                        <label for="checkbox-schedule">{{ 'schedule.put'|trans([], 'ScreenRoles') }}</label>
+                    </div>
+                </div>
+                <div class="ui field segment">
+                    <div class="ui checkbox">
+                        <input type="checkbox" name="roles[]" value="schedule.delete" id="checkbox-schedule">
+                        <label for="checkbox-schedule">{{ 'schedule.delete'|trans([], 'ScreenRoles') }}</label>
                     </div>
                 </div>
                 <div class="ui field segment">

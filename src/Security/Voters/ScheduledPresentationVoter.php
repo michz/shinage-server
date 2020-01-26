@@ -46,6 +46,6 @@ class ScheduledPresentationVoter extends Voter
         }
 
         $screen = $subject->getScreen();
-        return $this->authorizationChecker->isGranted('schedule', $screen);
+        return $this->authorizationChecker->isGranted('schedule.' . $attribute, $screen);
     }
 }

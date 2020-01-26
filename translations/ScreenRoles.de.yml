@@ -1,3 +1,5 @@
-schedule: Zeitplan
+schedule.get: Zeitplaneinträge ansehen
+schedule.put: Zeitplaneinträge hinzufügen und bearbeiten
+schedule.delete: Zeitplaneinträge löschen
 manage: Verwalten
 view_screenshot: Screenshot ansehen

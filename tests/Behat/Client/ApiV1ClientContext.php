@@ -17,6 +17,9 @@ class ApiV1ClientContext implements Context
     /** @var string */
     private $apiKey = '';
 
+    /** @var string */
+    private $screenGuid = '';
+
     /** @var null|Response */
     private $responseObject = null;
 
@@ -40,9 +43,15 @@ class ApiV1ClientContext implements Context
      */
     public function executeRequest(string $method, string $url, ?string $body = null, array $customHeaders = []): void
     {
-        $defaultHeaders = [
-            'x-api-token' => $this->apiKey,
-        ];
+        $defaultHeaders = [];
+
+        if (false === empty($this->apiKey)) {
+            $defaultHeaders['x-api-token'] = $this->apiKey;
+        }
+
+        if (false === empty($this->screenGuid)) {
+            $defaultHeaders['x-screen-guid'] = $this->screenGuid;
+        }
 
         $headers = \array_merge($defaultHeaders, $customHeaders);
 
@@ -82,6 +91,14 @@ class ApiV1ClientContext implements Context
     public function iUseTheApiKey(string $apiKey): void
     {
         $this->apiKey = $apiKey;
+    }
+
+    /**
+     * @Given /^I use the screen guid "([^"]*)" for rest authentication$/
+     */
+    public function iUseTheScreenGuidForRestAuthentication(string $guid): void
+    {
+        $this->screenGuid = $guid;
     }
 
     /**

@@ -38,7 +38,7 @@ class ScreenVoter extends Voter
     {
         $user = $token->getUser();
         if ($user instanceof VolatileScreenUser) {
-            return $user->getScreen() === $subject;
+            return 'schedule.get' === $attribute && $user->getScreen() === $subject;
         }
 
         return $this->screenAssociation->isUserAllowedTo($subject, $user, $attribute);

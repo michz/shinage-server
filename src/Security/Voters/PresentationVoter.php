@@ -44,6 +44,11 @@ class PresentationVoter extends Voter
     {
         $user = $token->getUser();
         if ($user instanceof VolatileScreenUser) {
+            // Screens are only allowed to get readonly access!
+            if ('get' !== $attribute) {
+                return false;
+            }
+
             $screen = $user->getScreen();
             // check if presentation is scheduled for this screen
 

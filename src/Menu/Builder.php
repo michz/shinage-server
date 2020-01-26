@@ -62,7 +62,7 @@ class Builder
             'routeParameters' => ['guid' => $guid],
         ]);
 
-        if ($this->authorizationChecker->isGranted('schedule', $screen)) {
+        if ($this->authorizationChecker->isGranted('schedule.get', $screen)) {
             $menu->addChild('Schedule', [
                 'route' => 'management-screen-schedule',
                 'routeParameters' => ['guid' => $guid],
@@ -88,7 +88,7 @@ class Builder
             ]);
         }
 
-        if ($this->authorizationChecker->isGranted('schedule', $screen)) {
+        if ($this->authorizationChecker->isGranted('schedule.get', $screen)) {
             $menu->addChild('Offline', [
                 'route' => 'management-screen-offline',
                 'routeParameters' => ['guid' => $guid],

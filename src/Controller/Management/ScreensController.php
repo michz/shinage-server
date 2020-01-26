@@ -132,7 +132,7 @@ class ScreensController extends AbstractController
 
         $assoc = new ScreenAssociationEntity();
         $assoc->setScreen($screen);
-        $assoc->setRoles(['schedule', 'manage', 'view_screenshot']);
+        $assoc->setRoles(['schedule.get', 'schedule.put', 'schedule.delete', 'manage', 'view_screenshot']);
 
         if ('me' === $who) {
             $assoc->setUser($user);
@@ -174,7 +174,7 @@ class ScreensController extends AbstractController
         $this->screenAssociation->associateByString(
             $virtualScreen,
             $createForm->get('owner')->getData(),
-            ['schedule', 'manage', 'view_screenshot']
+            ['schedule.get', 'schedule.put', 'schedule.delete', 'manage', 'view_screenshot']
         );
 
         // @TODO translate

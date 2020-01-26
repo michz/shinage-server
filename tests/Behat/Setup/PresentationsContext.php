@@ -88,4 +88,22 @@ class PresentationsContext implements Context
         $this->entityManager->persist($scheduledPresentation);
         $this->entityManager->flush();
     }
+
+    /**
+     * @Given The presentation :presentation is scheduled on screen :screen from :from to :to
+     */
+    public function thePresentationIsScheduledOnScreenFromTo(Presentation $presentation, Screen $screen, string $from, string $to): void
+    {
+        $start = new \DateTime($from);
+        $end = new \DateTime($to);
+
+        $scheduledPresentation = new ScheduledPresentation();
+        $scheduledPresentation->setPresentation($presentation);
+        $scheduledPresentation->setScreen($screen);
+        $scheduledPresentation->setScheduledStart($start);
+        $scheduledPresentation->setScheduledEnd($end);
+
+        $this->entityManager->persist($scheduledPresentation);
+        $this->entityManager->flush();
+    }
 }

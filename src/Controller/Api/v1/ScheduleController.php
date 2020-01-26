@@ -154,7 +154,7 @@ class ScheduleController extends AbstractController
             throw new NotFoundHttpException('The given screen could not be found.');
         }
 
-        $this->denyAccessUnlessGranted('schedule', $screen);
+        $this->denyAccessUnlessGranted('schedule.put', $screen);
         $scheduledPresentation->setScreen($screen);
 
         $presentation = $this->entityManager->find(Presentation::class, $rawData->presentation);

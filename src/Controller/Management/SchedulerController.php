@@ -93,7 +93,7 @@ class SchedulerController extends AbstractController
         $sched = [];
         if (null !== $screen) {
             // Check if user is allowed to see/edit screen
-            $this->denyAccessUnlessGranted('schedule', $screen);
+            $this->denyAccessUnlessGranted('schedule.get', $screen);
 
             $sf = $start->format('Y-m-d H:i:s');
             $su = $end->format('Y-m-d H:i:s');
@@ -129,7 +129,7 @@ class SchedulerController extends AbstractController
         $screen = $this->entityManager->find(Screen::class, $guid);
 
         // Check if user is allowed to see/edit screen
-        $this->denyAccessUnlessGranted('schedule', $screen);
+        $this->denyAccessUnlessGranted('schedule.put', $screen);
 
         $start  = new \DateTime($request->get('start'), new \DateTimeZone('UTC'));
         $end    = new \DateTime($request->get('end'), new \DateTimeZone('UTC'));
@@ -164,7 +164,7 @@ class SchedulerController extends AbstractController
         $s      = $this->entityManager->find(ScheduledPresentation::class, $id);
 
         // Check if user is allowed to see/edit screen
-        $this->denyAccessUnlessGranted('schedule', $screen);
+        $this->denyAccessUnlessGranted('schedule.put', $screen);
 
         $s->setScheduledStart($start);
         $s->setScheduledEnd($end);
@@ -188,7 +188,7 @@ class SchedulerController extends AbstractController
         $screen = $s->getScreen();
 
         // Check if user is allowed to see/edit screen
-        $this->denyAccessUnlessGranted('schedule', $screen);
+        $this->denyAccessUnlessGranted('schedule.delete', $screen);
 
         $this->entityManager->remove($s);
         $this->entityManager->flush();
