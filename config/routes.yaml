@@ -43,10 +43,6 @@ homepage:
   path: "/"
   controller: App\Controller\DefaultController::indexAction
 
-shinage_player:
-  prefix: "virtual_player"
-  resource: "@ShinagePlayerBundle/Resources/config/routing.yml"
-
 pool-get:
   path: /pool/{userRoot}/{path}
   controller: App\Controller\PoolController::getAction

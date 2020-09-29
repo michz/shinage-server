@@ -10,7 +10,7 @@ namespace App\Presentation\Slideshow\Slides;
 use JMS\Serializer\Annotation as JMS;
 
 /**
- * @JMS\ExclusionPolicy("NONE")
+ * @JMS\ExclusionPolicy("none")
  */
 class Slide
 {

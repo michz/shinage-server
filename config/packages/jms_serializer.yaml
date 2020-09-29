@@ -10,3 +10,6 @@ jms_serializer:
       paths:
         included:
           - "%kernel.root_dir%/Entity"
+          - "%kernel.root_dir%/Presentation"
+          - "%kernel.root_dir%/Presentation/Slideshow"
+          - "%kernel.root_dir%/Presentation/Slideshow/Slides"

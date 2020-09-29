@@ -15,11 +15,12 @@ ENV PHPIZE_DEPS \
     git \
     pkgconf \
     re2c \
-    libxml2-dev
+    libxml2-dev \
+    oniguruma-dev
 
 # Use a more local mirror as the CDN is sometimes terribly slow
-RUN echo http://mirror1.hs-esslingen.de/pub/Mirrors/alpine/v3.9/main > /etc/apk/repositories; \
-    echo http://mirror1.hs-esslingen.de/pub/Mirrors/alpine/v3.9/community >> /etc/apk/repositories
+RUN echo http://mirror1.hs-esslingen.de/pub/Mirrors/alpine/v3.11/main > /etc/apk/repositories; \
+    echo http://mirror1.hs-esslingen.de/pub/Mirrors/alpine/v3.11/community >> /etc/apk/repositories
 
 # persistent dependencies
 # inspired by https://github.com/prooph/docker-files/blob/master/php/7.1-fpm
@@ -40,17 +41,18 @@ RUN set -ex \
         $PHPIZE_DEPS \
     && docker-php-ext-configure bcmath --enable-bcmath \
     && docker-php-ext-configure gd \
-        --with-gd \
-        --with-freetype-dir=/usr/include \
-        --with-png-dir=/usr/include \
-        --with-jpeg-dir=/usr/include \
+        #--with-gd \
+        #--with-freetype-dir=/usr/include \
+        #--with-png-dir=/usr/include \
+        #--with-jpeg-dir=/usr/include \
     && docker-php-ext-configure intl --enable-intl  \
     && docker-php-ext-configure pcntl --enable-pcntl \
     && docker-php-ext-configure pdo_mysql --with-pdo-mysql \
     && docker-php-ext-configure mbstring --enable-mbstring \
     && docker-php-ext-configure soap --enable-soap \
     && docker-php-ext-configure xml --enable-xml \
-    && docker-php-ext-configure zip --enable-zip --with-libzip \
+    && docker-php-ext-configure zip \
+    #--enable-zip --with-libzip \
     && docker-php-ext-install \
         bcmath \
         gd \

@@ -29,11 +29,11 @@
     "composer/xdebug-handler": {
         "version": "1.3.0"
     },
-    "container-interop/container-interop": {
-        "version": "1.2.0"
-    },
     "dasprid/enum": {
         "version": "1.0.0"
+    },
+    "dealerdirect/phpcodesniffer-composer-installer": {
+        "version": "v0.7.0"
     },
     "doctrine/annotations": {
         "version": "1.0",
@@ -116,8 +116,8 @@
     "egulias/email-validator": {
         "version": "2.1.6"
     },
-    "eloquent/pathogen": {
-        "version": "0.6.1"
+    "endroid/installer": {
+        "version": "1.2.3"
     },
     "endroid/qr-code": {
         "version": "3.5.2"
@@ -164,9 +164,6 @@
     "jms/metadata": {
         "version": "1.7.0"
     },
-    "jms/parser-lib": {
-        "version": "1.0.0"
-    },
     "jms/serializer": {
         "version": "1.13.0"
     },
@@ -188,17 +185,26 @@
     "knplabs/knp-menu-bundle": {
         "version": "v2.2.1"
     },
+    "laminas/laminas-code": {
+        "version": "3.4.1"
+    },
+    "laminas/laminas-eventmanager": {
+        "version": "3.3.0"
+    },
+    "laminas/laminas-zendframework-bridge": {
+        "version": "1.1.1"
+    },
     "lcobucci/jwt": {
         "version": "3.2.5"
     },
     "monolog/monolog": {
         "version": "1.23.0"
     },
+    "mschop/pathogen": {
+        "version": "0.6.1"
+    },
     "myclabs/php-enum": {
         "version": "1.6.6"
-    },
-    "mztx/shinage-player-bundle": {
-        "version": "v0.1.1"
     },
     "mztx/todo-bundle": {
         "version": "dev-master"
@@ -211,6 +217,9 @@
     },
     "nette/utils": {
         "version": "v2.5.3"
+    },
+    "nikic/php-parser": {
+        "version": "v4.10.2"
     },
     "ocramius/proxy-manager": {
         "version": "2.1.1"
@@ -230,11 +239,11 @@
     "paragonie/random_compat": {
         "version": "v2.0.17"
     },
+    "php": {
+        "version": "7.4.10"
+    },
     "php-cs-fixer/diff": {
         "version": "v1.3.0"
-    },
-    "phpcollection/phpcollection": {
-        "version": "0.5.0"
     },
     "phpdocumentor/reflection-common": {
         "version": "1.0.1"
@@ -244,9 +253,6 @@
     },
     "phpdocumentor/type-resolver": {
         "version": "0.4.0"
-    },
-    "phpoption/phpoption": {
-        "version": "1.5.0"
     },
     "phpspec/php-diff": {
         "version": "v1.1.0"
@@ -259,6 +265,9 @@
     },
     "phpstan/phpdoc-parser": {
         "version": "0.3"
+    },
+    "phpstan/phpstan": {
+        "version": "0.12.47"
     },
     "psr/cache": {
         "version": "1.0.1"
@@ -311,9 +320,6 @@
             "ref": "fb7e19da7f013d0d422fa9bce16f5c510e27609b"
         }
     },
-    "slam/php-cs-fixer-extensions": {
-        "version": "v1.17.0"
-    },
     "slevomat/coding-standard": {
         "version": "4.8.5"
     },
@@ -347,9 +353,6 @@
     "symfony/cache-contracts": {
         "version": "v1.1.1"
     },
-    "symfony/class-loader": {
-        "version": "v3.4.17"
-    },
     "symfony/config": {
         "version": "v3.4.17"
     },
@@ -370,6 +373,9 @@
     },
     "symfony/dependency-injection": {
         "version": "v3.4.17"
+    },
+    "symfony/deprecation-contracts": {
+        "version": "v2.2.0"
     },
     "symfony/doctrine-bridge": {
         "version": "v4.1.6"
@@ -419,20 +425,20 @@
             "ref": "a9eecaa968723a91299a2eb1a893648dc11a7194"
         }
     },
+    "symfony/http-client-contracts": {
+        "version": "v2.2.0"
+    },
     "symfony/http-foundation": {
         "version": "v4.1.6"
     },
     "symfony/http-kernel": {
         "version": "v3.4.17"
     },
-    "symfony/inflector": {
-        "version": "v4.1.6"
-    },
     "symfony/intl": {
         "version": "v4.1.6"
     },
     "symfony/mime": {
-        "version": "v4.3.1"
+        "version": "v4.4.14"
     },
     "symfony/monolog-bridge": {
         "version": "v4.1.6"
@@ -467,11 +473,17 @@
     "symfony/polyfill-iconv": {
         "version": "v1.11.0"
     },
+    "symfony/polyfill-intl-grapheme": {
+        "version": "v1.18.1"
+    },
     "symfony/polyfill-intl-icu": {
         "version": "v1.10.0"
     },
     "symfony/polyfill-intl-idn": {
         "version": "v1.11.0"
+    },
+    "symfony/polyfill-intl-normalizer": {
+        "version": "v1.18.1"
     },
     "symfony/polyfill-mbstring": {
         "version": "v1.10.0"
@@ -485,6 +497,9 @@
     "symfony/polyfill-php73": {
         "version": "v1.11.0"
     },
+    "symfony/polyfill-php80": {
+        "version": "v1.18.1"
+    },
     "symfony/process": {
         "version": "v3.4.17"
     },
@@ -493,6 +508,9 @@
     },
     "symfony/property-access": {
         "version": "v4.1.6"
+    },
+    "symfony/property-info": {
+        "version": "v5.1.6"
     },
     "symfony/proxy-manager-bridge": {
         "version": "v4.3.4"
@@ -527,14 +545,14 @@
     "symfony/security-http": {
         "version": "v4.2.3"
     },
-    "symfony/serializer": {
-        "version": "v4.1.6"
-    },
     "symfony/service-contracts": {
         "version": "v1.1.2"
     },
     "symfony/stopwatch": {
         "version": "v4.1.6"
+    },
+    "symfony/string": {
+        "version": "v5.1.6"
     },
     "symfony/swiftmailer-bundle": {
         "version": "2.5",
@@ -602,11 +620,14 @@
     "symfony/yaml": {
         "version": "v3.4.17"
     },
-    "symplify/better-phpdoc-parser": {
-        "version": "v4.8.0"
+    "symplify/autowire-array-parameter": {
+        "version": "8.3.17"
     },
     "symplify/coding-standard": {
         "version": "v4.8.0"
+    },
+    "symplify/console-color-diff": {
+        "version": "8.3.17"
     },
     "symplify/easy-coding-standard": {
         "version": "v4.8.0"
@@ -614,14 +635,17 @@
     "symplify/package-builder": {
         "version": "v4.8.0"
     },
-    "symplify/token-runner": {
-        "version": "v4.8.0"
+    "symplify/set-config-resolver": {
+        "version": "8.3.17"
     },
-    "thecodingmachine/safe": {
-        "version": "v0.1.6"
+    "symplify/smart-file-system": {
+        "version": "8.3.17"
     },
     "twig/twig": {
         "version": "v2.5.0"
+    },
+    "webimpress/safe-writer": {
+        "version": "2.1.0"
     },
     "webmozart/assert": {
         "version": "1.3.0"

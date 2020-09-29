@@ -33,6 +33,8 @@
 !/bin/devEnv.sh
 !/bin/runInDev.sh
 
+.preload.php
+
 # Legacy
 /web/
 

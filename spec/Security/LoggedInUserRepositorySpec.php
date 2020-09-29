@@ -57,8 +57,6 @@ class LoggedInUserRepositorySpec extends ObjectBehavior
         TokenInterface $token,
         User $user
     ): void {
-        // @TODO By now this works because it fails on "instanceof User", not on isEnabled check. Fix this.
-
         $tokenStorage
             ->getToken()
             ->willReturn($token);
@@ -66,6 +64,10 @@ class LoggedInUserRepositorySpec extends ObjectBehavior
         $token
             ->getUser()
             ->willReturn($user);
+
+        $user
+            ->getId()
+            ->willReturn(42);
 
         $user
             ->isEnabled()
