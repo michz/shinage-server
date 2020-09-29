@@ -200,9 +200,6 @@
     "myclabs/php-enum": {
         "version": "1.6.6"
     },
-    "mztx/shinage-player-bundle": {
-        "version": "v0.1.1"
-    },
     "mztx/todo-bundle": {
         "version": "dev-master"
     },
@@ -541,9 +538,6 @@
     },
     "symfony/security-http": {
         "version": "v4.2.3"
-    },
-    "symfony/serializer": {
-        "version": "v4.1.6"
     },
     "symfony/service-contracts": {
         "version": "v1.1.2"

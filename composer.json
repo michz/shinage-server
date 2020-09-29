@@ -23,7 +23,6 @@
     "php": ">=7.1.0",
     "ext-intl": "*",
     "ext-json": "*",
-    "mztx/shinage-player-bundle": "~0.1",
     "mztx/todo-bundle": "~0.1",
 
     "doctrine/orm": "^2.5",
