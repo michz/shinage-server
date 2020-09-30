@@ -3,6 +3,13 @@ filter:
         - "src/"
 
 build:
+    environment:
+        php:
+            version: 7.4.10
+
+    dependencies:
+        override: true
+
     tests:
         override: ['php -v']
 
