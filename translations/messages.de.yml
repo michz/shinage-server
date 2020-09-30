@@ -112,3 +112,10 @@ Security Code: Code
 
 Forgot password: Ich habe mein Passwort vergessen...
 Reset Password: Passwort zurücksetzen
+
+code_invalid: Der Code war leider nicht gültig. Bitte probiere es noch einmal.
+
+scheb_two_factor:
+  login: Login
+  cancel: Abbrechen
+  choose_provider: Authentifizierungs-Methode wechseln

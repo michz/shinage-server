@@ -2,6 +2,9 @@
     "bacon/bacon-qr-code": {
         "version": "2.0.0"
     },
+    "beberlei/assert": {
+        "version": "v3.2.7"
+    },
     "behat/behat": {
         "version": "v3.5.0"
     },
@@ -113,6 +116,9 @@
     "doctrine/reflection": {
         "version": "v1.0.0"
     },
+    "doctrine/sql-formatter": {
+        "version": "1.1.1"
+    },
     "egulias/email-validator": {
         "version": "2.1.6"
     },
@@ -154,9 +160,6 @@
     },
     "icecave/isolator": {
         "version": "2.3.0"
-    },
-    "jdorn/sql-formatter": {
-        "version": "v1.2.17"
     },
     "jean85/pretty-package-versions": {
         "version": "1.2"
@@ -235,6 +238,9 @@
             "version": "1.1",
             "ref": "81130d6607195660087a01442f30be1edad71804"
         }
+    },
+    "paragonie/constant_time_encoding": {
+        "version": "v2.3.0"
     },
     "paragonie/random_compat": {
         "version": "v2.0.17"
@@ -323,8 +329,8 @@
     "slevomat/coding-standard": {
         "version": "4.8.5"
     },
-    "sonata-project/google-authenticator": {
-        "version": "2.2.0"
+    "spomky-labs/otphp": {
+        "version": "v10.0.1"
     },
     "squizlabs/php_codesniffer": {
         "version": "3.0",
@@ -640,6 +646,9 @@
     },
     "symplify/smart-file-system": {
         "version": "8.3.17"
+    },
+    "thecodingmachine/safe": {
+        "version": "v1.2.1"
     },
     "twig/twig": {
         "version": "v2.5.0"

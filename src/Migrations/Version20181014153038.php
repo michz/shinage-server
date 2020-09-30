@@ -12,6 +12,11 @@ use Doctrine\Migrations\AbstractMigration;
 
 final class Version20181014153038 extends AbstractMigration
 {
+    public function getDescription(): string
+    {
+       return 'Initial schema';
+    }
+
     public function up(Schema $schema): void
     {
         $this->abortIf('mysql' !== $this->connection->getDatabasePlatform()->getName(), 'Migration can only be executed safely on \'mysql\'.');
