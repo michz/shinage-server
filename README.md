@@ -28,11 +28,9 @@ Please contact us!
 Prerequisites
 -------------
 
-* A machine with a running PHP installation (7.1 or newer)
+* A machine with a running PHP installation (7.4 or newer)
   with mysql support, libgd and terminal access.
-* MySQL-Server (local or remote).  
-  (On Ubuntu 18.04 or newer you can get a very basic system configuration by running:  
-  `apt-get install mysql-server mysql-client php7.2-cli php7.2-gd php7.2-intl php7.2-json php7.2-mysql php7.2-xml`)
+* MariaDB- or MySQL-Server (local or remote). 
 * At least one database on this MySQL-Server.  
   (Run `mysql -uroot -p` and then type `CREATE DATABASE your_database_name;` )
 * At least one user with full access to this database.  
