@@ -84,6 +84,7 @@ class ScreensController extends AbstractController
             'organizations' => $user->getOrganizations(),
             'create_form' => $createForm->createView(),
             'onlinePlayerBaseUrls' => $this->generateCurrentUrls($screens),
+            'prefillConnectCode' => $request->get('connect_code', null),
         ]);
     }
 
