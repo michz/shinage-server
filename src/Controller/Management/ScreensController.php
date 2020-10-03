@@ -65,8 +65,6 @@ class ScreensController extends AbstractController
     {
         $user = $this->loggedInUserRepository->getLoggedInUserOrDenyAccess();
 
-        // @TODO{s:5} Standardpräsentation pro Screen einstellen
-
         // "create virtual screen" form
         $createForm = $this->createForm(CreateVirtualScreenForm::class);
         $this->handleCreateVirtualScreen($request, $createForm);
