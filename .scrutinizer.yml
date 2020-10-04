@@ -6,9 +6,7 @@ build:
     environment:
         php:
             version: 7.4.10
-
-    dependencies:
-        override: true
+            compile_options: '--enable-gd --with-openssl --enable-mbstring --enable-intl'
 
     tests:
         override: ['php -v']

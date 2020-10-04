@@ -22,6 +22,7 @@
   },
   "require": {
     "php": ">=7.4",
+    "ext-gd": "*",
     "ext-intl": "*",
     "ext-json": "*",
     "mztx/todo-bundle": "~0.1",
