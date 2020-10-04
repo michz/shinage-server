@@ -9,6 +9,7 @@ namespace Tests\Behat\Setup;
 
 use App\Entity\Screen;
 use App\Entity\ScreenAssociation;
+use App\Entity\ScreenCommand;
 use App\Entity\User;
 use Behat\Behat\Context\Context;
 use Doctrine\ORM\EntityManagerInterface;
@@ -145,6 +146,20 @@ class ScreenContext implements Context
     public function theScreenHasTheAlarmingMailAddressSetTo(Screen $screen, string $target): void
     {
         $screen->setAlarmingMailTargets($target);
+        $this->entityManager->flush();
+    }
+
+    /**
+     * @Given There is a command :command available for screen :screen
+     */
+    public function thereIsACommandAvailableForScreen(string $command, Screen $screen)
+    {
+        $screenCommand = new ScreenCommand();
+        $screenCommand->setCreated(new \DateTime());
+        $screenCommand->setScreen($screen);
+        $screenCommand->setFetched(null);
+        $screenCommand->setCommand($command);
+        $this->entityManager->persist($screenCommand);
         $this->entityManager->flush();
     }
 }

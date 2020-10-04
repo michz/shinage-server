@@ -1,4 +1,4 @@
-@api @screen_remote @deprecated
+@api @screen_remote
 Feature: As a player
   I can do a so called heartbeat
 
@@ -18,5 +18,9 @@ Feature: As a player
     Then I should see that the screen is registered
 
 
-  # @TODO Test if last connect date is set correctly
+  Scenario: I can see that there is a command available for screen
+    Given There is a command "reboot" available for screen "123456"
+    When I do a heartbeat with guid "123456"
+    Then I should see that there is a command "reboot" available
+
 
