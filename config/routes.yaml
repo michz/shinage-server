@@ -52,3 +52,9 @@ pool-get:
 
 pool-get-root:
   path: /pool/
+
+qr-for-screen-registration:
+  path: /qr/register-screen/{connectCode}
+  controller: App\Controller\QrController::registerScreenUrlAction
+  requirements:
+    connectCode: .+

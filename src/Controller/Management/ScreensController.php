@@ -65,8 +65,6 @@ class ScreensController extends AbstractController
     {
         $user = $this->loggedInUserRepository->getLoggedInUserOrDenyAccess();
 
-        // @TODO{s:5} Standardpräsentation pro Screen einstellen
-
         // "create virtual screen" form
         $createForm = $this->createForm(CreateVirtualScreenForm::class);
         $this->handleCreateVirtualScreen($request, $createForm);
@@ -86,6 +84,7 @@ class ScreensController extends AbstractController
             'organizations' => $user->getOrganizations(),
             'create_form' => $createForm->createView(),
             'onlinePlayerBaseUrls' => $this->generateCurrentUrls($screens),
+            'prefillConnectCode' => $request->get('connect_code', null),
         ]);
     }
 

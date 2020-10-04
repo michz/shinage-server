@@ -45,16 +45,16 @@
                 <div class="ui cancel button">{{ 'Close'|trans }}</div>
             </div>
         </div>
-        
-        <h3 class="ui top attached block header">
+
+        <h3 class="ui top attached block header {% if prefillConnectCode != '' %}pulse{% endif %}">
             {{ 'Connect screen'|trans }}
         </h3>
 
-        <div class="ui bottom attached segment">
-            <form action="{{ path('management-connect-screen') }}" method="post" class="form-inline">
+        <div class="ui bottom attached segment {% if prefillConnectCode != '' %}pulse{% endif %}">
+            <form action="{{ path('management-connect-screen') }}" method="post" class="form-inline connect-screen">
                 <label for="inlineFormInput">{{ 'Connect code'|trans }}:</label>
                 <div class="ui input">
-                    <input type="text" id="inlineFormInput" placeholder="12345678" name="connect_code" maxlength="8">
+                    <input type="text" id="inlineFormInput" placeholder="12345678" name="connect_code" maxlength="8" value="{{ prefillConnectCode|default('') }}">
                 </div>
 
                 <label for="who">&nbsp;&nbsp;&nbsp;{{ 'Connect with'|trans }}: </label>
@@ -65,7 +65,7 @@
                     {% endfor %}
                 </select>
 
-                <button class="ui default button" type="submit" class="btn btn-primary">{{ "Connect"|trans }}</button>
+                <button class="ui default button {% if prefillConnectCode != '' %}pulse{% endif %}" type="submit" class="btn btn-primary">{{ "Connect"|trans }}</button>
             </form>
         </div>
 
