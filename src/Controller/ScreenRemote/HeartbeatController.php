@@ -7,126 +7,84 @@ declare(strict_types=1);
 
 namespace App\Controller\ScreenRemote;
 
-use App\Entity\PresentationInterface;
 use App\Entity\Screen;
+use App\Entity\ScreenCommand;
 use App\Exceptions\NoScreenGivenException;
 use App\Presentation\PresentationTypeRegistryInterface;
-use App\Service\ConnectCodeGeneratorInterface;
-use App\Service\SchedulerService;
-use App\Service\ScreenAssociation;
+use App\Repository\ScreenCommandRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use JMS\Serializer\SerializerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Routing\RouterInterface;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class HeartbeatController extends AbstractController
 {
-    const JSONP_DUMMY = 'REPLACE_JSONP_CALLBACK_DUMMY';
+    private EntityManagerInterface $entityManager;
 
-    /** @var EntityManagerInterface */
-    private $entityManager;
+    private PresentationTypeRegistryInterface $presentationTypeRegistry;
 
-    /** @var PresentationTypeRegistryInterface */
-    private $presentationTypeRegistry;
+    private SerializerInterface $serializer;
 
-    /** @var ScreenAssociation */
-    private $screenAssociationHelper;
-
-    /** @var RouterInterface */
-    private $router;
-
-    /** @var SchedulerService */
-    private $scheduler;
-
-    /** @var ConnectCodeGeneratorInterface */
-    private $connectCodeGenerator;
+    private ScreenCommandRepository $screenCommandRepository;
 
     public function __construct(
         EntityManagerInterface $entityManager,
         PresentationTypeRegistryInterface $presentationTypeRegistry,
-        ScreenAssociation $screenAssociationHelper,
-        RouterInterface $router,
-        SchedulerService $scheduler,
-        ConnectCodeGeneratorInterface $connectCodeGenerator
+        SerializerInterface $serializer,
+        ScreenCommandRepository $screenCommandRepository
     ) {
         $this->entityManager = $entityManager;
         $this->presentationTypeRegistry = $presentationTypeRegistry;
-        $this->screenAssociationHelper = $screenAssociationHelper;
-        $this->router = $router;
-        $this->scheduler = $scheduler;
-        $this->connectCodeGenerator = $connectCodeGenerator;
+        $this->serializer = $serializer;
+        $this->screenCommandRepository = $screenCommandRepository;
     }
 
-    public function heartbeatAction(Request $request, string $screenId): Response
+    public function heartbeatAction(string $screenId): Response
     {
-        if (!$screenId) {
+        if (empty($screenId)) {
             return $this->json([
                 'status'        => 'error',
                 'error_code'    => 'NO_SCREEN_GIVEN',
                 'error_message' => 'No screen was given in this request.',
-            ], 500);
+            ], 400);
         }
 
         $screen = $this->entityManager->find(Screen::class, $screenId);
-        if (null === $screen) {
-            $screen = new Screen();
-            $screen->setGuid($screenId);
-            $screen->setFirstConnect(new \DateTime());
-            $screen->setLastConnect(new \DateTime('@0'));
-            $screen->setConnectCode($this->generateUniqueConnectcode());
+        if (empty($screen)) {
+            throw new NotFoundHttpException();
         }
 
-        $isPreview = $request->headers->get('X-PREVIEW');
-        if ('1' !== $isPreview) {
-            $screen->setLastConnect(new \DateTime());
+        // Get "oldest" command for screen. If none existing, just return 204 to save traffic.
+        $command = $this->screenCommandRepository->getOldestCommandForScreenIfAny($screen);
+        if (empty($command)) {
+            return new Response('', 204);
         }
 
-        // check if screen is associated
-        $is_assoc = $this->screenAssociationHelper->isScreenAssociated($screen);
-        if (!$is_assoc) {
-            $screen->setConnectCode($this->generateUniqueConnectcode());
-        }
-
-        $this->entityManager->persist($screen);
+        // Mark as fetched
+        $command->setFetched(new \DateTime());
         $this->entityManager->flush();
 
-        $presentation = null;
-        /** @var PresentationInterface $current */
-        $current = $this->getCurrentPresentation($screen);
-        if (null !== $current) {
-            $presentation = $current;
-
-            $presentationType = $this->presentationTypeRegistry->getPresentationType($presentation->getType());
-            $renderer = $presentationType->getRenderer();
-            $lastModified = $renderer->getLastModified($current);
-        } else {
-            $lastModified = new \DateTime('now');
-        }
-
-        $presentationId = null;
-        $presentationUrl = null;
-        if (null !== $presentation) {
-            $presentationId = $presentation->getId();
-            $presentationUrl = $request->getScheme() . '://' . $request->getHttpHost() .
-                $this->router->generate('presentation', ['id' => $presentationId]);
-        }
-
-        return $this->json([
-            'status'           => 'ok',
-            'screen_status'    => $is_assoc ? 'registered' : 'not_registered',
-            'connect_code'     => $screen->getConnectCode(),
-            'presentation'     => $presentationId,
-            'presentationUrl'  => $presentationUrl,
-            'last_modified'    => $lastModified->format('Y-m-d H:i:s'),
-        ]);
+        $responseText = $this->serializer->serialize(['command' => $command], 'json');
+        return new Response(
+            $responseText,
+            200,
+            [
+                'Content-Type' => 'application/json',
+                'Content-Length' => \strlen($responseText),
+            ]
+        );
     }
 
+    /**
+     * @deprecated Replace by own controller?
+     */
     public function uploadScreenshotAction(Request $request): Response
     {
         // Which screen?
         $sGuid = $request->request->get('screen', null);
-        if (!$sGuid) {
+        if (empty($sGuid)) {
             throw new NoScreenGivenException();
         }
 
@@ -141,15 +99,5 @@ class HeartbeatController extends AbstractController
         }
 
         return $this->json(['status' => 'ok']);
-    }
-
-    protected function generateUniqueConnectcode(): string
-    {
-        return $this->connectCodeGenerator->generateUniqueConnectcode();
-    }
-
-    protected function getCurrentPresentation(Screen $screen): ?PresentationInterface
-    {
-        return $this->scheduler->getCurrentPresentation($screen, true);
     }
 }

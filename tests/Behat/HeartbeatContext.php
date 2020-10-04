@@ -23,7 +23,7 @@ class HeartbeatContext implements Context
     }
 
     /**
-     * @When /^I do a heartbeat with guid "([^"]*)"$/
+     * @When I do a heartbeat with guid :guid
      */
     public function iDoAHeartbeatWithGuid(string $guid): void
     {
@@ -37,35 +37,29 @@ class HeartbeatContext implements Context
     }
 
     /**
-     * @Then /^I should see that the screen is registered$/
+     * @Then I should see that the screen is registered
      */
     public function iShouldSeeThatTheScreenIsRegistered(): void
     {
-        /** @var Response $response */
-        $response = $this->client->getResponse();
-        $data = \json_decode($response->getContent());
-
-        $this->assertScreenState('registered', $data->screen_status);
+        Assert::eq($this->client->getInternalResponse()->getStatusCode(), 204);
     }
 
     /**
-     * @Then /^I should see that the screen is not registered$/
+     * @Then I should see that the screen is not registered
      */
     public function iShouldSeeThatTheScreenIsNotRegistered(): void
+    {
+        Assert::eq($this->client->getInternalResponse()->getStatusCode(), 404);
+    }
+
+    /**
+     * @Then I should see that there is a command :command available
+     */
+    public function iShouldSeeThatThereIsACommandAvailable(string $command)
     {
         /** @var Response $response */
         $response = $this->client->getResponse();
         $data = \json_decode($response->getContent());
-
-        $this->assertScreenState('not_registered', $data->screen_status);
-    }
-
-    private function assertScreenState(string $expected, string $actual): void
-    {
-        Assert::eq(
-            $expected,
-            $actual,
-            'Wrong screen status returned: ' . $actual
-        );
+        Assert::eq($data->command->command, $command);
     }
 }

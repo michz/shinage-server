@@ -647,6 +647,9 @@
     "symplify/smart-file-system": {
         "version": "8.3.17"
     },
+    "symplify/symplify-kernel": {
+        "version": "8.3.27"
+    },
     "thecodingmachine/safe": {
         "version": "v1.2.1"
     },
