@@ -1,0 +1,17 @@
+App\Entity\ScreenCommand:
+  exclusion_policy: ALL
+  properties:
+    id:
+      type: integer
+      expose: true
+      readonly: true
+    created:
+      type: "DateTime<'Y-m-d H:i:s'>"
+      expose: true
+      readonly: true
+    command:
+      type: string
+      expose: true
+    arguments:
+      type: array
+      expose: true
