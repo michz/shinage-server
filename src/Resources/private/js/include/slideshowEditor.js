@@ -48,14 +48,31 @@ window.SlideshowEditor = {
                 $("#selectFilesPane").trigger("resize");
             })
             .modal('setting', 'onApprove', $.proxy(function () {
-                $("#selectFilesPane").elfinder('instance').exec('getfile');
-                for (var i = 0; i < window.selectedFiles.length; i++) {
-                    var file = window.selectedFiles[i];
-                    var slide = $(e.currentTarget).data('prototype');
-                    slide.src = this.generatePoolUrlFromElFinderFile(file);
-                    this.appendSlide(slide);
-                    this.saveSlides();
-                }
+                var that = this;
+                var elFinderInstance = $("#selectFilesPane").elfinder('instance');
+                var success = false;
+                elFinderInstance.exec('getfile').done(function (selectedFiles) {
+                    if (undefined === selectedFiles || selectedFiles.length === 0) {
+                        return false;
+                    }
+
+                    for (var i = 0; i < selectedFiles.length; i++) {
+                        var file = selectedFiles[i];
+                        if (file.mime === 'directory') {
+                            continue;
+                        }
+
+                        success = true;
+                        var slide = $(e.currentTarget).data('prototype');
+                        slide.src = that.generatePoolUrlFromElFinderFile(file);
+                        that.appendSlide(slide);
+                        that.saveSlides();
+                    }
+
+                    return false;
+                });
+
+                return success;
             }, this))
             .modal('show');
 
