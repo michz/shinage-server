@@ -137,20 +137,35 @@
                                 oldSchool : false
                             }
                         },
+
                         handlers : {
                             dblclick : function(event, elfinderInstance) {
+                                var selectedFiles = elfinderInstance.selectedFiles();
+                                // If no files are selected: Use default logic
+                                if (selectedFiles.length < 1) {
+                                    return;
+                                }
+
+                                // If at least one selected file is a directory: Use default logic
+                                for (var i = 0; i < selectedFiles.length; i++) {
+                                    if (selectedFiles[i].mime === 'directory') {
+                                        return true;
+                                    }
+                                }
+
                                 event.preventDefault();
                                 $('#choseImageOverlay .approve').trigger('click');
                             }
                         },
 
                         getFileCallback : function(files, fm) {
-                            window.selectedFiles = files;
+                            return files;
                         },
 
                         commandsOptions : {
                             getfile: {
-                                multiple: true
+                                multiple: true,
+                                folders: false,
                             },
                             quicklook : {
                                 width : 640,  // Set default width/height voor quicklook
