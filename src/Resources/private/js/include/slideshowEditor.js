@@ -8,6 +8,10 @@ window.SlideshowEditor = {
     virtualBaseUrl: 'pool://',
     poolBaseUrl: '',
     messages: {},
+    prototypes: {
+        image: {"type":"Image", "duration":5000, "title":"Slide", "transition":"", "src":"//via.placeholder.com/500x380"},
+        video: {"type":"Video", "duration":0, "title":"Slide", "transition":"", "src":"//via.placeholder.com/500x380"}
+    },
     init: function (container, saveUrl) {
         this.saveUrl = saveUrl;
         this.container = $(container);
@@ -36,7 +40,7 @@ window.SlideshowEditor = {
 
         return this;
     },
-    addSlideButton: function (e) {
+    addSlideButton: function () {
         //var slide = $(e.currentTarget).data('prototype');
         //this.appendSlide(slide);
         //this.saveSlides();
@@ -62,8 +66,16 @@ window.SlideshowEditor = {
                             continue;
                         }
 
+                        var slide = {};
+                        if (file.mime.startsWith('image')) {
+                            slide = that.prototypes.image;
+                        } else if (file.mime.startsWith('video')) {
+                            slide = that.prototypes.video;
+                        } else {
+                            continue;
+                        }
+
                         success = true;
-                        var slide = $(e.currentTarget).data('prototype');
                         slide.src = that.generatePoolUrlFromElFinderFile(file);
                         that.appendSlide(slide);
                         that.saveSlides();
