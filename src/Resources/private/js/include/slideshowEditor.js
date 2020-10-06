@@ -107,8 +107,15 @@ window.SlideshowEditor = {
     },
     removeSlideButton: function (e) {
         var slide = $(e.currentTarget).parent();
+        if (slide.hasClass('selected')) {
+            $("#tabSlide .settings." + slide.data("slide").type, this.container).hide();
+            $('.tabular.menu .item').tab('change tab', 'tabAdd');
+        }
+
         slide.remove();
         this.saveSlides();
+        e.stopPropagation();
+        e.preventDefault();
     },
     settingsChanged: function (e) {
         if (this.selectedSlide === null) {
