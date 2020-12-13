@@ -20,7 +20,7 @@
 !/var/spool/default/.gitkeep
 /vendor/
 /public/assets/
-/public/semantic-ui-css/
+/public/fomantic-ui-css/
 /public/bundles/
 /public/js/elfinder/
 /public/css/elfinder/

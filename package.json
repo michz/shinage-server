@@ -17,6 +17,6 @@
     "moment": "^2.29.0",
     "reset-css": "^4.0.1",
     "reveal.js": "^3.9.2",
-    "semantic-ui-css": "^2.4.1"
+    "fomantic-ui-css": "^2.8.7"
   }
 }

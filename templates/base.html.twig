@@ -42,6 +42,21 @@
             </div>
         </div>
 
+        <div class="ui mini modal" id="chooseOwnerDialog" data-get-possible-owners-url="{{ path('management-get-possible-owners') }}">
+            <i class="close icon"></i>
+            <div class="header">
+                {{ 'Choose new owner'|trans }}
+            </div>
+            <div class="content">
+                <select name="newOwner">
+                </select>
+            </div>
+            <div class="actions">
+                <div class="ui cancel button">{{ 'Cancel'|trans }}</div>
+                <div class="ui approve button">{{ 'Save'|trans }}</div>
+            </div>
+        </div>
+
         <script src="{{ asset('assets/lib.min.js') }}"></script>
         <script src="{{ asset('assets/app.min.js') }}"></script>
 

@@ -5,9 +5,13 @@ filter:
 build:
     environment:
         php:
-            version: 7.4.10
+            version: 7.4.13
             compile_options: '--enable-gd --with-openssl --enable-mbstring --enable-intl'
-
+    nodes:
+        analysis:
+            environment:
+                node:
+                    version: v10.14.2
     tests:
         override: ['php -v']
 

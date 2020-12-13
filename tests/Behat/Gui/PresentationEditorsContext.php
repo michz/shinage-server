@@ -27,7 +27,7 @@ class PresentationEditorsContext extends \Behat\MinkExtension\Context\RawMinkCon
     {
         $link = $this->getSession()->getPage()->find(
             'xpath',
-            '//h2[contains(., "' . $title . '")]/following-sibling::div/.//a'
+            '//h2[contains(., "' . $title . '")]/following-sibling::div[contains(@class, "bottom")]/.//a'
         );
         $link->click();
     }
