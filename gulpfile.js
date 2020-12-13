@@ -13,7 +13,7 @@ var development = environments.development;
 
 var distPath = 'public/assets/';
 var elfinderDistPath = 'public/vendor/studio-42/elfinder';
-var semanticDistPath = 'public/semantic-ui-css';
+var fomanticDistPath = 'public/fomantic-ui-css';
 var jqueryUiDistPath = 'public/jquery-ui-dist';
 var revealDistPath = 'public/reveal.js';
 var esLintPaths = [
@@ -23,7 +23,7 @@ var paths = {
     libraryJs: [
         'node_modules/jquery/dist/jquery.js',
         'node_modules/jquery-ui-dist/jquery-ui.js',
-        'node_modules/semantic-ui-css/semantic.js',
+        'node_modules/fomantic-ui-css/semantic.js',
         'node_modules/moment/min/moment-with-locales.js',
         'node_modules/fullcalendar/dist/fullcalendar.js',
         'node_modules/fullcalendar/dist/locale-all.js',
@@ -41,7 +41,7 @@ var paths = {
     ],
     css: [
         'node_modules/reset-css/reset.css',
-        'node_modules/semantic-ui-css/semantic.css',
+        'node_modules/fomantic-ui-css/semantic.css',
         'node_modules/jquery-ui-dist/jquery-ui.css',
         'node_modules/jquery-ui-dist/jquery-ui.theme.css',
         'node_modules/fullcalendar/dist/fullcalendar.css',
@@ -80,15 +80,15 @@ gulp.task('clean', function() {
     return del([
         distPath,
         elfinderDistPath,
-        semanticDistPath,
+        fomanticDistPath,
         jqueryUiDistPath,
         revealDistPath,
     ]);
 });
 
 gulp.task('copy1', function() {
-    return gulp.src('node_modules/semantic-ui-css/themes/**')
-        .pipe(gulp.dest(semanticDistPath + '/themes/'));
+    return gulp.src('node_modules/fomantic-ui-css/themes/**')
+        .pipe(gulp.dest(fomanticDistPath + '/themes/'));
 });
 gulp.task('copy2a', function() {
     return gulp.src('vendor/studio-42/elfinder/img/**')
