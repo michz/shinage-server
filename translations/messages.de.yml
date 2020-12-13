@@ -21,6 +21,7 @@ Owner: Besitzer
 User: Benutzer
 Users: Benutzer
 Organizations: Organisationen
+Change Owner: Besitzer ändern
 
 ClickForPreview: Für Live-Vorschau auf das Bild klicken
 Current: Aktuell
@@ -118,3 +119,5 @@ scheb_two_factor:
   login: Login
   cancel: Abbrechen
   choose_provider: Authentifizierungs-Methode wechseln
+
+Choose new owner: Wähle einen neuen Besitzer

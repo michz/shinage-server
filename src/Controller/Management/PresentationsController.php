@@ -9,6 +9,7 @@ namespace App\Controller\Management;
 
 use App\Entity\Presentation;
 use App\Entity\PresentationInterface;
+use App\Entity\User;
 use App\Presentation\PresentationTypeRegistryInterface;
 use App\Repository\PresentationsRepository;
 use App\Security\LoggedInUserRepositoryInterface;
@@ -164,11 +165,30 @@ class PresentationsController extends AbstractController
             return new Response('Presentation not found.', 400);
         }
 
-        if ($user !== $presentation->getOwner()) {
-            return new Response('Only owner can edit title.', 403);
-        }
+        $this->denyAccessUnlessGranted('edit', $presentation);
 
         $presentation->setNotes($newDescription);
+        $this->entityManager->flush();
+
+        return new Response('', 204);
+    }
+
+    public function savePresentationOwner(Request $request): Response
+    {
+        $user = $this->loggedInUserRepository->getLoggedInUserOrDenyAccess();
+
+        $presentationId = $request->get('presentationId');
+        $newOwnerId = $request->get('newOwnerId');
+
+        $presentation = $this->entityManager->find(Presentation::class, $presentationId);
+        if (null === $presentation) {
+            return new Response('Presentation not found.', 400);
+        }
+
+        $this->denyAccessUnlessGranted('edit', $presentation);
+
+        $newOwner = $this->entityManager->find(User::class, $newOwnerId);
+        $presentation->setOwner($newOwner);
         $this->entityManager->flush();
 
         return new Response('', 204);

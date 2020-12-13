@@ -58,6 +58,9 @@ presentation-save-notes:
   controller: App\Controller\Management\PresentationsController::savePresentationNotes
   methods: [ post ]
 
+presentation-change-owner:
+  path: /presentations/change-owner
+  controller: App\Controller\Management\PresentationsController::savePresentationOwner
 
 management-preview:
   path: /preview
@@ -108,3 +111,7 @@ management-files-el-thumbnail:
 management-files-connector:
   path: /files-connector
   controller: App\Controller\Management\FileManager::connectorAction
+
+management-get-possible-owners:
+  path: /ajax/get-possible-owners
+  controller: App\Controller\Management\OwnersController::getPossibleOwnersAction

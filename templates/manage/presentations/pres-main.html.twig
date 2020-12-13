@@ -47,6 +47,16 @@
                         <p><i class="ui icon {{ presentation.type|trans([], 'PresentationTypesIcons') }}"></i> {{ presentation.type|trans([], 'PresentationTypes') }}</p>
                     </div>
                     <div class="ui middle attached segment row slide">
+                        <p>
+                            {{ 'Owner'|trans }}: <span class="presentation-owner-identifier">{{ presentation.owner }}</span>
+                            <a
+                                    class="ui icon circular button tiny"
+                                    title="{{ 'Change Owner'|trans }}"
+                                    data-choose-owner-for-presentation="{{ presentation.id }}"
+                            ><i class="icon users cog"></i></a>
+                        </p>
+                    </div>
+                    <div class="ui middle attached segment row slide">
                         <p>{{ 'Last modified'|trans }}: {{ presentation.lastModified|date('d.m.Y H:i') }}</p>
                     </div>
                 </div>
@@ -85,7 +95,12 @@
                                 {{ presentation.lastModified|date('d.m.Y H:i') }}
                             </td>
                             <td data-label="{{ "Owner"|trans }}">
-                                {{ presentation.owner }}
+                                <span class="presentation-owner-identifier">{{ presentation.owner }}</span>
+                                <a
+                                        class="ui icon circular button tiny"
+                                        title="{{ 'Change Owner'|trans }}"
+                                        data-choose-owner-for-presentation="{{ presentation.id }}"
+                                ><i class="icon users cog"></i></a>
                             </td>
                             <td>
                                 <a class="ui labeled icon button default" href="{{ path("presentation-editor-" ~ presentation.type, { presentationId: presentation.id })  }}">
@@ -146,6 +161,34 @@
                 }).modal('show');
                 e.preventDefault();
                 return false;
+            });
+
+            $('[data-choose-owner-for-presentation]').on('click', function (e) {
+                var targetPresentation = $(e.currentTarget).data('chooseOwnerForPresentation');
+                var displayField = $(e.currentTarget).closest('td,div').find('.presentation-owner-identifier');
+                $(this).mztxOwnerChooser({
+                    callbackApprove: function (e) {
+                        window.ajaxLoadShow();
+                        $.ajax({
+                            method: 'post',
+                            url: '{{ path('presentation-change-owner') }}',
+                            data: {
+                                'presentationId': targetPresentation,
+                                'newOwnerId': e.id
+                            },
+                            success: function () {
+                                $.notify("{{ 'Saved successfully'|trans([], 'flashes')|escape('js') }}", { className: 'success', autoHideDelay: 5000 });
+                                displayField.html(e.name);
+                            },
+                            error: function () {
+                                $.notify("{{ 'Failed saving'|trans([], 'flashes')|escape('js') }}", { className: 'error', autoHideDelay: 5000 });
+                            },
+                            complete: function () {
+                                window.ajaxLoadHide();
+                            }
+                        });
+                    }
+                });
             });
 
             $('.sortable.table').tablesort();
