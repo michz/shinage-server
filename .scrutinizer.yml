@@ -7,7 +7,11 @@ build:
         php:
             version: 7.4.10
             compile_options: '--enable-gd --with-openssl --enable-mbstring --enable-intl'
-
+    nodes:
+        analysis:
+            environment:
+                node:
+                    version: v10.14.2
     tests:
         override: ['php -v']
 
