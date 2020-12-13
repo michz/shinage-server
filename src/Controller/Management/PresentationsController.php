@@ -156,7 +156,6 @@ class PresentationsController extends AbstractController
 
     public function savePresentationNotes(Request $request): Response
     {
-        $user = $this->loggedInUserRepository->getLoggedInUserOrDenyAccess();
         $presentationId = $request->get('subject');
         $newDescription = $request->get('value');
 
@@ -175,8 +174,6 @@ class PresentationsController extends AbstractController
 
     public function savePresentationOwner(Request $request): Response
     {
-        $user = $this->loggedInUserRepository->getLoggedInUserOrDenyAccess();
-
         $presentationId = $request->get('presentationId');
         $newOwnerId = $request->get('newOwnerId');
 
