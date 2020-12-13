@@ -9,6 +9,7 @@
         this.element = element;
         this.subject = $(element).data('contentEditableSubject');
         this.url = $(element).data('contentEditableSaveCallback');
+        this.contentBefore = null;
 
         if ($(element).data('contentEditableAllowNewline') === undefined) {
             this.allowNewline = true;
@@ -49,14 +50,24 @@
                 }, this));
             }
 
+            $(this.element).on('focus', $.proxy(function () {
+                this.contentBefore = $(this.element).get(0).innerText;
+            }, this));
+
             $(this.element).on('blur', $.proxy(function () {
                 var value = $(this.element).get(0).innerText;
+                if (value === this.contentBefore) {
+                    // Nothing to save as nothing changed.
+                    return;
+                }
+
                 var dimmer = $('<div class="ui active inverted dimmer"><div class="ui loader"></div></div>');
                 $(this.element).append(dimmer);
 
-                this.save(value, function () {
+                this.save(value, $.proxy(function () {
                     dimmer.remove();
-                });
+                    this.contentBefore = null;
+                }, this));
             }, this));
         },
         save: function (value, callback) {
