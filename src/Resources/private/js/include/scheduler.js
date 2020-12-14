@@ -113,11 +113,6 @@
                     }
 
                     element.append('<div class="fc-event-title">' + event.presentation.title + '</div>');
-                    element.find('.fc-content').append("<div class='event-delete'><img src='data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAABmJLR0QA/wD/AP+gvaeTAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAB3RJTUUH4QECDRkgLhOZPwAAAJZJREFUOMutU0kOxDAIMz11PoOUR+T/x/5gvjA9jedQ6FBET9RSJBKb4CyAJBwk4fO8nvmscfJNclQJFg/T4AIjN/4xC2cz8NvJh8oZ6g4szjicBGsVVhsVRnYxk+B7E1+PmC5JbxLimsYcOQMR32wF8EGNF4DdtSKCBU0sqbpadRZaGqcp54FLbD1j+yO1v3K7mbrt/ANBpmKW31STdQAAAABJRU5ErkJggg=='></div>");
-                    element.find('.fc-content .event-delete').on('click', $.proxy(function(e) {
-                        this.deletePresentation(event);
-                        e.stopPropagation();
-                    }, this));
                 }, this),
                 eventDrop: $.proxy(this.movePresentation, this),
                 eventClick: $.proxy(this.clickScheduledPresentation, this)
@@ -160,7 +155,6 @@
             }, this));
 
             $('#scheduler-diag-edit .action--delete').on('click', function (e) {
-                // @TODO
                 var scheduledPresentation = $(e.currentTarget).closest('.modal')
                     .find('input[name="scheduledPresentationId"]').data('scheduled-presentation');
                 that.hideEditDialog();
@@ -266,7 +260,6 @@
                 return;
             }
 
-            /** global: url_delete_scheduled */
             window.ajaxLoadShow();
             $.ajax({
                 url: this.url_delete_scheduled,
