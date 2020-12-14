@@ -20,6 +20,7 @@ use JMS\Serializer\SerializerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class SchedulerController extends AbstractController
 {
@@ -123,12 +124,31 @@ class SchedulerController extends AbstractController
         ));
     }
 
-    public function addScheduledAction(Request $request): Response
+    public function editScheduledAction(Request $request): Response
     {
+        $id = $request->get('scheduledPresentationId');
+        if (empty($id)) {
+            // Create new schedule item
+            $scheduledPresentation = new ScheduledPresentation();
+            $this->entityManager->persist($scheduledPresentation);
+        } else {
+            // Edit existing schedule item
+            $scheduledPresentation = $this->entityManager->find(ScheduledPresentation::class, $id);
+            if (null === $scheduledPresentation) {
+                throw new NotFoundHttpException('Could not find the scheduled presentation.');
+            }
+
+            // Check if user is allowed to see/edit the screen that the presentation is currently scheduled on
+            $this->denyAccessUnlessGranted('schedule', $scheduledPresentation->getScreen());
+
+            // Check if user is allowed to see/edit the presentation is currently scheduled
+            $this->denyAccessUnlessGranted('schedule', $scheduledPresentation->getPresentation());
+        }
+
         $guid   = $request->get('screen');
         $screen = $this->entityManager->find(Screen::class, $guid);
 
-        // Check if user is allowed to see/edit screen
+        // Check if user is allowed to see/edit the (newly chosen) screen
         $this->denyAccessUnlessGranted('schedule', $screen);
 
         $start  = new \DateTime($request->get('start'), new \DateTimeZone('UTC'));
@@ -137,16 +157,18 @@ class SchedulerController extends AbstractController
         $pres_id = $request->get('presentation');
         $pres   = $this->entityManager->find(Presentation::class, $pres_id);
 
-        $s = new ScheduledPresentation();
-        $s->setScheduledStart($start);
-        $s->setScheduledEnd($end);
-        $s->setScreen($screen);
-        $s->setPresentation($pres);
+        // Check if user is allowed to see/edit the (newly chosen) presentation
+        $this->denyAccessUnlessGranted('schedule', $pres);
 
-        $this->entityManager->persist($s);
-        $this->entityManager->flush(); // just for sure
+        $scheduledPresentation->setScheduledStart($start);
+        $scheduledPresentation->setScheduledEnd($end);
+        $scheduledPresentation->setScreen($screen);
+        $scheduledPresentation->setPresentation($pres);
 
-        $this->collisionHandler->handleCollisions($s);
+        // To be sure the changes are flushed to database before doing the collision detection on the database
+        $this->entityManager->flush();
+
+        $this->collisionHandler->handleCollisions($scheduledPresentation);
         $this->entityManager->flush();
 
         return $this->json(['status' => 'ok']);
