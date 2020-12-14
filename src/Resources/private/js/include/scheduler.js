@@ -57,26 +57,35 @@
             var that = this;
             var today = moment();
             var tmpView = 'agendaWeek';
-            var vars = window.location.hash.split("&");
-            for (var url_i = 0; url_i < vars.length; url_i++) {
-                if (vars[url_i].match("^#year")) {
-                    today.year(vars[url_i].substring(6));
-                }
-                if (vars[url_i].match("^month")) {
-                    today.month(vars[url_i].substring(6));
-                }
-                if (vars[url_i].match("^day")) {
-                    today.day(vars[url_i].substring(4));
-                }
-                if (vars[url_i].match("^view")) {
-                    tmpView = vars[url_i].substring(5);
-                }
-                if (vars[url_i].match("^selectedScreen")) {
-                    this.setSelectedScreen(vars[url_i].substring(15));
-                }
-            }
+            var vars = {};
+            window.location.hash.split("&").forEach(function(v) {
+                var stripped = v.replace(new RegExp('^[#]+'), '');
+                var splitted = stripped.split('=');
+                vars[splitted[0]] = splitted[1];
+            });
 
-            // @TODO visible screens
+            // @TODO Represent visible screens in URL
+
+            Object.keys(vars).forEach(function (key) {
+                var value = vars[key];
+                switch (key) {
+                    case 'year':
+                        today.year(parseInt(value, 10));
+                        break;
+                    case 'month':
+                        today.month(parseInt(value, 10) - 1);
+                        break;
+                    case 'day':
+                        today.date(parseInt(value, 10));
+                        break;
+                    case 'view':
+                        tmpView = value;
+                        break;
+                    case 'selectedScreen':
+                        that.setSelectedScreen(value);
+                        break;
+                }
+            });
 
             $('.calendar', this.element).fullCalendar({
                 header: {
@@ -119,8 +128,7 @@
             });
 
             $('.sched-screen-list .item', this.element).on("click", $.proxy(function (e) {
-                $('.sched-screen-list .item', this.element).removeClass('selected');
-                $(e.currentTarget).addClass('selected');
+                this.setSelectedScreen($(e.currentTarget).data('guid'));
                 this.setUrl($('.calendar', this.element).fullCalendar('getView'));
             }, this));
             $('.sched-screen-list .item .selector', this.element).on("click", $.proxy(function (e) {
@@ -137,8 +145,11 @@
                 }
             }, this));
 
-            $('.sched-screen-list .item:first', this.element).trigger('click');
 
+            // If no screen is selected yet, preselect the first
+            if ($('.sched-screen-list .selected', this.element).length < 1) {
+                $('.sched-screen-list .item:first', this.element).trigger('click');
+            }
 
             var global_i = 0;
             $('.sched-screen-list .item', this.element).each($.proxy(function (k, o) {
@@ -227,9 +238,8 @@
             return $('.sched-screen-list .selected', this.element).data('guid');
         },
         setSelectedScreen: function (guid) {
-            $('.sched-screen-list [data^="' + guid + '"]', this.element).removeClass('selected');
-            $('.sched-screen-list [data="' + guid + '"]', this.element).addClass('selected');
-            return this;
+            $('.sched-screen-list .item[data-guid!="' + guid + '"]', this.element).removeClass('selected');
+            $('.sched-screen-list .item[data-guid="' + guid + '"]', this.element).addClass('selected');
         },
         setScreenColor: function (screen) {
             var col = this.screen_colors[$(screen).data('color-set')];
