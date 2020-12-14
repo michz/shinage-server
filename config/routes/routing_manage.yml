@@ -77,9 +77,9 @@ management-get-schedule:
   path: /get-schedule
   controller: App\Controller\Management\SchedulerController::getScheduleAction
 
-management-add-scheduled:
-  path: /add-scheduled
-  controller: App\Controller\Management\SchedulerController::addScheduledAction
+management-edit-scheduled:
+  path: /edit-scheduled
+  controller: App\Controller\Management\SchedulerController::editScheduledAction
 
 management-change-scheduled:
   path: /change-scheduled

@@ -30,3 +30,11 @@ admin:
     too_short: Der eingebene Code ist zu kurz. Er muss mindestens 6 Zeichen lang sein.
     invalid_characters: Der eingebene Code enthält ungültige Zeichen. Er darf nur Buchstaben, Ziffern, Bindestriche - und Unterstriche enthalten.
     could_not_delete: Code konnte nicht gelöscht werden
+
+scheduler:
+  create:
+    successful: Der Eintrag wurde angelegt
+    error: Der Eintrag konnte nicht angelegt werden
+  edit:
+    successful: Der Eintrag wurde geändert
+    error: Der Eintrag konnte nicht geändert werden

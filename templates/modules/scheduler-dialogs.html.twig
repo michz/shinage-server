@@ -1,61 +1,64 @@
-{#
-<div class="dialog">
-    <select name="screen" id="screen-prototype">
-        {% for screen in screens %}
-            <option value="{{ screen.getGuid() }}">{{ screen.getName() }}</option>
-        {% endfor %}
-    </select>
-</div>
-#}
-
-
-
-
-<div class="dialog">
-    <select name="screen" id="screen-prototype">
-        {% for screen in screens %}
-            <option value="{{ screen.getGuid() }}">{{ screen.getName() }}</option>
-        {% endfor %}
-    </select>
-    <select name="presentation" id="presentation-prototype">
-        {% for presentation in presentations %}
-            <option value="{{ presentation.getId() }}">{{ presentation.getTitle() }}</option>
-        {% endfor %}
-    </select>
-</div>
-
-<div id="scheduler-diag-place" class="ui modal">
+<div
+        id="scheduler-diag-edit"
+        class="ui modal"
+        data-message-create-success="{{ 'scheduler.create.successful'|trans([], 'flashes') }}"
+        data-message-create-error="{{ 'scheduler.create.error'|trans([], 'flashes') }}"
+        data-message-edit-success="{{ 'scheduler.edit.successful'|trans([], 'flashes') }}"
+        data-message-edit-error="{{ 'scheduler.edit.error'|trans([], 'flashes') }}"
+>
     <div class="header">
-        {{ 'Add further rights'|trans }}
+        {{ 'Plan presentation'|trans }}
     </div>
     <div class="content">
-        <form action="{{ path('management-add-scheduled') }}" method="post" class="ui form">
-            <div class="ui field segment">
-                <p>{{ 'Presentation'|trans }}:</p>
-                <div id="inp-pres" class="ui fluid input">
+        <form action="{{ path('management-edit-scheduled') }}" method="post" class="ui form">
+            <input type="hidden" name="scheduledPresentationId" value="">
+            <div class="ui two fields segment">
+                <div class="ui field">
+                    <label for="schedule-edit-form--presentation">{{ 'Presentation'|trans }}:</label>
+                    <div class="ui fluid input">
+                        <select name="presentation" id="schedule-edit-form--presentation">
+                            {% for presentation in presentations %}
+                                <option value="{{ presentation.getId() }}">{{ presentation.getTitle() }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+                <div class="ui field">
+                    <label for="">{{ 'Screen'|trans }}:</label>
+                    <div id="inp-screen" class="ui fluid input">
+                        <select name="screen" id="screen-prototype">
+                            {% for screen in screens %}
+                                <option value="{{ screen.getGuid() }}">{{ screen.getName() }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
                 </div>
             </div>
-            <div class="ui field segment">
-                <p>{{ 'Screen'|trans }}:</p>
-                <div id="inp-screen" class="ui fluid input">
+            <div class="ui two fields segment">
+                <div class="ui field">
+                    <label for="">{{ 'StartTime'|trans }}:</label>
+                    <div id="inp-screen" class="ui fluid input">
+                        <input name="start" class="date-pick" type="text">
+                    </div>
                 </div>
-            </div>
-            <div class="ui field segment">
-                <p>{{ 'StartTime'|trans }}:</p>
-                <div id="inp-screen" class="ui fluid input">
-                    <input id="date-start" name="start" class="date-pick" type="text">
-                </div>
-            </div>
-            <div class="ui field segment">
-                <p>{{ 'EndTime'|trans }}:</p>
-                <div id="inp-screen" class="ui fluid input">
-                    <input id="date-end" name="end" class="date-pick" type="text">
+                <div class="ui field">
+                    <label for="">{{ 'EndTime'|trans }}:</label>
+                    <div id="inp-screen" class="ui fluid input">
+                        <input name="end" class="date-pick" type="text">
+                    </div>
                 </div>
             </div>
 
         </form>
     </div>
     <div class="actions">
+        <div class="ui icon labeled red button action--delete">
+            <i class="icon trash"></i>
+            {{ 'Remove'|trans }}
+        </div>
+        &nbsp;
+        &nbsp;
+        &nbsp;
         <div class="ui cancel button">{{ 'Cancel'|trans }}</div>
         <div class="ui primary approve button">{{ 'Save'|trans }}</div>
     </div>

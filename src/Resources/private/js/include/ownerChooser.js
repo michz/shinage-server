@@ -63,7 +63,6 @@
                 method: 'get',
                 url: this.getPossibleOwnersUrl,
                 success: function (data) {
-                    window.ajaxLoadHide();
                     var $select = $('select', this.modal);
                     $select.empty();
                     Object.keys(data).forEach(function (k) {
@@ -74,7 +73,7 @@
                     $.notify("{{ 'Could not fetch possible owners'|trans([], 'flashes')|escape('js') }}", { className: 'error', autoHideDelay: 5000 });
                 },
                 complete: function () {
-                    // @TODO Hide loader
+                    window.ajaxLoadHide();
                 }
             });
         }

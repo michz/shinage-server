@@ -44,7 +44,6 @@
         this.global_evt_src = 1;
 
         this.url_get_schedule = $(this.element).data('urlGetSchedule');
-        this.url_add_scheduled = $(this.element).data('urlAddScheduled');
         this.url_change_scheduled = $(this.element).data('urlChangeScheduled');
         this.url_delete_scheduled = $(this.element).data('urlDeleteScheduled');
 
@@ -55,28 +54,38 @@
     // Avoid Plugin.prototype conflicts
     $.extend(Plugin.prototype, {
         init: function () {
+            var that = this;
             var today = moment();
             var tmpView = 'agendaWeek';
-            var vars = window.location.hash.split("&");
-            for (var url_i = 0; url_i < vars.length; url_i++) {
-                if (vars[url_i].match("^#year")) {
-                    today.year(vars[url_i].substring(6));
-                }
-                if (vars[url_i].match("^month")) {
-                    today.month(vars[url_i].substring(6));
-                }
-                if (vars[url_i].match("^day")) {
-                    today.day(vars[url_i].substring(4));
-                }
-                if (vars[url_i].match("^view")) {
-                    tmpView = vars[url_i].substring(5);
-                }
-                if (vars[url_i].match("^selectedScreen")) {
-                    this.setSelectedScreen(vars[url_i].substring(15));
-                }
-            }
+            var vars = {};
+            window.location.hash.split("&").forEach(function(v) {
+                var stripped = v.replace(new RegExp('^[#]+'), '');
+                var splitted = stripped.split('=');
+                vars[splitted[0]] = splitted[1];
+            });
 
-            // @TODO visible screens
+            // @TODO Represent visible screens in URL
+
+            Object.keys(vars).forEach(function (key) {
+                var value = vars[key];
+                switch (key) {
+                    case 'year':
+                        today.year(parseInt(value, 10));
+                        break;
+                    case 'month':
+                        today.month(parseInt(value, 10) - 1);
+                        break;
+                    case 'day':
+                        today.date(parseInt(value, 10));
+                        break;
+                    case 'view':
+                        tmpView = value;
+                        break;
+                    case 'selectedScreen':
+                        that.setSelectedScreen(value);
+                        break;
+                }
+            });
 
             $('.calendar', this.element).fullCalendar({
                 header: {
@@ -113,18 +122,13 @@
                     }
 
                     element.append('<div class="fc-event-title">' + event.presentation.title + '</div>');
-                    element.find('.fc-content').append("<div class='event-delete'><img src='data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAABmJLR0QA/wD/AP+gvaeTAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAB3RJTUUH4QECDRkgLhOZPwAAAJZJREFUOMutU0kOxDAIMz11PoOUR+T/x/5gvjA9jedQ6FBET9RSJBKb4CyAJBwk4fO8nvmscfJNclQJFg/T4AIjN/4xC2cz8NvJh8oZ6g4szjicBGsVVhsVRnYxk+B7E1+PmC5JbxLimsYcOQMR32wF8EGNF4DdtSKCBU0sqbpadRZaGqcp54FLbD1j+yO1v3K7mbrt/ANBpmKW31STdQAAAABJRU5ErkJggg=='></div>");
-                    element.find('.fc-content .event-delete').on('click', $.proxy(function(e) {
-                        this.deletePresentation(event);
-                        e.stopPropagation();
-                    }, this));
                 }, this),
-                eventDrop: $.proxy(this.movePresentation, this)
+                eventDrop: $.proxy(this.movePresentation, this),
+                eventClick: $.proxy(this.clickScheduledPresentation, this)
             });
 
             $('.sched-screen-list .item', this.element).on("click", $.proxy(function (e) {
-                $('.sched-screen-list .item', this.element).removeClass('selected');
-                $(e.currentTarget).addClass('selected');
+                this.setSelectedScreen($(e.currentTarget).data('guid'));
                 this.setUrl($('.calendar', this.element).fullCalendar('getView'));
             }, this));
             $('.sched-screen-list .item .selector', this.element).on("click", $.proxy(function (e) {
@@ -141,8 +145,11 @@
                 }
             }, this));
 
-            $('.sched-screen-list .item:first', this.element).trigger('click');
 
+            // If no screen is selected yet, preselect the first
+            if ($('.sched-screen-list .selected', this.element).length < 1) {
+                $('.sched-screen-list .item:first', this.element).trigger('click');
+            }
 
             var global_i = 0;
             $('.sched-screen-list .item', this.element).each($.proxy(function (k, o) {
@@ -158,7 +165,14 @@
                 this.global_evt_src++;
             }, this));
 
-            this.initCreateDialog();
+            $('#scheduler-diag-edit .action--delete').on('click', function (e) {
+                var scheduledPresentation = $(e.currentTarget).closest('.modal')
+                    .find('input[name="scheduledPresentationId"]').data('scheduled-presentation');
+                that.hideEditDialog();
+                that.deletePresentation(scheduledPresentation);
+            });
+
+            this.initEditDialog();
         },
         setUrl: function (view) {
             var moment = view.start;
@@ -220,10 +234,12 @@
         getSelectedScreen: function () {
             return $('.sched-screen-list .selected', this.element).get(0);
         },
+        getSelectedScreenGuid: function () {
+            return $('.sched-screen-list .selected', this.element).data('guid');
+        },
         setSelectedScreen: function (guid) {
-            $('.sched-screen-list [data^="' + guid + '"]', this.element).removeClass('selected');
-            $('.sched-screen-list [data="' + guid + '"]', this.element).addClass('selected');
-            return this;
+            $('.sched-screen-list .item[data-guid!="' + guid + '"]', this.element).removeClass('selected');
+            $('.sched-screen-list .item[data-guid="' + guid + '"]', this.element).addClass('selected');
         },
         setScreenColor: function (screen) {
             var col = this.screen_colors[$(screen).data('color-set')];
@@ -236,15 +252,9 @@
                 $(screen).css('color', col.normal);
             }
         },
-        placePresentationBySelection: $.proxy(function (start, end) {
-            this.showCreateDialog(
-                start,
-                end,
-                $.proxy(function () {
-                    $('.calendar', this.element).fullCalendar('refetchEvents');
-                }, this)
-            );
-        }, this),
+        placePresentationBySelection: function (start, end) {
+            this.showEditDialog(undefined, start, end);
+        },
         resizePresentation: function(event, delta, revertFunc) {
             this.saveChanged(event, revertFunc);
         },
@@ -260,7 +270,6 @@
                 return;
             }
 
-            /** global: url_delete_scheduled */
             window.ajaxLoadShow();
             $.ajax({
                 url: this.url_delete_scheduled,
@@ -276,17 +285,54 @@
             });
         },
 
-        showCreateDialog: function (start, stop, success) {
-            $('#scheduler-diag-place').find('#date-start').val(start.format('DD.MM.YYYY HH:mm'));
-            $('#scheduler-diag-place').find('#date-end').val(stop.format('DD.MM.YYYY HH:mm'));
-
-            $('#scheduler-diag-place').data('successCallback', success);
-            $('#scheduler-diag-place').modal('show');
+        clickScheduledPresentation: function (e) {
+            //this.initEditDialog();
+            this.showEditDialog(e);
         },
 
-        initCreateDialog: function () {
+        hideEditDialog: function () {
+            $('#scheduler-diag-edit').modal('hide');
+        },
+
+        showEditDialog: function (scheduledPresentation, start, stop) {
+            var $schedulerDialog = $('#scheduler-diag-edit');
+
+            if (scheduledPresentation !== undefined) {
+                // Edit an existing schedule item
+                $schedulerDialog.find('.action--delete').css('visibility', 'visible');
+                $schedulerDialog.data('messageSuccess', $schedulerDialog.data('messageEditSuccess'));
+                $schedulerDialog.data('messageError', $schedulerDialog.data('messageEditError'));
+
+                $schedulerDialog.find('input[name="scheduledPresentationId"]').val(scheduledPresentation.id);
+                $schedulerDialog.find('input[name="scheduledPresentationId"]').data('scheduled-presentation', scheduledPresentation);
+                $schedulerDialog.find('select[name="presentation"]').val(scheduledPresentation.presentation.id);
+                $schedulerDialog.find('select[name="screen"]').val(scheduledPresentation.screen);
+
+                start = scheduledPresentation.start;
+                stop = scheduledPresentation.end;
+            } else {
+                // Create a new schedule item
+                $schedulerDialog.find('.action--delete').css('visibility', 'hidden');
+                $schedulerDialog.data('messageSuccess', $schedulerDialog.data('messageCreateSuccess'));
+                $schedulerDialog.data('messageError', $schedulerDialog.data('messageCreateError'));
+
+                $schedulerDialog.find('input[name="scheduledPresentationId"]').val('');
+                $schedulerDialog.find('input[name="scheduledPresentationId"]').data('scheduled-presentation', undefined);
+                $schedulerDialog.find('select[name="presentation"]').val('');
+
+                // Preselect currently selected screen
+                $schedulerDialog.find('select[name="screen"]').val(this.getSelectedScreenGuid());
+            }
+
+            $schedulerDialog.find('input[name="start"]').val(start.format('DD.MM.YYYY HH:mm'));
+            $schedulerDialog.find('input[name="end"]').val(stop.format('DD.MM.YYYY HH:mm'));
+
+            $schedulerDialog.modal('show');
+        },
+
+        initEditDialog: function () {
             var that = this;
-            $('#scheduler-diag-place').modal({
+            $('#scheduler-diag-edit').modal({
                 closable: true,
                 onApprove: function () {
                     var form = $('form', this);
@@ -295,18 +341,17 @@
                     $.ajax({
                         type: 'post',
                         url: form.attr('action'),
-                        data: form.serialize()
-                    })
-                    .fail(function () {
-                        $.notify("Beim Eintragen ist leider ein Fehler aufgetreten.", "error");
-                    })
-                    .done(function () {
-                        $.notify("Die Präsentation wurde eingetragen.", "success");
-                        var cb = $('#scheduler-diag-place').data('successCallback');
-                        cb();
-                    })
-                    .always(function () {
-                        window.ajaxLoadHide();
+                        data: form.serialize(),
+                        success: function () {
+                            $.notify($('#scheduler-diag-edit').data('messageSuccess'), 'success');
+                        },
+                        error: function () {
+                            $.notify($('#scheduler-diag-edit').data('messageError'), 'error');
+                        },
+                        complete: function () {
+                            window.ajaxLoadHide();
+                            $('.calendar', that.element).fullCalendar('refetchEvents');
+                        }
                     });
                 },
                 onHide: function () {
@@ -314,18 +359,6 @@
                 },
                 onHidden: function () {
                     $('form', this).trigger('reset');
-                },
-                onShow: function () {
-                    $('#inp-screen', this).empty();
-                    $('#inp-screen', this).append($('#screen-prototype').clone());
-                    $('#inp-pres', this).empty();
-                    $('#inp-pres', this).append($('#presentation-prototype').clone());
-                    $('#inp-screen', this).children('select').val($(that.getSelectedScreen()).data('guid'));
-
-                    $.datetimepicker.setLocale('de');
-                    $('.date-pick', this).datetimepicker({
-                        format: 'd.m.Y H:i'
-                    });
                 }
             });
         }
