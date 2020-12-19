@@ -30,7 +30,7 @@ class VersionChecker
         $exitCode = 0;
 
         // try to get exact tag
-        $r = \exec('git describe --tags --abbrev=0', $output, $exitCode);
+        $r = \exec('git describe --tags --abbrev=0 --always', $output, $exitCode);
         if (0 === $exitCode) {
             return $r;
         }

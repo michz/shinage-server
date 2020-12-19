@@ -1,0 +1,137 @@
+name: Test and Build
+on:
+  push: ~
+  pull_request:
+    branches:
+      - master
+
+jobs:
+  build:
+    runs-on: ubuntu-20.04
+
+    services:
+      mysql:
+        image: mysql:5.7
+        env:
+          MYSQL_ALLOW_EMPTY_PASSWORD: yes
+          MYSQL_DATABASE: shinage_test
+        ports:
+          - 13306:3306
+        options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
+
+    steps:
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '7.4'
+
+      - uses: actions/checkout@v2
+
+      - name: Validate composer files
+        run: composer validate --no-check-all --strict
+
+      - name: Install dependencies
+        run: composer install --prefer-dist --no-progress --no-scripts
+
+      - name: Install yarn dependencies
+        run: yarn install --frozen-lockfile
+
+      - name: Build assets
+        run: NODE_ENV=production ./node_modules/.bin/gulp
+
+      - name: Setup test environment
+        shell: bash
+        run: |
+          cp .env.github-actions .env &&
+          cp .env.github-actions .env.test &&
+          php bin/console assets:install --env=test &&
+          php bin/console doctrine:migrations:migrate -n --env=test &&
+          php bin/console doctrine:fixtures:load -n --env=test
+
+      - name: Start test webserver
+        run: php bin/console server:start 127.0.0.1:8000 --env=test
+
+      #- name: Install assets for test environment
+
+      - name: Check PHP codestyle
+        run: ./vendor/bin/ecs check --no-progress-bar --ansi --no-interaction src/ tests/
+
+      - name: Check JS codestyle
+        run: ./node_modules/.bin/gulp eslint
+
+      - name: Lint YAML files
+        run: ./bin/console lint:yaml config/ src/ translations/
+
+      - name: Lint TWIG files
+        run: ./bin/console lint:twig config/ src/ templates/
+
+      - name: Run phpspec
+        run: ./vendor/bin/phpspec run --format=pretty --no-code-generation
+
+      - name: Run behat
+        run: ./vendor/bin/behat --format=progress --strict -n --tags="~@todo"
+
+  deploy:
+    if: github.event_name == 'push' && contains(github.ref, 'refs/tags/v')
+    needs: build
+    runs-on: ubuntu-20.04
+    steps:
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '7.4'
+
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Install dependencies
+        run: composer install --prefer-dist --no-progress --no-scripts --no-dev
+
+      - name: Install yarn dependencies
+        run: yarn install --frozen-lockfile
+
+      - name: Build assets
+        run: NODE_ENV=production ./node_modules/.bin/gulp
+
+      - name: Install php dependencies
+        run: |
+          composer install --no-scripts --no-dev &&
+          composer dump-autoload --classmap-authoritative
+
+      - name: Write revision file
+        run: echo "${GITHUB_REF#refs/*/}" > REVISION
+
+      - name: Prepare and cleanup
+        run: |
+          mkdir ./build &&
+          rm -f .scrutinizer.yml .travis.yml .gitignore .web-server-pid .env .env.* .eslintrc &&
+          rm -f bin/devEnv.sh bin/runInDev.sh &&
+          rm -f easy-coding-standard.yml package* behat.yml codeception.yml install-git-hooks.php phpspec.yml gulpfile.js &&
+          rm -rf .github/ node_modules/  var/cache/dev/ var/cache/test/ var/session/dev/ var/session/test/ .git/ etc/ features/ tests/ git-hooks/ vendor/ spec/ data/pool/* &&
+          echo "${TRAVIS_BRANCH}" > REVISION
+
+      - name: Package release file
+        run: tar --exclude="./build" --exclude="./var/log/*.log" --transform 's,^\./,,' -czf ./build/shinage-server-release.tar.gz .
+
+      - name: Create Release
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ github.ref }}
+          release_name: Release ${{ github.ref }}
+          body: Release ${{ github.ref }}
+          draft: false
+          prerelease: false
+
+      - name: Upload Release Asset
+        id: upload-release-asset
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ./build/shinage-server-release.tar.gz
+          asset_name: shinage-server-release.tar.gz
+          asset_content_type: application/gzip
