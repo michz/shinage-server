@@ -10,6 +10,10 @@
         <div class="ui cards">
             {% for screen in screens %}
                 <div class="card">
+                    <div class="content">
+                        <div class="right floated meta">{{ screen.location }}</div>
+                        {{ screen.name }}
+                    </div>
                     <div class="image">
                         <img class="preview" src="{{ path('management-dashboard-preview', {'screen_guid': screen.getGuid()}) }}">
                     </div>
@@ -25,6 +29,9 @@
                                 <i class="eye icon"></i>{{ 'View in online player'|trans }}
                             </a>
                         </p>
+                    </div>
+                    <div class="extra content last-connected" title="{{ 'Last connected'|trans }}">
+                        {{ 'Connected'|trans }}: {{ screen.lastConnect|date('d.m.Y H:i:s') }}
                     </div>
                     <div class="extra content">
                         {{ 'Current'|trans }}: {{ screen.getCurrentPresentation() }}
@@ -46,6 +53,7 @@
             </div>
         </div>
 
+        <p>&nbsp;</p>
         <h3 class="ui top attached block header {% if prefillConnectCode != '' %}pulse{% endif %}">
             {{ 'Connect screen'|trans }}
         </h3>
