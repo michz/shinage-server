@@ -107,7 +107,7 @@ jobs:
           rm -f .scrutinizer.yml .travis.yml .gitignore .web-server-pid .env .env.* .eslintrc &&
           rm -f bin/devEnv.sh bin/runInDev.sh &&
           rm -f easy-coding-standard.yml package* behat.yml codeception.yml install-git-hooks.php phpspec.yml gulpfile.js &&
-          rm -rf .github/ node_modules/  var/cache/dev/ var/cache/test/ var/session/dev/ var/session/test/ .git/ etc/ features/ tests/ git-hooks/ vendor/ spec/ data/pool/* &&
+          rm -rf .github/ node_modules/  var/cache/dev/ var/cache/test/ var/session/dev/ var/session/test/ .git/ etc/ features/ tests/ git-hooks/ spec/ data/pool/* &&
           echo "${TRAVIS_BRANCH}" > REVISION
 
       - name: Package release file
