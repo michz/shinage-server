@@ -1,5 +1,16 @@
 // @TODO Transform this Javascript monster into a jQuery plugin to better bind it and better instantiate it
 
+// @source https://stackoverflow.com/a/20141791
+(function($) {
+    $.fn.isAfter = function(sel) {
+        return this.prevAll().filter(sel).length !== 0;
+    };
+
+    $.fn.isBefore = function(sel) {
+        return this.nextAll().filter(sel).length !== 0;
+    };
+})(jQuery);
+
 window.SlideshowEditor = {
     container: null,
     selectedSlide: null,
@@ -23,11 +34,39 @@ window.SlideshowEditor = {
         // sortable slide list
         var that = this;
         $("#slides", this.container).sortable({
-            "items": "> .slide",
-            "update": function () {
+            items: "> .slide",
+            update: function () {
                 that.saveSlides();
+            }/*,
+            helper: function (e, item) {
+                console.log(e, item);
+                //Basically, if you grab an unhighlighted item to drag, it will deselect (unhighlight) everything else
+                if (!item.hasClass('selected')) {
+                    item.addClass('selected').siblings().removeClass('selected');
+                }
+
+                //////////////////////////////////////////////////////////////////////
+                //HERE'S HOW TO PASS THE SELECTED ITEMS TO THE `stop()` FUNCTION:
+
+                //Clone the selected items into an array
+                var elements = item.parent().children('.selected').clone();
+
+                //Add a property to `item` called 'multidrag` that contains the
+                //  selected items, then remove the selected items from the source list
+                item.data('multidrag', elements).siblings('.selected').remove();
+
+                //Now the selected items exist in memory, attached to the `item`,
+                //  so we can access them later when we get to the `stop()` callback
+
+                //Create the helper
+                var helper = $('<li/>');
+                return helper.append(elements);
             }
+             */
         });
+
+        // @TODO Multiselect
+        // https://stackoverflow.com/questions/3774755/jquery-sortable-select-and-drag-multiple-list-items
 
         // select slide handler
         $(this.container).on("click", "#slides > .slide", null, $.proxy(this.selectSlide, this));
@@ -91,13 +130,33 @@ window.SlideshowEditor = {
         //initElFinder();
     },
     selectSlide: function (e) {
-        var slide = $(e.currentTarget).data("slide");
+        var $alreadySelected = $('#slides > .slide.selected', this.container);
+        var $item = $(e.currentTarget);
+        var slide = $item.data("slide");
 
-        // visualization
-        $('#slides > .slide', this.container).removeClass('selected');
-        $(e.currentTarget).addClass('selected');
+        if (e.ctrlKey === true && e.shiftKey === false) {
+            // CTRL Click
+            $item.toggleClass('selected');
+        } else if (e.ctrlKey === false && e.shiftKey === true && $alreadySelected.length > 0) {
+            // Shift Click (and current selection is not empty!)
+            if ($item.isBefore($alreadySelected.first())) {
+                $alreadySelected.first().prevUntil($item).addClass('selected');
+            } else if ($item.isAfter($alreadySelected.last())) {
+                $alreadySelected.last().nextUntil($item).addClass('selected');
+            }
+
+            // In either case: select the clicked element, even if it is in the middle / somewhere in between
+            $item.addClass('selected');
+        } else if (e.ctrlKey === true && e.shiftKey === true) {
+            // Invalid key combination, ignore
+        } else {
+            // Just normal click
+            $('#slides > .slide', this.container).removeClass('selected');
+            $(e.currentTarget).addClass('selected');
+        }
 
         // Write properties in slide settings pane
+        // @TODO Adjust for multiselect
         for (var property in slide) {
             if (slide.hasOwnProperty(property)) {
                 var value = slide[property];
