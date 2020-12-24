@@ -45,13 +45,29 @@ window.SlideshowEditor = {
 
                 var $elements = $item.parent().children('.selected').clone();
 
-                // Now comes the "multidrag" trick:
-                // Add a property to `$item` called 'multidrag` that contains the list of
-                // selected items, then remove the selected items from the source list
-                $item.data('multidrag', $elements).siblings('.selected').remove();
+                // Problems with mutiple selected:
+                // [1] https://stackoverflow.com/questions/49492227/jquery-ui-sortable-with-multiple-elements-throws-typeerror-cannot-read-propert
 
-                var $helper = $('<li class="item slide"/>');
-                return $helper.append($elements);
+                // Now comes the "multidrag" trick:
+                // Add a property to `$item` called 'multidrag` that contains the list of selected items
+                $item.data('multidrag', $elements); //.siblings('.selected') .remove(); // Workaround for [1]
+                var siblings = $item.siblings('.selected');
+                siblings.each(function (key, item) {
+                    $(item).addClass('hidden-element').hide();
+                });
+
+                var $helper = $('<li class="item slide" />');
+
+                // Improve multidrag styling a little bit
+                if ($elements.length <= 5) {
+                    $helper.addClass('multidrag multidrag-' + $elements.length);
+                } else {
+                    $helper.addClass('multidrag multidrag-more');
+                }
+
+                $helper.append($elements);
+                $helper.append($('<span class="multidrag-count">' + $elements.length + '</span>'));
+                return $helper;
             },
             stop: function (e, ui) {
                 // Get back the items from `item`s data attribute `multidrag`!
@@ -60,6 +76,9 @@ window.SlideshowEditor = {
                 // Finally insert the selected items after the `item`, then remove the `item`,
                 // because `item` is a duplicate of one of $elements.
                 ui.item.after($elements).remove();
+
+                // Workaround for [1]: Remove the already hidden items
+                $('.hidden-element', that.element).remove();
 
                 // Normally we would do this in `update` handler.
                 // But if we do so, the multidrag breaks because only the first item is saved,
@@ -159,10 +178,12 @@ window.SlideshowEditor = {
             $(e.currentTarget).addClass('selected');
         }
 
+        /*
         var selectedSlides = $('#slides > .slide.selected', this.container).map(function() {
             return $(this).data('slide');
         }).get();
         console.log(selectedSlides);
+         */
 
         // Write properties in slide settings pane
         // @TODO Adjust for multiselect
