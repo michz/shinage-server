@@ -37,34 +37,36 @@ window.SlideshowEditor = {
             items: "> .slide",
             delay: 150, // prevent accidental drag when selecting
             placeholder: 'placeholder slide',
-            update: function () {
-                that.saveSlides();
-            }/*,
-            helper: function (e, item) {
-                console.log(e, item);
-                //Basically, if you grab an unhighlighted item to drag, it will deselect (unhighlight) everything else
-                if (!item.hasClass('selected')) {
-                    item.addClass('selected').siblings().removeClass('selected');
+            helper: function (e, $item) {
+                // When clicking an unselected item to drag, it will deselect everything else
+                if (!$item.hasClass('selected')) {
+                    $item.addClass('selected').siblings().removeClass('selected');
                 }
 
-                //////////////////////////////////////////////////////////////////////
-                //HERE'S HOW TO PASS THE SELECTED ITEMS TO THE `stop()` FUNCTION:
+                var $elements = $item.parent().children('.selected').clone();
 
-                //Clone the selected items into an array
-                var elements = item.parent().children('.selected').clone();
+                // Now comes the "multidrag" trick:
+                // Add a property to `$item` called 'multidrag` that contains the list of
+                // selected items, then remove the selected items from the source list
+                $item.data('multidrag', $elements).siblings('.selected').remove();
 
-                //Add a property to `item` called 'multidrag` that contains the
-                //  selected items, then remove the selected items from the source list
-                item.data('multidrag', elements).siblings('.selected').remove();
+                var $helper = $('<li class="item slide"/>');
+                return $helper.append($elements);
+            },
+            stop: function (e, ui) {
+                // Get back the items from `item`s data attribute `multidrag`!
+                var $elements = ui.item.data('multidrag');
 
-                //Now the selected items exist in memory, attached to the `item`,
-                //  so we can access them later when we get to the `stop()` callback
+                // Finally insert the selected items after the `item`, then remove the `item`,
+                // because `item` is a duplicate of one of $elements.
+                ui.item.after($elements).remove();
 
-                //Create the helper
-                var helper = $('<li/>');
-                return helper.append(elements);
+                // Normally we would do this in `update` handler.
+                // But if we do so, the multidrag breaks because only the first item is saved,
+                // because `stop` fires after `update`.
+                // So this is "our" `update` handler here.
+                that.saveSlides();
             }
-             */
         });
 
         // @TODO Multiselect
@@ -157,6 +159,11 @@ window.SlideshowEditor = {
             $(e.currentTarget).addClass('selected');
         }
 
+        var selectedSlides = $('#slides > .slide.selected', this.container).map(function() {
+            return $(this).data('slide');
+        }).get();
+        console.log(selectedSlides);
+
         // Write properties in slide settings pane
         // @TODO Adjust for multiselect
         for (var property in slide) {
@@ -194,6 +201,9 @@ window.SlideshowEditor = {
         if (this.selectedSlide === null) {
             return;
         }
+
+        // @TODO Multiselect: Do only if value is not empty (as empty is for "different values")
+        // @TODO Multiselect: Do for **all selected** items
 
         var key = $(e.currentTarget).attr('name');
         var value = $(e.currentTarget).val();
