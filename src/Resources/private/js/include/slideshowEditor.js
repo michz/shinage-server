@@ -35,6 +35,8 @@ window.SlideshowEditor = {
         var that = this;
         $("#slides", this.container).sortable({
             items: "> .slide",
+            delay: 150, // prevent accidental drag when selecting
+            placeholder: 'placeholder slide',
             update: function () {
                 that.saveSlides();
             }/*,
