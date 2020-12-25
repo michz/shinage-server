@@ -325,12 +325,21 @@ window.SlideshowEditor = {
     },
     provisionImageSlide: function (div, slide) {
         $("img", div).attr("src", this.generateRealUrlFromPoolUrl(slide.src));
+        $(".label.slide-src", div).text(this.baseName(slide.src));
         return this;
     },
     provisionVideoSlide: function (div, slide) {
         var filename = slide.src.replace(/^.*[\\\/]/, '');
         $(".videoFileName", div).text(filename);
         return this;
+    },
+    baseName: function (path, stripExtension) {
+        let base = path.substring(path.lastIndexOf('/') + 1);
+        if (stripExtension === true && base.lastIndexOf(".") !== -1) {
+            base = base.substring(0, base.lastIndexOf("."));
+        }
+
+        return base;
     },
     serialize: function() {
         var data = [];
