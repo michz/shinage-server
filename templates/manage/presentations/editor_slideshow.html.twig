@@ -42,11 +42,24 @@
                     <div class="settings Image">
                         <label for="settingsImageSrc">{{ "Image Source"|trans }}:</label>
                         <div class="ui input fluid">
-                            <input type="text" name="src" id="settingsImageSrc">
+                            <input
+                                    type="text"
+                                    name="src"
+                                    id="settingsImageSrc"
+                                    data-multiselect-editable="false"
+                                    data-multiselect-different-value="{{ 'different'|trans }}"
+                            >
                         </div>
                         <label for="settingsImageDuration">{{ "Duration"|trans }}:</label>
                         <div class="ui right labeled input fluid">
-                            <input type="text" name="duration" id="settingsImageDuration" data-transformer="transformMilliseconds">
+                            <input
+                                    type="text"
+                                    name="duration"
+                                    id="settingsImageDuration"
+                                    data-transformer="transformMilliseconds"
+                                    data-multiselect-editable="true"
+                                    data-multiselect-different-value=""
+                            >
                             <div class="ui basic label">
                                 s
                             </div>

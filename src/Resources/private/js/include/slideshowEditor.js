@@ -13,7 +13,6 @@
 
 window.SlideshowEditor = {
     container: null,
-    selectedSlide: null,
     slides: [],
     saveUrl: "",
     virtualBaseUrl: 'pool://',
@@ -102,6 +101,9 @@ window.SlideshowEditor = {
 
         return this;
     },
+    getSelectedSlides: function () {
+        return $('#slides > .slide.selected', this.container);
+    },
     addSlideButton: function () {
         //var slide = $(e.currentTarget).data('prototype');
         //this.appendSlide(slide);
@@ -153,9 +155,8 @@ window.SlideshowEditor = {
         //initElFinder();
     },
     selectSlide: function (e) {
-        var $alreadySelected = $('#slides > .slide.selected', this.container);
+        var $alreadySelected = this.getSelectedSlides();
         var $item = $(e.currentTarget);
-        var slide = $item.data("slide");
 
         if (e.ctrlKey === true && e.shiftKey === false) {
             // CTRL Click
@@ -178,33 +179,78 @@ window.SlideshowEditor = {
             $(e.currentTarget).addClass('selected');
         }
 
-        /*
-        var selectedSlides = $('#slides > .slide.selected', this.container).map(function() {
+        this.updateSlideSettingsInputs();
+        $('.tabular.menu .item').tab('change tab', 'tabSlide');
+    },
+    updateSlideSettingsInputs: function () {
+        var selectedSlidesData = $('#slides > .slide.selected', this.container).map(function() {
             return $(this).data('slide');
         }).get();
-        console.log(selectedSlides);
-         */
+
+        // Hide all existing settings panes
+        $("#tabSlide .settings", this.container).hide();
+
+        // Check if all selected slides are from same type
+        if (this.haveSlidesTheSameType(selectedSlidesData) === false) {
+            // Different type: Nothing to do
+            return;
+        }
+
+        var isMultiselect = selectedSlidesData.length > 1;
 
         // Write properties in slide settings pane
-        // @TODO Adjust for multiselect
-        for (var property in slide) {
-            if (slide.hasOwnProperty(property)) {
-                var value = slide[property];
-                var input = $("#tabSlide .settings input[name=" + property + "]", this.container);
-                if (input.data('transformer')) {
-                    value = this[input.data('transformer') + 'Get'](value);
-                }
+        // @TODO Replace by `const slide of selectedSlidesData`
+        var currentActiveData = {};
+        for (var slideIndex in selectedSlidesData) {
+            var slide = selectedSlidesData[slideIndex];
 
-                input.val(value);
+            for (var property in slide) {
+                if (slide.hasOwnProperty(property)) {
+                    var value = slide[property];
+                    var $input = $("#tabSlide .settings input[name=" + property + "]", this.container);
+
+                    // If the field does not support multiselect, disable it, otherwise enable it
+                    if (isMultiselect && $input.data('multiselectEditable') === false) {
+                        $input.prop('disabled', true);
+                    } else {
+                        $input.removeAttr('disabled');
+                    }
+
+                    if (currentActiveData[property] === undefined) {
+                        // Not known yet, set!
+                        currentActiveData[property] = value;
+                    } else if (currentActiveData[property] !== value) {
+                        // Known but different :(
+                        currentActiveData[property] = $input.data('multiselectDifferentValue');
+                    }
+
+                    value = currentActiveData[property];
+
+                    if ($input.data('transformer') && value !== $input.data('multiselectDifferentValue')) {
+                        value = this[$input.data('transformer') + 'Get'](value);
+                    }
+
+                    $input.val(value);
+                }
             }
         }
 
         // this is the SlideshowEditor object; e.currentTarget the event handler's element
-        $("#tabSlide .settings", this.container).hide();
-        $("#tabSlide .settings." + slide.type, this.container).show();
+        $("#tabSlide .settings." + selectedSlidesData[0].type, this.container).show();
+    },
+    haveSlidesTheSameType: function (slides) {
+        var lastType = null;
+        // @TODO Replace by `const slide of slides` (ES6)
+        for (var key in slides) {
+            var slide = slides[key];
+            if (lastType !== null && lastType !== slide.type) {
+                return false;
+            }
 
-        this.selectedSlide = slide;
-        $('.tabular.menu .item').tab('change tab', 'tabSlide');
+            lastType = slide.type;
+        }
+
+        return true;
     },
     removeSlideButton: function (e) {
         var slide = $(e.currentTarget).parent();
@@ -219,20 +265,33 @@ window.SlideshowEditor = {
         e.preventDefault();
     },
     settingsChanged: function (e) {
-        if (this.selectedSlide === null) {
+        var $selectedSlides = this.getSelectedSlides();
+
+        if ($selectedSlides.length < 1) {
             return;
         }
 
-        // @TODO Multiselect: Do only if value is not empty (as empty is for "different values")
-        // @TODO Multiselect: Do for **all selected** items
+        var isMultiselect = $selectedSlides.length > 1;
+        var $input = $(e.currentTarget);
 
-        var key = $(e.currentTarget).attr('name');
-        var value = $(e.currentTarget).val();
-        if ($(e.currentTarget).data('transformer')) {
-            value = this[$(e.currentTarget).data('transformer') + 'Set'](value);
+        var key = $input.attr('name');
+        var value = $input.val();
+
+        if (isMultiselect && value === $input.data('multiselectDifferentValue')) {
+            // Skipping because empty on multiselect
+            return;
         }
 
-        this.selectedSlide[key] = value;
+        // Apply data transformer if necessary
+        if ($input.data('transformer')) {
+            value = this[$input.data('transformer') + 'Set'](value);
+        }
+
+        // Multiselect: Do for **all selected** items
+        $selectedSlides.each(function () {
+            $(this).data('slide')[key] = value;
+        });
+
         this.saveSlides();
     },
     transformMillisecondsGet: function (value) {
