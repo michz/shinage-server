@@ -283,8 +283,12 @@ window.SlideshowEditor = {
         }
 
         // Multiselect: Do for **all selected** items
+        var that = this;
         $selectedSlides.each(function () {
             $(this).data('slide')[key] = value;
+
+            // Update visible slide (labels and others)
+            that.provisionSlide(this);
         });
 
         this.saveSlides();
@@ -315,6 +319,10 @@ window.SlideshowEditor = {
         return this;
     },
     provisionSlide: function (div, slide) {
+        if (slide === undefined) {
+            slide = $(div).data('slide');
+        }
+
         if (slide.type === "Image") {
             this.provisionImageSlide(div, slide);
         }
@@ -326,6 +334,7 @@ window.SlideshowEditor = {
     provisionImageSlide: function (div, slide) {
         $("img", div).attr("src", this.generateRealUrlFromPoolUrl(slide.src));
         $(".label.slide-src", div).text(this.baseName(slide.src));
+        $(".label.slide-duration", div).text(slide.duration / 1000.0 + 's');
         return this;
     },
     provisionVideoSlide: function (div, slide) {
