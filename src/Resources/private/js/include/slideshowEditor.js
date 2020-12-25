@@ -55,7 +55,7 @@ window.SlideshowEditor = {
                     $(item).addClass('hidden-element').hide();
                 });
 
-                var $helper = $('<li class="item slide" />');
+                var $helper = $('<div class="item slide" />');
 
                 // Improve multidrag styling a little bit
                 if ($elements.length <= 5) {
