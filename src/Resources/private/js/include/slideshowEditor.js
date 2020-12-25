@@ -87,7 +87,7 @@ window.SlideshowEditor = {
             }
         });
 
-        // @TODO Multiselect
+        // Multiselect, inspired by
         // https://stackoverflow.com/questions/3774755/jquery-sortable-select-and-drag-multiple-list-items
 
         // select slide handler
@@ -199,11 +199,8 @@ window.SlideshowEditor = {
         var isMultiselect = selectedSlidesData.length > 1;
 
         // Write properties in slide settings pane
-        // @TODO Replace by `const slide of selectedSlidesData`
         var currentActiveData = {};
-        for (var slideIndex in selectedSlidesData) {
-            var slide = selectedSlidesData[slideIndex];
-
+        for (const slide of selectedSlidesData) {
             for (var property in slide) {
                 if (slide.hasOwnProperty(property)) {
                     var value = slide[property];
@@ -240,9 +237,7 @@ window.SlideshowEditor = {
     },
     haveSlidesTheSameType: function (slides) {
         var lastType = null;
-        // @TODO Replace by `const slide of slides` (ES6)
-        for (var key in slides) {
-            var slide = slides[key];
+        for (const slide of slides) {
             if (lastType !== null && lastType !== slide.type) {
                 return false;
             }
