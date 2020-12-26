@@ -13,8 +13,16 @@
     "shelljs": false,     // shelljs global variables.
   },
 
+  "parserOptions": {
+    "ecmaVersion": 6,
+    "sourceType": "module",
+    "ecmaFeatures": {
+      "jsx": false,
+    },
+  },
+
   "globals": {
-    "moment": true
+    "moment": true,
     // e.g. "angular": true
   },
 

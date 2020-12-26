@@ -14,9 +14,45 @@
     background-color: #ececec;
     overflow: hidden;
 
+    .label {
+      position: absolute;
+
+      max-height: 1.5rem;
+      padding: 0.1rem 0.2rem;
+      overflow: hidden;
+
+      white-space: nowrap;
+
+      font-size: 0.8em;
+      text-align: left;
+      cursor: default;
+
+      &.slide-src {
+        top: 0;
+        left: 0;
+        right: 0;
+
+        background-color: #d5d5d5;
+        color: #000;
+      }
+
+      &.slide-duration {
+        bottom: 0;
+        left: 0;
+
+        background-color: #656565;
+        color: #eeeeee;
+      }
+    }
+
     &.selected {
       border: 1px solid #2b5759;
       background-color: #e1f3fa;
+
+      .label.slide-src {
+        background-color: #2b5759;
+        color: #fff;
+      }
     }
 
     .removeSlide {
@@ -61,6 +97,16 @@
     &.placeholder {
       border: 1px solid #f3e1a1;
       background-color: #fffdf7;
+    }
+
+    &.multidrag {
+      background-color: initial;
+      border: none;
+      overflow: visible;
+      white-space: nowrap;
+
+      margin: 0;
+      padding: 0;
     }
 
     .multidrag-count {

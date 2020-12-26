@@ -1,6 +1,7 @@
 var gulp = require('gulp');
 var concat = require('gulp-concat');
-var uglify = require('gulp-uglify');
+var babel = require('gulp-babel');
+var uglify = require('gulp-uglify');                // @TODO Replace
 var less = require('gulp-less');
 var clean_css = require('gulp-clean-css');
 var environments = require('gulp-environments');
@@ -141,8 +142,11 @@ gulp.task('libraryJs', function() {
 gulp.task('js', function() {
     return gulp.src(paths.js)
         .pipe(development(sourcemaps.init()))
-        .pipe(uglify())
+        .pipe(babel({
+            presets: ['@babel/env']
+        }))
         .pipe(concat('app.min.js'))
+        .pipe(uglify())
         .pipe(development(sourcemaps.write()))
         .pipe(gulp.dest(distPath));
 });

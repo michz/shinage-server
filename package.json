@@ -1,10 +1,14 @@
 {
   "dependencies": {
+    "@babel/core": "^7.12.10",
+    "@babel/preset-env": "^7.12.11",
+    "@babel/register": "^7.12.10",
     "codemirror": "^5.59.0",
     "del": "^6.0.0",
     "fomantic-ui-css": "^2.8.7",
     "fullcalendar": "^3.10.2",
     "gulp": "^4.0.2",
+    "gulp-babel": "^8.0.0",
     "gulp-clean-css": "^3.10.0",
     "gulp-concat": "^2.6.1",
     "gulp-environments": "^1.0.1",

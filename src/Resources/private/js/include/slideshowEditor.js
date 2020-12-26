@@ -55,7 +55,7 @@ window.SlideshowEditor = {
                     $(item).addClass('hidden-element').hide();
                 });
 
-                var $helper = $('<li class="item slide" />');
+                var $helper = $('<div class="item slide" />');
 
                 // Improve multidrag styling a little bit
                 if ($elements.length <= 5) {
@@ -87,7 +87,7 @@ window.SlideshowEditor = {
             }
         });
 
-        // @TODO Multiselect
+        // Multiselect, inspired by
         // https://stackoverflow.com/questions/3774755/jquery-sortable-select-and-drag-multiple-list-items
 
         // select slide handler
@@ -199,11 +199,8 @@ window.SlideshowEditor = {
         var isMultiselect = selectedSlidesData.length > 1;
 
         // Write properties in slide settings pane
-        // @TODO Replace by `const slide of selectedSlidesData`
         var currentActiveData = {};
-        for (var slideIndex in selectedSlidesData) {
-            var slide = selectedSlidesData[slideIndex];
-
+        for (const slide of selectedSlidesData) {
             for (var property in slide) {
                 if (slide.hasOwnProperty(property)) {
                     var value = slide[property];
@@ -240,9 +237,7 @@ window.SlideshowEditor = {
     },
     haveSlidesTheSameType: function (slides) {
         var lastType = null;
-        // @TODO Replace by `const slide of slides` (ES6)
-        for (var key in slides) {
-            var slide = slides[key];
+        for (const slide of slides) {
             if (lastType !== null && lastType !== slide.type) {
                 return false;
             }
@@ -288,8 +283,12 @@ window.SlideshowEditor = {
         }
 
         // Multiselect: Do for **all selected** items
+        var that = this;
         $selectedSlides.each(function () {
             $(this).data('slide')[key] = value;
+
+            // Update visible slide (labels and others)
+            that.provisionSlide(this);
         });
 
         this.saveSlides();
@@ -320,6 +319,10 @@ window.SlideshowEditor = {
         return this;
     },
     provisionSlide: function (div, slide) {
+        if (slide === undefined) {
+            slide = $(div).data('slide');
+        }
+
         if (slide.type === "Image") {
             this.provisionImageSlide(div, slide);
         }
@@ -330,12 +333,22 @@ window.SlideshowEditor = {
     },
     provisionImageSlide: function (div, slide) {
         $("img", div).attr("src", this.generateRealUrlFromPoolUrl(slide.src));
+        $(".label.slide-src", div).text(this.baseName(slide.src));
+        $(".label.slide-duration", div).text(slide.duration / 1000.0 + 's');
         return this;
     },
     provisionVideoSlide: function (div, slide) {
         var filename = slide.src.replace(/^.*[\\\/]/, '');
         $(".videoFileName", div).text(filename);
         return this;
+    },
+    baseName: function (path, stripExtension) {
+        let base = path.substring(path.lastIndexOf('/') + 1);
+        if (stripExtension === true && base.lastIndexOf(".") !== -1) {
+            base = base.substring(0, base.lastIndexOf("."));
+        }
+
+        return base;
     },
     serialize: function() {
         var data = [];
