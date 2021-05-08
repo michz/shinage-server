@@ -62,6 +62,9 @@
     "doctrine/dbal": {
         "version": "v2.8.0"
     },
+    "doctrine/deprecations": {
+        "version": "v0.5.3"
+    },
     "doctrine/doctrine-bundle": {
         "version": "1.6",
         "recipe": {
@@ -145,6 +148,9 @@
             "version": "2.2",
             "ref": "81dee417d2cc60cd1c9d6208dff2ec22a1103e93"
         }
+    },
+    "friendsofphp/proxy-manager-lts": {
+        "version": "v1.0.3"
     },
     "friendsofsymfony/user-bundle": {
         "version": "v2.1.2"
