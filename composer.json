@@ -68,7 +68,8 @@
     "friends-of-behat/symfony-extension": "^2.0",
     "symplify/easy-coding-standard": "^8.3",
     "onurb/doctrine-yuml-bundle": "^1.1",
-    "symfony/profiler-pack": "^1.0"
+    "symfony/profiler-pack": "^1.0",
+    "cweagans/composer-patches": "~1.0"
   },
   "conflict": {
     "symfony/symfony": "*"
@@ -89,6 +90,12 @@
   "extra": {
     "symfony": {
       "allow-contrib": true
-    }
+    },
+    "patches": {
+      "symplify/easy-coding-standard": {
+        "Backport of Symfony BC fix": "etc/patches/ecs-8_9_backport1.patch"
+      }
+    },
+    "composer-exit-on-patch-failure": true
   }
 }
