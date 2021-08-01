@@ -1,0 +1,60 @@
+--- src/Yaml/CheckerServiceParametersShifter.php	2020-10-26 11:38:48.000000000 +0100
++++ src/Yaml/CheckerServiceParametersShifterPatched.php	2021-05-13 17:29:33.885508482 +0200
+@@ -48,9 +48,34 @@
+     private const STARTS_WITH_AT_REGEX = '#^@#';
+ 
+     /**
++     * @see \Symfony\Component\DependencyInjection\Loader\YamlFileLoader::SERVICE_KEYWORDS
+      * @var string[]
+      */
+-    private $serviceKeywords = [];
++    private const SERVICE_KEYWORDS = [
++        'alias',
++        'parent',
++        'class',
++        'shared',
++        'synthetic',
++        'lazy',
++        'public',
++        'abstract',
++        'deprecated',
++        'factory',
++        'file',
++        'arguments',
++        'properties',
++        'configurator',
++        'calls',
++        'tags',
++        'decorates',
++        'decoration_inner_name',
++        'decoration_priority',
++        'decoration_on_invalid',
++        'autowire',
++        'autoconfigure',
++        'bind',
++    ];
+ 
+     /**
+      * @var CheckerConfigurationGuardian
+@@ -66,12 +91,6 @@
+     {
+         $this->checkerConfigurationGuardian = new CheckerConfigurationGuardian();
+         $this->stringFormatConverter = new StringFormatConverter();
+-
+-        /** @var string[] $serviceKeywordsProperty */
+-        $serviceKeywordsProperty = (new ReflectionClass(YamlFileLoader::class))
+-            ->getStaticProperties()['serviceKeywords'];
+-
+-        $this->serviceKeywords = $serviceKeywordsProperty;
+     }
+ 
+     /**
+@@ -194,7 +213,7 @@
+             return false;
+         }
+ 
+-        return in_array($key, $this->serviceKeywords, true);
++        return in_array($key, self::$serviceKeywords, true);
+     }
+ 
+     /**
