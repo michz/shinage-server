@@ -29,11 +29,9 @@
 
     "doctrine/orm": "^2.5",
     "doctrine/doctrine-bundle": "^2.1",
-    "doctrine/doctrine-cache-bundle": "^1.2",
     "friendsofsymfony/user-bundle": "~2.0",
     "studio-42/elfinder": "^2.1",
     "guzzlehttp/guzzle": "^6.5",
-    "roave/security-advisories": "dev-master",
     "knplabs/knp-menu-bundle": "^3.0",
     "jms/serializer-bundle": "^3.7",
     "doctrine/doctrine-migrations-bundle": "^3.0",
@@ -92,9 +90,6 @@
       "allow-contrib": true
     },
     "patches": {
-      "symplify/easy-coding-standard": {
-        "Backport of Symfony BC fix": "etc/patches/ecs-8_9_backport1.patch"
-      }
     },
     "composer-exit-on-patch-failure": true
   }
