@@ -20,9 +20,5 @@ framework:
   cache:
     prefix_seed: mztx/shinage-server
 
-  templating:
-    engines:
-      - twig
-
   validation:
     enable_annotations:

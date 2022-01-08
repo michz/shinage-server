@@ -7,7 +7,9 @@ declare(strict_types=1);
 
 namespace Tests\Behat\Gui;
 
-class GeneralWebpagesContext extends \Behat\MinkExtension\Context\RawMinkContext
+use Behat\MinkExtension\Context\RawMinkContext;
+
+class GeneralWebpagesContext extends RawMinkContext
 {
     /**
      * @Given I see a headline :title

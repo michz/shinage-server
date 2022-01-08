@@ -4,27 +4,13 @@
     <div class="ui main container">
 
         <div class="page-header">
-            <h2>Willkommen <small>im Zentrum der Macht!</small></h2>
+            <h2>Nothing <small>too see here.</small></h2>
         </div>
-
-        <div id="todolist">
-            <ul>
-                {% for t in todos %}
-                    <li class="todo-{{ t.getType() }} severity-{{ t.getSeverity() }}">
-                        <span class="todo-li-text">{{ t.getText() }}</span>
-                        <span class="todo-li-file">{{ t.getFile() }}</span>
-                        <span class="todo-li-line">{{ 'Line'|trans }}: {{ t.getLine() }}</span>
-                    </li>
-                {% endfor %}
-            </ul>
-        </div>
-
     </div>
 
 {% endblock %}
 
 {% block stylesheets %}
 <style>
-
 </style>
 {% endblock %}

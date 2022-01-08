@@ -8,7 +8,7 @@ namespace App\DataFixtures\ORM;
 
 use App\Entity\Screen;
 use Doctrine\Bundle\FixturesBundle\Fixture;
-use Doctrine\Common\Persistence\ObjectManager;
+use Doctrine\Persistence\ObjectManager;
 
 class ScreenFixtures extends Fixture
 {

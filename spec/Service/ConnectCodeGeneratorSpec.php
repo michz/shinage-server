@@ -4,7 +4,7 @@ namespace spec\App\Service;
 
 use App\Service\ConnectCodeGenerator;
 use App\Service\ConnectCodeGeneratorInterface;
-use Doctrine\Common\Persistence\ObjectRepository;
+use Doctrine\Persistence\ObjectRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use PhpSpec\ObjectBehavior;
 use Prophecy\Argument;

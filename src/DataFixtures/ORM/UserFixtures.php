@@ -10,7 +10,7 @@ namespace App\DataFixtures\ORM;
 use App\Entity\User;
 use App\UserType;
 use Doctrine\Bundle\FixturesBundle\Fixture;
-use Doctrine\Common\Persistence\ObjectManager;
+use Doctrine\Persistence\ObjectManager;
 use FOS\UserBundle\Model\UserManagerInterface;
 
 class UserFixtures extends Fixture

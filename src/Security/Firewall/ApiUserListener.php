@@ -11,13 +11,12 @@ use App\Entity\Api\AccessKey;
 use App\Security\Authentication\Token\ApiUserToken;
 use Doctrine\ORM\EntityRepository;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpKernel\Event\GetResponseEvent;
+use Symfony\Component\HttpKernel\Event\RequestEvent;
 use Symfony\Component\Security\Core\Authentication\AuthenticationManagerInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
-use Symfony\Component\Security\Http\Firewall\ListenerInterface;
 
-class ApiUserListener implements ListenerInterface
+class ApiUserListener
 {
     /** @var TokenStorageInterface */
     private $tokenStorage;
@@ -38,10 +37,7 @@ class ApiUserListener implements ListenerInterface
         $this->apiTokenRepository = $apiTokenRepository;
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function handle(GetResponseEvent $event)
+    public function __invoke(RequestEvent $event)
     {
         $request = $event->getRequest();
 

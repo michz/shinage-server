@@ -23,7 +23,8 @@ jobs:
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
         with:
-          php-version: '7.4'
+          php-version: '8.0'
+          tools: symfony
 
       - uses: actions/checkout@v2
 
@@ -37,7 +38,9 @@ jobs:
         run: yarn install --frozen-lockfile
 
       - name: Build assets
-        run: NODE_ENV=production ./node_modules/.bin/gulp
+        run: ./node_modules/.bin/gulp
+        env:
+          NODE_ENV: production
 
       - name: Setup test environment
         shell: bash
@@ -49,7 +52,7 @@ jobs:
           php bin/console doctrine:fixtures:load -n --env=test
 
       - name: Start test webserver
-        run: php bin/console server:start 127.0.0.1:8000 --env=test
+        run: symfony local:server:start --no-tls --daemon --port=8000
 
       #- name: Install assets for test environment
 
@@ -70,6 +73,8 @@ jobs:
 
       - name: Run behat
         run: ./vendor/bin/behat --format=progress --strict -n --tags="~@todo"
+        env:
+          APP_ENV: test
 
   deploy:
     if: github.event_name == 'push' && contains(github.ref, 'refs/tags/v')
@@ -79,7 +84,7 @@ jobs:
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
         with:
-          php-version: '7.4'
+          php-version: '8.0'
 
       - name: Checkout code
         uses: actions/checkout@v2
@@ -91,7 +96,9 @@ jobs:
         run: yarn install --frozen-lockfile
 
       - name: Build assets
-        run: NODE_ENV=production ./node_modules/.bin/gulp
+        run: ./node_modules/.bin/gulp
+        env:
+          NODE_ENV: production
 
       - name: Install php dependencies
         run: |

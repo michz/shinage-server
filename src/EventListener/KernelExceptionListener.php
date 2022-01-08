@@ -10,7 +10,7 @@ namespace App\EventListener;
 use App\Controller\Api\Exception\AccessDeniedException;
 use Symfony\Component\HttpFoundation\File\Exception\AccessDeniedException as HttpFoundationFileAccessDeniedException;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpKernel\Event\GetResponseForExceptionEvent;
+use Symfony\Component\HttpKernel\Event\ExceptionEvent;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException as SecurityCoreAccessDeniedException;
@@ -26,23 +26,23 @@ class KernelExceptionListener
         $this->environment = $environment;
     }
 
-    public function onKernelException(GetResponseForExceptionEvent $event): void
+    public function onKernelException(ExceptionEvent $event): void
     {
         if (0 !== \strpos($event->getRequest()->getPathInfo(), '/api/')) {
             return;
         }
 
         $data = new \stdClass();
-        $data->message = $event->getException()->getMessage();
-        $data->type = \get_class($event->getException());
-        $statusCode = $this->getStatusCode($event->getException());
+        $data->message = $event->getThrowable()->getMessage();
+        $data->type = \get_class($event->getThrowable());
+        $statusCode = $this->getStatusCode($event->getThrowable());
 
         if (\in_array($this->environment, ['dev', 'test'])) {
-            $data->trace = $event->getException()->getTraceAsString();
+            $data->trace = $event->getThrowable()->getTraceAsString();
         }
 
         if (null === $event->getResponse()) {
-            $event->setResponse(Response::create());
+            $event->setResponse(new Response());
         }
 
         $event->getResponse()

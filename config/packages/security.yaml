@@ -40,6 +40,7 @@ security:
     #- { path: ^/resetting, role: IS_AUTHENTICATED_ANONYMOUSLY }
     - { path: ^/adm/modify_screen, role: ROLE_USER }
     - { path: ^/adm, role: ROLE_ADMIN }
+    #- { path: ^/2fa, role: IS_AUTHENTICATED_2FA_IN_PROGRESS }
     - { path: ^/manage/2fa, role: IS_AUTHENTICATED_2FA_IN_PROGRESS }
     - { path: ^/logout$, role: IS_AUTHENTICATED_2FA_IN_PROGRESS }
     - { path: ^/manage, role: ROLE_USER }
