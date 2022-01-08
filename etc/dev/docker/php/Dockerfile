@@ -69,3 +69,6 @@ RUN set -ex \
     && apk del .build-deps
 #    && pecl install xdebug-2.6.0 \
 #    && docker-php-ext-enable xdebug \
+
+COPY installComposer.sh /installComposer.sh
+RUN sh /installComposer.sh
