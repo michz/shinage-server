@@ -89,6 +89,12 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
+      - name: Print versions
+        run: |
+          php --version ;
+          node --version ;
+          yarn --version
+
       - name: Install dependencies
         run: composer install --prefer-dist --no-progress --no-scripts --no-dev
 

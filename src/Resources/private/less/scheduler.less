@@ -45,30 +45,18 @@
 .calendar {
   width: 100%;
 
+  .fc-col-header-cell-cushion {
+    color: #000;
+  }
+
   .fc-event {
     .fc-event-title {
       font-weight: bold;
       font-size: 13px;
     }
 
-    .event-delete {
-      visibility: hidden;
-      position: absolute;
-      right: 6px;
-      top: 0;
-    }
-
-    &:hover .event-delete {
-      visibility: visible;
-    }
-  }
-
-  a {
-    color: #000;
-    text-decoration: none;
-
     &:hover {
-      text-decoration: underline;
+      text-decoration: none;
     }
   }
 }
