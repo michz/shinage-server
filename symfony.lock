@@ -23,17 +23,8 @@
     "behat/transliterator": {
         "version": "v1.3.0"
     },
-    "composer/semver": {
-        "version": "3.2.7"
-    },
-    "composer/xdebug-handler": {
-        "version": "1.4.6"
-    },
     "dasprid/enum": {
         "version": "1.0.3"
-    },
-    "dealerdirect/phpcodesniffer-composer-installer": {
-        "version": "v0.7.1"
     },
     "doctrine/annotations": {
         "version": "1.13",
@@ -160,18 +151,6 @@
             "tests/Behat/DemoContext.php"
         ]
     },
-    "friendsofphp/php-cs-fixer": {
-        "version": "2.19",
-        "recipe": {
-            "repo": "github.com/symfony/recipes",
-            "branch": "master",
-            "version": "2.19",
-            "ref": "34d1a22f840953909c581b8f993093b14cc9491b"
-        },
-        "files": [
-            ".php-cs-fixer.dist.php"
-        ]
-    },
     "friendsofphp/proxy-manager-lts": {
         "version": "v1.0.5"
     },
@@ -189,9 +168,6 @@
     },
     "icecave/isolator": {
         "version": "2.3.0"
-    },
-    "jean85/pretty-package-versions": {
-        "version": "1.6.0"
     },
     "jms/metadata": {
         "version": "2.6.1"
@@ -240,23 +216,8 @@
     "mztx/todo-bundle": {
         "version": "v0.1.0"
     },
-    "nette/finder": {
-        "version": "v2.5.3"
-    },
-    "nette/robot-loader": {
-        "version": "v3.4.1"
-    },
-    "nette/utils": {
-        "version": "v3.2.6"
-    },
-    "nikic/php-parser": {
-        "version": "v4.13.2"
-    },
     "paragonie/constant_time_encoding": {
         "version": "v2.4.0"
-    },
-    "php-cs-fixer/diff": {
-        "version": "v1.3.1"
     },
     "phpdocumentor/reflection-common": {
         "version": "2.2.0"
@@ -278,9 +239,6 @@
     },
     "phpstan/phpdoc-parser": {
         "version": "0.4.9"
-    },
-    "phpstan/phpstan": {
-        "version": "0.12.99"
     },
     "psr/cache": {
         "version": "2.0.0"
@@ -362,23 +320,8 @@
             "config/packages/sensio_framework_extra.yaml"
         ]
     },
-    "slevomat/coding-standard": {
-        "version": "6.4.1"
-    },
     "spomky-labs/otphp": {
         "version": "v10.0.1"
-    },
-    "squizlabs/php_codesniffer": {
-        "version": "3.6",
-        "recipe": {
-            "repo": "github.com/symfony/recipes-contrib",
-            "branch": "master",
-            "version": "3.6",
-            "ref": "1019e5c08d4821cb9b77f4891f8e9c31ff20ac6f"
-        },
-        "files": [
-            "phpcs.xml.dist"
-        ]
     },
     "studio-42/elfinder": {
         "version": "2.1.60"
@@ -558,9 +501,6 @@
     "symfony/polyfill-mbstring": {
         "version": "v1.24.0"
     },
-    "symfony/polyfill-php70": {
-        "version": "v1.20.0"
-    },
     "symfony/polyfill-php72": {
         "version": "v1.24.0"
     },
@@ -716,28 +656,7 @@
     "symfony/yaml": {
         "version": "v5.4.2"
     },
-    "symplify/autowire-array-parameter": {
-        "version": "8.3.48"
-    },
-    "symplify/coding-standard": {
-        "version": "8.3.48"
-    },
-    "symplify/console-color-diff": {
-        "version": "8.3.48"
-    },
     "symplify/easy-coding-standard": {
-        "version": "8.3.48"
-    },
-    "symplify/package-builder": {
-        "version": "8.3.48"
-    },
-    "symplify/set-config-resolver": {
-        "version": "8.3.48"
-    },
-    "symplify/smart-file-system": {
-        "version": "8.3.48"
-    },
-    "symplify/symplify-kernel": {
         "version": "8.3.48"
     },
     "thecodingmachine/safe": {
