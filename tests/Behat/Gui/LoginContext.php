@@ -22,12 +22,8 @@ class LoginContext extends RawMinkContext
     /** @var string */
     private $firewallName;
 
-    /** @var mixed */
     private $session;
 
-    /**
-     * @param mixed $session
-     */
     public function __construct(
         UserManagerInterface $userManager,
         $session,

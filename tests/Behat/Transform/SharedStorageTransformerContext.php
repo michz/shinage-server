@@ -28,8 +28,6 @@ class SharedStorageTransformerContext implements Context
 
     /**
      * @Transform /^(it|its|theirs|them)$/
-     *
-     * @return mixed
      */
     public function getLatestResource()
     {
@@ -38,8 +36,6 @@ class SharedStorageTransformerContext implements Context
 
     /**
      * @Transform /^(?:this|that|the) ([^"]+)$/
-     *
-     * @return mixed
      */
     public function getResource(string $resource)
     {
