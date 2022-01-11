@@ -95,9 +95,6 @@ jobs:
           node --version ;
           yarn --version
 
-      - name: Install dependencies
-        run: composer install --prefer-dist --no-progress --no-scripts --no-dev
-
       - name: Install yarn dependencies
         run: yarn install --frozen-lockfile
 
@@ -108,7 +105,7 @@ jobs:
 
       - name: Install php dependencies
         run: |
-          composer install --no-scripts --no-dev &&
+          composer install --prefer-dist --no-progress --no-scripts --no-dev &&
           composer dump-autoload --classmap-authoritative
 
       - name: Write revision file
@@ -117,9 +114,9 @@ jobs:
       - name: Prepare and cleanup
         run: |
           mkdir ./build &&
-          rm -f .scrutinizer.yml .travis.yml .gitignore .web-server-pid .env .env.* .eslintrc &&
+          rm -f .scrutinizer.yml .gitignore .web-server-pid .env .env.* .eslintrc .nvmrc &&
           rm -f bin/devEnv.sh bin/runInDev.sh &&
-          rm -f easy-coding-standard.yml package* behat.yml codeception.yml install-git-hooks.php phpspec.yml gulpfile.js &&
+          rm -f ecs.php package* behat.yml codeception.yml install-git-hooks.php phpspec.yml gulpfile.js &&
           rm -rf .github/ node_modules/  var/cache/dev/ var/cache/test/ var/session/dev/ var/session/test/ .git/ etc/ features/ tests/ git-hooks/ spec/ data/pool/*
 
       - name: Package release file
