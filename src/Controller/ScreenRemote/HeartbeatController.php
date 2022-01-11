@@ -8,7 +8,6 @@ declare(strict_types=1);
 namespace App\Controller\ScreenRemote;
 
 use App\Entity\Screen;
-use App\Entity\ScreenCommand;
 use App\Exceptions\NoScreenGivenException;
 use App\Presentation\PresentationTypeRegistryInterface;
 use App\Repository\ScreenCommandRepository;

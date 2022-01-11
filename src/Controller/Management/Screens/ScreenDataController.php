@@ -101,7 +101,7 @@ class ScreenDataController extends AbstractController
             );
         }
 
-        $choices = [null];
+        $choices = [];
         foreach ($this->presentationsRepository->getPresentationsForsUser($user) as $presentation) {
             $choices[] = $presentation;
         }

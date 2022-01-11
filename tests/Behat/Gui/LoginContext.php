@@ -9,11 +9,12 @@ namespace Tests\Behat\Gui;
 
 use Behat\Mink\Driver\BrowserKitDriver;
 use Behat\Mink\Exception\UnsupportedDriverActionException;
+use Behat\MinkExtension\Context\RawMinkContext;
 use FOS\UserBundle\Model\UserManagerInterface;
 use Symfony\Component\BrowserKit\Cookie;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 
-class LoginContext extends \Behat\MinkExtension\Context\RawMinkContext
+class LoginContext extends RawMinkContext
 {
     /** @var UserManagerInterface */
     private $userManager;
@@ -21,12 +22,8 @@ class LoginContext extends \Behat\MinkExtension\Context\RawMinkContext
     /** @var string */
     private $firewallName;
 
-    /** @var mixed */
     private $session;
 
-    /**
-     * @param mixed $session
-     */
     public function __construct(
         UserManagerInterface $userManager,
         $session,

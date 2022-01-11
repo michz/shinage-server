@@ -90,7 +90,7 @@ class ApiV1ClientContext implements Context
     public function iCanSeeThatTheApiRequestWasSuccessful(): void
     {
         Assert::notNull($this->responseObject);
-        Assert::eq($this->responseObject->getStatusCode(), 200, $this->responseBody);
+        Assert::eq($this->responseObject->getStatusCode(), 200);
     }
 
     /**
@@ -99,7 +99,7 @@ class ApiV1ClientContext implements Context
     public function iShouldGetANoContentResponse(): void
     {
         Assert::notNull($this->responseObject);
-        Assert::eq($this->responseStatusCode, 204, $this->responseBody);
+        Assert::eq($this->responseStatusCode, 204);
     }
 
     /**
@@ -108,7 +108,7 @@ class ApiV1ClientContext implements Context
     public function iShouldGetANotModifiedResponse(): void
     {
         Assert::notNull($this->responseObject);
-        Assert::eq($this->responseStatusCode, 304, $this->responseBody);
+        Assert::eq($this->responseStatusCode, 304);
     }
 
     /**
@@ -117,7 +117,7 @@ class ApiV1ClientContext implements Context
     public function iShouldGetABadRequestResponse(): void
     {
         Assert::notNull($this->responseObject);
-        Assert::eq($this->responseStatusCode, 400, $this->responseBody);
+        Assert::eq($this->responseStatusCode, 400);
     }
 
     /**
@@ -126,7 +126,7 @@ class ApiV1ClientContext implements Context
     public function iShouldGetAnAccessDeniedResponse(): void
     {
         Assert::notNull($this->responseObject);
-        Assert::eq($this->responseStatusCode, 403, $this->responseBody);
+        Assert::eq($this->responseStatusCode, 403);
     }
 
     /**
@@ -135,7 +135,7 @@ class ApiV1ClientContext implements Context
     public function iShouldGetANotFoundResponse(): void
     {
         Assert::notNull($this->responseObject);
-        Assert::eq($this->responseStatusCode, 404, $this->responseBody);
+        Assert::eq($this->responseStatusCode, 404);
         $json = \json_decode($this->responseBody, true);
         Assert::eq($json['type'], 'Symfony\\Component\\HttpKernel\\Exception\\NotFoundHttpException');
     }

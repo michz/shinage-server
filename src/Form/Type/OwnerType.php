@@ -7,6 +7,7 @@ declare(strict_types=1);
 
 namespace App\Form\Type;
 
+use App\Entity\PresentationInterface;
 use App\Entity\User;
 use App\Security\LoggedInUserRepositoryInterface;
 use Doctrine\ORM\EntityManagerInterface;
@@ -23,7 +24,7 @@ class OwnerType extends AbstractType
     /** @var EntityManagerInterface */
     protected $entityManager;
 
-    /** @var mixed */
+    /** @var mixed|PresentationInterface */
     protected $entity;
 
     /** @var LoggedInUserRepositoryInterface */

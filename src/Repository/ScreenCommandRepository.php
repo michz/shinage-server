@@ -10,11 +10,9 @@ namespace App\Repository;
 use App\Entity\Screen;
 use App\Entity\ScreenCommand;
 use Doctrine\ORM\EntityManagerInterface;
-use Doctrine\ORM\Query\Expr\OrderBy;
 
 class ScreenCommandRepository
 {
-    /** @var EntityManagerInterface */
     private EntityManagerInterface $entityManager;
 
     public function __construct(

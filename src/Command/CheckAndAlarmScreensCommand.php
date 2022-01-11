@@ -90,6 +90,8 @@ class CheckAndAlarmScreensCommand extends Command
                 }
             }
         }
+
+        return 0;
     }
 
     private function sendAlarmByMail(Screen $screen, OutputInterface $output): void

@@ -7,7 +7,9 @@ declare(strict_types=1);
 
 namespace Tests\Behat\Gui;
 
-class PresentationEditorsContext extends \Behat\MinkExtension\Context\RawMinkContext
+use Behat\MinkExtension\Context\RawMinkContext;
+
+class PresentationEditorsContext extends RawMinkContext
 {
     /**
      * @Then I should see the slideshow editor

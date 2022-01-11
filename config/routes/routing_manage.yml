@@ -1,6 +1,6 @@
 # 2fa
 _2fa:
-  resource: ./scheb_two_factor.yaml
+  resource: ./scheb_2fa.yaml
 
 _qr:
   prefix: /qr

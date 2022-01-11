@@ -9,7 +9,7 @@ namespace App\Security;
 
 use Scheb\TwoFactorBundle\Mailer\AuthCodeMailerInterface;
 use Scheb\TwoFactorBundle\Model\Email\TwoFactorInterface;
-use Symfony\Bundle\FrameworkBundle\Templating\EngineInterface;
+use Twig\Environment;
 
 class TwoFactorCodeMailer implements AuthCodeMailerInterface
 {
@@ -22,12 +22,12 @@ class TwoFactorCodeMailer implements AuthCodeMailerInterface
     /** @var string|null */
     private $senderName;
 
-    /** @var EngineInterface */
+    /** @var Environment */
     private $engine;
 
     public function __construct(
         \Swift_Mailer $mailer,
-        EngineInterface $engine,
+        Environment $engine,
         string $senderMail,
         ?string $senderName
     ) {

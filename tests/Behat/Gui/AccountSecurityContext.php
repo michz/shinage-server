@@ -7,9 +7,10 @@ declare(strict_types=1);
 
 namespace Tests\Behat\Gui;
 
+use Behat\MinkExtension\Context\RawMinkContext;
 use Webmozart\Assert\Assert;
 
-class AccountSecurityContext extends \Behat\MinkExtension\Context\RawMinkContext
+class AccountSecurityContext extends RawMinkContext
 {
     /**
      * @When I click on the `enable mail auth` button

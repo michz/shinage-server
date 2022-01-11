@@ -11,7 +11,7 @@ use App\Entity\Presentation;
 use App\Entity\Screen;
 use Behat\Behat\Context\Context;
 use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Component\BrowserKit\Client;
+use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Webmozart\Assert\Assert;
 
 class PresentationContext implements Context
@@ -19,10 +19,10 @@ class PresentationContext implements Context
     /** @var EntityManagerInterface */
     private $entityManager;
 
-    /** @var Client */
+    /** @var KernelBrowser */
     private $client;
 
-    public function __construct(EntityManagerInterface $entityManager, Client $client)
+    public function __construct(EntityManagerInterface $entityManager, KernelBrowser $client)
     {
         $this->entityManager = $entityManager;
         $this->client = $client;

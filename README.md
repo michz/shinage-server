@@ -13,7 +13,7 @@ Introduction
 This is a piece of software running on a web server providing management
 functionality for *Shinage* digital signage solutions.
 
-It's based on [Symfony 4](http://symfony.com/).
+It's based on [Symfony 5.4](http://symfony.com/).
 
 
 Hosted
@@ -90,6 +90,24 @@ Development
     it is important to understand that must commands have to be executed *inside* the php container.
     There is a tiny helper script that executes the necessary `docker exec` command at `bin/runInDev.sh`.
     For example to call the Symfony console you have to run `bin/runInDev.sh bin/console`.
+
+
+Testing
+-------
+
+To run behat, start the development webserver:
+
+```bash
+symfony local:server:start --no-tls --port=8000
+```
+
+And in a separate shell execute behat:
+
+```bash
+APP_ENV=test vendor/bin/behat --format=progress --strict -n --tags="~@todo"
+```
+
+
 
 
 Containerize me

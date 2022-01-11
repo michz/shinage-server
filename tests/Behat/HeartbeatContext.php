@@ -8,16 +8,16 @@ declare(strict_types=1);
 namespace Tests\Behat;
 
 use Behat\Behat\Context\Context;
-use Symfony\Component\BrowserKit\Client;
+use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Component\BrowserKit\Response;
 use Webmozart\Assert\Assert;
 
 class HeartbeatContext implements Context
 {
-    /** @var Client */
+    /** @var KernelBrowser */
     private $client;
 
-    public function __construct(Client $client)
+    public function __construct(KernelBrowser $client)
     {
         $this->client = $client;
     }

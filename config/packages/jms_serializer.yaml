@@ -5,11 +5,11 @@ jms_serializer:
     directories:
       app:
         namespace_prefix: "App\\Entity"
-        path: "%kernel.root_dir%/../config/jms_serializer"
+        path: "%kernel.project_dir%/config/jms_serializer"
     warmup:
       paths:
         included:
-          - "%kernel.root_dir%/Entity"
-          - "%kernel.root_dir%/Presentation"
-          - "%kernel.root_dir%/Presentation/Slideshow"
-          - "%kernel.root_dir%/Presentation/Slideshow/Slides"
+          - "%kernel.project_dir%/src/Entity"
+          - "%kernel.project_dir%/src/Presentation"
+          - "%kernel.project_dir%/src/Presentation/Slideshow"
+          - "%kernel.project_dir%/src/Presentation/Slideshow/Slides"

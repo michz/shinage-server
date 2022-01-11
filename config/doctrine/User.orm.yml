@@ -38,7 +38,7 @@ App\Entity\User:
       unique: false
       nullable: true
     backupCodes:
-      type: json_array
+      type: json
       unique: false
       nullable: true
     orgaAssignAutomaticallyByMailHost:

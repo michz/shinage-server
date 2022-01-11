@@ -8,9 +8,10 @@ declare(strict_types=1);
 namespace Tests\Behat\Gui;
 
 use App\Entity\User;
+use Behat\MinkExtension\Context\RawMinkContext;
 use Webmozart\Assert\Assert;
 
-class RegistrationContext extends \Behat\MinkExtension\Context\RawMinkContext
+class RegistrationContext extends RawMinkContext
 {
     /**
      * @Then I should see that the registration was successful
