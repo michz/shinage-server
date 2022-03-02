@@ -21,6 +21,6 @@
     "jquery-ui-dist": "^1.12.1",
     "moment": "^2.29.0",
     "reset-css": "^5.0.1",
-    "reveal.js": "^3.9.2"
+    "reveal.js": "^4.3.0"
   }
 }
