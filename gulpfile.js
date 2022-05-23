@@ -62,14 +62,12 @@ var paths = {
 var playerPaths = {
     js: [
         'node_modules/jquery/dist/jquery.js',
-        'node_modules/reveal.js/lib/js/html5shiv.js',
-        'node_modules/reveal.js/lib/js/promise.js',
-        'node_modules/reveal.js/js/reveal.js',
+        'node_modules/reveal.js/dist/reveal.js',
 //        'shinage-client.js',
     ],
     css: [
         'node_modules/reset-css/reset.css',
-        'node_modules/reveal.js/css/reveal.css',
+        'node_modules/reveal.js/dist/reveal.css',
         'public/css/reveal_theme_very_black.css',
         'src/Resources/private/player_css/**',
     ],
