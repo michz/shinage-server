@@ -41,6 +41,7 @@ use PhpCsFixer\Fixer\Import\OrderedImportsFixer;
 use PhpCsFixer\Fixer\LanguageConstruct\DeclareEqualNormalizeFixer;
 use PhpCsFixer\Fixer\NamespaceNotation\NoLeadingNamespaceWhitespaceFixer;
 use PhpCsFixer\Fixer\NamespaceNotation\SingleBlankLineBeforeNamespaceFixer;
+use PhpCsFixer\Fixer\Operator\BinaryOperatorSpacesFixer;
 use PhpCsFixer\Fixer\Operator\ConcatSpaceFixer;
 use PhpCsFixer\Fixer\Operator\IncrementStyleFixer;
 use PhpCsFixer\Fixer\Operator\NewWithBracesFixer;
@@ -49,6 +50,7 @@ use PhpCsFixer\Fixer\Operator\StandardizeNotEqualsFixer;
 use PhpCsFixer\Fixer\Operator\TernaryOperatorSpacesFixer;
 use PhpCsFixer\Fixer\Operator\UnaryOperatorSpacesFixer;
 use PhpCsFixer\Fixer\Phpdoc\NoSuperfluousPhpdocTagsFixer;
+use PhpCsFixer\Fixer\PhpTag\BlankLineAfterOpeningTagFixer;
 use PhpCsFixer\Fixer\PhpUnit\PhpUnitFqcnAnnotationFixer;
 use PhpCsFixer\Fixer\Phpdoc\NoBlankLinesAfterPhpdocFixer;
 use PhpCsFixer\Fixer\Phpdoc\NoEmptyPhpdocFixer;
@@ -77,181 +79,179 @@ use PhpCsFixer\Fixer\Whitespace\NoExtraBlankLinesFixer;
 use PhpCsFixer\Fixer\Whitespace\NoSpacesAroundOffsetFixer;
 use PhpCsFixer\Fixer\Whitespace\NoTrailingWhitespaceFixer;
 use PhpCsFixer\Fixer\Whitespace\NoWhitespaceInBlankLineFixer;
-use Symfony\Component\DependencyInjection\Loader\Configurator\ContainerConfigurator;
+use Symplify\EasyCodingStandard\Config\ECSConfig;
+use Symplify\EasyCodingStandard\ValueObject\Set\SetList;
 
-require_once __DIR__ . '/vendor/symplify/easy-coding-standard/config/set/psr12.php';
-require_once __DIR__ . '/vendor/symplify/easy-coding-standard/config/set/clean-code.php';
+return static function (ECSConfig $ecsConfig): void {
+    $ecsConfig->paths([
+        __DIR__ . '/src',
+        __DIR__ . '/tests',
+    ]);
 
-return static function (ContainerConfigurator $containerConfigurator): void {
-    $services = $containerConfigurator->services();
+    $ecsConfig->sets([SetList::CLEAN_CODE]);
+    $ecsConfig->sets([SetList::PSR_12]);
 
-    $services->set(ConcatSpaceFixer::class)
-        ->call('configure', [['spacing' => 'one']]);
+    $ecsConfig->ruleWithConfiguration(ConcatSpaceFixer::class, ['spacing' => 'one']);
 
-    $services->set(NewWithBracesFixer::class);
+    $ecsConfig->rule(NewWithBracesFixer::class);
 
-    $services->set(PhpdocAlignFixer::class)
-        ->tag('param');
+    $ecsConfig->ruleWithConfiguration(PhpdocAlignFixer::class, ['tags' => ['param']]);
 
-    $services->set(UnaryOperatorSpacesFixer::class);
+    $ecsConfig->rule(UnaryOperatorSpacesFixer::class);
 
-    $services->set(CastSpacesFixer::class);
+    $ecsConfig->rule(CastSpacesFixer::class);
 
-    $services->set(DeclareEqualNormalizeFixer::class);
+    $ecsConfig->rule(DeclareEqualNormalizeFixer::class);
 
-    $services->set(SingleLineCommentStyleFixer::class)
-        ->call('configure', [['comment_types' => ['hash']]]);
+    $ecsConfig->ruleWithConfiguration(SingleLineCommentStyleFixer::class, ['comment_types' => ['hash']]);
 
-    $services->set(IncludeFixer::class);
+    $ecsConfig->rule(IncludeFixer::class);
 
-    $services->set(LowercaseCastFixer::class);
+    $ecsConfig->rule(LowercaseCastFixer::class);
 
-    $services->set(NativeFunctionCasingFixer::class);
+    $ecsConfig->rule(NativeFunctionCasingFixer::class);
 
-    $services->set(NoBlankLinesAfterClassOpeningFixer::class);
+    $ecsConfig->rule(NoBlankLinesAfterClassOpeningFixer::class);
 
-    $services->set(NoBlankLinesAfterPhpdocFixer::class);
+    $ecsConfig->rule(NoBlankLinesAfterPhpdocFixer::class);
 
-    $services->set(NoEmptyCommentFixer::class);
+    $ecsConfig->rule(NoEmptyCommentFixer::class);
 
-    $services->set(NoEmptyPhpdocFixer::class);
+    $ecsConfig->rule(NoEmptyPhpdocFixer::class);
 
-    $services->set(NoEmptyStatementFixer::class);
+    $ecsConfig->rule(NoEmptyStatementFixer::class);
 
-    $services->set(NoLeadingNamespaceWhitespaceFixer::class);
+    $ecsConfig->rule(NoLeadingNamespaceWhitespaceFixer::class);
 
-    $services->set(NoMultilineWhitespaceAroundDoubleArrowFixer::class);
+    $ecsConfig->rule(NoMultilineWhitespaceAroundDoubleArrowFixer::class);
 
-    $services->set(NoShortBoolCastFixer::class);
+    $ecsConfig->rule(NoShortBoolCastFixer::class);
 
-    $services->set(NoSinglelineWhitespaceBeforeSemicolonsFixer::class);
+    $ecsConfig->rule(NoSinglelineWhitespaceBeforeSemicolonsFixer::class);
 
-    $services->set(NoSpacesAroundOffsetFixer::class);
+    $ecsConfig->rule(NoSpacesAroundOffsetFixer::class);
 
-    $services->set(NoTrailingCommaInListCallFixer::class);
+    $ecsConfig->rule(NoTrailingCommaInListCallFixer::class);
 
-    $services->set(ArraySyntaxFixer::class)
-        ->call('configure', [['syntax' => 'short']]);
+    $ecsConfig->ruleWithConfiguration(ArraySyntaxFixer::class, ['syntax' => 'short']);
 
-    $services->set(NoTrailingCommaInSinglelineArrayFixer::class);
+    $ecsConfig->rule(NoTrailingCommaInSinglelineArrayFixer::class);
 
-    $services->set(TrailingCommaInMultilineFixer::class);
+    $ecsConfig->rule(TrailingCommaInMultilineFixer::class);
 
-    $services->set(MultiLineFunctionDeclarationSniff::class);
+    $ecsConfig->rule(MultiLineFunctionDeclarationSniff::class);
 
-    $services->set(NoUnneededControlParenthesesFixer::class);
+    $ecsConfig->rule(NoUnneededControlParenthesesFixer::class);
 
-    $services->set(NoWhitespaceBeforeCommaInArrayFixer::class);
+    $ecsConfig->rule(NoWhitespaceBeforeCommaInArrayFixer::class);
 
-    $services->set(NoWhitespaceInBlankLineFixer::class);
+    $ecsConfig->rule(NoWhitespaceInBlankLineFixer::class);
 
-    $services->set(NormalizeIndexBraceFixer::class);
+    $ecsConfig->rule(NormalizeIndexBraceFixer::class);
 
-    $services->set(ObjectOperatorWithoutWhitespaceFixer::class);
+    $ecsConfig->rule(ObjectOperatorWithoutWhitespaceFixer::class);
 
-    $services->set(PhpdocAnnotationWithoutDotFixer::class);
+    $ecsConfig->rule(PhpdocAnnotationWithoutDotFixer::class);
 
-    $services->set(PhpdocIndentFixer::class);
+    $ecsConfig->rule(PhpdocIndentFixer::class);
 
-    $services->set(PhpdocNoAccessFixer::class);
+    $ecsConfig->rule(PhpdocNoAccessFixer::class);
 
-    $services->set(PhpdocNoEmptyReturnFixer::class);
+    $ecsConfig->rule(PhpdocNoEmptyReturnFixer::class);
 
-    $services->set(PhpdocNoPackageFixer::class);
+    $ecsConfig->rule(PhpdocNoPackageFixer::class);
 
-    $services->set(PhpdocNoUselessInheritdocFixer::class);
+    $ecsConfig->rule(PhpdocNoUselessInheritdocFixer::class);
 
-    $services->set(PhpdocScalarFixer::class);
+    $ecsConfig->rule(PhpdocScalarFixer::class);
 
-    $services->set(PhpdocSingleLineVarSpacingFixer::class);
+    $ecsConfig->rule(PhpdocSingleLineVarSpacingFixer::class);
 
-    $services->set(PhpdocToCommentFixer::class);
+    $ecsConfig->rule(PhpdocToCommentFixer::class);
 
-    $services->set(PhpdocTrimFixer::class);
+    $ecsConfig->rule(PhpdocTrimFixer::class);
 
-    $services->set(PhpdocTypesFixer::class);
+    $ecsConfig->rule(PhpdocTypesFixer::class);
 
-    $services->set(PhpdocVarWithoutNameFixer::class);
+    $ecsConfig->rule(PhpdocVarWithoutNameFixer::class);
 
-    $services->set(IncrementStyleFixer::class)
-        ->call('configure', [['style' => 'pre']]);
+    $ecsConfig->ruleWithConfiguration(IncrementStyleFixer::class, ['style' => 'pre']);
 
-    $services->set(ReturnTypeDeclarationFixer::class)
-        ->call('configure', [['space_before' => 'none']]);
+    $ecsConfig->ruleWithConfiguration(ReturnTypeDeclarationFixer::class, ['space_before' => 'none']);
 
-    $services->set(SelfAccessorFixer::class);
+    $ecsConfig->rule(SelfAccessorFixer::class);
 
-    $services->set(ShortScalarCastFixer::class);
+    $ecsConfig->rule(ShortScalarCastFixer::class);
 
-    $services->set(SingleQuoteFixer::class);
+    $ecsConfig->rule(SingleQuoteFixer::class);
 
-    $services->set(SpaceAfterSemicolonFixer::class);
+    $ecsConfig->rule(SpaceAfterSemicolonFixer::class);
 
-    $services->set(StandardizeNotEqualsFixer::class);
+    $ecsConfig->rule(StandardizeNotEqualsFixer::class);
 
-    $services->set(TernaryOperatorSpacesFixer::class);
+    $ecsConfig->rule(TernaryOperatorSpacesFixer::class);
 
-    $services->set(TrimArraySpacesFixer::class);
+    $ecsConfig->rule(TrimArraySpacesFixer::class);
 
-    $services->set(WhitespaceAfterCommaInArrayFixer::class);
+    $ecsConfig->rule(WhitespaceAfterCommaInArrayFixer::class);
 
-    $services->set(ClassDefinitionFixer::class)
-        ->call('configure', [['single_line' => true]]);
+    $ecsConfig->ruleWithConfiguration(ClassDefinitionFixer::class, ['single_line' => true]);
 
-    $services->set(MagicConstantCasingFixer::class);
+    $ecsConfig->rule(MagicConstantCasingFixer::class);
 
-    $services->set(MethodArgumentSpaceFixer::class);
+    $ecsConfig->rule(MethodArgumentSpaceFixer::class);
 
-    $services->set(NoMixedEchoPrintFixer::class)
-        ->call('configure', [['use' => 'echo']]);
+    $ecsConfig->ruleWithConfiguration(NoMixedEchoPrintFixer::class, ['use' => 'echo']);
 
-    $services->set(PhpUnitFqcnAnnotationFixer::class);
+    $ecsConfig->rule(PhpUnitFqcnAnnotationFixer::class);
 
-    $services->set(PhpdocNoAliasTagFixer::class);
+    $ecsConfig->rule(PhpdocNoAliasTagFixer::class);
 
-    $services->set(ProtectedToPrivateFixer::class);
+    $ecsConfig->rule(ProtectedToPrivateFixer::class);
 
-    $services->set(SingleBlankLineBeforeNamespaceFixer::class);
+    $ecsConfig->rule(SingleBlankLineBeforeNamespaceFixer::class);
 
-    $services->set(SingleClassElementPerStatementFixer::class);
+    $ecsConfig->rule(SingleClassElementPerStatementFixer::class);
 
-    $services->set(NoUnneededCurlyBracesFixer::class);
+    $ecsConfig->rule(NoUnneededCurlyBracesFixer::class);
 
-    $services->set(NoUnneededFinalMethodFixer::class);
+    $ecsConfig->rule(NoUnneededFinalMethodFixer::class);
 
-    $services->set(SemicolonAfterInstructionFixer::class);
+    $ecsConfig->rule(SemicolonAfterInstructionFixer::class);
 
-    $services->set(YodaStyleFixer::class);
+    $ecsConfig->rule(YodaStyleFixer::class);
 
-    $services->set(NoUnusedImportsFixer::class);
+    $ecsConfig->rule(NoUnusedImportsFixer::class);
 
-    $services->set(OrderedImportsFixer::class);
+    $ecsConfig->rule(OrderedImportsFixer::class);
 
-    $services->set(ArrayIndentationFixer::class);
+    $ecsConfig->rule(ArrayIndentationFixer::class);
 
-    $services->set(RandomApiMigrationFixer::class)
-        ->call('configure', [['replacements' => ['mt_rand' => 'random_int', 'rand' => 'random_int']]]);
+    $ecsConfig->ruleWithConfiguration(RandomApiMigrationFixer::class, ['replacements' => ['mt_rand' => 'random_int', 'rand' => 'random_int']]);
 
-    $services->set(DeclareStrictTypesFixer::class);
+    $ecsConfig->rule(DeclareStrictTypesFixer::class);
 
-    $services->set(NoTrailingWhitespaceFixer::class);
+    $ecsConfig->rule(NoTrailingWhitespaceFixer::class);
 
-    $services->set(NoExtraBlankLinesFixer::class)
-        ->call('configure', [['tokens' => ['curly_brace_block', 'case', 'return', 'use', 'throw', 'switch', 'parenthesis_brace_block', 'extra', 'default']]]);
+    $ecsConfig->ruleWithConfiguration(NoExtraBlankLinesFixer::class, ['tokens' => ['curly_brace_block', 'case', 'return', 'use', 'throw', 'switch', 'parenthesis_brace_block', 'extra', 'default']]);
 
-    $services->set(NoSuperfluousPhpdocTagsFixer::class);
+    $ecsConfig->rule(NoSuperfluousPhpdocTagsFixer::class);
 
-    $services->set(MemberVarSpacingSniff::class)
-        ->property('spacing', 1)
-        ->property('spacingBeforeFirst', 0);
+    $ecsConfig->ruleWithConfiguration(MemberVarSpacingSniff::class, ['spacing' => 1, 'spacingBeforeFirst' => 0]);
 
-    $services->set(HeaderCommentFixer::class)
-        ->call('configure', [['header' => 'Licensed under MIT. See file /LICENSE.', 'location' => 'after_declare_strict']]);
+    $ecsConfig->ruleWithConfiguration(HeaderCommentFixer::class, ['header' => 'Licensed under MIT. See file /LICENSE.', 'location' => 'after_declare_strict']);
 
-    $services->set(NativeFunctionInvocationFixer::class)
-        ->call('configure', [['include' => ['@all'], 'scope' => 'all']]);
+    $ecsConfig->ruleWithConfiguration(NativeFunctionInvocationFixer::class, ['include' => ['@all'], 'scope' => 'all']);
 
-    $parameters = $containerConfigurator->parameters();
-
-    $parameters->set('skip', ['SlevomatCodingStandard\Sniffs\TypeHints\TypeHintDeclarationSniff.UselessDocComment' => ['tests/*'], 'PHP_CodeSniffer\Standards\Squiz\Sniffs\WhiteSpace\ControlStructureSpacingSniff.NoLineAfterClose' => ['./*']]);
+    $ecsConfig->skip([
+        'SlevomatCodingStandard\Sniffs\TypeHints\TypeHintDeclarationSniff.UselessDocComment' => [
+            'tests/*',
+        ],
+        'PHP_CodeSniffer\Standards\Squiz\Sniffs\WhiteSpace\ControlStructureSpacingSniff.NoLineAfterClose' => [
+            './*',
+        ],
+        BinaryOperatorSpacesFixer::class => [
+            './*',
+        ]
+    ]);
 };
