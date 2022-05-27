@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 /*
@@ -13,6 +14,6 @@ class UserType
      * ENUM('user', 'organization')
      */
 
-    const USER_TYPE_USER    = 'user';
-    const USER_TYPE_ORGA    = 'organization';
+    public const USER_TYPE_USER = 'user';
+    public const USER_TYPE_ORGA = 'organization';
 }

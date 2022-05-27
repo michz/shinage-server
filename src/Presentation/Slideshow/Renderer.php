@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 /*
@@ -17,7 +18,7 @@ use Symfony\Component\Routing\RouterInterface;
 
 class Renderer implements PresentationRendererInterface
 {
-    const POOL_VIRTUAL_BASE_URL = 'pool://';
+    public const POOL_VIRTUAL_BASE_URL = 'pool://';
 
     /** @var SettingsReaderInterface */
     private $settingsReader;
@@ -53,7 +54,7 @@ class Renderer implements PresentationRendererInterface
         foreach ($parsedSettings->getSlides() as $slide) {
             // @TODO Own render service per Slide Type
             if ('Image' === $slide->getType()) {
-                /* @var $slide ImageSlide */
+                /** @var ImageSlide $slide */
                 $slides .= "
                     <section 
                         data-autoslide='{$slide->getDuration()}' 
@@ -63,7 +64,7 @@ class Renderer implements PresentationRendererInterface
                     </section>
                 ";
             } elseif ('Video' === $slide->getType()) {
-                /* @var $slide VideoSlide */
+                /** @var VideoSlide $slide */
                 ++$videoCounter;
                 $uniqueId = 'video-' . $videoCounter++; // @TODO better unique id (counter)
                 $slides .= "

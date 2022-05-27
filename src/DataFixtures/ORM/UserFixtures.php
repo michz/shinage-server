@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 /*
@@ -15,8 +16,8 @@ use FOS\UserBundle\Model\UserManagerInterface;
 
 class UserFixtures extends Fixture
 {
-    const USERNAME_ADMIN = 'admin@shinage.test';
-    const PASSWORD_ADMIN = 'admin';
+    public const USERNAME_ADMIN = 'admin@shinage.test';
+    public const PASSWORD_ADMIN = 'admin';
 
     /** @var UserManagerInterface */
     private $userManager;

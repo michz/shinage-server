@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 /*
@@ -64,8 +65,8 @@ class RevealJsEditorController extends AbstractPresentationEditor
                 'revealSettings',
                 TextareaType::class,
                 [
-                    'label'      => 'Reveal.js settings (leave empty for defaults)',
-                    'required'   => false,
+                    'label' => 'Reveal.js settings (leave empty for defaults)',
+                    'required' => false,
                     'empty_data' => '',
                     'attr' => ['data-codemirror' => 'true', 'data-codemirror-mode' => 'json'],
                 ]

@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 /*
@@ -44,8 +45,8 @@ class HeartbeatController extends AbstractController
     {
         if (empty($screenId)) {
             return $this->json([
-                'status'        => 'error',
-                'error_code'    => 'NO_SCREEN_GIVEN',
+                'status' => 'error',
+                'error_code' => 'NO_SCREEN_GIVEN',
                 'error_message' => 'No screen was given in this request.',
             ], 400);
         }

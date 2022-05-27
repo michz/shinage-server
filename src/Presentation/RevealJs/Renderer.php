@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 /*
@@ -15,7 +16,7 @@ use Symfony\Component\Routing\RouterInterface;
 
 class Renderer implements PresentationRendererInterface
 {
-    const POOL_VIRTUAL_BASE_URL = 'pool://';
+    public const POOL_VIRTUAL_BASE_URL = 'pool://';
 
     /** @var SettingsReaderInterface */
     private $settingsReader;

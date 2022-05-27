@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 /*
@@ -126,22 +127,22 @@ class FileManager extends AbstractController
                     '/.el-thumbnails/' . $basename . '/';
 
                 $roots[] = [
-                    'driver'        => 'LocalFileSystem',
-                    'alias'         => $name,
-                    'path'          => $path['real'],
-                    'URL'           => $this->generateUrl(
+                    'driver' => 'LocalFileSystem',
+                    'alias' => $name,
+                    'path' => $path['real'],
+                    'URL' => $this->generateUrl(
                         'pool-get',
                         ['userRoot' => $basenameVirtual, 'path' => ''],
                         UrlGeneratorInterface::ABSOLUTE_URL
                     ),
-                    'tmbPath'       => $tmb_path,
-                    'tmbURL'        => $this->generateUrl(
+                    'tmbPath' => $tmb_path,
+                    'tmbURL' => $this->generateUrl(
                         'management-files-el-thumbnail',
                         ['base' => $basename, 'file' => '']
                     ),
-                    'uploadDeny'    => ['all'],
-                    'uploadAllow'   => ['image', 'video'],
-                    'uploadOrder'   => ['deny', 'allow'],
+                    'uploadDeny' => ['all'],
+                    'uploadAllow' => ['image', 'video'],
+                    'uploadOrder' => ['deny', 'allow'],
                     'accessControl' => 'access',
                 ];
             }

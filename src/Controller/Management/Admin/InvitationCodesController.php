@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 /*
@@ -16,8 +17,8 @@ use Symfony\Component\HttpFoundation\Response;
 
 class InvitationCodesController extends AbstractController
 {
-    const DEFAULT_CODE_LENGTH = 12;
-    const MAX_COUNT_GENERATE  = 100;
+    public const DEFAULT_CODE_LENGTH = 12;
+    public const MAX_COUNT_GENERATE = 100;
 
     /** @var EntityManagerInterface */
     private $entityManager;

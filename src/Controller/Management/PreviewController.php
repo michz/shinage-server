@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 /*
@@ -17,7 +18,7 @@ use Symfony\Component\HttpFoundation\Response;
 
 class PreviewController extends AbstractController
 {
-    const PLAYER_URL_BASE = 'https://player.shinage.org/player.html?current_presentation_url=';
+    public const PLAYER_URL_BASE = 'https://player.shinage.org/player.html?current_presentation_url=';
 
     /** @var ScreenRepository */
     private $screenRepository;

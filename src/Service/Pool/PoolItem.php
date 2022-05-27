@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 /*
@@ -9,8 +10,8 @@ namespace App\Service\Pool;
 
 abstract class PoolItem
 {
-    const TYPE_DIRECTORY = 'dir';
-    const TYPE_FILE = 'file';
+    public const TYPE_DIRECTORY = 'dir';
+    public const TYPE_FILE = 'file';
 
     /** @var string */
     protected $name = '';

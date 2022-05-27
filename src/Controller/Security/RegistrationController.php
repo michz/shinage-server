@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 /*
@@ -83,7 +84,7 @@ class RegistrationController extends AbstractController
                 'invalid_message' => 'PasswordsMustMatch',
                 'options' => ['attr' => ['class' => 'password-field']],
                 'required' => true,
-                'first_options'  => ['label' => 'Password'],
+                'first_options' => ['label' => 'Password'],
                 'second_options' => ['label' => 'PasswordAgain'],
             ])
             ->add('save', SubmitType::class, ['label' => 'Save'])

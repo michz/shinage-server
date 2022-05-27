@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 /*
@@ -145,17 +146,17 @@ class SchedulerController extends AbstractController
             $this->denyAccessUnlessGranted('schedule', $scheduledPresentation->getPresentation());
         }
 
-        $guid   = $request->get('screen');
+        $guid = $request->get('screen');
         $screen = $this->entityManager->find(Screen::class, $guid);
 
         // Check if user is allowed to see/edit the (newly chosen) screen
         $this->denyAccessUnlessGranted('schedule', $screen);
 
-        $start  = new \DateTime($request->get('start'), new \DateTimeZone('UTC'));
-        $end    = new \DateTime($request->get('end'), new \DateTimeZone('UTC'));
+        $start = new \DateTime($request->get('start'), new \DateTimeZone('UTC'));
+        $end = new \DateTime($request->get('end'), new \DateTimeZone('UTC'));
 
         $pres_id = $request->get('presentation');
-        $pres   = $this->entityManager->find(Presentation::class, $pres_id);
+        $pres = $this->entityManager->find(Presentation::class, $pres_id);
 
         // Check if user is allowed to see/edit the (newly chosen) presentation
         $this->denyAccessUnlessGranted('schedule', $pres);
@@ -178,12 +179,12 @@ class SchedulerController extends AbstractController
     {
         $id = $request->get('id');
 
-        $start  = new \DateTime($request->get('start'), new \DateTimeZone('UTC'));
-        $end    = new \DateTime($request->get('end'), new \DateTimeZone('UTC'));
-        $guid   = $request->get('screen');
+        $start = new \DateTime($request->get('start'), new \DateTimeZone('UTC'));
+        $end = new \DateTime($request->get('end'), new \DateTimeZone('UTC'));
+        $guid = $request->get('screen');
         $screen = $this->entityManager->find(Screen::class, $guid);
         /** @var ScheduledPresentation $s */
-        $s      = $this->entityManager->find(ScheduledPresentation::class, $id);
+        $s = $this->entityManager->find(ScheduledPresentation::class, $id);
 
         // Check if user is allowed to see/edit screen
         $this->denyAccessUnlessGranted('schedule', $screen);

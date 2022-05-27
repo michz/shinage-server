@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 /*
@@ -21,8 +22,8 @@ use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 
 class SecurityController extends AbstractController
 {
-    const BACKUP_CODE_COUNT = 12;
-    const BACKUP_CODE_LENGTH = 12;
+    public const BACKUP_CODE_COUNT = 12;
+    public const BACKUP_CODE_LENGTH = 12;
 
     /** @var EntityManagerInterface */
     private $entityManager;
@@ -89,7 +90,7 @@ class SecurityController extends AbstractController
 
         return $this->render('account/2fa_totp_init.html.twig', [
             'qrData' => $qrData,
-            'form'   => $initForm->createView(),
+            'form' => $initForm->createView(),
         ]);
     }
 

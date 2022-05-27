@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 /*
@@ -27,23 +28,17 @@ use Symfony\Component\Routing\RouterInterface;
 
 class ScreensController extends AbstractController
 {
-    /** @var EntityManagerInterface */
-    private $entityManager;
+    private EntityManagerInterface $entityManager;
 
-    /** @var SchedulerService */
-    private $scheduler;
+    private SchedulerService $scheduler;
 
-    /** @var ScreenRepository */
-    private $screenRepository;
+    private ScreenRepository $screenRepository;
 
-    /** @var ScreenAssociation */
-    private $screenAssociation;
+    private ScreenAssociation $screenAssociation;
 
-    /** @var RouterInterface */
-    private $router;
+    private RouterInterface $router;
 
-    /** @var LoggedInUserRepositoryInterface */
-    private $loggedInUserRepository;
+    private LoggedInUserRepositoryInterface $loggedInUserRepository;
 
     public function __construct(
         EntityManagerInterface $entityManager,
@@ -111,10 +106,10 @@ class ScreensController extends AbstractController
     public function connectAction(Request $request): RedirectResponse
     {
         $user = $this->loggedInUserRepository->getLoggedInUserOrDenyAccess();
-        $rep = $this->entityManager->getRepository('App:Screen');
+        $rep = $this->entityManager->getRepository(Screen::class);
 
-        $code   = $request->get('connect_code');
-        $who    = $request->get('who');
+        $code = $request->get('connect_code');
+        $who = $request->get('who');
 
         $screens = $rep->findBy(['connect_code' => $code]);
         if (0 === \count($screens)) {
@@ -123,7 +118,7 @@ class ScreensController extends AbstractController
             return $this->redirectToRoute('management-screens');
         }
 
-        /* @var Screen $screen */
+        /** @var Screen $screen */
         $screen = $screens[0];
 
         $screen->setConnectCode('');

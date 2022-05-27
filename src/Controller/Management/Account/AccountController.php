@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 /*
@@ -33,23 +34,17 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 
 class AccountController extends AbstractController
 {
-    /** @var EntityManagerInterface */
-    private $entityManager;
+    private EntityManagerInterface $entityManager;
 
-    /** @var UserManagerInterface */
-    private $userManager;
+    private UserManagerInterface $userManager;
 
-    /** @var TranslatorInterface */
-    private $translator;
+    private TranslatorInterface $translator;
 
-    /** @var FormFactoryInterface */
-    private $formFactory;
+    private FormFactoryInterface $formFactory;
 
-    /** @var EncoderFactoryInterface */
-    private $encoderFactory;
+    private EncoderFactoryInterface $encoderFactory;
 
-    /** @var LoggedInUserRepositoryInterface */
-    private $loggedInUserRepository;
+    private LoggedInUserRepositoryInterface $loggedInUserRepository;
 
     public function __construct(
         EntityManagerInterface $entityManager,
@@ -84,13 +79,13 @@ class AccountController extends AbstractController
             ->getForm();
 
         $form_pw = $this->formFactory->createNamedBuilder('form2name', FormType::class, $user)
-            ->add('old-password', PasswordType::class, ['label'=>'oldPassword', 'mapped' => false])
+            ->add('old-password', PasswordType::class, ['label' => 'oldPassword', 'mapped' => false])
             ->add('plainPassword', RepeatedType::class, [
                 'type' => PasswordType::class,
                 'invalid_message' => 'PasswordsMustMatch',
                 'options' => ['attr' => ['class' => 'password-field']],
                 'required' => true,
-                'first_options'  => ['label' => 'Password'],
+                'first_options' => ['label' => 'Password'],
                 'second_options' => ['label' => 'PasswordAgain'],
             ])
             ->add('save', SubmitType::class, ['label' => 'Save'])
@@ -161,14 +156,14 @@ class AccountController extends AbstractController
         }
 
         // get API keys
-        $rep = $this->entityManager->getRepository('App:Api\AccessKey');
+        $rep = $this->entityManager->getRepository(AccessKey::class);
         $apiKeys = $rep->findBy(['owner' => $user]);
 
         return $this->render('account/user.html.twig', [
-            'form'                  => $form->createView(),
-            'form_pw'               => $form_pw->createView(),
-            'form_add_api_key'      => $createApiKeyForm->createView(),
-            'api_keys'              => $apiKeys,
+            'form' => $form->createView(),
+            'form_pw' => $form_pw->createView(),
+            'form_add_api_key' => $createApiKeyForm->createView(),
+            'api_keys' => $apiKeys,
         ]);
     }
 
@@ -252,7 +247,7 @@ class AccountController extends AbstractController
     {
         /** @var User $user_new */
         $user = $this->loggedInUserRepository->getLoggedInUserOrDenyAccess();
-        $rep = $this->entityManager->getRepository('App:User');
+        $rep = $this->entityManager->getRepository(User::class);
         $user_new = $rep->findOneBy(['email' => $request->get('email')]);
         $orga = $this->entityManager->find(User::class, $request->get('organization'));
 
@@ -306,7 +301,7 @@ class AccountController extends AbstractController
 
         $user_other->removeOrganization($organization);
         $this->entityManager->persist($user_other);
-        $$this->entityManagerem->flush();
+        $this->entityManager->flush();
 
         $this->addFlash('success', 'Die Benutzer (' . $user_other->getEmail() .
             ') wurde aus der Organisation (' . $organization->getName() . ') entfernt.');
@@ -317,7 +312,7 @@ class AccountController extends AbstractController
     {
         $user = $this->loggedInUserRepository->getLoggedInUserOrDenyAccess();
 
-        $key = $this->entityManager->find('App:Api\AccessKey', $id);
+        $key = $this->entityManager->find(AccessKey::class, $id);
         if ($key->getOwner() === $user || $user->getOrganizations()->contains($key->getOwner())) {
             $this->entityManager->remove($key);
             $this->entityManager->flush();

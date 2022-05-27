@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 /*
@@ -7,14 +8,14 @@ declare(strict_types=1);
 
 namespace App\Controller\Management\Admin;
 
+use App\Entity\Screen;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 
 class ScreenController extends AbstractController
 {
-    /** @var EntityManagerInterface */
-    private $entityManager;
+    private EntityManagerInterface $entityManager;
 
     public function __construct(
         EntityManagerInterface $entityManager
@@ -24,7 +25,7 @@ class ScreenController extends AbstractController
 
     public function indexAction(): Response
     {
-        $rep = $this->entityManager->getRepository('App:Screen');
+        $rep = $this->entityManager->getRepository(Screen::class);
         $screens = $rep->findAll();
 
         // replace this example code with whatever you need
