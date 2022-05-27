@@ -7,15 +7,14 @@ declare(strict_types=1);
 
 namespace App\Service;
 
+use App\Entity\Screen;
 use Doctrine\ORM\EntityManagerInterface;
 
 class ConnectCodeGenerator implements ConnectCodeGeneratorInterface
 {
-    /** @var EntityManagerInterface */
-    private $entityManager;
+    private EntityManagerInterface $entityManager;
 
-    /** @var int */
-    private $length;
+    private int $length;
 
     public function __construct(
         EntityManagerInterface $entityManager,
@@ -27,7 +26,7 @@ class ConnectCodeGenerator implements ConnectCodeGeneratorInterface
 
     public function generateUniqueConnectcode(): string
     {
-        $rep = $this->entityManager->getRepository('App:Screen');
+        $rep = $this->entityManager->getRepository(Screen::class);
 
         $code = '';
         $unique = false;

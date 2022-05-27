@@ -27,26 +27,19 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 
 class PresentationsController extends AbstractController
 {
-    /** @var PresentationTypeRegistryInterface */
-    private $presentationTypeRegistry;
+    private PresentationTypeRegistryInterface $presentationTypeRegistry;
 
-    /** @var SchedulerService */
-    private $scheduler;
+    private SchedulerService $scheduler;
 
-    /** @var TranslatorInterface */
-    private $translator;
+    private TranslatorInterface $translator;
 
-    /** @var EntityManagerInterface */
-    private $entityManager;
+    private EntityManagerInterface $entityManager;
 
-    /** @var FormFactoryInterface */
-    private $formFactory;
+    private FormFactoryInterface $formFactory;
 
-    /** @var PresentationsRepository */
-    private $presentationsRepository;
+    private PresentationsRepository $presentationsRepository;
 
-    /** @var LoggedInUserRepositoryInterface */
-    private $loggedInUserRepository;
+    private LoggedInUserRepositoryInterface $loggedInUserRepository;
 
     public function __construct(
         PresentationTypeRegistryInterface $presentationTypeRegistry,
@@ -113,7 +106,7 @@ class PresentationsController extends AbstractController
     public function deletePresentationAction(int $presentationId): Response
     {
         /** @var PresentationInterface $presentation */
-        $presentation = $this->entityManager->find('App:Presentation', $presentationId);
+        $presentation = $this->entityManager->find(Presentation::class, $presentationId);
 
         // Check role based access rights
         $this->denyAccessUnlessGranted('delete', $presentation);

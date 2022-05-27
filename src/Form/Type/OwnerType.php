@@ -62,7 +62,7 @@ class OwnerType extends AbstractType
                 FormEvents::SUBMIT,
                 function (FormEvent $event): void {
                     $entity = $this->entity;
-                    $entity->setOwner($this->entityManager->find('App:User', (int) $event->getData()));
+                    $entity->setOwner($this->entityManager->find(User::class, (int) $event->getData()));
                 }
             );
         }

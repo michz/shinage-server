@@ -14,8 +14,7 @@ use Doctrine\ORM\EntityManagerInterface;
 
 class ScreenAssociation
 {
-    /** @var EntityManagerInterface */
-    protected $entityManager;
+    protected EntityManagerInterface $entityManager;
 
     public function __construct(
         EntityManagerInterface $entityManager
@@ -59,7 +58,7 @@ class ScreenAssociation
 
     public function isScreenAssociated(Screen $screen): bool
     {
-        $rep = $this->entityManager->getRepository('App:ScreenAssociation');
+        $rep = $this->entityManager->getRepository(\App\Entity\ScreenAssociation::class);
         $assoc = $rep->findBy(['screen' => $screen->getGuid()]);
 
         return \count($assoc) > 0;
@@ -75,7 +74,7 @@ class ScreenAssociation
         $assoc = new ScreenAssociationEntity();
         $assoc->setScreen($screen);
         $assoc->setRoles($roles);
-        $assoc->setUser($this->entityManager->find('App:User', $owner));
+        $assoc->setUser($this->entityManager->find(User::class, $owner));
 
         $this->entityManager->persist($assoc);
         $this->entityManager->flush();
