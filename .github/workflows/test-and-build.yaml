@@ -57,7 +57,7 @@ jobs:
       #- name: Install assets for test environment
 
       - name: Check PHP codestyle
-        run: ./vendor/bin/ecs check --no-progress-bar --ansi --no-interaction src/ tests/
+        run: ./vendor/bin/ecs check --no-progress-bar --ansi --no-interaction
 
       - name: Check JS codestyle
         run: ./node_modules/.bin/gulp eslint
