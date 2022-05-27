@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 /*
@@ -14,7 +15,7 @@ use App\Entity\PresentationInterface;
  */
 class MirrorPresentation
 {
-    const PRESENTATION_TYPE = 'mirror';
+    public const PRESENTATION_TYPE = 'mirror';
 
     public function supports(PresentationInterface $presentation): bool
     {

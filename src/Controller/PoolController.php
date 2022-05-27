@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 /*
@@ -97,7 +98,7 @@ class PoolController extends AbstractController
                 },
                 200,
                 [
-                    'Content-Type'  => $fileInfo->getMimeType(),
+                    'Content-Type' => $fileInfo->getMimeType(),
                     'Last-Modified' => \gmdate('D, d M Y G:i:s T', $lastModifiedDate),
                 ]
             );

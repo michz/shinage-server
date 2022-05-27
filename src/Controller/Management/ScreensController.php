@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 /*
@@ -107,8 +108,8 @@ class ScreensController extends AbstractController
         $user = $this->loggedInUserRepository->getLoggedInUserOrDenyAccess();
         $rep = $this->entityManager->getRepository(Screen::class);
 
-        $code   = $request->get('connect_code');
-        $who    = $request->get('who');
+        $code = $request->get('connect_code');
+        $who = $request->get('who');
 
         $screens = $rep->findBy(['connect_code' => $code]);
         if (0 === \count($screens)) {
@@ -117,7 +118,7 @@ class ScreensController extends AbstractController
             return $this->redirectToRoute('management-screens');
         }
 
-        /* @var Screen $screen */
+        /** @var Screen $screen */
         $screen = $screens[0];
 
         $screen->setConnectCode('');

@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 /*
@@ -16,7 +17,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 class CheckAndAlarmScreensCommand extends Command
 {
-    const MAIL_EOL = "\r\n";
+    public const MAIL_EOL = "\r\n";
 
     /** @var EntityManagerInterface */
     private $entityManager;

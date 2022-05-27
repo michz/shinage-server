@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 /*
@@ -10,17 +11,17 @@ namespace App\Entity\ScreenRemote;
 class PlayablePresentationSlide
 {
     /** @var string */
-    public $type        = 'Image';
+    public $type = 'Image';
 
     /** @var string */
-    public $title       = '';
+    public $title = '';
 
     /** @var int */
-    public $duration    = 5000;
+    public $duration = 5000;
 
     /** @var string */
-    public $transition  = '';
+    public $transition = '';
 
     /** @var string */
-    public $src         = '';
+    public $src = '';
 }

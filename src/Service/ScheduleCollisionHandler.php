@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 /*
@@ -184,7 +185,7 @@ class ScheduleCollisionHandler implements ScheduleCollisionHandlerInterface
                 'screen' => $scheduledPresentation->getScreen(),
             ]);
 
-        /* @var ScheduledPresentation $o */
+        /** @var ScheduledPresentation $o */
         foreach ($overlaps as $o) {
             // remove all that are fully enclosed
             $this->entityManager->remove($o);
@@ -232,12 +233,12 @@ class ScheduleCollisionHandler implements ScheduleCollisionHandlerInterface
         $overlaps = $this->selectOverlappingAtStartQuery
             ->execute([
                 'current_start' => $scheduledPresentation->getScheduledStart(),
-                'current_end'   => $scheduledPresentation->getScheduledEnd(),
-                'id'            => $scheduledPresentation->getId(),
-                'screen'        => $scheduledPresentation->getScreen(),
+                'current_end' => $scheduledPresentation->getScheduledEnd(),
+                'id' => $scheduledPresentation->getId(),
+                'screen' => $scheduledPresentation->getScreen(),
             ]);
 
-        /* @var ScheduledPresentation $o */
+        /** @var ScheduledPresentation $o */
         foreach ($overlaps as $o) {
             if ($o->getPresentation() === $scheduledPresentation->getPresentation()) {
                 // The same presentation is scheduled twice overlapping, merge.
@@ -267,7 +268,7 @@ class ScheduleCollisionHandler implements ScheduleCollisionHandlerInterface
                 'screen' => $scheduledPresentation->getScreen(),
             ]);
 
-        /* @var ScheduledPresentation $o */
+        /** @var ScheduledPresentation $o */
         foreach ($overlaps as $o) {
             if ($o->getPresentation() === $scheduledPresentation->getPresentation()) {
                 // The same presentation is scheduled twice overlapping, merge.

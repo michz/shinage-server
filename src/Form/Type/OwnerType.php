@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 /*
@@ -85,8 +86,8 @@ class OwnerType extends AbstractType
         $resolver->setRequired('ownable');
 
         $resolver->setDefaults([
-            'choices'   => $choices,
-            'mapped'    => false,
+            'choices' => $choices,
+            'mapped' => false,
         ]);
     }
 

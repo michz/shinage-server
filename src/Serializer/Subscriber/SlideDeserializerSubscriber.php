@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 /*
@@ -19,11 +20,11 @@ class SlideDeserializerSubscriber implements EventSubscriberInterface
     public static function getSubscribedEvents(): array
     {
         return [[
-            'event'     => 'serializer.pre_deserialize',
-            'method'    => 'onPreDeserialize',
-            'class'     => Slide::class,
-            'format'    => 'json',
-            'priority'  => 0,
+            'event' => 'serializer.pre_deserialize',
+            'method' => 'onPreDeserialize',
+            'class' => Slide::class,
+            'format' => 'json',
+            'priority' => 0,
         ]];
     }
 

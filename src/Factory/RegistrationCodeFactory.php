@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 /*
@@ -14,7 +15,7 @@ use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInt
 
 class RegistrationCodeFactory implements RegistrationCodeFactoryInterface
 {
-    const CODE_LENGTH = 12;
+    public const CODE_LENGTH = 12;
 
     /** @var TokenStorageInterface */
     private $tokenStorage;

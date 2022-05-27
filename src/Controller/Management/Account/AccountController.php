@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 /*
@@ -78,13 +79,13 @@ class AccountController extends AbstractController
             ->getForm();
 
         $form_pw = $this->formFactory->createNamedBuilder('form2name', FormType::class, $user)
-            ->add('old-password', PasswordType::class, ['label'=>'oldPassword', 'mapped' => false])
+            ->add('old-password', PasswordType::class, ['label' => 'oldPassword', 'mapped' => false])
             ->add('plainPassword', RepeatedType::class, [
                 'type' => PasswordType::class,
                 'invalid_message' => 'PasswordsMustMatch',
                 'options' => ['attr' => ['class' => 'password-field']],
                 'required' => true,
-                'first_options'  => ['label' => 'Password'],
+                'first_options' => ['label' => 'Password'],
                 'second_options' => ['label' => 'PasswordAgain'],
             ])
             ->add('save', SubmitType::class, ['label' => 'Save'])
@@ -159,10 +160,10 @@ class AccountController extends AbstractController
         $apiKeys = $rep->findBy(['owner' => $user]);
 
         return $this->render('account/user.html.twig', [
-            'form'                  => $form->createView(),
-            'form_pw'               => $form_pw->createView(),
-            'form_add_api_key'      => $createApiKeyForm->createView(),
-            'api_keys'              => $apiKeys,
+            'form' => $form->createView(),
+            'form_pw' => $form_pw->createView(),
+            'form_add_api_key' => $createApiKeyForm->createView(),
+            'api_keys' => $apiKeys,
         ]);
     }
 

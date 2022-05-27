@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 /*
@@ -42,7 +43,7 @@ class FilePool
         $paths['me'] = $this->getPathForUser($user);
 
         $orgas = $user->getOrganizations();
-        foreach ($orgas as $o) { /* @var User $o */
+        foreach ($orgas as $o) { /** @var User $o */
             $paths['Org: ' . $o->getName()] = $this->getPathForUser($o);
         }
 
