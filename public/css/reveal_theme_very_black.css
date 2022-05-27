@@ -13,7 +13,7 @@ section.has-light-background, section.has-light-background h1, section.has-light
 /*********************************************
  * GLOBAL STYLES
  *********************************************/
-body {
+body, .reveal .slide-background {
     background: #000;
     background-color: #000; }
 
