@@ -1,6 +1,6 @@
 <div
         data-scheduler="true"
-        data-screens="{{ screens|serialize }}"
+        data-screens="{{ screens|jms_serialize }}"
         data-url-get-schedule="{{ path('management-get-schedule') }}"
         data-url-change-scheduled="{{ path('management-change-scheduled') }}"
         data-url-delete-scheduled="{{ path('management-delete-scheduled') }}"
