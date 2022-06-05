@@ -9,7 +9,6 @@ declare(strict_types=1);
 namespace App;
 
 use App\DependencyInjection\Compiler\PresentationTypeCompilerPass;
-use App\Security\Factory\ApiTokenFactory;
 use Symfony\Bundle\FrameworkBundle\Kernel\MicroKernelTrait;
 use Symfony\Component\Config\Loader\LoaderInterface;
 use Symfony\Component\Config\Resource\FileResource;
@@ -89,8 +88,5 @@ class Kernel extends BaseKernel
     {
         parent::build($container);
         $container->addCompilerPass(new PresentationTypeCompilerPass());
-
-        $extension = $container->getExtension('security');
-        $extension->addSecurityListenerFactory(new ApiTokenFactory());
     }
 }
