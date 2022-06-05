@@ -23,6 +23,12 @@
     "behat/transliterator": {
         "version": "v1.3.0"
     },
+    "composer/package-versions-deprecated": {
+        "version": "1.11.99.4"
+    },
+    "cweagans/composer-patches": {
+        "version": "1.7.2"
+    },
     "dasprid/enum": {
         "version": "1.0.3"
     },
@@ -124,6 +130,9 @@
     "egulias/email-validator": {
         "version": "3.1.2"
     },
+    "endroid/installer": {
+        "version": "1.4.0"
+    },
     "endroid/qr-code": {
         "version": "3.9.7"
     },
@@ -166,9 +175,6 @@
     "guzzlehttp/psr7": {
         "version": "1.8.3"
     },
-    "icecave/isolator": {
-        "version": "2.3.0"
-    },
     "jms/metadata": {
         "version": "2.6.1"
     },
@@ -189,9 +195,6 @@
             "config/packages/prod/jms_serializer.yaml"
         ]
     },
-    "khanamiryan/qrcode-detector-decoder": {
-        "version": "1.0.5.2"
-    },
     "knplabs/knp-menu": {
         "version": "v3.3.0"
     },
@@ -201,19 +204,13 @@
     "laminas/laminas-code": {
         "version": "4.5.1"
     },
-    "lcobucci/jwt": {
-        "version": "3.2.5"
-    },
     "monolog/monolog": {
         "version": "2.3.5"
     },
     "mschop/pathogen": {
         "version": "0.6.1"
     },
-    "myclabs/php-enum": {
-        "version": "1.8.3"
-    },
-    "mztx/todo-bundle": {
+    "mschop/simplified-isolator": {
         "version": "v0.1.0"
     },
     "paragonie/constant_time_encoding": {
@@ -249,6 +246,12 @@
     "psr/event-dispatcher": {
         "version": "1.0.0"
     },
+    "psr/http-client": {
+        "version": "1.0.1"
+    },
+    "psr/http-factory": {
+        "version": "1.0.1"
+    },
     "psr/http-message": {
         "version": "1.0.1"
     },
@@ -282,19 +285,6 @@
     },
     "scheb/2fa-google-authenticator": {
         "version": "v6.0.0"
-    },
-    "scheb/two-factor-bundle": {
-        "version": "4.18",
-        "recipe": {
-            "repo": "github.com/symfony/recipes-contrib",
-            "branch": "master",
-            "version": "3.16",
-            "ref": "b5789cd9710e2ee555bf361079b991068a0f640b"
-        },
-        "files": [
-            "config/packages/scheb_two_factor.yaml",
-            "config/routes/scheb_two_factor.yaml"
-        ]
     },
     "sebastian/comparator": {
         "version": "4.0.6"
