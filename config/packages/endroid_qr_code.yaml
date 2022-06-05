@@ -1,8 +1,8 @@
 endroid_qr_code:
     default:
         writer: Endroid\QrCode\Writer\PngWriter
-        size: 300
+        size: 400
         margin: 10
         encoding: 'UTF-8'
-        errorCorrectionLevel: 'low'
+        errorCorrectionLevel: 'high'
         validateResult: false
