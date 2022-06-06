@@ -10,8 +10,8 @@ namespace App\Controller;
 
 use App\Entity\Screen;
 use Doctrine\ORM\EntityManagerInterface;
-use Endroid\QrCode\ErrorCorrectionLevel;
-use Endroid\QrCode\QrCode;
+use Endroid\QrCode\Builder\BuilderRegistryInterface;
+use Endroid\QrCodeBundle\Response\QrCodeResponse;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
@@ -20,18 +20,20 @@ use Symfony\Component\Routing\RouterInterface;
 
 class QrController extends AbstractController
 {
-    /** @var EntityManagerInterface */
-    private $entityManager;
+    private EntityManagerInterface $entityManager;
 
-    /** @var RouterInterface */
-    private $router;
+    private RouterInterface $router;
+
+    private BuilderRegistryInterface $builderRegistry;
 
     public function __construct(
         EntityManagerInterface $entityManager,
-        RouterInterface $router
+        RouterInterface $router,
+        BuilderRegistryInterface $builderRegistry
     ) {
         $this->entityManager = $entityManager;
         $this->router = $router;
+        $this->builderRegistry = $builderRegistry;
     }
 
     public function registerScreenUrlAction(string $connectCode): Response
@@ -41,31 +43,12 @@ class QrController extends AbstractController
             throw new NotFoundHttpException();
         }
 
-        $qrCode = new QrCode();
-        $qrCode->setSize(400);
-        $qrCode->setMargin(10);
+        $builder = $this->builderRegistry->getBuilder('default');
+        $result = $builder
+            ->data($this->router->generate('management-screens', [], UrlGeneratorInterface::ABSOLUTE_URL) .
+                '?connect_code=' . $screen->getConnectCode())
+            ->build();
 
-        $qrCode->setWriterByName('png');
-        $qrCode->setEncoding('UTF-8');
-        $qrCode->setErrorCorrectionLevel(ErrorCorrectionLevel::HIGH());
-        $qrCode->setForegroundColor(['r' => 0, 'g' => 0, 'b' => 0, 'a' => 0]);
-        $qrCode->setBackgroundColor(['r' => 255, 'g' => 255, 'b' => 255, 'a' => 0]);
-        $qrCode->setLogoSize(150, 200);
-        $qrCode->setValidateResult(false);
-
-        $qrCode->setText(
-            $this->router->generate('management-screens', [], UrlGeneratorInterface::ABSOLUTE_URL) .
-            '?connect_code=' . $screen->getConnectCode()
-        );
-
-        $data = $qrCode->writeString();
-        return new Response(
-            $data,
-            200,
-            [
-                'Content-Type' => 'image/png',
-                'Content-Length' => \strlen($data),
-            ]
-        );
+        return new QrCodeResponse($result);
     }
 }
