@@ -8,33 +8,29 @@ declare(strict_types=1);
 
 namespace Tests\Behat\Hook;
 
+use App\Service\MailerTestTransport;
 use Behat\Behat\Context\Context;
 use Doctrine\Common\DataFixtures\Purger\ORMPurger;
 use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Component\Filesystem\Filesystem;
-use Symfony\Component\Finder\Finder;
-use Symfony\Component\HttpFoundation\File\File;
 
 /*
  * Inspired by Sylius ( see https://sylius.com ).
  */
 class PurgeContext implements Context
 {
-    /** @var EntityManagerInterface */
-    private $entityManager;
+    private EntityManagerInterface $entityManager;
+
+    private MailerTestTransport $mailerTestTransport;
 
     /** @var array|string[] */
-    private $poolFiles = [];
-
-    /** @var string */
-    private $mailSpoolPath;
+    private array $poolFiles = [];
 
     public function __construct(
         EntityManagerInterface $entityManager,
-        string $mailSpoolPath
+        MailerTestTransport $mailerTestTransport
     ) {
         $this->entityManager = $entityManager;
-        $this->mailSpoolPath = $mailSpoolPath;
+        $this->mailerTestTransport = $mailerTestTransport;
     }
 
     /**
@@ -85,19 +81,6 @@ class PurgeContext implements Context
 
     public function purgeMailSpool(): void
     {
-        $filesystem = new Filesystem();
-        $finder = $this->getSpooledEmails();
-
-        /** @var File $file */
-        foreach ($finder as $file) {
-            $filesystem->remove($file->getRealPath());
-        }
-    }
-
-    public function getSpooledEmails(): Finder
-    {
-        $finder = new Finder();
-        $finder->files()->in($this->mailSpoolPath);
-        return $finder;
+        $this->mailerTestTransport->reset();
     }
 }
