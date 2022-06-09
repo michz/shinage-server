@@ -6,4 +6,4 @@ fos_user:
   firewall_name: main
   user_class: App\Entity\User
   service:
-    mailer: fos_user.mailer.twig_swift
+    mailer: "App\\Service\\FOSUserMailer"

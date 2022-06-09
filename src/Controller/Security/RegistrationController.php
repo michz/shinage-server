@@ -24,6 +24,9 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormError;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Mailer\MailerInterface;
+use Symfony\Component\Mime\Address;
+use Symfony\Component\Mime\Email;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 class RegistrationController extends AbstractController
@@ -40,7 +43,7 @@ class RegistrationController extends AbstractController
     /** @var TranslatorInterface */
     private $translator;
 
-    /** @var \Swift_Mailer */
+    /** @var MailerInterface */
     private $mailer;
 
     /** @var UserRepositoryInterface */
@@ -57,7 +60,7 @@ class RegistrationController extends AbstractController
         ConfirmationTokenGeneratorInterface $confirmationTokenGenerator,
         UserManagerInterface $userManager,
         TranslatorInterface $translator,
-        \Swift_Mailer $mailer,
+        MailerInterface $mailer,
         UserRepositoryInterface $userRepository,
         string $mailSenderMail,
         string $mailSenderName
@@ -163,23 +166,22 @@ class RegistrationController extends AbstractController
 
     private function sendRegistrationMail(UserInterface $user): void
     {
-        $message = $this->mailer->createMessage()
-            ->setSubject($this->translator->trans('SubjectRegistrationMail'))
-            ->setFrom([$this->mailSenderMail => $this->mailSenderName])
-            ->setTo($user->getEmail())
-            ->setBody(
+        $message = new Email();
+        $message
+            ->subject($this->translator->trans('SubjectRegistrationMail'))
+            ->from(new Address($this->mailSenderMail, $this->mailSenderName))
+            ->to($user->getEmail())
+            ->html(
                 $this->renderView(
                     'mail/html/security/registration.html.twig',
                     ['user' => $user]
-                ),
-                'text/html'
+                )
             )
-            ->addPart(
+            ->text(
                 $this->renderView(
                     'mail/text/security/registration.txt.twig',
                     ['user' => $user]
-                ),
-                'text/plain'
+                )
             );
         $this->mailer->send($message);
     }

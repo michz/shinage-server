@@ -10,11 +10,14 @@ namespace App\Security;
 
 use Scheb\TwoFactorBundle\Mailer\AuthCodeMailerInterface;
 use Scheb\TwoFactorBundle\Model\Email\TwoFactorInterface;
+use Symfony\Component\Mailer\MailerInterface;
+use Symfony\Component\Mime\Address;
+use Symfony\Component\Mime\Email;
 use Twig\Environment;
 
 class TwoFactorCodeMailer implements AuthCodeMailerInterface
 {
-    /** @var \Swift_Mailer */
+    /** @var MailerInterface */
     private $mailer;
 
     /** @var string */
@@ -27,7 +30,7 @@ class TwoFactorCodeMailer implements AuthCodeMailerInterface
     private $engine;
 
     public function __construct(
-        \Swift_Mailer $mailer,
+        MailerInterface $mailer,
         Environment $engine,
         string $senderMail,
         ?string $senderName
@@ -40,25 +43,19 @@ class TwoFactorCodeMailer implements AuthCodeMailerInterface
 
     public function sendAuthCode(TwoFactorInterface $user): void
     {
-        $message = new \Swift_Message();
+        $message = new Email();
         $message
-            ->setTo($user->getEmailAuthRecipient())
-            ->setFrom([$this->senderMail => $this->senderName])
-            ->setSubject('Authentication Code')
-            ->setBody(
-                $this->engine->render(
-                    'mail/html/security/2fa_code.html.twig',
-                    ['code' => $user->getEmailAuthCode()]
-                ),
-                'text/html'
-            )
-            ->addPart(
-                $this->engine->render(
-                    'mail/text/security/2fa_code.txt.twig',
-                    ['code' => $user->getEmailAuthCode()]
-                ),
-                'text/plain'
-            );
+            ->to($user->getEmailAuthRecipient())
+            ->from(new Address($this->senderMail, $this->senderName))
+            ->subject('Authentication Code')
+            ->html($this->engine->render(
+                'mail/html/security/2fa_code.html.twig',
+                ['code' => $user->getEmailAuthCode()]
+            ))
+            ->text($this->engine->render(
+                'mail/text/security/2fa_code.txt.twig',
+                ['code' => $user->getEmailAuthCode()]
+            ));
         $this->mailer->send($message);
     }
 }

@@ -14,6 +14,9 @@ use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Mailer\MailerInterface;
+use Symfony\Component\Mime\Address;
+use Symfony\Component\Mime\Email;
 
 class CheckAndAlarmScreensCommand extends Command
 {
@@ -22,7 +25,7 @@ class CheckAndAlarmScreensCommand extends Command
     /** @var EntityManagerInterface */
     private $entityManager;
 
-    /** @var \Swift_Mailer */
+    /** @var MailerInterface */
     private $mailer;
 
     /** @var string */
@@ -33,7 +36,7 @@ class CheckAndAlarmScreensCommand extends Command
 
     public function __construct(
         EntityManagerInterface $entityManager,
-        \Swift_Mailer $mailer,
+        MailerInterface $mailer,
         string $senderMail,
         string $senderName,
         ?string $name = null
@@ -111,12 +114,16 @@ class CheckAndAlarmScreensCommand extends Command
             'This is longer than your configured threshold of  ' . $screen->getAlarmingConnectionThreshold() .
             ' minutes  ago.' . self::MAIL_EOL;
 
-        $message = new \Swift_Message();
+        $message = new Email();
         $message
-            ->setTo($recipients)
-            ->setFrom([$this->senderMail => $this->senderName])
-            ->setSubject('Shinage Screen Alarm: Last connection too long ago')
-            ->setBody($body);
+            ->from(new Address($this->senderMail, $this->senderName))
+            ->subject('Shinage Screen Alarm: Last connection too long ago')
+            ->text($body);
+
+        foreach ($recipients as $recipient) {
+            $message->addTo(Address::create($recipient));
+        }
+
         $this->mailer->send($message);
     }
 }
