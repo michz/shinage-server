@@ -46,7 +46,7 @@ class TwoFactorCodeMailer implements AuthCodeMailerInterface
         $message = new Email();
         $message
             ->to($user->getEmailAuthRecipient())
-            ->from(new Address($this->senderMail, $this->senderName ?? null))
+            ->from(new Address($this->senderMail, $this->senderName ?? ''))
             ->subject('Authentication Code')
             ->html($this->engine->render(
                 'mail/html/security/2fa_code.html.twig',
