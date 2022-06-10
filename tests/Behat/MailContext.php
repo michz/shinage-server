@@ -8,43 +8,18 @@ declare(strict_types=1);
 
 namespace Tests\Behat;
 
-use Symfony\Component\Filesystem\Filesystem;
-use Symfony\Component\Finder\Finder;
-use Symfony\Component\HttpFoundation\File\File;
+use App\Service\MailerTestTransport;
+use Symfony\Component\Mailer\SentMessage;
 use Webmozart\Assert\Assert;
 
 class MailContext extends \Behat\MinkExtension\Context\RawMinkContext
 {
-    /** @var string */
-    private $spoolDir;
+    private MailerTestTransport $mailerTestTransport;
 
     public function __construct(
-        string $spoolDir
+        MailerTestTransport $mailerTestTransport
     ) {
-        $this->spoolDir = $spoolDir;
-    }
-
-    public function purgeSpool(): void
-    {
-        $filesystem = new Filesystem();
-        $finder = $this->getSpooledEmails();
-
-        /** @var File $file */
-        foreach ($finder as $file) {
-            $filesystem->remove($file->getRealPath());
-        }
-    }
-
-    public function getSpooledEmails(): Finder
-    {
-        $finder = new Finder();
-        $finder->files()->in($this->spoolDir);
-        return $finder;
-    }
-
-    public function getMail(string $file): \Swift_Message
-    {
-        return \unserialize(\file_get_contents($file));
+        $this->mailerTestTransport = $mailerTestTransport;
     }
 
     /**
@@ -52,8 +27,7 @@ class MailContext extends \Behat\MinkExtension\Context\RawMinkContext
      */
     public function iShouldNotSeeAnyNewMails(): void
     {
-        $mails = $this->getSpooledEmails();
-        Assert::count($mails, 0);
+        Assert::eq($this->mailerTestTransport->count(), 0);
     }
 
     /**
@@ -61,14 +35,13 @@ class MailContext extends \Behat\MinkExtension\Context\RawMinkContext
      */
     public function iShouldSeeANewMailTo(string $to): void
     {
-        $mails = $this->getSpooledEmails();
+        $mails = $this->mailerTestTransport->getMails();
+        /** @var SentMessage $mail */
         foreach ($mails as $mail) {
-            /** @var \Swift_Message $mail */
-            $mail = $this->getMail($mail->getRealPath());
-            if (\array_key_exists($to, $mail->getTo()) ||
-                \array_key_exists($to, $mail->getCc()) ||
-                \array_key_exists($to, $mail->getBcc())) {
-                return;
+            foreach ($mail->getEnvelope()->getRecipients() as $recipient) {
+                if ($recipient->getAddress() === $to) {
+                    return;
+                }
             }
         }
 

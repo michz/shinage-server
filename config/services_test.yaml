@@ -12,10 +12,6 @@ services:
             $baseUrl: "http://127.0.0.1:8000"
             # @TODO Make it somehow autoconfigured
 
-    Tests\Behat\Hook\PurgeContext:
-        arguments:
-            $mailSpoolPath: "%swiftmailer.spool.default.file.path%"
-
     Tests\Behat\Setup\FilePoolContext:
         arguments:
             $basePath: '%path_pool%'
@@ -25,9 +21,12 @@ services:
             $session: "@session"
             $firewallName: "main"
 
-    Tests\Behat\MailContext:
-        arguments:
-            $spoolDir: "%swiftmailer.spool.default.file.path%"
+    mailer.transport_factory.testonly:
+        class: App\Factory\MailerTestTransportFactory
+        parent: mailer.transport_factory.abstract
+        tags:
+            - { name: mailer.transport_factory }
+
 
     # If you need to access services in a test, create an alias
     # and then fetch that alias from the container. As a convention,
