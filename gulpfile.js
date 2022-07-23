@@ -1,26 +1,26 @@
-var gulp = require('gulp');
-var concat = require('gulp-concat');
-var babel = require('gulp-babel');
-var uglify = require('gulp-uglify');                // @TODO Replace
-var less = require('gulp-less');
-var clean_css = require('gulp-clean-css');
-var environments = require('gulp-environments');
-var sourcemaps = require('gulp-sourcemaps');
-var eslint = require('gulp-eslint');
-var del = require('del');
+const gulp = require('gulp');
+const concat = require('gulp-concat');
+const babel = require('gulp-babel');
+const uglify = require('gulp-uglify');                // @TODO Replace
+const less = require('gulp-less');
+const clean_css = require('gulp-clean-css');
+const environments = require('gulp-environments');
+const sourcemaps = require('gulp-sourcemaps');
+const eslint = require('gulp-eslint');
+const del = import('del');
 
-var development = environments.development;
-//var production = environments.production;
+const development = environments.development;
+//const production = environments.production;
 
-var distPath = 'public/assets/';
-var elfinderDistPath = 'public/vendor/studio-42/elfinder';
-var fomanticDistPath = 'public/fomantic-ui-css';
-var jqueryUiDistPath = 'public/jquery-ui-dist';
-var revealDistPath = 'public/reveal.js';
-var esLintPaths = [
+const distPath = 'public/assets/';
+const elfinderDistPath = 'public/vendor/studio-42/elfinder';
+const fomanticDistPath = 'public/fomantic-ui-css';
+const jqueryUiDistPath = 'public/jquery-ui-dist';
+const revealDistPath = 'public/reveal.js';
+const esLintPaths = [
     'src/Resources/private/js/include/**',
 ];
-var paths = {
+const paths = {
     libraryJs: [
         'node_modules/jquery/dist/jquery.js',
         'node_modules/jquery-ui-dist/jquery-ui.js',
@@ -59,7 +59,7 @@ var paths = {
         'src/Resources/private/less/**',
     ],
 };
-var playerPaths = {
+const playerPaths = {
     js: [
         'node_modules/jquery/dist/jquery.js',
         'node_modules/reveal.js/dist/reveal.js',
@@ -76,7 +76,7 @@ var playerPaths = {
 };
 
 gulp.task('clean', function() {
-    return del([
+    return del.deleteSync([
         distPath,
         elfinderDistPath,
         fomanticDistPath,
@@ -118,7 +118,7 @@ gulp.task('less', function() {
 });
 
 gulp.task('css', gulp.series('less', function() {
-    var finalPaths = paths.css;
+    const finalPaths = paths.css;
     finalPaths.push(distPath + '/less.css');
     return gulp.src(finalPaths)
         .pipe(development(sourcemaps.init()))
