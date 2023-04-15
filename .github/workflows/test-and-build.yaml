@@ -95,6 +95,11 @@ jobs:
           node --version ;
           yarn --version
 
+      - name: Install php dependencies
+        run: |
+          composer install --prefer-dist --no-progress --no-scripts --no-dev &&
+          composer dump-autoload --classmap-authoritative
+
       - name: Install yarn dependencies
         run: yarn install --frozen-lockfile
 
@@ -102,11 +107,6 @@ jobs:
         run: ./node_modules/.bin/gulp
         env:
           NODE_ENV: production
-
-      - name: Install php dependencies
-        run: |
-          composer install --prefer-dist --no-progress --no-scripts --no-dev &&
-          composer dump-autoload --classmap-authoritative
 
       - name: Write revision file
         run: echo "${GITHUB_REF#refs/*/}" > REVISION
