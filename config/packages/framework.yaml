@@ -15,7 +15,7 @@ framework:
 
   #fragments: true
   php_errors:
-    log: true
+    log: false
 
   cache:
     prefix_seed: mztx/shinage-server
