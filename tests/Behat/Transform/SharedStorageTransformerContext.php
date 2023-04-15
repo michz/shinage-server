@@ -18,10 +18,8 @@ use Tests\Behat\Service\SharedStorageInterface;
  */
 class SharedStorageTransformerContext implements Context
 {
-    /** @var SharedStorageInterface */
-    private $sharedStorage;
+    private SharedStorageInterface $sharedStorage;
 
-    /** @param SharedStorageInterface $sharedStorage */
     public function __construct(SharedStorageInterface $sharedStorage)
     {
         $this->sharedStorage = $sharedStorage;
