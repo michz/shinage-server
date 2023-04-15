@@ -58,7 +58,7 @@ class SlideshowEditorController extends AbstractPresentationEditor
         }
 
         $slidesJson = $request->get('slides');
-        $slides = $this->serializer->deserialize($slidesJson, 'array<' . ImageSlide::class . '>', 'json');
+        $slides = $this->serializer->deserialize($slidesJson, 'list<' . ImageSlide::class . '>', 'json');
 
         /** @var Settings $settings */
         $settings = $this->getCurrentSettingsOrEmpty($presentation);

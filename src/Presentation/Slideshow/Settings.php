@@ -16,7 +16,7 @@ class Settings
     /**
      * @var Slide[]|array
      *
-     * @JMS\Type("array<App\Presentation\Slideshow\Slides\Slide>")
+     * @JMS\Type("list<App\Presentation\Slideshow\Slides\Slide>")
      */
     protected $slides = [];
 
