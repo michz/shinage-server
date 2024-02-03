@@ -10,11 +10,9 @@ namespace App\Presentation;
 
 class GenericPresentationType implements PresentationTypeInterface
 {
-    /** @var string */
-    private $slug;
+    private string $slug;
 
-    /** @var PresentationRendererInterface */
-    private $presentationRenderer;
+    private PresentationRendererInterface $presentationRenderer;
 
     public function __construct(
         string $slug,

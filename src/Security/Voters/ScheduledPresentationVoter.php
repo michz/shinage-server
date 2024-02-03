@@ -15,8 +15,7 @@ use Symfony\Component\Security\Core\Authorization\Voter\Voter;
 
 class ScheduledPresentationVoter extends Voter
 {
-    /** @var AuthorizationCheckerInterface */
-    private $authorizationChecker;
+    private AuthorizationCheckerInterface $authorizationChecker;
 
     public function __construct(
         AuthorizationCheckerInterface $authorizationChecker

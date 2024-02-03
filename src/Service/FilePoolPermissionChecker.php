@@ -13,8 +13,7 @@ use App\Security\PathCheckerInterface;
 
 class FilePoolPermissionChecker implements FilePoolPermissionCheckerInterface
 {
-    /** @var PathCheckerInterface */
-    private $pathChecker;
+    private PathCheckerInterface $pathChecker;
 
     public function __construct(
         PathCheckerInterface $pathChecker

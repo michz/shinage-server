@@ -14,18 +14,12 @@ use Symfony\Component\Routing\RouterInterface;
 
 class FilePoolUrlBuilder
 {
-    /** @var string */
-    protected $basePath = '';
+    protected string $basePath = '';
 
-    /** @var RouterInterface */
-    protected $router;
+    protected RouterInterface $router;
 
-    /** @var PathConcatenatorInterface */
-    private $pathConcatenator;
+    private PathConcatenatorInterface $pathConcatenator;
 
-    /**
-     * FilePoolUrlBuilder constructor.
-     */
     public function __construct(
         string $basePath,
         RouterInterface $router,

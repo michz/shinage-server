@@ -15,8 +15,7 @@ use Webmozart\Assert\Assert;
 
 class HeartbeatContext implements Context
 {
-    /** @var KernelBrowser */
-    private $client;
+    private KernelBrowser $client;
 
     public function __construct(KernelBrowser $client)
     {

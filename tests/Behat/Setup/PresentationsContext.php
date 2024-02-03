@@ -18,11 +18,9 @@ use Tests\Behat\Service\SharedStorage;
 
 class PresentationsContext implements Context
 {
-    /** @var EntityManagerInterface */
-    private $entityManager;
+    private EntityManagerInterface $entityManager;
 
-    /** @var SharedStorage */
-    private $sharedStorage;
+    private SharedStorage $sharedStorage;
 
     public function __construct(
         EntityManagerInterface $entityManager,

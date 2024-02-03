@@ -12,8 +12,7 @@ use App\Entity\PresentationInterface;
 
 class AnyPresentationRenderer implements AnyPresentationRendererInterface
 {
-    /** @var PresentationTypeRegistryInterface */
-    private $presentationTypeRegistry;
+    private PresentationTypeRegistryInterface $presentationTypeRegistry;
 
     public function __construct(
         PresentationTypeRegistryInterface $presentationTypeRegistry

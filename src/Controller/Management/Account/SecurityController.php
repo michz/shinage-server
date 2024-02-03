@@ -25,14 +25,11 @@ class SecurityController extends AbstractController
     public const BACKUP_CODE_COUNT = 12;
     public const BACKUP_CODE_LENGTH = 12;
 
-    /** @var EntityManagerInterface */
-    private $entityManager;
+    private EntityManagerInterface $entityManager;
 
-    /** @var GoogleAuthenticatorInterface */
-    private $googleAuthenticatorTwoFactorProvider;
+    private GoogleAuthenticatorInterface $googleAuthenticatorTwoFactorProvider;
 
-    /** @var LoggedInUserRepositoryInterface */
-    private $loggedInUserRepository;
+    private LoggedInUserRepositoryInterface $loggedInUserRepository;
 
     private RequestStack $requestStack;
 

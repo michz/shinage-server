@@ -22,17 +22,13 @@ class CheckAndAlarmScreensCommand extends Command
 {
     public const MAIL_EOL = "\r\n";
 
-    /** @var EntityManagerInterface */
-    private $entityManager;
+    private EntityManagerInterface $entityManager;
 
-    /** @var MailerInterface */
-    private $mailer;
+    private MailerInterface $mailer;
 
-    /** @var string */
-    private $senderMail;
+    private string $senderMail;
 
-    /** @var string */
-    private $senderName;
+    private string $senderName;
 
     public function __construct(
         EntityManagerInterface $entityManager,

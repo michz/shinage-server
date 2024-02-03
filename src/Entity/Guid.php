@@ -10,8 +10,7 @@ namespace App\Entity;
 
 class Guid
 {
-    /** @var string|null */
-    protected $val = null;
+    protected ?string $val = null;
 
     public function __construct(?string $str = null)
     {

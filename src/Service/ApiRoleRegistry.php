@@ -13,8 +13,8 @@ namespace App\Service;
  */
 class ApiRoleRegistry
 {
-    /** @var string[]|array */
-    protected $roles = [];
+    /** @var string[] */
+    protected array $roles = [];
 
     /**
      * @return string[]|array

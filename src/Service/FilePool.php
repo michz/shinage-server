@@ -15,8 +15,7 @@ use Symfony\Component\Config\Definition\Exception\Exception;
 
 class FilePool
 {
-    /** @var string */
-    protected $base = '';
+    protected string $base = '';
 
     public function __construct(string $basepath)
     {

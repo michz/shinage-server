@@ -15,8 +15,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 abstract class AbstractPresentationEditor extends AbstractController
 {
-    /** @var EntityManagerInterface */
-    private $entityManager;
+    private EntityManagerInterface $entityManager;
 
     /**
      * @required

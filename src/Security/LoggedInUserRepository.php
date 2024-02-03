@@ -15,11 +15,9 @@ use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 class LoggedInUserRepository implements LoggedInUserRepositoryInterface
 {
-    /** @var TokenStorageInterface */
-    private $tokenStorage;
+    private TokenStorageInterface $tokenStorage;
 
-    /** @var LoggerInterface */
-    private $logger;
+    private LoggerInterface $logger;
 
     public function __construct(
         TokenStorageInterface $tokenStorage,

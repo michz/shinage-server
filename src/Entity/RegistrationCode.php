@@ -10,20 +10,15 @@ namespace App\Entity;
 
 class RegistrationCode
 {
-    /** @var string|null */
-    private $code;
+    private ?string $code = null;
 
-    /** @var User|null */
-    private $createdBy;
+    private ?User $createdBy = null;
 
-    /** @var \DateTimeInterface|null */
-    private $createdDate;
+    private ?\DateTimeInterface $createdDate = null;
 
-    /** @var User|null */
-    private $assignOrganization;
+    private ?User $assignOrganization = null;
 
-    /** @var \DateTimeInterface|null */
-    private $validUntil;
+    private ?\DateTimeInterface $validUntil = null;
 
     public function getCode(): ?string
     {

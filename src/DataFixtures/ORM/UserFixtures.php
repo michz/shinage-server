@@ -19,8 +19,7 @@ class UserFixtures extends Fixture
     public const USERNAME_ADMIN = 'admin@shinage.test';
     public const PASSWORD_ADMIN = 'admin';
 
-    /** @var UserManagerInterface */
-    private $userManager;
+    private UserManagerInterface $userManager;
 
     public function __construct(
         UserManagerInterface $userManager

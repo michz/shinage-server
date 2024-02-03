@@ -21,17 +21,13 @@ use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 class FileManager extends AbstractController
 {
-    /** @var LoggedInUserRepositoryInterface */
-    private $loggedInUserRepository;
+    private LoggedInUserRepositoryInterface $loggedInUserRepository;
 
-    /** @var FilePool */
-    private $filePool;
+    private FilePool $filePool;
 
-    /** @var FilePoolPermissionCheckerInterface */
-    private $filePoolPermissionChecker;
+    private FilePoolPermissionCheckerInterface $filePoolPermissionChecker;
 
-    /** @var string */
-    private $poolPath;
+    private string $poolPath;
 
     public function __construct(
         LoggedInUserRepositoryInterface $loggedInUserRepository,

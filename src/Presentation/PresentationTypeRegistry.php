@@ -12,8 +12,8 @@ use App\Exceptions\PresentationTypeNotFoundException;
 
 class PresentationTypeRegistry implements PresentationTypeRegistryInterface
 {
-    /** @var string[]|array */
-    private $types = [];
+    /** @var string[] */
+    private array $types = [];
 
     public function addPresentationType(PresentationTypeInterface $type): void
     {

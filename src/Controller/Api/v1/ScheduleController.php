@@ -27,17 +27,13 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class ScheduleController extends AbstractController
 {
-    /** @var EntityManagerInterface */
-    private $entityManager;
+    private EntityManagerInterface $entityManager;
 
-    /** @var SerializerInterface */
-    private $serializer;
+    private SerializerInterface $serializer;
 
-    /** @var ScheduleCollisionHandlerInterface */
-    private $collisionHandler;
+    private ScheduleCollisionHandlerInterface $collisionHandler;
 
-    /** @var LoggedInUserRepository */
-    private $loggedInUserRepository;
+    private LoggedInUserRepository $loggedInUserRepository;
 
     public function __construct(
         EntityManagerInterface $entityManager,

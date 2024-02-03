@@ -22,17 +22,13 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class FilesController extends AbstractController
 {
-    /** @var FilePoolPermissionCheckerInterface */
-    private $filePoolPermissionChecker;
+    private FilePoolPermissionCheckerInterface $filePoolPermissionChecker;
 
-    /** @var VirtualPathResolverInterface */
-    private $virtualPathResolver;
+    private VirtualPathResolverInterface $virtualPathResolver;
 
-    /** @var LoggedInUserRepositoryInterface */
-    private $loggedInUserRepository;
+    private LoggedInUserRepositoryInterface $loggedInUserRepository;
 
-    /** @var string */
-    private $filePoolBasePath;
+    private string $filePoolBasePath;
 
     // @TODO Perhaps use flysystem?
 

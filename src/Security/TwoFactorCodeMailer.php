@@ -17,17 +17,13 @@ use Twig\Environment;
 
 class TwoFactorCodeMailer implements AuthCodeMailerInterface
 {
-    /** @var MailerInterface */
-    private $mailer;
+    private MailerInterface $mailer;
 
-    /** @var string */
-    private $senderMail;
+    private string $senderMail;
 
-    /** @var string|null */
-    private $senderName;
+    private ?string $senderName;
 
-    /** @var Environment */
-    private $engine;
+    private Environment $engine;
 
     public function __construct(
         MailerInterface $mailer,

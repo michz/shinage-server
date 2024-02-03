@@ -13,11 +13,9 @@ abstract class PoolItem
     public const TYPE_DIRECTORY = 'dir';
     public const TYPE_FILE = 'file';
 
-    /** @var string */
-    protected $name = '';
+    protected string $name = '';
 
-    /** @var string */
-    protected $fullpath = '';
+    protected string $fullpath = '';
 
     public function __construct(string $name, string $path)
     {

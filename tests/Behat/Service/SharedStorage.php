@@ -14,11 +14,10 @@ namespace Tests\Behat\Service;
  */
 class SharedStorage implements SharedStorageInterface
 {
-    /** @var array|mixed[] */
-    private $clipboard = [];
+    /** @var mixed[] */
+    private array $clipboard = [];
 
-    /** @var string|null */
-    private $latestKey;
+    private ?string $latestKey = null;
 
     /**
      * {@inheritdoc}

@@ -18,11 +18,9 @@ use Symfony\Component\HttpFoundation\Response;
 
 class SlideshowEditorController extends AbstractPresentationEditor
 {
-    /** @var EntityManagerInterface */
-    private $entityManager;
+    private EntityManagerInterface $entityManager;
 
-    /** @var SerializerInterface */
-    private $serializer;
+    private SerializerInterface $serializer;
 
     public function __construct(
         EntityManagerInterface $entityManager,

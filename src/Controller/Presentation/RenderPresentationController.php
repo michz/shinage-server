@@ -17,11 +17,9 @@ use Symfony\Component\HttpFoundation\Response;
 
 class RenderPresentationController extends AbstractController
 {
-    /** @var EntityManagerInterface */
-    private $entityManager;
+    private EntityManagerInterface $entityManager;
 
-    /** @var AnyPresentationRendererInterface */
-    private $anyPresentationRenderer;
+    private AnyPresentationRendererInterface $anyPresentationRenderer;
 
     public function __construct(
         EntityManagerInterface $entityManager,

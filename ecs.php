@@ -244,9 +244,6 @@ return static function (ECSConfig $ecsConfig): void {
     $ecsConfig->ruleWithConfiguration(NativeFunctionInvocationFixer::class, ['include' => ['@all'], 'scope' => 'all']);
 
     $ecsConfig->skip([
-        'SlevomatCodingStandard\Sniffs\TypeHints\TypeHintDeclarationSniff.UselessDocComment' => [
-            'tests/*',
-        ],
         'PHP_CodeSniffer\Standards\Squiz\Sniffs\WhiteSpace\ControlStructureSpacingSniff.NoLineAfterClose' => [
             './*',
         ],

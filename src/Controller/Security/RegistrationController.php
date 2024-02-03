@@ -33,29 +33,21 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 
 class RegistrationController extends AbstractController
 {
-    /** @var EntityManagerInterface */
-    private $entityManager;
+    private EntityManagerInterface $entityManager;
 
-    /** @var ConfirmationTokenGeneratorInterface */
-    private $confirmationTokenGenerator;
+    private ConfirmationTokenGeneratorInterface $confirmationTokenGenerator;
 
-    /** @var UserManagerInterface */
-    private $userManager;
+    private UserManagerInterface $userManager;
 
-    /** @var TranslatorInterface */
-    private $translator;
+    private TranslatorInterface $translator;
 
-    /** @var MailerInterface */
-    private $mailer;
+    private MailerInterface $mailer;
 
-    /** @var UserRepositoryInterface */
-    private $userRepository;
+    private UserRepositoryInterface $userRepository;
 
-    /** @var string */
-    private $mailSenderMail;
+    private string $mailSenderMail;
 
-    /** @var string */
-    private $mailSenderName;
+    private string $mailSenderName;
 
     public function __construct(
         EntityManagerInterface $entityManager,

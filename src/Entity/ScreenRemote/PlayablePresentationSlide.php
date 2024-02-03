@@ -10,18 +10,13 @@ namespace App\Entity\ScreenRemote;
 
 class PlayablePresentationSlide
 {
-    /** @var string */
-    public $type = 'Image';
+    public string $type = 'Image';
 
-    /** @var string */
-    public $title = '';
+    public string $title = '';
 
-    /** @var int */
-    public $duration = 5000;
+    public int $duration = 5000;
 
-    /** @var string */
-    public $transition = '';
+    public string $transition = '';
 
-    /** @var string */
-    public $src = '';
+    public string $src = '';
 }

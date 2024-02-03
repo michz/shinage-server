@@ -21,11 +21,9 @@ use Symfony\Component\HttpFoundation\Response;
 
 class RevealJsEditorController extends AbstractPresentationEditor
 {
-    /** @var EntityManagerInterface */
-    private $entityManager;
+    private EntityManagerInterface $entityManager;
 
-    /** @var SerializerInterface */
-    private $serializer;
+    private SerializerInterface $serializer;
 
     private FormFactoryInterface $formFactory;
 

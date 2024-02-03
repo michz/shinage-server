@@ -17,11 +17,9 @@ class RegistrationCodeFactory implements RegistrationCodeFactoryInterface
 {
     public const CODE_LENGTH = 12;
 
-    /** @var TokenStorageInterface */
-    private $tokenStorage;
+    private TokenStorageInterface $tokenStorage;
 
-    /** @var GenericCodeGeneratorInterface */
-    private $genericCodeGenerator;
+    private GenericCodeGeneratorInterface $genericCodeGenerator;
 
     public function __construct(
         TokenStorageInterface $tokenStorage,

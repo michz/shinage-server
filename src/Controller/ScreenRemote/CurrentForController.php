@@ -21,20 +21,15 @@ use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 
 class CurrentForController extends AbstractController
 {
-    /** @var SchedulerService */
-    private $scheduler;
+    private SchedulerService $scheduler;
 
-    /** @var UrlBuilderInterface */
-    private $urlBuilder;
+    private UrlBuilderInterface $urlBuilder;
 
-    /** @var ConnectCodeGeneratorInterface */
-    private $connectCodeGenerator;
+    private ConnectCodeGeneratorInterface $connectCodeGenerator;
 
-    /** @var EntityManagerInterface */
-    private $entityManager;
+    private EntityManagerInterface $entityManager;
 
-    /** @var ScreenAssociation */
-    private $screenAssociationHelper;
+    private ScreenAssociation $screenAssociationHelper;
 
     public function __construct(
         SchedulerService $scheduler,

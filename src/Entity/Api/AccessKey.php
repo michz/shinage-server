@@ -12,23 +12,18 @@ use App\Entity\User;
 
 class AccessKey
 {
-    /** @var null|int */
-    protected $id;
+    protected ?int $id;
 
-    /** @var string */
-    protected $code = '';
+    protected string $code = '';
 
-    /** @var string */
-    protected $name = '';
+    protected string $name = '';
 
-    /** @var null|\DateTime */
-    protected $last_use;
+    protected ?\DateTime $last_use;
 
     /** @var string[]|array */
-    protected $roles = [];
+    protected array $roles = [];
 
-    /** @var null|User */
-    protected $owner;
+    protected ?User $owner;
 
     /**
      * Generates a new code and sets it.

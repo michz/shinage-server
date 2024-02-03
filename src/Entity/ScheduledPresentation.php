@@ -10,20 +10,15 @@ namespace App\Entity;
 
 class ScheduledPresentation
 {
-    /** @var int */
-    private $id;
+    private int $id;
 
-    /** @var Screen */
-    private $screen;
+    private Screen $screen;
 
-    /** @var PresentationInterface */
-    private $presentation;
+    private PresentationInterface $presentation;
 
-    /** @var \DateTime */
-    private $scheduled_start;
+    private \DateTime $scheduled_start;
 
-    /** @var \DateTime */
-    private $scheduled_end;
+    private \DateTime $scheduled_end;
 
     public function getId(): int
     {

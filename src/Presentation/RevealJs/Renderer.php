@@ -18,14 +18,11 @@ class Renderer implements PresentationRendererInterface
 {
     public const POOL_VIRTUAL_BASE_URL = 'pool://';
 
-    /** @var SettingsReaderInterface */
-    private $settingsReader;
+    private SettingsReaderInterface $settingsReader;
 
-    /** @var Packages */
-    private $assetPackages;
+    private Packages $assetPackages;
 
-    /** @var string */
-    private $baseUrl;
+    private string $baseUrl;
 
     public function __construct(
         SettingsReaderInterface $settingsReader,

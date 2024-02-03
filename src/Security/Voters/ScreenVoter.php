@@ -15,8 +15,7 @@ use Symfony\Component\Security\Core\Authorization\Voter\Voter;
 
 class ScreenVoter extends Voter
 {
-    /** @var ScreenAssociation */
-    private $screenAssociation;
+    private ScreenAssociation $screenAssociation;
 
     public function __construct(ScreenAssociation $screenAssociation)
     {

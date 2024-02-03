@@ -18,8 +18,7 @@ use Symfony\Component\Security\Core\Exception\AccessDeniedException as SecurityC
 
 class KernelExceptionListener
 {
-    /** @var string */
-    private $environment;
+    private string $environment;
 
     public function __construct(
         string $environment

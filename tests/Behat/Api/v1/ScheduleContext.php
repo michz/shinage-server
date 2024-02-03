@@ -18,14 +18,11 @@ use Webmozart\Assert\Assert;
 
 class ScheduleContext implements Context
 {
-    /** @var ApiV1ClientContext */
-    private $apiV1ClientContext;
+    private ApiV1ClientContext $apiV1ClientContext;
 
-    /** @var \stdClass */
-    private $rememberedItem;
+    private \stdClass $rememberedItem;
 
-    /** @var EntityManagerInterface */
-    private $entityManager;
+    private EntityManagerInterface $entityManager;
 
     public function __construct(
         ApiV1ClientContext $apiV1ClientContext,

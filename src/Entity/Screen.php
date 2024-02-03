@@ -10,44 +10,31 @@ namespace App\Entity;
 
 class Screen
 {
-    /** @var string */
-    protected $guid;
+    protected string $guid;
 
-    /** @var string */
-    protected $name = 'unbenannte Anzeige';
+    protected string $name = 'unbenannte Anzeige';
 
-    /** @var string */
-    protected $location = '';
+    protected string $location = '';
 
-    /** @var string */
-    protected $notes = '';
+    protected string $notes = '';
 
-    /** @var string */
-    protected $admin_c = '';
+    protected string $admin_c = '';
 
-    /** @var \DateTime */
-    protected $first_connect;
+    protected \DateTime $first_connect;
 
-    /** @var \DateTime */
-    protected $last_connect;
+    protected \DateTime $last_connect;
 
-    /** @var string */
-    protected $connect_code = '';
+    protected string $connect_code = '';
 
-    /** @var PresentationInterface */
-    protected $default_presentation;
+    protected ?PresentationInterface $default_presentation = null;
 
-    /** @var PresentationInterface */
-    protected $current_presentation = null;
+    protected ?PresentationInterface $current_presentation = null;
 
-    /** @var bool */
-    protected $alarming_enabled = false;
+    protected bool $alarming_enabled = false;
 
-    /** @var string */
-    protected $alarming_mail_targets = '';
+    protected string $alarming_mail_targets = '';
 
-    /** @var int */
-    protected $alarming_connection_threshold = 30;
+    protected int $alarming_connection_threshold = 30;
 
     public function setGuid(string $guid): self
     {
