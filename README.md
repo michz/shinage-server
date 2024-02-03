@@ -95,10 +95,24 @@ Development
 Testing
 -------
 
-To run behat, start the development webserver:
+To run phpspec, do:
 
 ```bash
-symfony local:server:start --no-tls --port=8000
+./vendor/bin/phpspec run --format=dot --no-code-generation
+```
+
+To run behat, first initialize the testing database:
+
+```bash
+php bin/console doctrine:database:create --env=test
+php bin/console doctrine:schema:update --force --env=test
+php bin/console doctrine:fixtures:load --env=test
+```
+
+Then start the development webserver:
+
+```bash
+APP_ENV=test symfony local:server:start --no-tls --port=8000
 ```
 
 And in a separate shell execute behat:
@@ -106,8 +120,6 @@ And in a separate shell execute behat:
 ```bash
 APP_ENV=test vendor/bin/behat --format=progress --strict -n --tags="~@todo"
 ```
-
-
 
 
 Containerize me
