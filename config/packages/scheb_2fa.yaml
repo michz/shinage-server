@@ -20,3 +20,4 @@ scheb_two_factor:
         server_name: Shinage
         issuer: Shinage
         template: security/2fa_form.html.twig
+        leeway: 29

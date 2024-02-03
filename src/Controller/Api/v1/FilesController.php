@@ -126,10 +126,10 @@ class FilesController extends AbstractController
             \mkdir($folder, 0777, true);
         }
 
-        $body = $request->getContent();
+        $body = $request->getContent(false);
         \file_put_contents($fullPath, $body);
 
-        return Response::create('', Response::HTTP_NO_CONTENT);
+        return new Response('', Response::HTTP_NO_CONTENT);
     }
 
     public function deleteAction(string $path): Response
@@ -152,7 +152,7 @@ class FilesController extends AbstractController
             throw new NotFoundHttpException('File could not be deleted. Not found or not a regular file.');
         }
 
-        return Response::create('', Response::HTTP_NO_CONTENT);
+        return new Response('', Response::HTTP_NO_CONTENT);
     }
 
     private function checkPathPermissions(string $path): void

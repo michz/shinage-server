@@ -8,33 +8,10 @@ declare(strict_types=1);
 
 namespace Tests\Behat\Gui;
 
-use Behat\Mink\Driver\BrowserKitDriver;
-use Behat\Mink\Exception\UnsupportedDriverActionException;
 use Behat\MinkExtension\Context\RawMinkContext;
-use FOS\UserBundle\Model\UserManagerInterface;
-use Symfony\Component\BrowserKit\Cookie;
-use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 
 class LoginContext extends RawMinkContext
 {
-    /** @var UserManagerInterface */
-    private $userManager;
-
-    /** @var string */
-    private $firewallName;
-
-    private $session;
-
-    public function __construct(
-        UserManagerInterface $userManager,
-        $session,
-        string $firewallName
-    ) {
-        $this->userManager = $userManager;
-        $this->session = $session;
-        $this->firewallName = $firewallName;
-    }
-
     /**
      * @Given /^I am on page "([^"]*)"$/
      *
@@ -114,26 +91,13 @@ class LoginContext extends RawMinkContext
     }
 
     /**
-     * @Given /^I am logged in as user "([^"]*)"$/
+     * @Given /^I am logged in as user "([^"]*)" with password "([^"]*)"$/
      */
-    public function iAmLoggedInAsUser(string $username): void
+    public function iAmLoggedInAsUser(string $username, string $password): void
     {
-        $driver = $this->getSession()->getDriver();
-        if (!($driver instanceof BrowserKitDriver)) {
-            throw new UnsupportedDriverActionException('This step is only supported by the BrowserKitDriver', $driver);
-        }
-
-        $client = $driver->getClient();
-        $client->getCookieJar()->set(new Cookie(\session_name(), '1'));
-
-        $firewall = $this->firewallName;
-        $user = $this->userManager->findUserBy(['username' => $username]);
-        /** @var \FOS\UserBundle\Model\UserInterface $user */
-        $token = new UsernamePasswordToken($user, null, $firewall, $user->getRoles());
-        $this->session->set('_security_' . $firewall, \serialize($token));
-        $this->session->save();
-
-        $cookie = new Cookie($this->session->getName(), $this->session->getId());
-        $client->getCookieJar()->set($cookie);
+        $this->iGoToURL('login');
+        $this->iFillTheFieldWith('_username', $username);
+        $this->iFillTheFieldWith('_password', $password);
+        $this->iSubmitTheLoginForm('_submit');
     }
 }

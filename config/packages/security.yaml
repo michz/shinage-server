@@ -37,13 +37,13 @@ security:
       access_denied_handler: App\Component\Event\AccessDeniedHandler
 
   access_control:
-    - { path: ^/login$, role: IS_AUTHENTICATED_ANONYMOUSLY }
-    - { path: ^/register, role: IS_AUTHENTICATED_ANONYMOUSLY }
-    #- { path: ^/resetting, role: IS_AUTHENTICATED_ANONYMOUSLY }
+    - { path: ^/login$, role: PUBLIC_ACCESS }
+    - { path: ^/register, role: PUBLIC_ACCESS }
+    #- { path: ^/resetting, role: PUBLIC_ACCESS }
     - { path: ^/adm/modify_screen, role: ROLE_USER }
     - { path: ^/adm, role: ROLE_ADMIN }
     #- { path: ^/2fa, role: IS_AUTHENTICATED_2FA_IN_PROGRESS }
     - { path: ^/manage/2fa, role: IS_AUTHENTICATED_2FA_IN_PROGRESS }
     - { path: ^/logout$, role: IS_AUTHENTICATED_2FA_IN_PROGRESS }
     - { path: ^/manage, role: ROLE_USER }
-    - { path: ^/pool, role: IS_AUTHENTICATED_ANONYMOUSLY, methods: [GET] }
+    - { path: ^/pool, role: PUBLIC_ACCESS, methods: [GET] }

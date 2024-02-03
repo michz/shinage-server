@@ -7,7 +7,7 @@ Feature: In order to login more securely
     Given There is a user with username "test@test.test" and password "testPassword"
     And The user "test@test.test" has the roles "ROLE_SUPER_ADMIN"
     And The user "test@test.test" has two factor authentication disabled at all
-    And I am logged in as user "test@test.test"
+    And I am logged in as user "test@test.test" with password "testPassword"
 
   Scenario: I can see that all two factor authentication modes are disabled
     Given I am on page "manage/account/security"

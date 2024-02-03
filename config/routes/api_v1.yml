@@ -1,68 +1,68 @@
 api-v1-files-get:
   path: /files/{path}
-  controller: App\Controller\Api\v1\FilesController:getAction
+  controller: App\Controller\Api\v1\FilesController::getAction
   methods: [ GET, HEAD ]
   requirements:
     path: ".+"
 
 api-v1-files-put:
   path: /files/{path}
-  controller: App\Controller\Api\v1\FilesController:putAction
+  controller: App\Controller\Api\v1\FilesController::putAction
   methods: [ PUT ]
   requirements:
     path: ".+"
 
 api-v1-files-delete:
   path: /files/{path}
-  controller: App\Controller\Api\v1\FilesController:deleteAction
+  controller: App\Controller\Api\v1\FilesController::deleteAction
   methods: [ DELETE ]
   requirements:
     path: ".+"
 
 api-v1-presentations-list:
   path: /presentations
-  controller: App\Controller\Api\v1\PresentationsController:listAction
+  controller: App\Controller\Api\v1\PresentationsController::listAction
   methods: [ GET ]
 
 api-v1-presentations-get:
   path: /presentations/{id}
-  controller: App\Controller\Api\v1\PresentationsController:getAction
+  controller: App\Controller\Api\v1\PresentationsController::getAction
   methods: [ GET ]
   requirements:
     id: "\\d+"
 
 api-v1-presentations-put:
   path: /presentations
-  controller: App\Controller\Api\v1\PresentationsController:putAction
+  controller: App\Controller\Api\v1\PresentationsController::putAction
   methods: [ PUT ]
 
 api-v1-presentations-delete:
   path: /presentations/{id}
-  controller: App\Controller\Api\v1\PresentationsController:deleteAction
+  controller: App\Controller\Api\v1\PresentationsController::deleteAction
   methods: [ DELETE ]
   requirements:
     id: "\\d+"
 
 api-v1-schedule-list:
   path: /schedule
-  controller: App\Controller\Api\v1\ScheduleController:listAction
+  controller: App\Controller\Api\v1\ScheduleController::listAction
   methods: [ GET ]
 
 api-v1-schedule-get:
   path: /schedule/{id}
-  controller: App\Controller\Api\v1\ScheduleController:getAction
+  controller: App\Controller\Api\v1\ScheduleController::getAction
   methods: [ GET ]
   requirements:
     id: "\\d+"
 
 api-v1-schedule-put:
   path: /schedule
-  controller: App\Controller\Api\v1\ScheduleController:putAction
+  controller: App\Controller\Api\v1\ScheduleController::putAction
   methods: [ PUT ]
 
 api-v1-schedule-delete:
   path: /schedule/{id}
-  controller: App\Controller\Api\v1\ScheduleController:deleteAction
+  controller: App\Controller\Api\v1\ScheduleController::deleteAction
   methods: [ DELETE ]
   requirements:
     id: "\\d+"
