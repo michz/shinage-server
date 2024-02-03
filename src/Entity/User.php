@@ -64,7 +64,7 @@ class User extends BaseUser implements TwoFactorEmailInterface, TwoFactorGoogleI
     /**
      * {@inheritdoc}
      */
-    public function setEmail($email)
+    public function setEmail($email): BaseUser|User|\FOS\UserBundle\Model\UserInterface
     {
         parent::setUsername($email);
         parent::setUsernameCanonical($email);
