@@ -27,3 +27,9 @@ presentation-editor-reveal_js:
   controller: App\Controller\PresentationEditors\RevealJsEditorController::editAction
   requirements:
     presentationId: "[0-9]+"
+
+presentation-editor-splash:
+  path: /presentations/editor/splash/{presentationId}
+  controller: App\Controller\PresentationEditors\SplashEditorController::editAction
+  requirements:
+    presentationId: "[0-9]+"

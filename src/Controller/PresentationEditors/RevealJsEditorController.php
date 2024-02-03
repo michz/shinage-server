@@ -15,6 +15,7 @@ use JMS\Serializer\SerializerInterface;
 use Symfony\Component\Form\Extension\Core\Type\FormType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
+use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -26,12 +27,16 @@ class RevealJsEditorController extends AbstractPresentationEditor
     /** @var SerializerInterface */
     private $serializer;
 
+    private FormFactoryInterface $formFactory;
+
     public function __construct(
         EntityManagerInterface $entityManager,
-        SerializerInterface $serializer
+        SerializerInterface $serializer,
+        FormFactoryInterface $formFactory
     ) {
         $this->entityManager = $entityManager;
         $this->serializer = $serializer;
+        $this->formFactory = $formFactory;
     }
 
     public function editAction(Request $request, int $presentationId): Response
@@ -47,7 +52,7 @@ class RevealJsEditorController extends AbstractPresentationEditor
             $settings = new Settings();
         }
 
-        $form = $this->get('form.factory')
+        $form = $this->formFactory
             ->createNamedBuilder(
                 'form_presentation',
                 FormType::class,
