@@ -199,7 +199,6 @@ class AccountController extends AbstractController
                         'Der gewählte Name oder die E-Mail-Adresse wird bereits verwendet. ' .
                         'Bitte probiere es mit einer anderen Kombination.'
                     );
-                    $this->getDoctrine()->resetManager();
                 }
             } else {
                 $this->addFlash('error', 'Die Organisation konnte leider nicht angelegt werden.');
