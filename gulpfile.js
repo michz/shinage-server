@@ -193,4 +193,3 @@ gulp.task('watch', function() {
   gulp.watch(paths.css, gulp.parallel(['css']));
   gulp.watch(paths.lessSrc, gulp.parallel(['less', 'css']));
 });
-

@@ -57,7 +57,12 @@ class RevealJsEditorController extends AbstractPresentationEditor
                 'form_presentation',
                 FormType::class,
                 $settings,
-                ['translation_domain' => 'RevealJsPresentationEditor']
+                [
+                    'translation_domain' => 'RevealJsPresentationEditor',
+                    'attr' => [
+                        'novalidate' => 'novalidate',
+                    ],
+                ]
             )
             ->add(
                 'content',
