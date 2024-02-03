@@ -18,7 +18,7 @@ class PresentationVoter extends Voter
     /**
      * {@inheritdoc}
      */
-    protected function supports($attribute, $subject)
+    protected function supports($attribute, $subject): bool
     {
         return $subject instanceof Presentation;
     }
@@ -28,7 +28,7 @@ class PresentationVoter extends Voter
      *
      * {@inheritdoc}
      */
-    protected function voteOnAttribute($attribute, $subject, TokenInterface $token)
+    protected function voteOnAttribute($attribute, $subject, TokenInterface $token): bool
     {
         $owner = $subject->getOwner();
         /** @var User $user */

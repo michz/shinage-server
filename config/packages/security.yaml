@@ -1,7 +1,7 @@
 security:
   enable_authenticator_manager: true
 
-  encoders:
+  password_hashers:
     FOS\UserBundle\Model\UserInterface: bcrypt
 
   role_hierarchy:

@@ -26,7 +26,7 @@ class ScreenVoter extends Voter
     /**
      * {@inheritdoc}
      */
-    protected function supports($attribute, $subject)
+    protected function supports($attribute, $subject): bool
     {
         return $subject instanceof Screen;
     }
@@ -34,7 +34,7 @@ class ScreenVoter extends Voter
     /**
      * {@inheritdoc}
      */
-    protected function voteOnAttribute($attribute, $subject, TokenInterface $token)
+    protected function voteOnAttribute($attribute, $subject, TokenInterface $token): bool
     {
         return $this->screenAssociation->isUserAllowedTo($subject, $token->getUser(), $attribute);
     }

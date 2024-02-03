@@ -16,8 +16,8 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 
 class SecurityController extends AbstractController
@@ -31,22 +31,21 @@ class SecurityController extends AbstractController
     /** @var GoogleAuthenticatorInterface */
     private $googleAuthenticatorTwoFactorProvider;
 
-    /** @var SessionInterface */
-    private $session;
-
     /** @var LoggedInUserRepositoryInterface */
     private $loggedInUserRepository;
+
+    private RequestStack $requestStack;
 
     public function __construct(
         EntityManagerInterface $entityManager,
         GoogleAuthenticatorInterface $googleAuthenticatorTwoFactorProvider,
-        SessionInterface $session,
-        LoggedInUserRepositoryInterface $loggedInUserRepository
+        LoggedInUserRepositoryInterface $loggedInUserRepository,
+        RequestStack $requestStack
     ) {
         $this->entityManager = $entityManager;
         $this->googleAuthenticatorTwoFactorProvider = $googleAuthenticatorTwoFactorProvider;
-        $this->session = $session;
         $this->loggedInUserRepository = $loggedInUserRepository;
+        $this->requestStack = $requestStack;
     }
 
     public function indexAction(): Response
@@ -86,7 +85,7 @@ class SecurityController extends AbstractController
         // Reset to old secret
         $this->entityManager->refresh($user);
 
-        $this->session->set('newTotpSecret', $newSecret);
+        $this->requestStack->getSession()->set('newTotpSecret', $newSecret);
 
         return $this->render('account/2fa_totp_init.html.twig', [
             'qrData' => $qrData,
@@ -98,7 +97,7 @@ class SecurityController extends AbstractController
     {
         $user = $this->loggedInUserRepository->getLoggedInUserOrDenyAccess();
 
-        $newSecret = $this->session->get('newTotpSecret');
+        $newSecret = $this->requestStack->getSession()->get('newTotpSecret');
         if (null === $newSecret) {
             return new Response('no-secret', 500);
         }
