@@ -21,17 +21,13 @@ class User extends BaseUser implements TwoFactorEmailInterface, TwoFactorGoogleI
     /** @var int */
     protected $id;
 
-    /** @var string */
-    protected $userType = UserType::USER_TYPE_USER;
+    protected string $userType = UserType::USER_TYPE_USER;
 
-    /** @var string */
-    protected $name = '';
+    protected string $name = '';
 
-    /** @var Collection */
-    private $organizations;
+    private Collection|ArrayCollection $organizations;
 
-    /** @var Collection */
-    private $users;
+    private Collection|ArrayCollection $users;
 
     /** @var string */
     protected $password;
@@ -39,20 +35,15 @@ class User extends BaseUser implements TwoFactorEmailInterface, TwoFactorGoogleI
     /** @var string */
     protected $plainPassword;
 
-    /** @var bool */
-    private $emailAuthEnabled = false;
+    private bool $emailAuthEnabled = false;
 
-    /** @var null|string */
-    private $emailAuthCode;
+    private ?string $emailAuthCode;
 
-    /** @var null|string[] */
-    private $backupCodes;
+    private ?array $backupCodes;
 
-    /** @var null|string */
-    private $totpSecret;
+    private ?string $totpSecret;
 
-    /** @var bool */
-    private $orgaAssignAutomaticallyByMailHost = false;
+    private bool $orgaAssignAutomaticallyByMailHost = false;
 
     public function __construct()
     {
@@ -64,7 +55,7 @@ class User extends BaseUser implements TwoFactorEmailInterface, TwoFactorGoogleI
     /**
      * {@inheritdoc}
      */
-    public function setEmail($email)
+    public function setEmail($email): BaseUser|User|\FOS\UserBundle\Model\UserInterface
     {
         parent::setUsername($email);
         parent::setUsernameCanonical($email);

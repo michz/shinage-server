@@ -17,14 +17,11 @@ use Symfony\Component\HttpFoundation\Response;
 
 class ScreenScheduleController extends AbstractController
 {
-    /** @var EntityManagerInterface */
-    private $entityManager;
+    private EntityManagerInterface $entityManager;
 
-    /** @var PresentationsRepository */
-    private $presentationsRepository;
+    private PresentationsRepository $presentationsRepository;
 
-    /** @var LoggedInUserRepositoryInterface */
-    private $loggedInUserRepository;
+    private LoggedInUserRepositoryInterface $loggedInUserRepository;
 
     public function __construct(
         EntityManagerInterface $entityManager,

@@ -17,11 +17,9 @@ use FOS\UserBundle\Model\UserManagerInterface;
 
 class UserContext implements Context
 {
-    /** @var EntityManagerInterface */
-    private $entityManager;
+    private EntityManagerInterface $entityManager;
 
-    /** @var UserManagerInterface */
-    private $userManager;
+    private UserManagerInterface $userManager;
 
     public function __construct(
         EntityManagerInterface $entityManager,

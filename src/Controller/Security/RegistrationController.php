@@ -23,7 +23,9 @@ use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormError;
 use Symfony\Component\Form\FormInterface;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Mime\Address;
 use Symfony\Component\Mime\Email;
@@ -31,29 +33,21 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 
 class RegistrationController extends AbstractController
 {
-    /** @var EntityManagerInterface */
-    private $entityManager;
+    private EntityManagerInterface $entityManager;
 
-    /** @var ConfirmationTokenGeneratorInterface */
-    private $confirmationTokenGenerator;
+    private ConfirmationTokenGeneratorInterface $confirmationTokenGenerator;
 
-    /** @var UserManagerInterface */
-    private $userManager;
+    private UserManagerInterface $userManager;
 
-    /** @var TranslatorInterface */
-    private $translator;
+    private TranslatorInterface $translator;
 
-    /** @var MailerInterface */
-    private $mailer;
+    private MailerInterface $mailer;
 
-    /** @var UserRepositoryInterface */
-    private $userRepository;
+    private UserRepositoryInterface $userRepository;
 
-    /** @var string */
-    private $mailSenderMail;
+    private string $mailSenderMail;
 
-    /** @var string */
-    private $mailSenderName;
+    private string $mailSenderName;
 
     public function __construct(
         EntityManagerInterface $entityManager,
@@ -75,7 +69,7 @@ class RegistrationController extends AbstractController
         $this->mailSenderName = $mailSenderName;
     }
 
-    public function indexAction(Request $request): \Symfony\Component\HttpFoundation\Response
+    public function indexAction(Request $request): Response
     {
         $user = new User();
 
@@ -143,7 +137,7 @@ class RegistrationController extends AbstractController
         ]);
     }
 
-    public function confirmAction(string $confirmationToken): \Symfony\Component\HttpFoundation\RedirectResponse
+    public function confirmAction(string $confirmationToken): RedirectResponse
     {
         $user = $this->userManager->findUserByConfirmationToken($confirmationToken);
 

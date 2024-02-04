@@ -15,20 +15,15 @@ use Webmozart\Assert\Assert;
 
 class ApiV1ClientContext implements Context
 {
-    /** @var string */
-    private $apiKey = '';
+    private string $apiKey = '';
 
-    /** @var null|Response */
-    private $responseObject = null;
+    private ?Response $responseObject = null;
 
-    /** @var string */
-    private $responseBody = '';
+    private string $responseBody = '';
 
-    /** @var int */
-    private $responseStatusCode = 0;
+    private int $responseStatusCode = 0;
 
-    /** @var string */
-    private $baseUrl;
+    private string $baseUrl;
 
     public function __construct(
         string $baseUrl

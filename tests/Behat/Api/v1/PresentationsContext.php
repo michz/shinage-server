@@ -17,11 +17,9 @@ use Webmozart\Assert\Assert;
 
 class PresentationsContext implements Context
 {
-    /** @var ApiV1ClientContext */
-    private $apiV1ClientContext;
+    private ApiV1ClientContext $apiV1ClientContext;
 
-    /** @var EntityManagerInterface */
-    private $entityManager;
+    private EntityManagerInterface $entityManager;
 
     public function __construct(
         ApiV1ClientContext $apiV1ClientContext,

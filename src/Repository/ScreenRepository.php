@@ -16,8 +16,7 @@ use Doctrine\ORM\Query\Expr;
 
 class ScreenRepository
 {
-    /** @var EntityManagerInterface */
-    private $entityManager;
+    private EntityManagerInterface $entityManager;
 
     public function __construct(EntityManagerInterface $em)
     {

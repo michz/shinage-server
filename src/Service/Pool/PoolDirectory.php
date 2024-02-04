@@ -11,7 +11,7 @@ namespace App\Service\Pool;
 class PoolDirectory extends PoolItem
 {
     /** @var PoolFile[] */
-    protected $contents = [];
+    protected array $contents = [];
 
     public function __construct(string $filename, string $fullpath)
     {

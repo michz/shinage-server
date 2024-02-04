@@ -15,8 +15,7 @@ use Webmozart\Assert\Assert;
 
 class FilePoolContext implements Context
 {
-    /** @var ApiV1ClientContext */
-    private $apiV1ClientContext;
+    private ApiV1ClientContext $apiV1ClientContext;
 
     public function __construct(
         ApiV1ClientContext $apiV1ClientContext

@@ -12,8 +12,7 @@ use Throwable;
 
 class PresentationTypeNotFoundException extends \RuntimeException
 {
-    /** @var string */
-    private $type;
+    private string $type;
 
     public function __construct(string $type, string $message = '', int $code = 0, Throwable $previous = null)
     {

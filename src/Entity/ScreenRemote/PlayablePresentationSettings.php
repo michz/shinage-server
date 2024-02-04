@@ -10,6 +10,5 @@ namespace App\Entity\ScreenRemote;
 
 class PlayablePresentationSettings
 {
-    /** @var string */
-    public $backgroundColor;
+    public string $backgroundColor;
 }

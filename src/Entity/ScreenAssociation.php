@@ -10,17 +10,14 @@ namespace App\Entity;
 
 class ScreenAssociation
 {
-    /** @var int */
-    protected $id;
+    protected int $id;
 
-    /** @var Screen */
-    protected $screen;
+    protected Screen $screen;
 
-    /** @var User */
-    protected $user;
+    protected User $user;
 
-    /** @var array|string[] */
-    protected $roles;
+    /** @var string[] */
+    protected array $roles;
 
     public function getId(): int
     {

@@ -17,17 +17,13 @@ use Tests\Behat\Service\SharedStorage;
 
 class FilePoolContext implements Context
 {
-    /** @var EntityManagerInterface */
-    private $entityManager;
+    private EntityManagerInterface $entityManager;
 
-    /** @var SharedStorage */
-    private $sharedStorage;
+    private SharedStorage $sharedStorage;
 
-    /** @var PurgeContext */
-    private $purgeContext;
+    private PurgeContext $purgeContext;
 
-    /** @var string */
-    private $basePath;
+    private string $basePath;
 
     public function __construct(
         EntityManagerInterface $entityManager,

@@ -16,11 +16,6 @@ services:
         arguments:
             $basePath: '%path_pool%'
 
-    Tests\Behat\Gui\LoginContext:
-        arguments:
-            $session: "@session"
-            $firewallName: "main"
-
     mailer.transport_factory.testonly:
         class: App\Factory\MailerTestTransportFactory
         parent: mailer.transport_factory.abstract

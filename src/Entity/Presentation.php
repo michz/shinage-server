@@ -13,49 +13,36 @@ use JMS\Serializer\Annotation as JMS;
 class Presentation implements PresentationInterface
 {
     /**
-     * @var int
-     *
      * @JMS\Type("integer")
      */
-    protected $id;
+    protected int $id;
 
     /**
-     * @var string
-     *
      * @JMS\Type("string")
      */
-    protected $title = 'Presentation';
+    protected string $title = 'Presentation';
 
     /**
-     * @var string
-     *
      * @JMS\Type("string")
      */
-    protected $notes = '';
+    protected string $notes = '';
 
     /**
-     * @var string
-     *
      * @JMS\Exclude()
      */
-    protected $settings = '';
+    protected string $settings = '';
 
     /**
-     * @var \DateTime
-     *
      * @JMS\Type("DateTime")
      */
-    protected $lastModified;
+    protected \DateTime $lastModified;
 
-    /** @var User */
-    protected $owner;
+    protected User $owner;
 
     /**
-     * @var string
-     *
      * @JMS\Type("string")
      */
-    protected $type;
+    protected string $type;
 
     public function __construct()
     {

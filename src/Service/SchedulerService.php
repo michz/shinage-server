@@ -16,8 +16,7 @@ use Doctrine\ORM\EntityManagerInterface;
 
 class SchedulerService
 {
-    /** @var EntityManagerInterface */
-    protected $entityManager;
+    protected EntityManagerInterface $entityManager;
 
     public function __construct(EntityManagerInterface $entityManager)
     {

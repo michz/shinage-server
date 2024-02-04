@@ -17,11 +17,9 @@ use Webmozart\Assert\Assert;
 
 class PresentationContext implements Context
 {
-    /** @var EntityManagerInterface */
-    private $entityManager;
+    private EntityManagerInterface $entityManager;
 
-    /** @var KernelBrowser */
-    private $client;
+    private KernelBrowser $client;
 
     public function __construct(EntityManagerInterface $entityManager, KernelBrowser $client)
     {

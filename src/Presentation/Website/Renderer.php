@@ -14,8 +14,7 @@ use App\Presentation\SettingsReaderInterface;
 
 class Renderer implements PresentationRendererInterface
 {
-    /** @var SettingsReaderInterface */
-    private $settingsReader;
+    private SettingsReaderInterface $settingsReader;
 
     public function __construct(
         SettingsReaderInterface $settingsReader

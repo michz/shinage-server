@@ -8,46 +8,46 @@ management-connect-screen:
 
 management-screen-data:
   path: /{guid}
-  controller: App\Controller\Management\Screens\ScreenDataController:indexAction
+  controller: App\Controller\Management\Screens\ScreenDataController::indexAction
   requirements:
     guid: "[^/]*"
 
 management-screen-offline:
   path: /{guid}/offline
-  controller: App\Controller\Management\Screens\ScreenOfflineController:indexAction
+  controller: App\Controller\Management\Screens\ScreenOfflineController::indexAction
   requirements:
     guid: "[^/]*"
 
 management-screen-rights:
   path: /{guid}/rights
-  controller: App\Controller\Management\Screens\ScreenRightsController:indexAction
+  controller: App\Controller\Management\Screens\ScreenRightsController::indexAction
   requirements:
     guid: "[^/]*"
 
 management-screen-rights-check-user-exists:
   path: /screen-rights/user-exists
-  controller: App\Controller\Management\Screens\ScreenRightsController:checkUserExistsAction
+  controller: App\Controller\Management\Screens\ScreenRightsController::checkUserExistsAction
 
 management-screen-rights-add:
   path: /{guid}/rights/add
-  controller: App\Controller\Management\Screens\ScreenRightsController:addAction
+  controller: App\Controller\Management\Screens\ScreenRightsController::addAction
   requirements:
     guid: "[^/]*"
 
 management-screen-rights-remove:
   path: /screen-rights/remove/{id}
-  controller: App\Controller\Management\Screens\ScreenRightsController:removeAction
+  controller: App\Controller\Management\Screens\ScreenRightsController::removeAction
   requirements:
     id: "\\d*"
 
 management-screen-schedule:
   path: /{guid}/schedule
-  controller: App\Controller\Management\Screens\ScreenScheduleController:indexAction
+  controller: App\Controller\Management\Screens\ScreenScheduleController::indexAction
   requirements:
     guid: "[^/]*"
 
 management-screen-alarming:
   path: /{guid}/alarming
-  controller: App\Controller\Management\Screens\ScreenAlarmingController:indexAction
+  controller: App\Controller\Management\Screens\ScreenAlarmingController::indexAction
   requirements:
     guid: "[^/]*"

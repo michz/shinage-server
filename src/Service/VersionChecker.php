@@ -10,8 +10,7 @@ namespace App\Service;
 
 class VersionChecker
 {
-    /** @var string */
-    private $rootPath;
+    private string $rootPath;
 
     public function __construct(string $rootPath)
     {

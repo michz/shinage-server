@@ -20,11 +20,9 @@ class InvitationCodesController extends AbstractController
     public const DEFAULT_CODE_LENGTH = 12;
     public const MAX_COUNT_GENERATE = 100;
 
-    /** @var EntityManagerInterface */
-    private $entityManager;
+    private EntityManagerInterface $entityManager;
 
-    /** @var RegistrationCodeFactoryInterface */
-    private $registrationCodeFactory;
+    private RegistrationCodeFactoryInterface $registrationCodeFactory;
 
     public function __construct(
         EntityManagerInterface $entityManager,

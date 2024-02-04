@@ -15,8 +15,7 @@ use Symfony\Component\Security\Core\Authorization\Voter\Voter;
 
 class ScheduledPresentationVoter extends Voter
 {
-    /** @var AuthorizationCheckerInterface */
-    private $authorizationChecker;
+    private AuthorizationCheckerInterface $authorizationChecker;
 
     public function __construct(
         AuthorizationCheckerInterface $authorizationChecker
@@ -27,7 +26,7 @@ class ScheduledPresentationVoter extends Voter
     /**
      * {@inheritdoc}
      */
-    protected function supports($attribute, $subject)
+    protected function supports($attribute, $subject): bool
     {
         return $subject instanceof ScheduledPresentation;
     }
@@ -37,7 +36,7 @@ class ScheduledPresentationVoter extends Voter
      *
      * {@inheritdoc}
      */
-    protected function voteOnAttribute($attribute, $subject, TokenInterface $token)
+    protected function voteOnAttribute($attribute, $subject, TokenInterface $token): bool
     {
         // If the action is PUT then we also need the rights to the presentation
         if ('put' === $attribute) {

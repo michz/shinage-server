@@ -1,8 +1,8 @@
-version: '3'
+version: '3.7'
 
 services:
   nginx:
-    image: nginx:1.14-alpine
+    image: nginx:1.25-alpine
     environment:
       - VIRTUAL_HOST=shinage.localhost
     ports:
@@ -47,7 +47,7 @@ services:
       - "${MARIADB_PORT}:3306"
 
   redis:
-    image: redis:5-alpine
+    image: redis:7-alpine
     ports:
       - "${REDIS_PORT}:6379"
 

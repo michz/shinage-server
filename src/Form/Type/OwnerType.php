@@ -22,14 +22,12 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 // @TODO I think this can be refactored and simplified.
 class OwnerType extends AbstractType
 {
-    /** @var EntityManagerInterface */
-    protected $entityManager;
+    protected EntityManagerInterface $entityManager;
 
     /** @var mixed|PresentationInterface */
-    protected $entity;
+    protected mixed $entity;
 
-    /** @var LoggedInUserRepositoryInterface */
-    private $loggedInUserRepository;
+    private LoggedInUserRepositoryInterface $loggedInUserRepository;
 
     public function __construct(
         EntityManagerInterface $entityManager,
@@ -94,7 +92,7 @@ class OwnerType extends AbstractType
     /**
      * {@inheritdoc}
      */
-    public function getParent()
+    public function getParent(): ?string
     {
         return ChoiceType::class;
     }

@@ -16,11 +16,9 @@ use Symfony\Component\HttpKernel\KernelInterface;
 
 class ScreenAlarmingContext implements Context
 {
-    /** @var Application */
-    private $application;
+    private Application $application;
 
-    /** @var BufferedOutput */
-    private $output;
+    private BufferedOutput $output;
 
     public function __construct(
         KernelInterface $kernel

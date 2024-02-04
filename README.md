@@ -13,7 +13,7 @@ Introduction
 This is a piece of software running on a web server providing management
 functionality for *Shinage* digital signage solutions.
 
-It's based on [Symfony 5.4](http://symfony.com/).
+It's based on [Symfony](http://symfony.com/).
 
 
 Hosted
@@ -28,7 +28,7 @@ Please contact us!
 Prerequisites
 -------------
 
-* A machine with a running PHP installation (8.0 or newer)
+* A machine with a running PHP installation (8.2 or newer)
   with mysql support, libgd and terminal access.
 * MariaDB- or MySQL-Server (local or remote). 
 * At least one database on this MySQL-Server.  
@@ -95,10 +95,24 @@ Development
 Testing
 -------
 
-To run behat, start the development webserver:
+To run phpspec, do:
 
 ```bash
-symfony local:server:start --no-tls --port=8000
+./vendor/bin/phpspec run --format=dot --no-code-generation
+```
+
+To run behat, first initialize the testing database:
+
+```bash
+php bin/console doctrine:database:create --env=test
+php bin/console doctrine:schema:update --force --env=test
+php bin/console doctrine:fixtures:load --env=test
+```
+
+Then start the development webserver:
+
+```bash
+APP_ENV=test symfony local:server:start --no-tls --port=8000
 ```
 
 And in a separate shell execute behat:
@@ -106,8 +120,6 @@ And in a separate shell execute behat:
 ```bash
 APP_ENV=test vendor/bin/behat --format=progress --strict -n --tags="~@todo"
 ```
-
-
 
 
 Containerize me

@@ -12,11 +12,9 @@ use JMS\Serializer\SerializerInterface;
 
 class GenericSettingsReader implements SettingsReaderInterface
 {
-    /** @var SerializerInterface */
-    private $serializer;
+    private SerializerInterface $serializer;
 
-    /** @var string */
-    private $settingsType;
+    private string $settingsType;
 
     public function __construct(
         SerializerInterface $serializer,

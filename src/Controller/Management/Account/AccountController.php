@@ -29,7 +29,7 @@ use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Security\Core\Encoder\EncoderFactoryInterface;
+use Symfony\Component\PasswordHasher\Hasher\PasswordHasherFactoryInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 class AccountController extends AbstractController
@@ -42,7 +42,7 @@ class AccountController extends AbstractController
 
     private FormFactoryInterface $formFactory;
 
-    private EncoderFactoryInterface $encoderFactory;
+    private PasswordHasherFactoryInterface $passwordHasherFactory;
 
     private LoggedInUserRepositoryInterface $loggedInUserRepository;
 
@@ -51,14 +51,14 @@ class AccountController extends AbstractController
         UserManagerInterface $userManager,
         TranslatorInterface $translator,
         FormFactoryInterface $formFactory,
-        EncoderFactoryInterface $encoderFactory,
+        PasswordHasherFactoryInterface $passwordHasherFactory,
         LoggedInUserRepositoryInterface $loggedInUserRepository
     ) {
         $this->entityManager = $entityManager;
         $this->userManager = $userManager;
         $this->translator = $translator;
         $this->formFactory = $formFactory;
-        $this->encoderFactory = $encoderFactory;
+        $this->passwordHasherFactory = $passwordHasherFactory;
         $this->loggedInUserRepository = $loggedInUserRepository;
     }
 
@@ -124,9 +124,9 @@ class AccountController extends AbstractController
                 $form_pw->handleRequest($request);
 
                 if ($form_pw->isSubmitted()) {
-                    $encoder = $this->encoderFactory->getEncoder($user);
+                    $passwordHasher = $this->passwordHasherFactory->getPasswordHasher($user);
 
-                    if (!$encoder->isPasswordValid(
+                    if (!$passwordHasher->verify(
                         $user->getPassword(),
                         $form_pw->get('old-password')->getData(),
                         $user->getSalt()
@@ -199,7 +199,6 @@ class AccountController extends AbstractController
                         'Der gewählte Name oder die E-Mail-Adresse wird bereits verwendet. ' .
                         'Bitte probiere es mit einer anderen Kombination.'
                     );
-                    $this->getDoctrine()->resetManager();
                 }
             } else {
                 $this->addFlash('error', 'Die Organisation konnte leider nicht angelegt werden.');

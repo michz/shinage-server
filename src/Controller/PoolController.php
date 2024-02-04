@@ -21,14 +21,11 @@ use Symfony\Component\HttpFoundation\StreamedResponse;
 
 class PoolController extends AbstractController
 {
-    /** @var FilePoolUrlBuilder */
-    private $filePoolUrlBuilder;
+    private FilePoolUrlBuilder $filePoolUrlBuilder;
 
-    /** @var VirtualPathResolverInterface */
-    private $virtualPathResolver;
+    private VirtualPathResolverInterface $virtualPathResolver;
 
-    /** @var PathConcatenatorInterface */
-    private $pathConcatenator;
+    private PathConcatenatorInterface $pathConcatenator;
 
     public function __construct(
         FilePoolUrlBuilder $filePoolUrlBuilder,

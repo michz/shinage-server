@@ -15,8 +15,7 @@ use Symfony\Component\Security\Core\Authorization\Voter\Voter;
 
 class ScreenVoter extends Voter
 {
-    /** @var ScreenAssociation */
-    private $screenAssociation;
+    private ScreenAssociation $screenAssociation;
 
     public function __construct(ScreenAssociation $screenAssociation)
     {
@@ -26,7 +25,7 @@ class ScreenVoter extends Voter
     /**
      * {@inheritdoc}
      */
-    protected function supports($attribute, $subject)
+    protected function supports($attribute, $subject): bool
     {
         return $subject instanceof Screen;
     }
@@ -34,7 +33,7 @@ class ScreenVoter extends Voter
     /**
      * {@inheritdoc}
      */
-    protected function voteOnAttribute($attribute, $subject, TokenInterface $token)
+    protected function voteOnAttribute($attribute, $subject, TokenInterface $token): bool
     {
         return $this->screenAssociation->isUserAllowedTo($subject, $token->getUser(), $attribute);
     }

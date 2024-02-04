@@ -9,12 +9,12 @@ declare(strict_types=1);
 namespace App\Security;
 
 use Eloquent\Pathogen\FileSystem\Normalizer\FileSystemPathNormalizer;
+use Eloquent\Pathogen\Normalizer\PathNormalizerInterface;
 use Eloquent\Pathogen\Path;
 
 class PathChecker implements PathCheckerInterface
 {
-    /** @var \Eloquent\Pathogen\Normalizer\PathNormalizerInterface */
-    private $pathNormalizer;
+    private PathNormalizerInterface $pathNormalizer;
 
     public function __construct()
     {
