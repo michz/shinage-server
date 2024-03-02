@@ -73,7 +73,8 @@
     "symplify/easy-coding-standard": "^11.0",
     "cweagans/composer-patches": "~1.0",
     "symfony/stopwatch": "6.4.*",
-    "symfony/web-profiler-bundle": "6.4.*"
+    "symfony/web-profiler-bundle": "6.4.*",
+    "friends-of-phpspec/phpspec-code-coverage": "^6.3"
   },
   "conflict": {
     "symfony/symfony": "*"
