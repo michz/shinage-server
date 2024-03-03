@@ -28,10 +28,12 @@
 /public/reveal.js/
 /public/vendor/
 /node_modules/
-/bin/
+/bin/*
 !/bin/console
 !/bin/devEnv.sh
+!/bin/mergeCoverageReports.sh
 !/bin/runInDev.sh
+!/bin/runInDevWithXDebugCoverage.sh
 
 .preload.php
 
