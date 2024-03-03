@@ -12,10 +12,10 @@ extensions:
     # Default: [html]
     format:
       - text
-      - html
+      #- html
       #- clover
-      #- php
-      - xml
+      - php
+      #- xml
       #- cobertura
 
     # Specify output file/directory where code coverage report will be
@@ -24,10 +24,11 @@ extensions:
     # Default: coverage
     output:
       text: coverage/phpspec/text
-      html: coverage/phpspec/html
-      xml: coverage/phpspec/xml
+      #html: coverage/phpspec/html
+      #clover: coverage/phpspec-clover.cov
+      #xml: coverage/phpspec/xml
       #clover: coverage.xml
-      #php: coverage.php
+      php: coverage/phpspec.cov
       #xml: coverage
       #cobertura: cobertura.xml
 
@@ -48,7 +49,7 @@ extensions:
     #
     # Should text output show only summary?
     # Default: false
-    show_only_summary: true
+    show_only_summary: false
 
     whitelist:
       - src

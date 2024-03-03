@@ -23,7 +23,7 @@ jobs:
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
         with:
-          php-version: '8.2'
+          php-version: '8.3'
           tools: symfony
 
       - uses: actions/checkout@v2
@@ -79,6 +79,15 @@ jobs:
           APP_ENV: test
           XDEBUG_MODE: coverage
 
+      - name: Aggregate code coverage results
+        run: bin/mergeCoverageReports.sh
+
+      - name: Upload code coverage results
+        uses: actions/upload-artifact@v4
+        with:
+          name: code-coverage-report
+          path: coverage/**
+
   deploy:
     if: github.event_name == 'push' && contains(github.ref, 'refs/tags/v')
     needs: build
@@ -87,7 +96,7 @@ jobs:
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
         with:
-          php-version: '8.2'
+          php-version: '8.3'
 
       - name: Checkout code
         uses: actions/checkout@v2
