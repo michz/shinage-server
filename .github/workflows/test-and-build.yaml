@@ -70,11 +70,14 @@ jobs:
 
       - name: Run phpspec
         run: ./vendor/bin/phpspec run --format=pretty --no-code-generation
+        env:
+          XDEBUG_MODE: coverage
 
       - name: Run behat
         run: ./vendor/bin/behat --format=progress --strict -n --tags="~@todo"
         env:
           APP_ENV: test
+          XDEBUG_MODE: coverage
 
   deploy:
     if: github.event_name == 'push' && contains(github.ref, 'refs/tags/v')

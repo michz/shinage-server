@@ -74,7 +74,9 @@
     "cweagans/composer-patches": "~1.0",
     "symfony/stopwatch": "6.4.*",
     "symfony/web-profiler-bundle": "6.4.*",
-    "friends-of-phpspec/phpspec-code-coverage": "^6.3"
+    "friends-of-phpspec/phpspec-code-coverage": "^6.3",
+    "dvdoug/behat-code-coverage": "^5.3",
+    "rector/rector": "^1.0"
   },
   "conflict": {
     "symfony/symfony": "*"

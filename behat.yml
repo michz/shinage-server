@@ -113,3 +113,14 @@ default:
       kernel:
         path: src/Kernel.php
         class: 'App\Kernel'
+
+    DVDoug\Behat\CodeCoverage\Extension:
+      filter:
+        include:
+          directories:
+            'src': ~
+      reports:
+        html:
+          target: coverage/behat/html
+        text:
+          showColors: true

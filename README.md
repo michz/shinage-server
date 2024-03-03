@@ -98,7 +98,8 @@ Testing
 To run phpspec, do:
 
 ```bash
-./vendor/bin/phpspec run --format=dot --no-code-generation
+bin/devEnv.sh start
+bin/runInDevWithXDebugCoverage.sh ./vendor/bin/phpspec run --format=dot --no-code-generation
 ```
 
 To run behat, first initialize the testing database:

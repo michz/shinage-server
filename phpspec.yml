@@ -5,3 +5,73 @@ suites:
     psr4_prefix: App
     src_path: '%paths.config%/src/'
     spec_path: '%paths.config%/'
+extensions:
+  FriendsOfPhpSpec\PhpSpec\CodeCoverage\CodeCoverageExtension:
+    # Specify a list of formats in which code coverage report should be
+    # generated.
+    # Default: [html]
+    format:
+      - text
+      - html
+      #- clover
+      #- php
+      - xml
+      #- cobertura
+
+    # Specify output file/directory where code coverage report will be
+    # generated. You can configure different output file/directory per
+    # enabled format.
+    # Default: coverage
+    output:
+      text: coverage/phpspec/text
+      html: coverage/phpspec/html
+      xml: coverage/phpspec/xml
+      #clover: coverage.xml
+      #php: coverage.php
+      #xml: coverage
+      #cobertura: cobertura.xml
+
+    # Should uncovered files be included in the reports?
+    # Default: true
+    #show_uncovered_files: true
+
+    # Set lower upper bound for code coverage
+    # Default: 35
+    #lower_upper_bound: 35
+
+    # Set high lower bound for code coverage
+    # Default: 70
+    #high_lower_bound: 70
+
+    # Whilelist directories for which code generation should be done
+    # Default: [src, lib]
+    #
+    # Should text output show only summary?
+    # Default: false
+    show_only_summary: true
+
+    whitelist:
+      - src
+      #- lib
+      # or to apply filtering on files names
+      #- directory: src
+      #  suffix: "Controller.php"
+      #  prefix: "Get"
+      #
+      # Whiltelist files for which code generation should be done
+      # Default: empty
+      #whilelist_files:
+      #- app/bootstrap.php
+      #- web/index.php
+      #
+      # Blacklist directories for which code generation should NOT be done
+      #blacklist:
+      #- src/legacy
+      # or to apply filtering on files names
+      #- directory: src/legacy
+      #  suffix: "Spec.php"
+      #  prefix: "Test"
+      #
+      # Blacklist files for which code generation should NOT be done
+      #blacklist_files:
+      #- lib/bootstrap.php

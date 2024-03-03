@@ -16,7 +16,8 @@ ENV PHPIZE_DEPS \
     pkgconf \
     re2c \
     libxml2-dev \
-    oniguruma-dev
+    oniguruma-dev \
+    linux-headers
 
 # Use a more local mirror as the CDN is sometimes terribly slow
 RUN echo http://mirror1.hs-esslingen.de/pub/Mirrors/alpine/v3.19/main > /etc/apk/repositories; \
@@ -66,9 +67,9 @@ RUN set -ex \
     && pecl install -o -f redis \
     && rm -rf /tmp/pear \
     && docker-php-ext-enable redis \
+    && pecl install xdebug-3.3.1 \
+    && docker-php-ext-enable xdebug \
     && apk del .build-deps
-#    && pecl install xdebug-2.6.0 \
-#    && docker-php-ext-enable xdebug \
 
 COPY installComposer.sh /installComposer.sh
 RUN sh /installComposer.sh
