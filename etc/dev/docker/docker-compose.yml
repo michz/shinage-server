@@ -31,7 +31,7 @@ services:
       - ./php/php.ini:/usr/local/etc/php/conf.d/zzz-override-php.ini:delegated
     links:
       - mariadb
-      - mailhog
+      - mailpit
       - redis
     depends_on:
       - mariadb
@@ -51,10 +51,10 @@ services:
     ports:
       - "${REDIS_PORT}:6379"
 
-  mailhog:
-    image: mailhog/mailhog:latest
+  mailpit:
+    image: axllent/mailpit:latest
     ports:
-      - "${MAILHOG_PORT}:8025"
+      - "${MAILPIT_PORT}:8025"
 
   phpmyadmin:
     image: phpmyadmin:latest

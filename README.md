@@ -83,7 +83,7 @@ Development
     The relevant ports are mapped to host ports and printed to console during startup.
     For example you can open the web interface via `http://localhost:8001/` or `https://localhost:44301`.
     
-    In the docker development environment there is a working [Mailhog](https://github.com/mailhog/MailHog) installation
+    In the docker development environment there is a working [Mailpit](https://github.com/axllent/mailpit) installation
     that catches all mails sent via PHP `mail()` function in the php container.
     
   * If you use the docker based environment

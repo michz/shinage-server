@@ -25,7 +25,7 @@ function echo_configuration {
     echo "HTTP:    "${HTTP_PORT}
     echo "HTTPS:   "${HTTPS_PORT}
     echo "MariaDB: "${MARIADB_PORT}
-    echo "Mailhog: "${MAILHOG_PORT}
+    echo "Mailpit: "${MAILPIT_PORT}
     echo ""
     echo "PHP version: "${PHP_VERSION}
     echo "MariaDB version: "${MARIADB_VERSION}
