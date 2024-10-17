@@ -68,12 +68,12 @@
     "phpspec/phpspec": "^7.2",
     "behat/behat": "^3.7",
     "friends-of-behat/mink-extension": "^2.3",
-    "behat/mink-goutte-driver": "^2.0",
     "friends-of-behat/symfony-extension": "^2.0",
     "symplify/easy-coding-standard": "^11.0",
     "cweagans/composer-patches": "~1.0",
     "symfony/stopwatch": "6.4.*",
-    "symfony/web-profiler-bundle": "6.4.*"
+    "symfony/web-profiler-bundle": "6.4.*",
+    "behat/mink-browserkit-driver": "^2.2"
   },
   "conflict": {
     "symfony/symfony": "*"
