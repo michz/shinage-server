@@ -12,14 +12,11 @@ use App\Entity\Screen;
 use App\Entity\ScreenCommand;
 use Doctrine\ORM\EntityManagerInterface;
 
-class ScreenCommandRepository
+readonly class ScreenCommandRepository
 {
-    private EntityManagerInterface $entityManager;
-
     public function __construct(
-        EntityManagerInterface $entityManager
+        private EntityManagerInterface $entityManager,
     ) {
-        $this->entityManager = $entityManager;
     }
 
     public function getOldestCommandForScreenIfAny(Screen $screen): ?ScreenCommand

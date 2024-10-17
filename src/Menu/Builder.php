@@ -13,18 +13,12 @@ use Knp\Menu\FactoryInterface;
 use Knp\Menu\ItemInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
-class Builder
+readonly class Builder
 {
-    private FactoryInterface $factory;
-
-    private AuthorizationCheckerInterface $authorizationChecker;
-
     public function __construct(
-        FactoryInterface $factory,
-        AuthorizationCheckerInterface $authorizationChecker
+        private FactoryInterface $factory,
+        private AuthorizationCheckerInterface $authorizationChecker,
     ) {
-        $this->factory = $factory;
-        $this->authorizationChecker = $authorizationChecker;
     }
 
     /**

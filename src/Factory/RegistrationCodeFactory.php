@@ -13,20 +13,14 @@ use App\Entity\User;
 use App\Service\GenericCodeGeneratorInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
-class RegistrationCodeFactory implements RegistrationCodeFactoryInterface
+readonly class RegistrationCodeFactory implements RegistrationCodeFactoryInterface
 {
     public const CODE_LENGTH = 12;
 
-    private TokenStorageInterface $tokenStorage;
-
-    private GenericCodeGeneratorInterface $genericCodeGenerator;
-
     public function __construct(
-        TokenStorageInterface $tokenStorage,
-        GenericCodeGeneratorInterface $genericCodeGenerator
+        private TokenStorageInterface $tokenStorage,
+        private GenericCodeGeneratorInterface $genericCodeGenerator
     ) {
-        $this->tokenStorage = $tokenStorage;
-        $this->genericCodeGenerator = $genericCodeGenerator;
     }
 
     public function create(?User $assignOrganization): RegistrationCode

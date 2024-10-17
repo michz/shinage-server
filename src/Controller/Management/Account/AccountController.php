@@ -34,32 +34,14 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 
 class AccountController extends AbstractController
 {
-    private EntityManagerInterface $entityManager;
-
-    private UserManagerInterface $userManager;
-
-    private TranslatorInterface $translator;
-
-    private FormFactoryInterface $formFactory;
-
-    private PasswordHasherFactoryInterface $passwordHasherFactory;
-
-    private LoggedInUserRepositoryInterface $loggedInUserRepository;
-
     public function __construct(
-        EntityManagerInterface $entityManager,
-        UserManagerInterface $userManager,
-        TranslatorInterface $translator,
-        FormFactoryInterface $formFactory,
-        PasswordHasherFactoryInterface $passwordHasherFactory,
-        LoggedInUserRepositoryInterface $loggedInUserRepository
+        private readonly EntityManagerInterface $entityManager,
+        private readonly UserManagerInterface $userManager,
+        private readonly TranslatorInterface $translator,
+        private readonly FormFactoryInterface $formFactory,
+        private readonly PasswordHasherFactoryInterface $passwordHasherFactory,
+        private readonly LoggedInUserRepositoryInterface $loggedInUserRepository
     ) {
-        $this->entityManager = $entityManager;
-        $this->userManager = $userManager;
-        $this->translator = $translator;
-        $this->formFactory = $formFactory;
-        $this->passwordHasherFactory = $passwordHasherFactory;
-        $this->loggedInUserRepository = $loggedInUserRepository;
     }
 
     public function indexAction(): RedirectResponse

@@ -28,36 +28,15 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 
 class PresentationsController extends AbstractController
 {
-    private PresentationTypeRegistryInterface $presentationTypeRegistry;
-
-    private SchedulerService $scheduler;
-
-    private TranslatorInterface $translator;
-
-    private EntityManagerInterface $entityManager;
-
-    private FormFactoryInterface $formFactory;
-
-    private PresentationsRepository $presentationsRepository;
-
-    private LoggedInUserRepositoryInterface $loggedInUserRepository;
-
     public function __construct(
-        PresentationTypeRegistryInterface $presentationTypeRegistry,
-        SchedulerService $scheduler,
-        TranslatorInterface $translator,
-        EntityManagerInterface $entityManager,
-        FormFactoryInterface $formFactory,
-        PresentationsRepository $presentationsRepository,
-        LoggedInUserRepositoryInterface $loggedInUserRepository
+        private readonly PresentationTypeRegistryInterface $presentationTypeRegistry,
+        private readonly SchedulerService $scheduler,
+        private readonly TranslatorInterface $translator,
+        private readonly EntityManagerInterface $entityManager,
+        private readonly FormFactoryInterface $formFactory,
+        private readonly PresentationsRepository $presentationsRepository,
+        private readonly LoggedInUserRepositoryInterface $loggedInUserRepository,
     ) {
-        $this->presentationTypeRegistry = $presentationTypeRegistry;
-        $this->scheduler = $scheduler;
-        $this->translator = $translator;
-        $this->entityManager = $entityManager;
-        $this->formFactory = $formFactory;
-        $this->presentationsRepository = $presentationsRepository;
-        $this->loggedInUserRepository = $loggedInUserRepository;
     }
 
     public function managePresentationsAction(string $viewMode = 'large'): Response

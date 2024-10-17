@@ -13,18 +13,12 @@ use Psr\Log\LoggerInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
-class LoggedInUserRepository implements LoggedInUserRepositoryInterface
+readonly class LoggedInUserRepository implements LoggedInUserRepositoryInterface
 {
-    private TokenStorageInterface $tokenStorage;
-
-    private LoggerInterface $logger;
-
     public function __construct(
-        TokenStorageInterface $tokenStorage,
-        LoggerInterface $logger
+        private TokenStorageInterface $tokenStorage,
+        private LoggerInterface $logger,
     ) {
-        $this->tokenStorage = $tokenStorage;
-        $this->logger = $logger;
     }
 
     public function getLoggedInUserOrDenyAccess(): User

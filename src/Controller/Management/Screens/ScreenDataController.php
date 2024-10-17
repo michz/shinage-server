@@ -25,20 +25,11 @@ use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 class ScreenDataController extends AbstractController
 {
-    private EntityManagerInterface $entityManager;
-
-    private PresentationsRepository $presentationsRepository;
-
-    private LoggedInUserRepositoryInterface $loggedInUserRepository;
-
     public function __construct(
-        EntityManagerInterface $entityManager,
-        PresentationsRepository $presentationsRepository,
-        LoggedInUserRepositoryInterface $loggedInUserRepository
+        private readonly EntityManagerInterface $entityManager,
+        private readonly PresentationsRepository $presentationsRepository,
+        private readonly LoggedInUserRepositoryInterface $loggedInUserRepository,
     ) {
-        $this->entityManager = $entityManager;
-        $this->presentationsRepository = $presentationsRepository;
-        $this->loggedInUserRepository = $loggedInUserRepository;
     }
 
     public function indexAction(Request $request, string $guid): Response

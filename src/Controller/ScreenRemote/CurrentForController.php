@@ -21,28 +21,13 @@ use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 
 class CurrentForController extends AbstractController
 {
-    private SchedulerService $scheduler;
-
-    private UrlBuilderInterface $urlBuilder;
-
-    private ConnectCodeGeneratorInterface $connectCodeGenerator;
-
-    private EntityManagerInterface $entityManager;
-
-    private ScreenAssociation $screenAssociationHelper;
-
     public function __construct(
-        SchedulerService $scheduler,
-        UrlBuilderInterface $urlBuilder,
-        ConnectCodeGeneratorInterface $connectCodeGenerator,
-        EntityManagerInterface $entityManager,
-        ScreenAssociation $screenAssociationHelper
+        private readonly SchedulerService $scheduler,
+        private readonly UrlBuilderInterface $urlBuilder,
+        private readonly ConnectCodeGeneratorInterface $connectCodeGenerator,
+        private readonly EntityManagerInterface $entityManager,
+        private readonly ScreenAssociation $screenAssociationHelper,
     ) {
-        $this->scheduler = $scheduler;
-        $this->urlBuilder = $urlBuilder;
-        $this->connectCodeGenerator = $connectCodeGenerator;
-        $this->entityManager = $entityManager;
-        $this->screenAssociationHelper = $screenAssociationHelper;
     }
 
     public function indexAction(Request $request, ?Screen $screen = null): Response

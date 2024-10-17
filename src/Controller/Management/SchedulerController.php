@@ -25,32 +25,14 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class SchedulerController extends AbstractController
 {
-    private EntityManagerInterface $entityManager;
-
-    private ScreenRepository $screenRepository;
-
-    private SerializerInterface $serializer;
-
-    private ScheduleCollisionHandlerInterface $collisionHandler;
-
-    private PresentationsRepository $presentationsRepository;
-
-    private LoggedInUserRepositoryInterface $loggedInUserRepository;
-
     public function __construct(
-        EntityManagerInterface $entityManager,
-        ScreenRepository $screenRepository,
-        SerializerInterface $serializer,
-        ScheduleCollisionHandlerInterface $collisionHandler,
-        PresentationsRepository $presentationsRepository,
-        LoggedInUserRepositoryInterface $loggedInUserRepository
+        private readonly EntityManagerInterface $entityManager,
+        private readonly ScreenRepository $screenRepository,
+        private readonly SerializerInterface $serializer,
+        private readonly ScheduleCollisionHandlerInterface $collisionHandler,
+        private readonly PresentationsRepository $presentationsRepository,
+        private readonly LoggedInUserRepositoryInterface $loggedInUserRepository,
     ) {
-        $this->entityManager = $entityManager;
-        $this->screenRepository = $screenRepository;
-        $this->serializer = $serializer;
-        $this->collisionHandler = $collisionHandler;
-        $this->presentationsRepository = $presentationsRepository;
-        $this->loggedInUserRepository = $loggedInUserRepository;
     }
 
     public function schedulerAction(): Response

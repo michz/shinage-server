@@ -20,20 +20,11 @@ use Symfony\Component\Routing\RouterInterface;
 
 class QrController extends AbstractController
 {
-    private EntityManagerInterface $entityManager;
-
-    private RouterInterface $router;
-
-    private BuilderRegistryInterface $builderRegistry;
-
     public function __construct(
-        EntityManagerInterface $entityManager,
-        RouterInterface $router,
-        BuilderRegistryInterface $builderRegistry
+        private readonly EntityManagerInterface $entityManager,
+        private readonly RouterInterface $router,
+        private readonly BuilderRegistryInterface $builderRegistry,
     ) {
-        $this->entityManager = $entityManager;
-        $this->router = $router;
-        $this->builderRegistry = $builderRegistry;
     }
 
     public function registerScreenUrlAction(string $connectCode): Response

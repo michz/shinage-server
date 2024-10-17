@@ -19,7 +19,7 @@ use App\Service\SchedulerService;
 use App\Service\ScreenAssociation;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\Form\Form;
+use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -28,32 +28,14 @@ use Symfony\Component\Routing\RouterInterface;
 
 class ScreensController extends AbstractController
 {
-    private EntityManagerInterface $entityManager;
-
-    private SchedulerService $scheduler;
-
-    private ScreenRepository $screenRepository;
-
-    private ScreenAssociation $screenAssociation;
-
-    private RouterInterface $router;
-
-    private LoggedInUserRepositoryInterface $loggedInUserRepository;
-
     public function __construct(
-        EntityManagerInterface $entityManager,
-        SchedulerService $scheduler,
-        ScreenRepository $screenRepository,
-        ScreenAssociation $screenAssociation,
-        RouterInterface $router,
-        LoggedInUserRepositoryInterface $loggedInUserRepository
+        private readonly EntityManagerInterface $entityManager,
+        private readonly SchedulerService $scheduler,
+        private readonly ScreenRepository $screenRepository,
+        private readonly ScreenAssociation $screenAssociation,
+        private readonly RouterInterface $router,
+        private readonly LoggedInUserRepositoryInterface $loggedInUserRepository,
     ) {
-        $this->entityManager = $entityManager;
-        $this->scheduler = $scheduler;
-        $this->screenRepository = $screenRepository;
-        $this->screenAssociation = $screenAssociation;
-        $this->router = $router;
-        $this->loggedInUserRepository = $loggedInUserRepository;
     }
 
     public function indexAction(Request $request): Response
@@ -143,7 +125,7 @@ class ScreensController extends AbstractController
         return $this->redirectToRoute('management-screens');
     }
 
-    protected function handleCreateVirtualScreen(Request $request, Form $createForm): void
+    protected function handleCreateVirtualScreen(Request $request, FormInterface $createForm): void
     {
         if ('POST' !== $request->getMethod() || !$request->request->has($createForm->getName())) {
             return;

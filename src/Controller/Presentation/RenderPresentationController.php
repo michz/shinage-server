@@ -17,16 +17,10 @@ use Symfony\Component\HttpFoundation\Response;
 
 class RenderPresentationController extends AbstractController
 {
-    private EntityManagerInterface $entityManager;
-
-    private AnyPresentationRendererInterface $anyPresentationRenderer;
-
     public function __construct(
-        EntityManagerInterface $entityManager,
-        AnyPresentationRendererInterface $anyPresentationRenderer
+        private readonly EntityManagerInterface $entityManager,
+        private readonly AnyPresentationRendererInterface $anyPresentationRenderer,
     ) {
-        $this->entityManager = $entityManager;
-        $this->anyPresentationRenderer = $anyPresentationRenderer;
     }
 
     public function getAction(Request $request, int $id): Response

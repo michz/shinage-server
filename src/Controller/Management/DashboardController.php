@@ -19,20 +19,11 @@ use Symfony\Component\HttpFoundation\Response;
 
 class DashboardController extends AbstractController
 {
-    private EntityManagerInterface $entityManager;
-
-    private ScreenRepository $screenRepository;
-
-    private LoggedInUserRepositoryInterface $loggedInUserRepository;
-
     public function __construct(
-        EntityManagerInterface $entityManager,
-        ScreenRepository $screenRepository,
-        LoggedInUserRepositoryInterface $loggedInUserRepository
+        private readonly EntityManagerInterface $entityManager,
+        private readonly ScreenRepository $screenRepository,
+        private readonly LoggedInUserRepositoryInterface $loggedInUserRepository,
     ) {
-        $this->entityManager = $entityManager;
-        $this->screenRepository = $screenRepository;
-        $this->loggedInUserRepository = $loggedInUserRepository;
     }
 
     public function dashboardAction(): Response

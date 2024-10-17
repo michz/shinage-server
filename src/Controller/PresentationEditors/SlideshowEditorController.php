@@ -18,16 +18,10 @@ use Symfony\Component\HttpFoundation\Response;
 
 class SlideshowEditorController extends AbstractPresentationEditor
 {
-    private EntityManagerInterface $entityManager;
-
-    private SerializerInterface $serializer;
-
     public function __construct(
-        EntityManagerInterface $entityManager,
-        SerializerInterface $serializer
+        private readonly EntityManagerInterface $entityManager,
+        private readonly SerializerInterface $serializer,
     ) {
-        $this->entityManager = $entityManager;
-        $this->serializer = $serializer;
     }
 
     public function editAction(int $presentationId): Response

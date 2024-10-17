@@ -18,12 +18,9 @@ use Symfony\Component\HttpFoundation\Response;
 
 class ScreenRightsController extends AbstractController
 {
-    private EntityManagerInterface $entityManager;
-
     public function __construct(
-        EntityManagerInterface $entityManager
+        private readonly EntityManagerInterface $entityManager,
     ) {
-        $this->entityManager = $entityManager;
     }
 
     public function indexAction(Screen $screen): Response
