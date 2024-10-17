@@ -28,7 +28,7 @@
 /public/reveal.js/
 /public/vendor/
 /node_modules/
-/bin/
+/bin/*
 !/bin/console
 !/bin/devEnv.sh
 !/bin/runInDev.sh
