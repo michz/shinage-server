@@ -12,14 +12,11 @@ use App\Entity\PresentationInterface;
 use App\Presentation\PresentationRendererInterface;
 use Symfony\Component\Routing\RouterInterface;
 
-class Renderer implements PresentationRendererInterface
+readonly class Renderer implements PresentationRendererInterface
 {
-    private RouterInterface $router;
-
     public function __construct(
-        RouterInterface $router
+        private RouterInterface $router
     ) {
-        $this->router = $router;
     }
 
     public function render(PresentationInterface $presentation): string

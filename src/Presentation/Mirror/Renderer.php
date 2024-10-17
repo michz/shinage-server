@@ -12,14 +12,11 @@ use App\Entity\PresentationInterface;
 use App\Presentation\PresentationRendererInterface;
 use App\Presentation\SettingsReaderInterface;
 
-class Renderer implements PresentationRendererInterface
+readonly class Renderer implements PresentationRendererInterface
 {
-    private SettingsReaderInterface $settingsReader;
-
     public function __construct(
-        SettingsReaderInterface $settingsReader
+        private SettingsReaderInterface $settingsReader,
     ) {
-        $this->settingsReader = $settingsReader;
     }
 
     public function render(PresentationInterface $presentation): string

@@ -14,23 +14,17 @@ use App\Presentation\SettingsReaderInterface;
 use Symfony\Component\Asset\Packages;
 use Symfony\Component\Routing\RouterInterface;
 
-class Renderer implements PresentationRendererInterface
+readonly class Renderer implements PresentationRendererInterface
 {
     public const POOL_VIRTUAL_BASE_URL = 'pool://';
-
-    private SettingsReaderInterface $settingsReader;
-
-    private Packages $assetPackages;
 
     private string $baseUrl;
 
     public function __construct(
-        SettingsReaderInterface $settingsReader,
-        Packages $assetPackages,
-        RouterInterface $router
+        private SettingsReaderInterface $settingsReader,
+        private Packages $assetPackages,
+        RouterInterface $router,
     ) {
-        $this->settingsReader = $settingsReader;
-        $this->assetPackages = $assetPackages;
         $this->baseUrl = $router->generate('pool-get-root', [], RouterInterface::ABSOLUTE_URL);
     }
 

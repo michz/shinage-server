@@ -10,24 +10,14 @@ namespace App\Presentation\Slideshow\Slides;
 
 use JMS\Serializer\Annotation as JMS;
 
-/**
- * @JMS\ExclusionPolicy("NONE")
- */
+#[JMS\ExclusionPolicy(JMS\ExclusionPolicy::NONE)]
 class ImageSlide extends Slide
 {
-    /**
-     * @var string
-     *
-     * @JMS\Type("string")
-     */
-    protected $src = '';
+    #[JMS\Type('string')]
+    protected string $src = '';
 
-    /**
-     * @var string
-     *
-     * @JMS\Type("string")
-     */
-    protected $type = 'Image';
+    #[JMS\Type('string')]
+    protected string $type = 'Image';
 
     public function getSrc(): string
     {

@@ -12,12 +12,8 @@ use JMS\Serializer\Annotation as JMS;
 
 class Settings
 {
-    /**
-     * @var string
-     *
-     * @JMS\Type("string")
-     */
-    private $url = '';
+    #[JMS\Type('string')]
+    private string $url = '';
 
     public function getUrl(): string
     {

@@ -12,33 +12,17 @@ use JMS\Serializer\Annotation as JMS;
 
 class Settings
 {
-    /**
-     * @var string
-     *
-     * @JMS\Type("string")
-     */
-    protected $content = '';
+    #[JMS\Type('string')]
+    protected string $content = '';
 
-    /**
-     * @var string
-     *
-     * @JMS\Type("string")
-     */
-    protected $revealSettings = '';
+    #[JMS\Type('string')]
+    protected string $revealSettings = '';
 
-    /**
-     * @var int
-     *
-     * @JMS\Type("integer")
-     */
-    protected $width = 1280;
+    #[JMS\Type('integer')]
+    protected int $width = 1280;
 
-    /**
-     * @var int
-     *
-     * @JMS\Type("integer")
-     */
-    protected $height = 720;
+    #[JMS\Type('integer')]
+    protected int $height = 720;
 
     public function getContent(): string
     {

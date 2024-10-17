@@ -10,38 +10,20 @@ namespace App\Presentation\Slideshow\Slides;
 
 use JMS\Serializer\Annotation as JMS;
 
-/**
- * @JMS\ExclusionPolicy("none")
- */
+#[JMS\ExclusionPolicy(JMS\ExclusionPolicy::NONE)]
 class Slide
 {
-    /**
-     * @var int
-     *
-     * @JMS\Type("integer")
-     */
-    protected $duration = 1000;
+    #[JMS\Type('integer')]
+    protected int $duration = 1000;
 
-    /**
-     * @var string
-     *
-     * @JMS\Type("string")
-     */
-    protected $title = 'Slide';
+    #[JMS\Type('string')]
+    protected string $title = 'Slide';
 
-    /**
-     * @var string
-     *
-     * @JMS\Type("string")
-     */
-    protected $transition = '';
+    #[JMS\Type('string')]
+    protected string $transition = '';
 
-    /**
-     * @var string
-     *
-     * @JMS\Type("string")
-     */
-    protected $type = '';
+    #[JMS\Type('string')]
+    protected string $type = '';
 
     public function getDuration(): int
     {
