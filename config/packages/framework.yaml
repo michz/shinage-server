@@ -21,8 +21,8 @@ framework:
   cache:
     prefix_seed: mztx/shinage-server
 
-  validation:
-    enable_annotations:
+  #validation:
+  #  enable_annotations:
 
   router:
     utf8: true

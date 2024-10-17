@@ -6,7 +6,6 @@
   "autoload": {
     "psr-4": {
       "App\\": "src/",
-      "mztx\\ShinageOnlinePlayerBundle\\": "_old_src/ShinageOnlinePlayerBundle/",
       "shinage\\server\\behat\\": "features/bootstrap/"
     },
     "classmap": [
@@ -33,7 +32,7 @@
     "guzzlehttp/guzzle": "^7.4",
     "knplabs/knp-menu-bundle": "^3.0",
     "jms/serializer": "^3.23",
-    "jms/serializer-bundle": "4.0.2",
+    "jms/serializer-bundle": "^5.4",
     "doctrine/doctrine-migrations-bundle": "^3.0",
     "mschop/pathogen": "^0.7.1",
     "symfony/dependency-injection": "6.4.*",
@@ -50,7 +49,6 @@
     "symfony/asset": "6.4.*",
     "symfony/mime": "6.4.*",
     "symfony/expression-language": "6.4.*",
-    "sensio/framework-extra-bundle": "^6.2",
     "scheb/2fa-bundle": "^v7.2",
     "scheb/2fa-email": "^v7.2",
     "scheb/2fa-google-authenticator": "^v7.2",
@@ -73,7 +71,8 @@
     "cweagans/composer-patches": "~1.0",
     "symfony/stopwatch": "6.4.*",
     "symfony/web-profiler-bundle": "6.4.*",
-    "behat/mink-browserkit-driver": "^2.2"
+    "behat/mink-browserkit-driver": "^2.2",
+    "rector/rector": "^1.2"
   },
   "conflict": {
     "symfony/symfony": "*"
