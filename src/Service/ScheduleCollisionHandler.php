@@ -14,8 +14,6 @@ use Doctrine\ORM\Query;
 
 class ScheduleCollisionHandler implements ScheduleCollisionHandlerInterface
 {
-    private EntityManagerInterface $entityManager;
-
     private Query $selectEnclosedQuery;
 
     private Query $selectOtherEnclosingQuery;
@@ -27,15 +25,8 @@ class ScheduleCollisionHandler implements ScheduleCollisionHandlerInterface
     private Query $selectOverlappingAtEndQuery;
 
     public function __construct(
-        EntityManagerInterface $entityManager
+        private readonly EntityManagerInterface $entityManager,
     ) {
-        $this->entityManager = $entityManager;
-
-        $this->prepareQueries();
-    }
-
-    private function prepareQueries(): void
-    {
         $this->createSelectSameEnclosingQuery();
         $this->createSelectEnclosedQuery();
         $this->createSelectOtherEnclosingQuery();

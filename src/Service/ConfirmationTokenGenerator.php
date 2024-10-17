@@ -8,7 +8,7 @@ declare(strict_types=1);
 
 namespace App\Service;
 
-class ConfirmationTokenGenerator implements ConfirmationTokenGeneratorInterface
+readonly class ConfirmationTokenGenerator implements ConfirmationTokenGeneratorInterface
 {
     public function generateConfirmationToken(): string
     {

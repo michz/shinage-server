@@ -13,22 +13,18 @@ use App\Service\Pool\PoolDirectory;
 use App\Service\Pool\PoolFile;
 use Symfony\Component\Config\Definition\Exception\Exception;
 
-class FilePool
+readonly class FilePool
 {
-    protected string $base = '';
-
-    public function __construct(string $basepath)
+    public function __construct(private string $basePath)
     {
-        $this->base = $basepath;
-
         // test if path exists
-        if (!\is_dir($basepath)) {
-            \mkdir($basepath, 0700, true);
+        if (!\is_dir($basePath)) {
+            \mkdir($basePath, 0700, true);
         }
 
         // if not: try to create
         // test if it exists now; if not: Exception
-        if (!\is_dir($basepath)) {
+        if (!\is_dir($basePath)) {
             throw new Exception('FilePool path does not exist and cannot be created.');
         }
     }
@@ -54,7 +50,7 @@ class FilePool
      */
     public function getPathForUser(User $user): array
     {
-        $realBasePath = \realpath($this->base);
+        $realBasePath = \realpath($this->basePath);
         if (false === $realBasePath) {
             throw new \RuntimeException('Data pool base path not found.');
         }

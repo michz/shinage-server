@@ -13,14 +13,11 @@ use App\Entity\ScreenAssociation as ScreenAssociationEntity;
 use App\Entity\User;
 use Doctrine\ORM\EntityManagerInterface;
 
-class ScreenAssociation
+readonly class ScreenAssociation
 {
-    protected EntityManagerInterface $entityManager;
-
     public function __construct(
-        EntityManagerInterface $entityManager
+        private EntityManagerInterface $entityManager,
     ) {
-        $this->entityManager = $entityManager;
     }
 
     public function isUserAllowed(Screen $screen, User $user): bool

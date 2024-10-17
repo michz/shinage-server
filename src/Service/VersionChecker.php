@@ -8,13 +8,10 @@ declare(strict_types=1);
 
 namespace App\Service;
 
-class VersionChecker
+readonly class VersionChecker
 {
-    private string $rootPath;
-
-    public function __construct(string $rootPath)
+    public function __construct(private string $rootPath)
     {
-        $this->rootPath = $rootPath;
     }
 
     /**

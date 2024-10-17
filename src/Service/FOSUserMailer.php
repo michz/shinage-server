@@ -15,30 +15,15 @@ use Symfony\Component\Mime\Email;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Twig\Environment;
 
-class FOSUserMailer implements MailerInterface
+readonly class FOSUserMailer implements MailerInterface
 {
-    private \Symfony\Component\Mailer\MailerInterface $mailer;
-
-    private Environment $twig;
-
-    private UrlGeneratorInterface $router;
-
-    private string $senderMail;
-
-    private string $senderName;
-
     public function __construct(
-        \Symfony\Component\Mailer\MailerInterface $mailer,
-        Environment $twig,
-        UrlGeneratorInterface $router,
-        string $senderMail,
-        string $senderName
+        private \Symfony\Component\Mailer\MailerInterface $mailer,
+        private Environment $twig,
+        private UrlGeneratorInterface $router,
+        private string $senderMail,
+        private string $senderName,
     ) {
-        $this->mailer = $mailer;
-        $this->twig = $twig;
-        $this->router = $router;
-        $this->senderMail = $senderMail;
-        $this->senderName = $senderName;
     }
 
     /**

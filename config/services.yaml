@@ -186,12 +186,11 @@ services:
   # SHINAGE LEGACY FOLLOWING
   App\Service\FilePool:
     arguments:
-      $basepath: "%path_pool%"
+      $basePath: "%path_pool%"
 
   App\Service\FilePoolUrlBuilder:
     arguments:
       $basePath: "%path_pool%"
-      $router: "@router"
 
   App\EventListener\KernelExceptionListener:
     arguments:

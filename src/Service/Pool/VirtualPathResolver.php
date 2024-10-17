@@ -12,14 +12,11 @@ use App\Controller\Api\Exception\AccessDeniedException;
 use App\Entity\User;
 use Doctrine\ORM\EntityManagerInterface;
 
-class VirtualPathResolver implements VirtualPathResolverInterface
+readonly class VirtualPathResolver implements VirtualPathResolverInterface
 {
-    private EntityManagerInterface $entityManager;
-
     public function __construct(
-        EntityManagerInterface $entityManager
+        private EntityManagerInterface $entityManager
     ) {
-        $this->entityManager = $entityManager;
     }
 
     public function replaceVirtualBasePath(string $path): string

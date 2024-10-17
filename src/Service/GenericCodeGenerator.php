@@ -8,7 +8,7 @@ declare(strict_types=1);
 
 namespace App\Service;
 
-class GenericCodeGenerator implements GenericCodeGeneratorInterface
+readonly class GenericCodeGenerator implements GenericCodeGeneratorInterface
 {
     public function generate(int $length): string
     {
