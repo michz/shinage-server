@@ -44,7 +44,7 @@ class FOSUserMailer implements MailerInterface
     /**
      * {@inheritdoc}
      */
-    public function sendConfirmationEmailMessage(UserInterface $user)
+    public function sendConfirmationEmailMessage(UserInterface $user): void
     {
         $template = '@FOSUser/Registration/email.txt.twig';
         $url = $this->router->generate('fos_user_registration_confirm', ['token' => $user->getConfirmationToken()], UrlGeneratorInterface::ABSOLUTE_URL);
@@ -60,7 +60,7 @@ class FOSUserMailer implements MailerInterface
     /**
      * {@inheritdoc}
      */
-    public function sendResettingEmailMessage(UserInterface $user)
+    public function sendResettingEmailMessage(UserInterface $user): void
     {
         $template = '@FOSUser/Resetting/email.txt.twig';
         $url = $this->router->generate('fos_user_resetting_reset', ['token' => $user->getConfirmationToken()], UrlGeneratorInterface::ABSOLUTE_URL);
