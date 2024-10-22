@@ -57,6 +57,8 @@ Installation
   `mkdir ./data; chmod -R 0777 ./var ./data`  
   (If you know what you do you can avoid giving 777-permissions by only granting 
    read-write permission to the user the web server is running as.)
+* Build assets:
+  `nvm use && corepack enable && yarn install --frozen-lockfile`
 * If you want to host your own service,
   you *really* should know what to do from here.
   (i.e. installing and configuring a web server)

@@ -52,6 +52,14 @@ tests/_output/*
 
 /etc/dev/docker/nginx/server.*
 
+.pnp.*
+.yarn/*
+!.yarn/patches
+!.yarn/plugins
+!.yarn/releases
+!.yarn/sdks
+!.yarn/versions
+
 ###> symfony/framework-bundle ###
 /.env
 /public/bundles/
