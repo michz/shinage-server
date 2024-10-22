@@ -2,13 +2,13 @@
   "name": "shinage-server",
   "packageManager": "yarn@4.5.1",
   "dependencies": {
-    "@babel/core": "^7.18.9",
-    "@babel/preset-env": "^7.18.9",
-    "@babel/register": "^7.18.9",
-    "codemirror": "^5.65.7",
-    "del": "^7.0.0",
-    "fomantic-ui-css": "^2.8.7",
-    "fullcalendar": "^5.10.1",
+    "@babel/core": "^7.25.9",
+    "@babel/preset-env": "^7.25.9",
+    "@babel/register": "^7.25.9",
+    "codemirror": "^5.65.18",
+    "del": "^7.1.0",
+    "fomantic-ui-css": "^2.9.3",
+    "fullcalendar": "^5.11.5",
     "gulp": "^4.0.2",
     "gulp-babel": "^8.0.0",
     "gulp-clean-css": "^3.10.0",
@@ -20,9 +20,9 @@
     "gulp-uglify": "^3.0.2",
     "jquery": "^3.7.1",
     "jquery-datetimepicker": "^2.5.21",
-    "jquery-ui-dist": "^1.12.1",
-    "moment": "^2.29.4",
-    "reset-css": "^5.0.1",
-    "reveal.js": "^4.3.1"
+    "jquery-ui-dist": "^1.13.3",
+    "moment": "^2.30.1",
+    "reset-css": "^5.0.2",
+    "reveal.js": "^4.6.1"
   }
 }
