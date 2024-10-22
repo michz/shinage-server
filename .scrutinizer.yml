@@ -1,7 +1,7 @@
 build:
     environment:
         php:
-            version: 8.0.13
+            version: 8.2.15
             compile_options: '--enable-gd --with-openssl --enable-mbstring --enable-intl'
     nodes:
         analysis:
@@ -13,7 +13,7 @@ build:
                     - php-scrutinizer-run
             environment:
                 node:
-                    version: v14.18.2
+                    version: v20.18.0
         tests: true
     tests:
         override:
