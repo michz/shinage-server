@@ -4,8 +4,8 @@ services:
     environment:
       - VIRTUAL_HOST=shinage.localhost
     ports:
-      - "${HTTP_PORT}:80"
-      - "${HTTPS_PORT}:443"
+      - "127.0.0.1:${HTTP_PORT}:80"
+      - "127.0.0.1:${HTTPS_PORT}:443"
     volumes:
       - ${PROJECT_DIR}:/usr/share/nginx/html:delegated
       - ./nginx/nginx.conf:/etc/nginx/nginx.conf:delegated
@@ -42,17 +42,17 @@ services:
       - MYSQL_ALLOW_EMPTY_PASSWORD=false
       - MYSQL_DATABASE=${PROJECT_NAME}
     ports:
-      - "${MARIADB_PORT}:3306"
+      - "127.0.0.1:${MARIADB_PORT}:3306"
 
   redis:
     image: redis:7-alpine
     ports:
-      - "${REDIS_PORT}:6379"
+      - "127.0.0.1:${REDIS_PORT}:6379"
 
   mailpit:
     image: axllent/mailpit:latest
     ports:
-      - "${MAILPIT_PORT}:8025"
+      - "127.0.0.1:${MAILPIT_PORT}:8025"
 
   phpmyadmin:
     image: phpmyadmin:latest
@@ -62,7 +62,7 @@ services:
       PMA_USER: root
       PMA_PASSWORD: ${MARIADB_ROOT_PASSWORD}
     ports:
-      - "${PHPMYADMIN_PORT}:80"
+      - "127.0.0.1:${PHPMYADMIN_PORT}:80"
     links:
       - mariadb
     depends_on:
