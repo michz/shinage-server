@@ -25,24 +25,12 @@ class SecurityController extends AbstractController
     public const BACKUP_CODE_COUNT = 12;
     public const BACKUP_CODE_LENGTH = 12;
 
-    private EntityManagerInterface $entityManager;
-
-    private GoogleAuthenticatorInterface $googleAuthenticatorTwoFactorProvider;
-
-    private LoggedInUserRepositoryInterface $loggedInUserRepository;
-
-    private RequestStack $requestStack;
-
     public function __construct(
-        EntityManagerInterface $entityManager,
-        GoogleAuthenticatorInterface $googleAuthenticatorTwoFactorProvider,
-        LoggedInUserRepositoryInterface $loggedInUserRepository,
-        RequestStack $requestStack
+        private readonly EntityManagerInterface $entityManager,
+        private readonly GoogleAuthenticatorInterface $googleAuthenticatorTwoFactorProvider,
+        private readonly LoggedInUserRepositoryInterface $loggedInUserRepository,
+        private readonly RequestStack $requestStack
     ) {
-        $this->entityManager = $entityManager;
-        $this->googleAuthenticatorTwoFactorProvider = $googleAuthenticatorTwoFactorProvider;
-        $this->loggedInUserRepository = $loggedInUserRepository;
-        $this->requestStack = $requestStack;
     }
 
     public function indexAction(): Response

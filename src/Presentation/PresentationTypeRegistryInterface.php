@@ -15,7 +15,7 @@ interface PresentationTypeRegistryInterface
     public function getPresentationType(string $slug): PresentationTypeInterface;
 
     /**
-     * @return string[]|array
+     * @return PresentationTypeInterface[]
      */
     public function getPresentationTypes(): array;
 }

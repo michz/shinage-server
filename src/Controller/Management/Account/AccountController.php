@@ -23,43 +23,27 @@ use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\Form\Extension\Core\Type\RepeatedType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
-use Symfony\Component\Form\Form;
 use Symfony\Component\Form\FormError;
 use Symfony\Component\Form\FormFactoryInterface;
+use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\PasswordHasher\Hasher\MigratingPasswordHasher;
 use Symfony\Component\PasswordHasher\Hasher\PasswordHasherFactoryInterface;
+use Symfony\Component\PasswordHasher\Hasher\Pbkdf2PasswordHasher;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 class AccountController extends AbstractController
 {
-    private EntityManagerInterface $entityManager;
-
-    private UserManagerInterface $userManager;
-
-    private TranslatorInterface $translator;
-
-    private FormFactoryInterface $formFactory;
-
-    private PasswordHasherFactoryInterface $passwordHasherFactory;
-
-    private LoggedInUserRepositoryInterface $loggedInUserRepository;
-
     public function __construct(
-        EntityManagerInterface $entityManager,
-        UserManagerInterface $userManager,
-        TranslatorInterface $translator,
-        FormFactoryInterface $formFactory,
-        PasswordHasherFactoryInterface $passwordHasherFactory,
-        LoggedInUserRepositoryInterface $loggedInUserRepository
+        private readonly EntityManagerInterface $entityManager,
+        private readonly UserManagerInterface $userManager,
+        private readonly TranslatorInterface $translator,
+        private readonly FormFactoryInterface $formFactory,
+        private readonly PasswordHasherFactoryInterface $passwordHasherFactory,
+        private readonly LoggedInUserRepositoryInterface $loggedInUserRepository,
     ) {
-        $this->entityManager = $entityManager;
-        $this->userManager = $userManager;
-        $this->translator = $translator;
-        $this->formFactory = $formFactory;
-        $this->passwordHasherFactory = $passwordHasherFactory;
-        $this->loggedInUserRepository = $loggedInUserRepository;
     }
 
     public function indexAction(): RedirectResponse
@@ -124,12 +108,13 @@ class AccountController extends AbstractController
                 $form_pw->handleRequest($request);
 
                 if ($form_pw->isSubmitted()) {
+                    /** @var MigratingPasswordHasher|Pbkdf2PasswordHasher $passwordHasher */
                     $passwordHasher = $this->passwordHasherFactory->getPasswordHasher($user);
 
                     if (!$passwordHasher->verify(
                         $user->getPassword(),
                         $form_pw->get('old-password')->getData(),
-                        $user->getSalt()
+                        $user->getSalt() // @TODO Remove salt
                     )) {
                         // wrong old password
                         $form_pw->get('old-password')->addError(
@@ -244,7 +229,6 @@ class AccountController extends AbstractController
 
     public function orgaAddUserAction(Request $request): RedirectResponse
     {
-        /** @var User $user_new */
         $user = $this->loggedInUserRepository->getLoggedInUserOrDenyAccess();
         $rep = $this->entityManager->getRepository(User::class);
         $user_new = $rep->findOneBy(['email' => $request->get('email')]);
@@ -333,7 +317,7 @@ class AccountController extends AbstractController
     /**
      * Handles the create-api-key submission.
      */
-    protected function handleCreateApiToken(Request $request, Form $createApiKeyForm): void
+    protected function handleCreateApiToken(Request $request, FormInterface $createApiKeyForm): void
     {
         if ('POST' !== $request->getMethod() || !$request->request->has($createApiKeyForm->getName())) {
             return;

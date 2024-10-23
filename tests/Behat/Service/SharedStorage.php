@@ -19,10 +19,7 @@ class SharedStorage implements SharedStorageInterface
 
     private ?string $latestKey = null;
 
-    /**
-     * {@inheritdoc}
-     */
-    public function get(string $key)
+    public function get(string $key): mixed
     {
         if (!isset($this->clipboard[$key])) {
             throw new \InvalidArgumentException(\sprintf('There is no current resource for "%s"!', $key));
@@ -31,27 +28,18 @@ class SharedStorage implements SharedStorageInterface
         return $this->clipboard[$key];
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function has(string $key): bool
     {
         return isset($this->clipboard[$key]);
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function set(string $key, $resource): void
+    public function set(string $key, mixed $resource): void
     {
         $this->clipboard[$key] = $resource;
         $this->latestKey = $key;
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function getLatestResource()
+    public function getLatestResource(): mixed
     {
         if (!isset($this->clipboard[$this->latestKey])) {
             throw new \InvalidArgumentException(\sprintf('There is no "%s" latest resource!', $this->latestKey));

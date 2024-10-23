@@ -8,9 +8,7 @@ declare(strict_types=1);
 
 namespace App\Controller\Api\v1;
 
-use App\Controller\Api\Exception\AccessDeniedException;
 use App\Entity\Presentation;
-use App\Entity\User;
 use App\Security\LoggedInUserRepositoryInterface;
 use Doctrine\ORM\EntityManagerInterface;
 use JMS\Serializer\SerializationContext;
@@ -22,20 +20,11 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class PresentationsController extends AbstractController
 {
-    private EntityManagerInterface $entityManager;
-
-    private SerializerInterface $serializer;
-
-    private LoggedInUserRepositoryInterface $loggedInUserRepository;
-
     public function __construct(
-        EntityManagerInterface $entityManager,
-        SerializerInterface $serializer,
-        LoggedInUserRepositoryInterface $loggedInUserRepository
+        private readonly EntityManagerInterface $entityManager,
+        private readonly SerializerInterface $serializer,
+        private readonly LoggedInUserRepositoryInterface $loggedInUserRepository,
     ) {
-        $this->entityManager = $entityManager;
-        $this->serializer = $serializer;
-        $this->loggedInUserRepository = $loggedInUserRepository;
     }
 
     public function listAction(): Response
@@ -99,9 +88,6 @@ class PresentationsController extends AbstractController
         $presentation = $this->serializer->deserialize($request->getContent(), Presentation::class, 'json');
 
         $user = $this->loggedInUserRepository->getLoggedInUserOrDenyAccess();
-        if (false === ($user instanceof User)) {
-            throw new AccessDeniedException('User could not be loaded to be set as owner.');
-        }
 
         if (false === $this->entityManager->contains($presentation)) {
             // Persist new presentation

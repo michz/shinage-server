@@ -13,12 +13,17 @@ use App\Entity\User;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\Voter;
 
+/**
+ * @extends Voter<string, Presentation>
+ */
 class PresentationVoter extends Voter
 {
     /**
+     * @param Presentation $subject
+     *
      * {@inheritdoc}
      */
-    protected function supports($attribute, $subject): bool
+    protected function supports(string $attribute, mixed $subject): bool
     {
         return $subject instanceof Presentation;
     }
@@ -28,7 +33,7 @@ class PresentationVoter extends Voter
      *
      * {@inheritdoc}
      */
-    protected function voteOnAttribute($attribute, $subject, TokenInterface $token): bool
+    protected function voteOnAttribute(string $attribute, mixed $subject, TokenInterface $token): bool
     {
         $owner = $subject->getOwner();
         /** @var User $user */

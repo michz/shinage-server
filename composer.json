@@ -6,7 +6,6 @@
   "autoload": {
     "psr-4": {
       "App\\": "src/",
-      "mztx\\ShinageOnlinePlayerBundle\\": "_old_src/ShinageOnlinePlayerBundle/",
       "shinage\\server\\behat\\": "features/bootstrap/"
     },
     "classmap": [
@@ -28,12 +27,12 @@
 
     "doctrine/orm": "^2.7",
     "doctrine/doctrine-bundle": "^2.1",
-    "friendsofsymfony/user-bundle": "dev-master",
+    "friendsofsymfony/user-bundle": "^v4.0.0",
     "studio-42/elfinder": "^2.1",
     "guzzlehttp/guzzle": "^7.4",
     "knplabs/knp-menu-bundle": "^3.0",
     "jms/serializer": "^3.23",
-    "jms/serializer-bundle": "4.0.2",
+    "jms/serializer-bundle": "^5.4",
     "doctrine/doctrine-migrations-bundle": "^3.0",
     "mschop/pathogen": "^0.7.1",
     "symfony/dependency-injection": "6.4.*",
@@ -50,7 +49,6 @@
     "symfony/asset": "6.4.*",
     "symfony/mime": "6.4.*",
     "symfony/expression-language": "6.4.*",
-    "sensio/framework-extra-bundle": "^6.2",
     "scheb/2fa-bundle": "^v7.2",
     "scheb/2fa-email": "^v7.2",
     "scheb/2fa-google-authenticator": "^v7.2",
@@ -68,12 +66,15 @@
     "phpspec/phpspec": "^7.2",
     "behat/behat": "^3.7",
     "friends-of-behat/mink-extension": "^2.3",
-    "behat/mink-goutte-driver": "^2.0",
     "friends-of-behat/symfony-extension": "^2.0",
     "symplify/easy-coding-standard": "^11.0",
     "cweagans/composer-patches": "~1.0",
     "symfony/stopwatch": "6.4.*",
-    "symfony/web-profiler-bundle": "6.4.*"
+    "symfony/web-profiler-bundle": "6.4.*",
+    "behat/mink-browserkit-driver": "^2.2",
+    "rector/rector": "^1.2",
+    "phpstan/phpstan": "^1.12",
+    "shipmonk/composer-dependency-analyser": "^1.7"
   },
   "conflict": {
     "symfony/symfony": "*"

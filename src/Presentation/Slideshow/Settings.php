@@ -14,14 +14,13 @@ use JMS\Serializer\Annotation as JMS;
 class Settings
 {
     /**
-     * @var Slide[]|array
-     *
-     * @JMS\Type("list<App\Presentation\Slideshow\Slides\Slide>")
+     * @var Slide[]
      */
+    #[JMS\Type("list<App\Presentation\Slideshow\Slides\Slide>")]
     protected $slides = [];
 
     /**
-     * @return Slide[]|array
+     * @return Slide[]
      */
     public function getSlides(): array
     {
@@ -29,7 +28,7 @@ class Settings
     }
 
     /**
-     * @param Slide[]|array $slides
+     * @param Slide[] $slides
      */
     public function setSlides(array $slides): self
     {

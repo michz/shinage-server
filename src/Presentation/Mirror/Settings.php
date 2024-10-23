@@ -12,19 +12,11 @@ use JMS\Serializer\Annotation as JMS;
 
 class Settings
 {
-    /**
-     * @var string
-     *
-     * @JMS\Type("string")
-     */
-    protected $url = '';
+    #[JMS\Type('string')]
+    protected string $url = '';
 
-    /**
-     * @var string
-     *
-     * @JMS\Type("string")
-     */
-    protected $type = 'jsonp';
+    #[JMS\Type('string')]
+    protected string $type = 'jsonp';
 
     public function getUrl(): string
     {

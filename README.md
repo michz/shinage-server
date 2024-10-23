@@ -3,7 +3,6 @@ Shinage Server
 
 [![MIT license](https://img.shields.io/badge/License-MIT-blue.png)](https://lbesson.mit-license.org/)
 [![Build Status](https://github.com/michz/shinage-server/workflows/Test%20and%20Build/badge.svg)](https://github.com/michz/shinage-server/workflows/)
-[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/michz/shinage-server/badges/quality-score.png)](https://scrutinizer-ci.com/g/michz/shinage-server/)
 [![Open Source Love png1](https://badges.frapsoft.com/os/v1/open-source.png?v=103)](https://github.com/ellerbrock/open-source-badges/)
 
 
@@ -57,6 +56,8 @@ Installation
   `mkdir ./data; chmod -R 0777 ./var ./data`  
   (If you know what you do you can avoid giving 777-permissions by only granting 
    read-write permission to the user the web server is running as.)
+* Build assets:
+  `nvm use && corepack enable && yarn install --frozen-lockfile`
 * If you want to host your own service,
   you *really* should know what to do from here.
   (i.e. installing and configuring a web server)
@@ -79,11 +80,11 @@ Development
 
   * For better testing (including sending mails) you can use a ready-to-go docker based development environment:
     `bin/devEnv.sh start`.
-    For this you need a working `docker` and `docker-composer` installation.
+    For this you need a working `docker` and `docker-compose` installation.
     The relevant ports are mapped to host ports and printed to console during startup.
-    For example you can open the web interface via `http://localhost:8001/` or `https://localhost:44301`.
+    For example, you can open the web interface via `http://localhost:8001/` or `https://localhost:44301`.
     
-    In the docker development environment there is a working [Mailhog](https://github.com/mailhog/MailHog) installation
+    In the docker development environment there is a working [Mailpit](https://github.com/axllent/mailpit) installation
     that catches all mails sent via PHP `mail()` function in the php container.
     
   * If you use the docker based environment
@@ -91,6 +92,21 @@ Development
     There is a tiny helper script that executes the necessary `docker exec` command at `bin/runInDev.sh`.
     For example to call the Symfony console you have to run `bin/runInDev.sh bin/console`.
 
+To initialize the development database, do:
+
+```bash
+php bin/console doctrine:database:create
+php bin/console doctrine:schema:update --force
+php bin/console doctrine:fixtures:load
+```
+
+Or for docker based setup respectively:
+
+```bash
+bin/runInDev.sh php bin/console doctrine:database:create
+bin/runInDev.sh php bin/console doctrine:schema:update --force
+bin/runInDev.sh php bin/console doctrine:fixtures:load
+```
 
 Testing
 -------

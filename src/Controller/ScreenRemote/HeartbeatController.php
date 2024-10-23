@@ -10,7 +10,6 @@ namespace App\Controller\ScreenRemote;
 
 use App\Entity\Screen;
 use App\Exceptions\NoScreenGivenException;
-use App\Presentation\PresentationTypeRegistryInterface;
 use App\Repository\ScreenCommandRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use JMS\Serializer\SerializerInterface;
@@ -21,24 +20,11 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class HeartbeatController extends AbstractController
 {
-    private EntityManagerInterface $entityManager;
-
-    private PresentationTypeRegistryInterface $presentationTypeRegistry;
-
-    private SerializerInterface $serializer;
-
-    private ScreenCommandRepository $screenCommandRepository;
-
     public function __construct(
-        EntityManagerInterface $entityManager,
-        PresentationTypeRegistryInterface $presentationTypeRegistry,
-        SerializerInterface $serializer,
-        ScreenCommandRepository $screenCommandRepository
+        private readonly EntityManagerInterface $entityManager,
+        private readonly SerializerInterface $serializer,
+        private readonly ScreenCommandRepository $screenCommandRepository,
     ) {
-        $this->entityManager = $entityManager;
-        $this->presentationTypeRegistry = $presentationTypeRegistry;
-        $this->serializer = $serializer;
-        $this->screenCommandRepository = $screenCommandRepository;
     }
 
     public function heartbeatAction(string $screenId): Response

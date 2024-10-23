@@ -15,36 +15,21 @@ use Symfony\Component\Mime\Email;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Twig\Environment;
 
-class FOSUserMailer implements MailerInterface
+readonly class FOSUserMailer implements MailerInterface
 {
-    private \Symfony\Component\Mailer\MailerInterface $mailer;
-
-    private Environment $twig;
-
-    private UrlGeneratorInterface $router;
-
-    private string $senderMail;
-
-    private string $senderName;
-
     public function __construct(
-        \Symfony\Component\Mailer\MailerInterface $mailer,
-        Environment $twig,
-        UrlGeneratorInterface $router,
-        string $senderMail,
-        string $senderName
+        private \Symfony\Component\Mailer\MailerInterface $mailer,
+        private Environment $twig,
+        private UrlGeneratorInterface $router,
+        private string $senderMail,
+        private string $senderName,
     ) {
-        $this->mailer = $mailer;
-        $this->twig = $twig;
-        $this->router = $router;
-        $this->senderMail = $senderMail;
-        $this->senderName = $senderName;
     }
 
     /**
      * {@inheritdoc}
      */
-    public function sendConfirmationEmailMessage(UserInterface $user)
+    public function sendConfirmationEmailMessage(UserInterface $user): void
     {
         $template = '@FOSUser/Registration/email.txt.twig';
         $url = $this->router->generate('fos_user_registration_confirm', ['token' => $user->getConfirmationToken()], UrlGeneratorInterface::ABSOLUTE_URL);
@@ -60,7 +45,7 @@ class FOSUserMailer implements MailerInterface
     /**
      * {@inheritdoc}
      */
-    public function sendResettingEmailMessage(UserInterface $user)
+    public function sendResettingEmailMessage(UserInterface $user): void
     {
         $template = '@FOSUser/Resetting/email.txt.twig';
         $url = $this->router->generate('fos_user_resetting_reset', ['token' => $user->getConfirmationToken()], UrlGeneratorInterface::ABSOLUTE_URL);
@@ -73,7 +58,10 @@ class FOSUserMailer implements MailerInterface
         $this->sendMessage($template, $context, (string) $user->getEmail());
     }
 
-    protected function sendMessage(string $templateName, array $context, string $toEmail)
+    /**
+     * @param mixed[] $context
+     */
+    protected function sendMessage(string $templateName, array $context, string $toEmail): void
     {
         $template = $this->twig->load($templateName);
         $subject = $template->renderBlock('subject', $context);

@@ -21,20 +21,11 @@ use Symfony\Component\HttpFoundation\Response;
 
 class MirrorEditorController extends AbstractPresentationEditor
 {
-    private EntityManagerInterface $entityManager;
-
-    private SerializerInterface $serializer;
-
-    private FormFactoryInterface $formFactory;
-
     public function __construct(
-        EntityManagerInterface $entityManager,
-        SerializerInterface $serializer,
-        FormFactoryInterface $formFactory
+        private readonly EntityManagerInterface $entityManager,
+        private readonly SerializerInterface $serializer,
+        private readonly FormFactoryInterface $formFactory,
     ) {
-        $this->entityManager = $entityManager;
-        $this->serializer = $serializer;
-        $this->formFactory = $formFactory;
     }
 
     public function editAction(Request $request, int $presentationId): Response

@@ -12,13 +12,11 @@ use App\Entity\Presentation;
 use App\Entity\User;
 use Doctrine\ORM\EntityManagerInterface;
 
-class PresentationsRepository
+readonly class PresentationsRepository
 {
-    private EntityManagerInterface $entityManager;
-
-    public function __construct(EntityManagerInterface $em)
-    {
-        $this->entityManager = $em;
+    public function __construct(
+        private EntityManagerInterface $entityManager,
+    ) {
     }
 
     /**

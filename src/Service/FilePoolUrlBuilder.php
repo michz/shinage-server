@@ -10,24 +10,13 @@ namespace App\Service;
 
 use Symfony\Component\HttpFoundation\File\Exception\AccessDeniedException;
 use Symfony\Component\HttpFoundation\File\Exception\FileNotFoundException;
-use Symfony\Component\Routing\RouterInterface;
 
-class FilePoolUrlBuilder
+readonly class FilePoolUrlBuilder
 {
-    protected string $basePath = '';
-
-    protected RouterInterface $router;
-
-    private PathConcatenatorInterface $pathConcatenator;
-
     public function __construct(
-        string $basePath,
-        RouterInterface $router,
-        PathConcatenatorInterface $pathConcatenator
+        private string $basePath,
+        private PathConcatenatorInterface $pathConcatenator,
     ) {
-        $this->basePath = $basePath;
-        $this->router = $router;
-        $this->pathConcatenator = $pathConcatenator;
     }
 
     public function getAbsolutePath(string $filePath, string $userRoot = ''): string

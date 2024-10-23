@@ -28,7 +28,7 @@
 /public/reveal.js/
 /public/vendor/
 /node_modules/
-/bin/
+/bin/*
 !/bin/console
 !/bin/devEnv.sh
 !/bin/runInDev.sh
@@ -52,6 +52,14 @@ tests/_output/*
 
 /etc/dev/docker/nginx/server.*
 
+.pnp.*
+.yarn/*
+!.yarn/patches
+!.yarn/plugins
+!.yarn/releases
+!.yarn/sdks
+!.yarn/versions
+
 ###> symfony/framework-bundle ###
 /.env
 /public/bundles/
@@ -66,3 +74,7 @@ tests/_output/*
 .phpunit
 /phpunit.xml
 ###< symfony/phpunit-bridge ###
+
+###> phpstan/phpstan ###
+phpstan.neon
+###< phpstan/phpstan ###

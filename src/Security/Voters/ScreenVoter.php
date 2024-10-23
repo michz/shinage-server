@@ -9,10 +9,14 @@ declare(strict_types=1);
 namespace App\Security\Voters;
 
 use App\Entity\Screen;
+use App\Entity\User;
 use App\Service\ScreenAssociation;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\Voter;
 
+/**
+ * @extends Voter<string, Screen>
+ */
 class ScreenVoter extends Voter
 {
     private ScreenAssociation $screenAssociation;
@@ -23,18 +27,28 @@ class ScreenVoter extends Voter
     }
 
     /**
+     * @param Screen $subject
+     *
      * {@inheritdoc}
      */
-    protected function supports($attribute, $subject): bool
+    protected function supports(string $attribute, mixed $subject): bool
     {
         return $subject instanceof Screen;
     }
 
     /**
+     * @param Screen $subject
+     *
      * {@inheritdoc}
      */
-    protected function voteOnAttribute($attribute, $subject, TokenInterface $token): bool
+    protected function voteOnAttribute(string $attribute, mixed $subject, TokenInterface $token): bool
     {
-        return $this->screenAssociation->isUserAllowedTo($subject, $token->getUser(), $attribute);
+        $user = $token->getUser();
+
+        if (false === $user instanceof User) {
+            return false;
+        }
+
+        return $this->screenAssociation->isUserAllowedTo($subject, $user, $attribute);
     }
 }

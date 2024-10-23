@@ -13,14 +13,10 @@ abstract class PoolItem
     public const TYPE_DIRECTORY = 'dir';
     public const TYPE_FILE = 'file';
 
-    protected string $name = '';
-
-    protected string $fullpath = '';
-
-    public function __construct(string $name, string $path)
-    {
-        $this->name = $name;
-        $this->fullpath = $path;
+    public function __construct(
+        protected readonly string $name,
+        protected readonly string $fullpath,
+    ) {
     }
 
     public function getName(): string

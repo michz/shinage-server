@@ -33,40 +33,16 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 
 class RegistrationController extends AbstractController
 {
-    private EntityManagerInterface $entityManager;
-
-    private ConfirmationTokenGeneratorInterface $confirmationTokenGenerator;
-
-    private UserManagerInterface $userManager;
-
-    private TranslatorInterface $translator;
-
-    private MailerInterface $mailer;
-
-    private UserRepositoryInterface $userRepository;
-
-    private string $mailSenderMail;
-
-    private string $mailSenderName;
-
     public function __construct(
-        EntityManagerInterface $entityManager,
-        ConfirmationTokenGeneratorInterface $confirmationTokenGenerator,
-        UserManagerInterface $userManager,
-        TranslatorInterface $translator,
-        MailerInterface $mailer,
-        UserRepositoryInterface $userRepository,
-        string $mailSenderMail,
-        string $mailSenderName
+        private readonly EntityManagerInterface $entityManager,
+        private readonly ConfirmationTokenGeneratorInterface $confirmationTokenGenerator,
+        private readonly UserManagerInterface $userManager,
+        private readonly TranslatorInterface $translator,
+        private readonly MailerInterface $mailer,
+        private readonly UserRepositoryInterface $userRepository,
+        private readonly string $mailSenderMail,
+        private readonly string $mailSenderName,
     ) {
-        $this->entityManager = $entityManager;
-        $this->confirmationTokenGenerator = $confirmationTokenGenerator;
-        $this->userManager = $userManager;
-        $this->translator = $translator;
-        $this->mailer = $mailer;
-        $this->userRepository = $userRepository;
-        $this->mailSenderMail = $mailSenderMail;
-        $this->mailSenderName = $mailSenderName;
     }
 
     public function indexAction(Request $request): Response

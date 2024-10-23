@@ -1,0 +1,12 @@
+parameters:
+    level: 6
+    paths:
+        - bin/
+        - config/
+        - public/
+        - src/
+        - tests/
+    ignoreErrors:
+        -
+          message: '#Property [a-zA-Z0-9\\_]+::\$id is never written, only read.#'
+          path: src/Entity/*

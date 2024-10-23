@@ -15,12 +15,9 @@ use Symfony\Component\HttpFoundation\Response;
 
 class ScreenController extends AbstractController
 {
-    private EntityManagerInterface $entityManager;
-
     public function __construct(
-        EntityManagerInterface $entityManager
+        private readonly EntityManagerInterface $entityManager,
     ) {
-        $this->entityManager = $entityManager;
     }
 
     public function indexAction(): Response

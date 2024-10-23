@@ -96,14 +96,16 @@ class CheckAndAlarmScreensCommand extends Command
 
     private function sendAlarmByMail(Screen $screen, OutputInterface $output): void
     {
-        $recipients = \explode(';', $screen->getAlarmingMailTargets());
-        if (empty($recipients)) {
+        $alarmingMailTargets = $screen->getAlarmingMailTargets();
+        if (empty($alarmingMailTargets)) {
             $output->writeln(
                 'Screen  ' . $screen->getGuid() . '  does not have any readable recipients.',
                 OutputInterface::VERBOSITY_VERBOSE
             );
             return;
         }
+
+        $recipients = \explode(';', $alarmingMailTargets);
 
         $body = 'ALARM! Last successful connection from your screen "' . $screen->getName() . '" was on  ' .
             $screen->getLastConnect()->format('Y-m-d H:i:s') . ' .' . self::MAIL_EOL . self::MAIL_EOL .

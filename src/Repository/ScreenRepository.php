@@ -14,13 +14,11 @@ use App\Entity\User;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Query\Expr;
 
-class ScreenRepository
+readonly class ScreenRepository
 {
-    private EntityManagerInterface $entityManager;
-
-    public function __construct(EntityManagerInterface $em)
-    {
-        $this->entityManager = $em;
+    public function __construct(
+        private EntityManagerInterface $entityManager,
+    ) {
     }
 
     /**

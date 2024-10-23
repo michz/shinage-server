@@ -11,14 +11,11 @@ namespace App\Service;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\RouterInterface;
 
-class UrlBuilder implements UrlBuilderInterface
+readonly class UrlBuilder implements UrlBuilderInterface
 {
-    private RouterInterface $router;
-
     public function __construct(
-        RouterInterface $router
+        private RouterInterface $router,
     ) {
-        $this->router = $router;
     }
 
     /**

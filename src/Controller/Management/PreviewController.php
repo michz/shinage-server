@@ -20,20 +20,11 @@ class PreviewController extends AbstractController
 {
     public const PLAYER_URL_BASE = 'https://player.shinage.org/player.html?current_presentation_url=';
 
-    private ScreenRepository $screenRepository;
-
-    private UrlBuilderInterface $urlBuilder;
-
-    private LoggedInUserRepositoryInterface $loggedInUserRepository;
-
     public function __construct(
-        ScreenRepository $screenRepository,
-        UrlBuilderInterface $urlBuilder,
-        LoggedInUserRepositoryInterface $loggedInUserRepository
+        private readonly ScreenRepository $screenRepository,
+        private readonly UrlBuilderInterface $urlBuilder,
+        private readonly LoggedInUserRepositoryInterface $loggedInUserRepository,
     ) {
-        $this->screenRepository = $screenRepository;
-        $this->urlBuilder = $urlBuilder;
-        $this->loggedInUserRepository = $loggedInUserRepository;
     }
 
     public function previewAction(Request $request): Response

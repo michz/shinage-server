@@ -16,14 +16,11 @@ use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException as SecurityCoreAccessDeniedException;
 
-class KernelExceptionListener
+readonly class KernelExceptionListener
 {
-    private string $environment;
-
     public function __construct(
-        string $environment
+        private string $environment,
     ) {
-        $this->environment = $environment;
     }
 
     public function onKernelException(ExceptionEvent $event): void

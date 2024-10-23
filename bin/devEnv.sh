@@ -2,7 +2,8 @@
 
 PROJECT_DIR="$( cd "$( dirname $( dirname "${BASH_SOURCE[0]}") )" && pwd )"
 PROJECT_NAME="$( basename ${PROJECT_DIR} )"
-DOCKER_COMPOSE_YAML=${PROJECT_DIR}"/etc/dev/docker/docker-compose.yml"
+DOCKER_COMPOSE_YAML=${PROJECT_DIR}"/etc/dev/docker/compose.yml"
+DOCKER_COMPOSE_BIN=${DOCKER_COMPOSE_BIN:-"docker compose"}
 
 function prepare {
     if [ ! -f ${PROJECT_DIR}/etc/dev/docker/nginx/server.crt ] || [ ! -f ${PROJECT_DIR}/etc/dev/docker/nginx/server.key ]; then
@@ -25,7 +26,7 @@ function echo_configuration {
     echo "HTTP:    "${HTTP_PORT}
     echo "HTTPS:   "${HTTPS_PORT}
     echo "MariaDB: "${MARIADB_PORT}
-    echo "Mailhog: "${MAILHOG_PORT}
+    echo "Mailpit: "${MAILPIT_PORT}
     echo ""
     echo "PHP version: "${PHP_VERSION}
     echo "MariaDB version: "${MARIADB_VERSION}
@@ -75,7 +76,7 @@ function reset_container {
 }
 
 function docker_compose_cmd {
-    docker-compose \
+    ${DOCKER_COMPOSE_BIN} \
         -f ${DOCKER_COMPOSE_YAML} \
         -p ${PROJECT_NAME} \
         $@

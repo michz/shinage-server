@@ -20,6 +20,9 @@ final class MailerTestTransportFactory extends AbstractTransportFactory
         return new MailerTestTransport();
     }
 
+    /**
+     * @return string[]
+     */
     protected function getSupportedSchemes(): array
     {
         return ['testonly'];

@@ -27,24 +27,12 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class ScheduleController extends AbstractController
 {
-    private EntityManagerInterface $entityManager;
-
-    private SerializerInterface $serializer;
-
-    private ScheduleCollisionHandlerInterface $collisionHandler;
-
-    private LoggedInUserRepository $loggedInUserRepository;
-
     public function __construct(
-        EntityManagerInterface $entityManager,
-        SerializerInterface $serializer,
-        ScheduleCollisionHandlerInterface $collisionHandler,
-        LoggedInUserRepository $loggedInUserRepository
+        private readonly EntityManagerInterface $entityManager,
+        private readonly SerializerInterface $serializer,
+        private readonly ScheduleCollisionHandlerInterface $collisionHandler,
+        private readonly LoggedInUserRepository $loggedInUserRepository,
     ) {
-        $this->entityManager = $entityManager;
-        $this->serializer = $serializer;
-        $this->collisionHandler = $collisionHandler;
-        $this->loggedInUserRepository = $loggedInUserRepository;
     }
 
     public function listAction(): Response

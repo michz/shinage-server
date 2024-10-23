@@ -11,25 +11,16 @@ namespace App\Presentation\Slideshow\Slides;
 use JMS\Serializer\Annotation as JMS;
 
 /**
- * @JMS\ExclusionPolicy("NONE")
- *
  * @TODO Can Type be removed?
  */
+#[JMS\ExclusionPolicy(JMS\ExclusionPolicy::NONE)]
 class VideoSlide extends Slide
 {
-    /**
-     * @var string
-     *
-     * @JMS\Type("string")
-     */
-    protected $src = '';
+    #[JMS\Type('string')]
+    protected string $src = '';
 
-    /**
-     * @var string
-     *
-     * @JMS\Type("string")
-     */
-    protected $type = 'Video';
+    #[JMS\Type('string')]
+    protected string $type = 'Video';
 
     public function getSrc(): string
     {

@@ -11,14 +11,11 @@ namespace App\Service;
 use App\Entity\User;
 use App\Security\PathCheckerInterface;
 
-class FilePoolPermissionChecker implements FilePoolPermissionCheckerInterface
+readonly class FilePoolPermissionChecker implements FilePoolPermissionCheckerInterface
 {
-    private PathCheckerInterface $pathChecker;
-
     public function __construct(
-        PathCheckerInterface $pathChecker
+        private PathCheckerInterface $pathChecker,
     ) {
-        $this->pathChecker = $pathChecker;
     }
 
     public function mayUserAccessRoot(User $user, string $root): bool

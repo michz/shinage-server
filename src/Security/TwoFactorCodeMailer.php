@@ -15,26 +15,14 @@ use Symfony\Component\Mime\Address;
 use Symfony\Component\Mime\Email;
 use Twig\Environment;
 
-class TwoFactorCodeMailer implements AuthCodeMailerInterface
+readonly class TwoFactorCodeMailer implements AuthCodeMailerInterface
 {
-    private MailerInterface $mailer;
-
-    private string $senderMail;
-
-    private ?string $senderName;
-
-    private Environment $engine;
-
     public function __construct(
-        MailerInterface $mailer,
-        Environment $engine,
-        string $senderMail,
-        ?string $senderName
+        private MailerInterface $mailer,
+        private Environment $engine,
+        private string $senderMail,
+        private ?string $senderName,
     ) {
-        $this->mailer = $mailer;
-        $this->senderMail = $senderMail;
-        $this->senderName = $senderName;
-        $this->engine = $engine;
     }
 
     public function sendAuthCode(TwoFactorInterface $user): void

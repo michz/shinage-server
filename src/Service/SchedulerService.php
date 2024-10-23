@@ -14,13 +14,10 @@ use App\Entity\ScheduledPresentation;
 use App\Entity\Screen;
 use Doctrine\ORM\EntityManagerInterface;
 
-class SchedulerService
+readonly class SchedulerService
 {
-    protected EntityManagerInterface $entityManager;
-
-    public function __construct(EntityManagerInterface $entityManager)
+    public function __construct(private EntityManagerInterface $entityManager)
     {
-        $this->entityManager = $entityManager;
     }
 
     public function getCurrentPresentation(Screen $screen, bool $fallbackToDefault = true): ?PresentationInterface

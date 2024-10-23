@@ -149,7 +149,7 @@ class ScreenContext implements Context
     /**
      * @Given There is a command :command available for screen :screen
      */
-    public function thereIsACommandAvailableForScreen(string $command, Screen $screen)
+    public function thereIsACommandAvailableForScreen(string $command, Screen $screen): void
     {
         $screenCommand = new ScreenCommand();
         $screenCommand->setCreated(new \DateTime());

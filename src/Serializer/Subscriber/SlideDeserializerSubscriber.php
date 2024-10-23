@@ -16,6 +16,8 @@ class SlideDeserializerSubscriber implements EventSubscriberInterface
 {
     /**
      * {@inheritdoc}
+     *
+     * @return array<array-key,array<string, int|string|class-string>>
      */
     public static function getSubscribedEvents(): array
     {

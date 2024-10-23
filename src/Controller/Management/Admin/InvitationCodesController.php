@@ -20,16 +20,10 @@ class InvitationCodesController extends AbstractController
     public const DEFAULT_CODE_LENGTH = 12;
     public const MAX_COUNT_GENERATE = 100;
 
-    private EntityManagerInterface $entityManager;
-
-    private RegistrationCodeFactoryInterface $registrationCodeFactory;
-
     public function __construct(
-        EntityManagerInterface $entityManager,
-        RegistrationCodeFactoryInterface $registrationCodeFactory
+        private readonly EntityManagerInterface $entityManager,
+        private readonly RegistrationCodeFactoryInterface $registrationCodeFactory,
     ) {
-        $this->entityManager = $entityManager;
-        $this->registrationCodeFactory = $registrationCodeFactory;
     }
 
     public function indexAction(): Response

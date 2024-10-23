@@ -21,12 +21,9 @@ use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 class ScreenAlarmingController extends AbstractController
 {
-    private EntityManagerInterface $entityManager;
-
     public function __construct(
-        EntityManagerInterface $entityManager
+        private readonly EntityManagerInterface $entityManager,
     ) {
-        $this->entityManager = $entityManager;
     }
 
     public function indexAction(Request $request, string $guid): Response

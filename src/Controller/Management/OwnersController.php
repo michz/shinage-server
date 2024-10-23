@@ -10,22 +10,14 @@ namespace App\Controller\Management;
 
 use App\Entity\User;
 use App\Security\LoggedInUserRepositoryInterface;
-use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 
 class OwnersController extends AbstractController
 {
-    private EntityManagerInterface $entityManager;
-
-    private LoggedInUserRepositoryInterface $loggedInUserRepository;
-
     public function __construct(
-        EntityManagerInterface $entityManager,
-        LoggedInUserRepositoryInterface $loggedInUserRepository
+        private readonly LoggedInUserRepositoryInterface $loggedInUserRepository,
     ) {
-        $this->entityManager = $entityManager;
-        $this->loggedInUserRepository = $loggedInUserRepository;
     }
 
     public function getPossibleOwnersAction(): Response

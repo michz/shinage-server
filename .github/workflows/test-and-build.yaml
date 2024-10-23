@@ -26,7 +26,11 @@ jobs:
           php-version: '8.2'
           tools: symfony
 
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: '.nvmrc'
 
       - name: Validate composer files
         run: composer validate --no-check-all --strict
@@ -35,7 +39,9 @@ jobs:
         run: composer install --prefer-dist --no-progress --no-scripts
 
       - name: Install yarn dependencies
-        run: yarn install --frozen-lockfile
+        run:  |
+          corepack enable
+          yarn install --frozen-lockfile
 
       - name: Build assets
         run: ./node_modules/.bin/gulp
@@ -68,6 +74,13 @@ jobs:
       - name: Lint TWIG files
         run: ./bin/console lint:twig config/ src/ templates/
 
+      - name: Check composer dependencies
+        run: ./vendor/bin/composer-dependency-analyser
+        continue-on-error: true
+
+      - name: Run phpstan
+        run: ./vendor/bin/phpstan analyse --no-progress --no-interaction
+
       - name: Run phpspec
         run: ./vendor/bin/phpspec run --format=pretty --no-code-generation
 
@@ -76,7 +89,7 @@ jobs:
         env:
           APP_ENV: test
 
-  deploy:
+  package:
     if: github.event_name == 'push' && contains(github.ref, 'refs/tags/v')
     needs: build
     runs-on: ubuntu-22.04
@@ -87,21 +100,29 @@ jobs:
           php-version: '8.2'
 
       - name: Checkout code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: '.nvmrc'
 
       - name: Print versions
         run: |
-          php --version ;
-          node --version ;
+          corepack enable
+          php --version
+          node --version
+          corepack -v
           yarn --version
 
       - name: Install php dependencies
         run: |
-          composer install --prefer-dist --no-progress --no-scripts --no-dev &&
+          composer install --prefer-dist --no-progress --no-scripts --no-dev
           composer dump-autoload --classmap-authoritative
 
       - name: Install yarn dependencies
-        run: yarn install --frozen-lockfile
+        run: |
+          corepack enable
+          yarn install --frozen-lockfile
 
       - name: Build assets
         run: ./node_modules/.bin/gulp
@@ -113,10 +134,10 @@ jobs:
 
       - name: Prepare and cleanup
         run: |
-          mkdir ./build &&
-          rm -f .scrutinizer.yml .gitignore .web-server-pid .env .env.* .eslintrc .nvmrc &&
-          rm -f bin/devEnv.sh bin/runInDev.sh &&
-          rm -f ecs.php package* behat.yml codeception.yml install-git-hooks.php phpspec.yml gulpfile.js &&
+          mkdir ./build
+          rm -f .gitignore .web-server-pid .env .env.* .eslintrc .nvmrc
+          rm -f bin/devEnv.sh bin/runInDev.sh
+          rm -f ecs.php package* behat.yml codeception.yml install-git-hooks.php phpspec.yml gulpfile.js
           rm -rf .github/ node_modules/  var/cache/dev/ var/cache/test/ var/session/dev/ var/session/test/ .git/ etc/ features/ tests/ git-hooks/ spec/ data/pool/*
 
       - name: Package release file
@@ -124,23 +145,10 @@ jobs:
 
       - name: Create Release
         id: create_release
-        uses: actions/create-release@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        uses: softprops/action-gh-release@v2
         with:
-          tag_name: ${{ github.ref }}
-          release_name: Release ${{ github.ref }}
+          name: Release ${{ github.ref }}
           body: Release ${{ github.ref }}
           draft: false
           prerelease: false
-
-      - name: Upload Release Asset
-        id: upload-release-asset
-        uses: actions/upload-release-asset@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./build/shinage-server-release.tar.gz
-          asset_name: shinage-server-release.tar.gz
-          asset_content_type: application/gzip
+          files: build/shinage-server-release.tar.gz
