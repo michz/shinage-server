@@ -10,7 +10,6 @@ namespace App\Controller\Management\Screens;
 
 use App\Entity\Presentation;
 use App\Entity\Screen;
-use App\Entity\User;
 use App\Repository\PresentationsRepository;
 use App\Security\LoggedInUserRepositoryInterface;
 use Doctrine\ORM\EntityManagerInterface;
@@ -21,7 +20,6 @@ use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 class ScreenDataController extends AbstractController
 {
@@ -84,11 +82,6 @@ class ScreenDataController extends AbstractController
     private function getPresentationsChoices(): array
     {
         $user = $this->loggedInUserRepository->getLoggedInUserOrDenyAccess();
-        if (false === $user instanceof User) {
-            throw new AccessDeniedException(
-                'Presentations of user could not be fetched as no valid user was found in session.'
-            );
-        }
 
         $choices = [];
         foreach ($this->presentationsRepository->getPresentationsForsUser($user) as $presentation) {
