@@ -8,9 +8,7 @@ declare(strict_types=1);
 
 namespace App\Controller\Api\v1;
 
-use App\Controller\Api\Exception\AccessDeniedException;
 use App\Entity\Presentation;
-use App\Entity\User;
 use App\Security\LoggedInUserRepositoryInterface;
 use Doctrine\ORM\EntityManagerInterface;
 use JMS\Serializer\SerializationContext;
@@ -90,9 +88,6 @@ class PresentationsController extends AbstractController
         $presentation = $this->serializer->deserialize($request->getContent(), Presentation::class, 'json');
 
         $user = $this->loggedInUserRepository->getLoggedInUserOrDenyAccess();
-        if (false === ($user instanceof User)) {
-            throw new AccessDeniedException('User could not be loaded to be set as owner.');
-        }
 
         if (false === $this->entityManager->contains($presentation)) {
             // Persist new presentation
