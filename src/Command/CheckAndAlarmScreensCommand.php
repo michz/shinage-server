@@ -97,7 +97,7 @@ class CheckAndAlarmScreensCommand extends Command
     private function sendAlarmByMail(Screen $screen, OutputInterface $output): void
     {
         $recipients = \explode(';', $screen->getAlarmingMailTargets());
-        if (empty($recipients)) {
+        if ('' === $recipients) {
             $output->writeln(
                 'Screen  ' . $screen->getGuid() . '  does not have any readable recipients.',
                 OutputInterface::VERBOSITY_VERBOSE
