@@ -128,7 +128,7 @@ jobs:
       - name: Prepare and cleanup
         run: |
           mkdir ./build
-          rm -f .scrutinizer.yml .gitignore .web-server-pid .env .env.* .eslintrc .nvmrc
+          rm -f .gitignore .web-server-pid .env .env.* .eslintrc .nvmrc
           rm -f bin/devEnv.sh bin/runInDev.sh
           rm -f ecs.php package* behat.yml codeception.yml install-git-hooks.php phpspec.yml gulpfile.js
           rm -rf .github/ node_modules/  var/cache/dev/ var/cache/test/ var/session/dev/ var/session/test/ .git/ etc/ features/ tests/ git-hooks/ spec/ data/pool/*

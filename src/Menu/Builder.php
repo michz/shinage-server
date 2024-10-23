@@ -24,7 +24,7 @@ readonly class Builder
     /**
      * @param mixed[]|array $options
      */
-    public function accountMenu(/* @scrutinizer ignore-unused */ array $options): ItemInterface
+    public function accountMenu(array $options): ItemInterface
     {
         $menu = $this->factory->createItem('root');
 
