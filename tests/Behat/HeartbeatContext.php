@@ -10,7 +10,6 @@ namespace Tests\Behat;
 
 use Behat\Behat\Context\Context;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
-use Symfony\Component\BrowserKit\Response;
 use Webmozart\Assert\Assert;
 
 class HeartbeatContext implements Context
@@ -55,9 +54,8 @@ class HeartbeatContext implements Context
     /**
      * @Then I should see that there is a command :command available
      */
-    public function iShouldSeeThatThereIsACommandAvailable(string $command)
+    public function iShouldSeeThatThereIsACommandAvailable(string $command): void
     {
-        /** @var Response $response */
         $response = $this->client->getResponse();
         $data = \json_decode($response->getContent());
         Assert::eq($data->command->command, $command);

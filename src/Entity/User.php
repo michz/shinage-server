@@ -25,9 +25,11 @@ class User extends BaseUser implements TwoFactorEmailInterface, TwoFactorGoogleI
 
     protected string $name = '';
 
-    private Collection|ArrayCollection $organizations;
+    /** @var Collection<array-key, User> */
+    private Collection $organizations;
 
-    private Collection|ArrayCollection $users;
+    /** @var Collection<array-key, User> */
+    private Collection $users;
 
     /** @var string */
     protected $password;
@@ -39,6 +41,7 @@ class User extends BaseUser implements TwoFactorEmailInterface, TwoFactorGoogleI
 
     private ?string $emailAuthCode;
 
+    /** @var string[]|null */
     private ?array $backupCodes;
 
     private ?string $totpSecret;
@@ -86,6 +89,7 @@ class User extends BaseUser implements TwoFactorEmailInterface, TwoFactorGoogleI
         $this->organizations->removeElement($organization);
     }
 
+    /** @return Collection<array-key, User> */
     public function getOrganizations(): Collection
     {
         return $this->organizations;
@@ -103,15 +107,10 @@ class User extends BaseUser implements TwoFactorEmailInterface, TwoFactorGoogleI
         return $this->name;
     }
 
+    /** @return Collection<array-key, User> */
     public function getUsers(): Collection
     {
         return $this->users;
-    }
-
-    public function setUsers(Collection $users): self
-    {
-        $this->users = $users;
-        return $this;
     }
 
     public function addUser(self $user): self

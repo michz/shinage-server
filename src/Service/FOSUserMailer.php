@@ -58,7 +58,10 @@ readonly class FOSUserMailer implements MailerInterface
         $this->sendMessage($template, $context, (string) $user->getEmail());
     }
 
-    protected function sendMessage(string $templateName, array $context, string $toEmail)
+    /**
+     * @param mixed[] $context
+     */
+    protected function sendMessage(string $templateName, array $context, string $toEmail): void
     {
         $template = $this->twig->load($templateName);
         $subject = $template->renderBlock('subject', $context);

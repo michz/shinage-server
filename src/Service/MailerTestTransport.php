@@ -16,6 +16,7 @@ use Symfony\Component\Mime\RawMessage;
 
 class MailerTestTransport implements TransportInterface
 {
+    /** @var SentMessage[] */
     protected static array $mails = [];
 
     public function send(RawMessage $message, Envelope $envelope = null): ?SentMessage
@@ -42,6 +43,9 @@ class MailerTestTransport implements TransportInterface
         self::$mails = [];
     }
 
+    /**
+     * @return SentMessage[]
+     */
     public function getMails(): array
     {
         return self::$mails;

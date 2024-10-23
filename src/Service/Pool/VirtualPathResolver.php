@@ -26,7 +26,6 @@ readonly class VirtualPathResolver implements VirtualPathResolverInterface
             $mail = $matches['mail'];
             $relativePath = $matches['path'];
 
-            /** @var User $user */
             $user = $this->entityManager->getRepository(User::class)->findOneBy(['email' => $mail]);
             if (null === $user) {
                 throw new AccessDeniedException();

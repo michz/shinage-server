@@ -28,7 +28,7 @@ class SharedStorageTransformerContext implements Context
     /**
      * @Transform /^(it|its|theirs|them)$/
      */
-    public function getLatestResource()
+    public function getLatestResource(): mixed
     {
         return $this->sharedStorage->getLatestResource();
     }
@@ -36,7 +36,7 @@ class SharedStorageTransformerContext implements Context
     /**
      * @Transform /^(?:this|that|the) ([^"]+)$/
      */
-    public function getResource(string $resource)
+    public function getResource(string $resource): mixed
     {
         return $this->sharedStorage->get(StringInflector::nameToCode($resource));
     }

@@ -11,6 +11,7 @@ namespace App\Controller\Management;
 use App\Entity\Presentation;
 use App\Entity\PresentationInterface;
 use App\Entity\User;
+use App\Presentation\PresentationTypeInterface;
 use App\Presentation\PresentationTypeRegistryInterface;
 use App\Repository\PresentationsRepository;
 use App\Security\LoggedInUserRepositoryInterface;
@@ -165,9 +166,9 @@ class PresentationsController extends AbstractController
     }
 
     /**
-     * @param array|string[] $types
+     * @param PresentationTypeInterface[] $types
      *
-     * @return array|string[]
+     * @return array<string, string>
      */
     protected function getTypeChoices(array $types): array
     {

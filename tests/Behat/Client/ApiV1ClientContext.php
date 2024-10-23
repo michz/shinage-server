@@ -10,14 +10,14 @@ namespace Tests\Behat\Client;
 
 use Behat\Behat\Context\Context;
 use GuzzleHttp\Client;
-use GuzzleHttp\Psr7\Response;
+use Psr\Http\Message\ResponseInterface;
 use Webmozart\Assert\Assert;
 
 class ApiV1ClientContext implements Context
 {
     private string $apiKey = '';
 
-    private ?Response $responseObject = null;
+    private ?ResponseInterface $responseObject = null;
 
     private string $responseBody = '';
 
@@ -57,7 +57,7 @@ class ApiV1ClientContext implements Context
         $this->responseBody = $this->responseObject->getBody()->getContents();
     }
 
-    public function getResponseObject(): ?Response
+    public function getResponseObject(): ?ResponseInterface
     {
         return $this->responseObject;
     }

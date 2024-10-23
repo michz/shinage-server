@@ -10,16 +10,16 @@ namespace Tests\Behat\Service;
 
 interface SharedStorageInterface
 {
-    public function get(string $key);
+    public function get(string $key): mixed;
 
     public function has(string $key): bool;
 
-    public function set(string $key, $resource): void;
+    public function set(string $key, mixed $resource): void;
 
-    public function getLatestResource();
+    public function getLatestResource(): mixed;
 
     /**
-     * @param array|mixed[] $clipboard
+     * @param mixed[] $clipboard
      */
     public function setClipboard(array $clipboard): void;
 }
