@@ -74,6 +74,13 @@ jobs:
       - name: Lint TWIG files
         run: ./bin/console lint:twig config/ src/ templates/
 
+      - name: Check composer dependencies
+        run: ./vendor/bin/composer-dependency-analyser
+        continue-on-error: true
+
+      - name: Run phpstan
+        run: ./vendor/bin/phpstan analyse --no-progress --no-interaction
+
       - name: Run phpspec
         run: ./vendor/bin/phpspec run --format=pretty --no-code-generation
 

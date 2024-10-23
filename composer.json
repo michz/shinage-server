@@ -73,7 +73,8 @@
     "symfony/web-profiler-bundle": "6.4.*",
     "behat/mink-browserkit-driver": "^2.2",
     "rector/rector": "^1.2",
-    "phpstan/phpstan": "^1.12"
+    "phpstan/phpstan": "^1.12",
+    "shipmonk/composer-dependency-analyser": "^1.7"
   },
   "conflict": {
     "symfony/symfony": "*"
