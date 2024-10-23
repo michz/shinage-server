@@ -72,7 +72,8 @@
     "symfony/stopwatch": "6.4.*",
     "symfony/web-profiler-bundle": "6.4.*",
     "behat/mink-browserkit-driver": "^2.2",
-    "rector/rector": "^1.2"
+    "rector/rector": "^1.2",
+    "phpstan/phpstan": "^1.12"
   },
   "conflict": {
     "symfony/symfony": "*"
