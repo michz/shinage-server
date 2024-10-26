@@ -13,29 +13,33 @@ use App\Entity\PresentationInterface;
 use App\Entity\ScheduledPresentation;
 use App\Entity\Screen;
 use Doctrine\ORM\EntityManagerInterface;
+use Psr\Clock\ClockInterface;
 
 readonly class SchedulerService
 {
-    public function __construct(private EntityManagerInterface $entityManager)
-    {
+    public function __construct(
+        private EntityManagerInterface $entityManager,
+        private ClockInterface $clock,
+    ) {
     }
 
     public function getCurrentPresentation(Screen $screen, bool $fallbackToDefault = true): ?PresentationInterface
     {
-        $query = $this->entityManager->createQuery(
-            'SELECT p
-                    FROM App:ScheduledPresentation p
-                    WHERE
-                        (
-                        (p.scheduled_start <= :now AND p.scheduled_end >= :now)
-                        ) AND 
-                        p.screen = :screen
-                    ORDER BY p.scheduled_start ASC'
-        )
-            ->setParameter('now', \date('Y-m-d H:i:s'))
+        // Times in database are always interpreted as UTC.
+        $utc = new \DateTimeZone('UTC');
+        $now = \DateTime::createFromImmutable($this->clock->now());
+        $now->setTimezone($utc);
+        $queryBuilder = $this->entityManager->createQueryBuilder();
+        $queryBuilder
+            ->select('p')
+            ->from(ScheduledPresentation::class, 'p')
+            ->where('p.screen = :screen')
+            ->andWhere('p.scheduled_start <= :now')
+            ->andWhere('p.scheduled_end >= :now')
+            ->setParameter('now', $now->format('Y-m-d H:i:s'))
             ->setParameter('screen', $screen);
 
-        $results = $query->getResult();
+        $results = $queryBuilder->getQuery()->getResult();
 
         if (\count($results) > 0) {
             /** @var ScheduledPresentation $p */
@@ -71,11 +75,13 @@ readonly class SchedulerService
      */
     public function deleteAllScheduledPresentationsForPresentation(PresentationInterface $presentation): void
     {
-        $q = $this->entityManager->createQuery(
-            'delete from App:ScheduledPresentation p where p.presentation = :presentation'
-        );
-        $q->setParameter('presentation', $presentation);
-        $q->execute();
+        $queryBuilder = $this->entityManager->createQueryBuilder();
+        $queryBuilder
+            ->delete(ScheduledPresentation::class, 'p')
+            ->where('p.presentation = :presentation')
+            ->setParameter('presentation', $presentation);
+
+        $queryBuilder->getQuery()->execute();
         $this->entityManager->flush();
     }
 }
