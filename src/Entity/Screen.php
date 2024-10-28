@@ -36,6 +36,8 @@ class Screen
 
     protected int $alarming_connection_threshold = 30;
 
+    protected string $timezone = 'UTC';
+
     public function setGuid(string $guid): self
     {
         $this->guid = $guid;
@@ -185,6 +187,17 @@ class Screen
     public function setAlarmingConnectionThreshold(int $alarming_connection_threshold): self
     {
         $this->alarming_connection_threshold = $alarming_connection_threshold;
+        return $this;
+    }
+
+    public function getTimezone(): string
+    {
+        return $this->timezone;
+    }
+
+    public function setTimezone(string $timezone): self
+    {
+        $this->timezone = $timezone;
         return $this;
     }
 }

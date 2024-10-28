@@ -13,6 +13,7 @@ Feature: In order to manage the schedule in an organization
     And The user "drummer@shinage.test" belongs to the organization "band"
     And There is a screen with guid "sheet"
     And The screen "sheet" belongs to user "singer@shinage.test"
+    And The screen "sheet" is located in timezone "Europe/Berlin"
     And The organization "band" has the right to "schedule" for the screen "sheet"
     And The user "band" has a presentation of type "slideshow" and title "song1"
     And The user "band" has a presentation of type "slideshow" and title "song2"
@@ -25,20 +26,20 @@ Feature: In order to manage the schedule in an organization
 
   Scenario: I can schedule a presentation
     Given I use the api key "stick"
-    When I schedule the presentation "song1" on screen "sheet" from "2035-02-06 10:00:00" to "2035-02-06 18:00:00"
+    When I schedule the presentation "song1" on screen "sheet" from "2035-02-06T10:00:00+01:00" to "2035-02-06T10:00:00+01:00"
     Then I can see that the api request was successful
-    And I should see in the response that the presentation "song1" is scheduled on screen "sheet" from "2035-02-06 10:00:00" to "2035-02-06 18:00:00"
+    And I should see in the response that the presentation "song1" is scheduled on screen "sheet" from "2035-02-06T10:00:00+01:00" to "2035-02-06T10:00:00+01:00"
 
   Scenario: I can see a scheduled presentation
     Given I use the api key "stick"
-    When I schedule the presentation "song1" on screen "sheet" from "2035-02-06 10:00:00" to "2035-02-06 18:00:00"
+    When I schedule the presentation "song1" on screen "sheet" from "2035-02-06T10:00:00+01:00" to "2035-02-06T10:00:00+01:00"
     And I get the schedule
     Then I should see that the schedule contains exactly "2" items
-    And I should see the presentation "song1" scheduled on screen "sheet" from "2035-02-06 10:00:00" to "2035-02-06 18:00:00"
+    And I should see the presentation "song1" scheduled on screen "sheet" from "2035-02-06T10:00:00+01:00" to "2035-02-06T10:00:00+01:00"
 
   Scenario: I can delete a scheduled presentation
     Given I use the api key "stick"
-    When I schedule the presentation "song1" on screen "sheet" from "2035-02-06 10:00:00" to "2035-02-06 18:00:00"
+    When I schedule the presentation "song1" on screen "sheet" from "2035-02-06T10:00:00+01:00" to "2035-02-06T10:00:00+01:00"
     And I get the schedule
     And I remember the first item of the schedule
     And I delete the remembered item of the schedule

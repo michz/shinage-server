@@ -7,12 +7,12 @@ App\Entity\ScheduledPresentation:
       groups: ['Default', 'ui', 'api']
     scheduled_start:
       serialized_name: start
-      type: "DateTime<'Y-m-d H:i:s'>"
+      type: "DateTime"
       expose: true
       groups: ['Default', 'ui', 'api']
     scheduled_end:
       serialized_name: end
-      type: "DateTime<'Y-m-d H:i:s'>"
+      type: "DateTime"
       expose: true
       groups: ['Default', 'ui', 'api']
     presentation:

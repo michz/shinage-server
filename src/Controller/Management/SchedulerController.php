@@ -15,6 +15,7 @@ use App\Repository\PresentationsRepository;
 use App\Repository\ScreenRepository;
 use App\Security\LoggedInUserRepositoryInterface;
 use App\Service\ScheduleCollisionHandlerInterface;
+use DateTimeZone;
 use Doctrine\ORM\EntityManagerInterface;
 use JMS\Serializer\SerializationContext;
 use JMS\Serializer\SerializerInterface;
@@ -65,8 +66,8 @@ class SchedulerController extends AbstractController
         $screen = $this->entityManager->find(Screen::class, $guid);
 
         // parse start and end time
-        $start = new \DateTime($request->get('start'), new \DateTimeZone('UTC'));
-        $end = new \DateTime($request->get('end'), new \DateTimeZone('UTC'));
+        $start = new \DateTime($request->get('start'), new DateTimeZone('UTC'));
+        $end = new \DateTime($request->get('end'), new DateTimeZone('UTC'));
 
         $sched = [];
         if (null !== $screen) {
@@ -76,21 +77,31 @@ class SchedulerController extends AbstractController
             $sf = $start->format('Y-m-d H:i:s');
             $su = $end->format('Y-m-d H:i:s');
 
-            $query = $this->entityManager->createQuery(
-                'SELECT p
-                    FROM App:ScheduledPresentation p
-                    WHERE
-                        ((p.scheduled_start  >= :sf AND p.scheduled_start <= :su) OR 
-                        (p.scheduled_end >= :sf AND p.scheduled_end <= :su) OR
-                        (p.scheduled_start <= :sf AND p.scheduled_end >= :su)) AND 
-                        p.screen = :screen
-                    ORDER BY p.scheduled_start ASC'
-            )
+            $queryBuilder = $this->entityManager->createQueryBuilder();
+            $queryBuilder
+                ->select('p')
+                ->from(ScheduledPresentation::class, 'p')
+                ->where('p.screen = :screen')
+                ->andWhere('
+                    (p.scheduled_start  >= :sf AND p.scheduled_start <= :su) OR 
+                    (p.scheduled_end >= :sf AND p.scheduled_end <= :su) OR
+                    (p.scheduled_start <= :sf AND p.scheduled_end >= :su)
+                ')
                 ->setParameter('su', $su)
                 ->setParameter('sf', $sf)
-                ->setParameter('screen', $guid);
+                ->setParameter('screen', $guid)
+            ;
 
-            $sched = $query->getResult();
+            $sched = $queryBuilder->getQuery()->getResult();
+
+            /** @var ScheduledPresentation $s */
+            foreach ($sched as $s) {
+                try {
+                    $s->getScheduledStart()->setTimezone(new DateTimeZone($screen->getTimezone()));
+                    $s->getScheduledEnd()->setTimezone(new DateTimeZone($screen->getTimezone()));
+                } catch (\DateInvalidTimeZoneException) {
+                }
+            }
         }
 
         // is AJAX request
@@ -128,8 +139,13 @@ class SchedulerController extends AbstractController
         // Check if user is allowed to see/edit the (newly chosen) screen
         $this->denyAccessUnlessGranted('schedule', $screen);
 
-        $start = new \DateTime($request->get('start'), new \DateTimeZone('UTC'));
-        $end = new \DateTime($request->get('end'), new \DateTimeZone('UTC'));
+        try {
+            $screenTimezone = new DateTimeZone($screen->getTimezone());
+        } catch (\DateInvalidTimeZoneException) {
+            $screenTimezone = new DateTimeZone('UTC');
+        }
+        $start = new \DateTime($request->get('start'), $screenTimezone);
+        $end = new \DateTime($request->get('end'), $screenTimezone);
 
         $pres_id = $request->get('presentation');
         $pres = $this->entityManager->find(Presentation::class, $pres_id);
@@ -155,10 +171,17 @@ class SchedulerController extends AbstractController
     {
         $id = $request->get('id');
 
-        $start = new \DateTime($request->get('start'), new \DateTimeZone('UTC'));
-        $end = new \DateTime($request->get('end'), new \DateTimeZone('UTC'));
         $guid = $request->get('screen');
         $screen = $this->entityManager->find(Screen::class, $guid);
+
+        try {
+            $screenTimezone = new DateTimeZone($screen->getTimezone());
+        } catch (\DateInvalidTimeZoneException) {
+            $screenTimezone = new DateTimeZone('UTC');
+        }
+        $start = new \DateTime($request->get('start'), $screenTimezone);
+        $end = new \DateTime($request->get('end'), $screenTimezone);
+
         /** @var ScheduledPresentation $s */
         $s = $this->entityManager->find(ScheduledPresentation::class, $id);
 

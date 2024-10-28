@@ -74,6 +74,15 @@ class ScreenContext implements Context
     }
 
     /**
+     * @Given The screen :screen is located in timezone :timezone
+     */
+    public function theScreenIsLocatedInTimezone(Screen $screen, string $timezone): void
+    {
+        $screen->setTimezone($timezone);
+        $this->entityManager->flush();
+    }
+
+    /**
      * @Given The user :user has the right to :role for the screen :screen
      * @Given The organization :user has the right to :role for the screen :screen
      */

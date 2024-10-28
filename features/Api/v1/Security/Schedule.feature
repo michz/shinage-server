@@ -12,6 +12,7 @@ Feature: In order to manage the schedule securely
     And The user "guitarist@shinage.test" has an api key "finger" with scope "SCHEDULE"
     And There is a screen with guid "sheet"
     And The screen "sheet" belongs to user "singer@shinage.test"
+    And The screen "sheet" is located in timezone "Europe/Berlin"
     And The user "singer@shinage.test" has a presentation of type "slideshow" and title "song1"
     And The user "singer@shinage.test" has a presentation of type "slideshow" and title "song2"
     And The presentation "song1" is scheduled now for screen "sheet"
@@ -23,7 +24,7 @@ Feature: In order to manage the schedule securely
 
   Scenario: I cannot schedule on another user's screen
     Given I use the api key "stick"
-    When I schedule the presentation "song2" on screen "sheet" from "2035-03-01 00:05:10" to "2035-03-01 23:00:59"
+    When I schedule the presentation "song2" on screen "sheet" from "2035-03-01T00:05:10+01:00" to "2035-03-01T23:00:59+01:00"
     Then I should get an Access Denied response
 
   Scenario: I cannot delete another user's scheduled presentation

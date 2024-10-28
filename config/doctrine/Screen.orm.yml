@@ -54,6 +54,12 @@ App\Entity\Screen:
       unique: false
       nullable: false
       default: 30
+    timezone:
+      type: string
+      length: 32
+      unique: false
+      nullable: false
+      default: 'UTC'
   manyToOne:
     default_presentation:
       targetEntity: App\Entity\Presentation

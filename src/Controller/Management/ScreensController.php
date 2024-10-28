@@ -35,6 +35,7 @@ class ScreensController extends AbstractController
         private readonly ScreenAssociation $screenAssociation,
         private readonly RouterInterface $router,
         private readonly LoggedInUserRepositoryInterface $loggedInUserRepository,
+        private string $defaultTimezone,
     ) {
     }
 
@@ -142,6 +143,7 @@ class ScreensController extends AbstractController
         $virtualScreen->setName($createForm->get('name')->getData());
         $virtualScreen->setFirstConnect(new \DateTime());
         $virtualScreen->setLastConnect(new \DateTime());
+        $virtualScreen->setTimezone($this->defaultTimezone);
         $this->entityManager->persist($virtualScreen);
         $this->entityManager->flush();
 

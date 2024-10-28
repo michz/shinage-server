@@ -10,11 +10,14 @@ namespace App\Controller\Management\Screens;
 
 use App\Entity\Presentation;
 use App\Entity\Screen;
+use App\Provider\TimezoneProviderInterface;
 use App\Repository\PresentationsRepository;
 use App\Security\LoggedInUserRepositoryInterface;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Form\ChoiceList\Loader\CallbackChoiceLoader;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
@@ -27,6 +30,7 @@ class ScreenDataController extends AbstractController
         private readonly EntityManagerInterface $entityManager,
         private readonly PresentationsRepository $presentationsRepository,
         private readonly LoggedInUserRepositoryInterface $loggedInUserRepository,
+        private readonly TimezoneProviderInterface $timezoneProvider,
     ) {
     }
 
@@ -46,9 +50,14 @@ class ScreenDataController extends AbstractController
                 ->add('location', TextType::class, ['required' => false, 'empty_data' => ''])
                 ->add('adminc', TextType::class, ['required' => false, 'empty_data' => ''])
                 ->add('notes', TextareaType::class, ['required' => false, 'empty_data' => ''])
+                ->add('timezone', ChoiceType::class, [
+                    'required' => false,
+                    'empty_data' => 'UTC',
+                    'choice_loader' => new CallbackChoiceLoader(fn () => $this->timezoneProvider->getAvailableTimezones()),
+                ])
                 ->add('defaultPresentation', EntityType::class, [
                     'class' => Presentation::class,
-                    'choices' => $this->getPresentationsChoices(),
+                    'choice_loader' => new CallbackChoiceLoader(fn () => $this->getPresentationsChoices()),
                     'required' => false,
                 ])
                 ->add('save', SubmitType::class)

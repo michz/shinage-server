@@ -10,6 +10,8 @@ parameters:
   env(SHINAGE_ONLINE_PLAYER_BASE_URL): 'https://player.shinage.org/player.html?current_presentation_url='
   env(MAIL_DEFAULT_SENDER_MAIL): 'dev@shinage.test'
   env(MAIL_DEFAULT_SENDER_NAME): 'Shinage Digital Signage'
+  env(DEFAULT_SCREEN_TIMEZONE): 'UTC'
+  env(TIMEZONE_FILTER): '/.*/'
 
 services:
   # default configuration for services in *this* file
@@ -45,6 +47,10 @@ services:
   App\Controller\Management\FileManager:
     arguments:
       $poolPath: '%path_pool%'
+
+  App\Controller\Management\ScreensController:
+    arguments:
+      $defaultTimezone: '%env(DEFAULT_SCREEN_TIMEZONE)%'
 
   App\Controller\Security\RegistrationController:
     arguments:
@@ -233,3 +239,7 @@ services:
     arguments:
       $senderMail: '%env(MAIL_DEFAULT_SENDER_MAIL)%'
       $senderName: '%env(MAIL_DEFAULT_SENDER_NAME)%'
+
+  App\Provider\TimezoneProvider:
+    arguments:
+      $timezoneFilter: '%env(TIMEZONE_FILTER)%'

@@ -8,6 +8,7 @@ Feature: In order to manage the schedule
     And The user "apitester@shinage.test" has an api key "testapikey" with scope "SCHEDULE"
     And There is a screen with guid "screen1"
     And The screen "screen1" belongs to user "apitester@shinage.test"
+    And The screen "screen1" is located in timezone "Europe/Berlin"
     And The user "apitester@shinage.test" has a presentation of type "slideshow" and title "testpres1"
     And The user "apitester@shinage.test" has a presentation of type "slideshow" and title "testpres2"
 
@@ -18,20 +19,20 @@ Feature: In order to manage the schedule
 
   Scenario: I can schedule a presentation
     Given I use the api key "testapikey"
-    When I schedule the presentation "testpres1" on screen "screen1" from "2035-02-06 10:00:00" to "2035-02-06 18:00:00"
+    When I schedule the presentation "testpres1" on screen "screen1" from "2035-02-06T10:00:00+01:00" to "2035-02-06T18:00:00+01:00"
     Then I can see that the api request was successful
-    And I should see in the response that the presentation "testpres1" is scheduled on screen "screen1" from "2035-02-06 10:00:00" to "2035-02-06 18:00:00"
+    And I should see in the response that the presentation "testpres1" is scheduled on screen "screen1" from "2035-02-06T10:00:00+01:00" to "2035-02-06T18:00:00+01:00"
 
   Scenario: I can see a scheduled presentation
     Given I use the api key "testapikey"
-    When I schedule the presentation "testpres1" on screen "screen1" from "2035-02-06 10:00:00" to "2035-02-06 18:00:00"
+    When I schedule the presentation "testpres1" on screen "screen1" from "2035-02-06T10:00:00+01:00" to "2035-02-06T18:00:00+01:00"
     And I get the schedule
     Then I should see that the schedule contains exactly "1" item
-    And I should see the presentation "testpres1" scheduled on screen "screen1" from "2035-02-06 10:00:00" to "2035-02-06 18:00:00"
+    And I should see the presentation "testpres1" scheduled on screen "screen1" from "2035-02-06T10:00:00+01:00" to "2035-02-06T18:00:00+01:00"
 
   Scenario: I can delete a scheduled presentation
     Given I use the api key "testapikey"
-    When I schedule the presentation "testpres1" on screen "screen1" from "2035-02-06 10:00:00" to "2035-02-06 18:00:00"
+    When I schedule the presentation "testpres1" on screen "screen1" from "2035-02-06T10:00:00+01:00" to "2035-02-06T18:00:00+01:00"
     And I get the schedule
     And I remember the first item of the schedule
     And I delete the remembered item of the schedule
@@ -40,54 +41,54 @@ Feature: In order to manage the schedule
 
   Scenario: I can see an including collision is handled
     Given I use the api key "testapikey"
-    When I schedule the presentation "testpres1" on screen "screen1" from "2035-02-06 10:00:00" to "2035-02-06 18:00:00"
-    And I schedule the presentation "testpres2" on screen "screen1" from "2035-02-06 08:00:00" to "2035-02-06 20:00:00"
+    When I schedule the presentation "testpres1" on screen "screen1" from "2035-02-06T10:00:00+01:00" to "2035-02-06T18:00:00+01:00"
+    And I schedule the presentation "testpres2" on screen "screen1" from "2035-02-06T08:00:00+01:00" to "2035-02-06T20:00:00+01:00"
     And I get the schedule
     Then I should see that the schedule contains exactly "1" item
-    And I should see the presentation "testpres2" scheduled on screen "screen1" from "2035-02-06 08:00:00" to "2035-02-06 20:00:00"
+    And I should see the presentation "testpres2" scheduled on screen "screen1" from "2035-02-06T08:00:00+01:00" to "2035-02-06T20:00:00+01:00"
 
   Scenario: I can see an tiling collision is handled
     Given I use the api key "testapikey"
-    When I schedule the presentation "testpres1" on screen "screen1" from "2035-02-06 10:00:00" to "2035-02-06 18:00:00"
-    And I schedule the presentation "testpres2" on screen "screen1" from "2035-02-06 12:00:00" to "2035-02-06 14:00:00"
+    When I schedule the presentation "testpres1" on screen "screen1" from "2035-02-06T10:00:00+01:00" to "2035-02-06T18:00:00+01:00"
+    And I schedule the presentation "testpres2" on screen "screen1" from "2035-02-06T12:00:00+01:00" to "2035-02-06T14:00:00+01:00"
     And I get the schedule
     Then I should see that the schedule contains exactly "3" item
-    And I should see the presentation "testpres1" scheduled on screen "screen1" from "2035-02-06 10:00:00" to "2035-02-06 12:00:00"
-    And I should see the presentation "testpres1" scheduled on screen "screen1" from "2035-02-06 14:00:00" to "2035-02-06 18:00:00"
-    And I should see the presentation "testpres2" scheduled on screen "screen1" from "2035-02-06 12:00:00" to "2035-02-06 14:00:00"
+    And I should see the presentation "testpres1" scheduled on screen "screen1" from "2035-02-06T10:00:00+01:00" to "2035-02-06T12:00:00+01:00"
+    And I should see the presentation "testpres1" scheduled on screen "screen1" from "2035-02-06T14:00:00+01:00" to "2035-02-06T18:00:00+01:00"
+    And I should see the presentation "testpres2" scheduled on screen "screen1" from "2035-02-06T12:00:00+01:00" to "2035-02-06T14:00:00+01:00"
 
   Scenario: I can see an ending overlapping collision is handled
     Given I use the api key "testapikey"
-    When I schedule the presentation "testpres1" on screen "screen1" from "2035-02-06 10:00:00" to "2035-02-06 18:00:00"
-    And I schedule the presentation "testpres2" on screen "screen1" from "2035-02-06 12:00:00" to "2035-02-06 20:00:00"
+    When I schedule the presentation "testpres1" on screen "screen1" from "2035-02-06T10:00:00+01:00" to "2035-02-06T18:00:00+01:00"
+    And I schedule the presentation "testpres2" on screen "screen1" from "2035-02-06T12:00:00+01:00" to "2035-02-06T20:00:00+01:00"
     And I get the schedule
     Then I should see that the schedule contains exactly "2" item
-    And I should see the presentation "testpres1" scheduled on screen "screen1" from "2035-02-06 10:00:00" to "2035-02-06 12:00:00"
-    And I should see the presentation "testpres2" scheduled on screen "screen1" from "2035-02-06 12:00:00" to "2035-02-06 20:00:00"
+    And I should see the presentation "testpres1" scheduled on screen "screen1" from "2035-02-06T10:00:00+01:00" to "2035-02-06T12:00:00+01:00"
+    And I should see the presentation "testpres2" scheduled on screen "screen1" from "2035-02-06T12:00:00+01:00" to "2035-02-06T20:00:00+01:00"
 
   Scenario: I can see a starting overlapping collision is handled
     Given I use the api key "testapikey"
-    When I schedule the presentation "testpres1" on screen "screen1" from "2035-02-06 10:00:00" to "2035-02-06 18:00:00"
-    And I schedule the presentation "testpres2" on screen "screen1" from "2035-02-06 08:00:00" to "2035-02-06 12:00:00"
+    When I schedule the presentation "testpres1" on screen "screen1" from "2035-02-06T10:00:00+01:00" to "2035-02-06T18:00:00+01:00"
+    And I schedule the presentation "testpres2" on screen "screen1" from "2035-02-06T08:00:00+01:00" to "2035-02-06T12:00:00+01:00"
     And I get the schedule
     Then I should see that the schedule contains exactly "2" item
-    And I should see the presentation "testpres1" scheduled on screen "screen1" from "2035-02-06 12:00:00" to "2035-02-06 18:00:00"
-    And I should see the presentation "testpres2" scheduled on screen "screen1" from "2035-02-06 08:00:00" to "2035-02-06 12:00:00"
+    And I should see the presentation "testpres1" scheduled on screen "screen1" from "2035-02-06T12:00:00+01:00" to "2035-02-06T18:00:00+01:00"
+    And I should see the presentation "testpres2" scheduled on screen "screen1" from "2035-02-06T08:00:00+01:00" to "2035-02-06T12:00:00+01:00"
 
   Scenario: I can see an ending edge collision is handled
     Given I use the api key "testapikey"
-    When I schedule the presentation "testpres1" on screen "screen1" from "2035-02-06 10:00:00" to "2035-02-06 18:00:00"
-    And I schedule the presentation "testpres2" on screen "screen1" from "2035-02-06 12:00:00" to "2035-02-06 18:00:00"
+    When I schedule the presentation "testpres1" on screen "screen1" from "2035-02-06T10:00:00+01:00" to "2035-02-06T18:00:00+01:00"
+    And I schedule the presentation "testpres2" on screen "screen1" from "2035-02-06T12:00:00+01:00" to "2035-02-06T18:00:00+01:00"
     And I get the schedule
     Then I should see that the schedule contains exactly "2" item
-    And I should see the presentation "testpres1" scheduled on screen "screen1" from "2035-02-06 10:00:00" to "2035-02-06 12:00:00"
-    And I should see the presentation "testpres2" scheduled on screen "screen1" from "2035-02-06 12:00:00" to "2035-02-06 18:00:00"
+    And I should see the presentation "testpres1" scheduled on screen "screen1" from "2035-02-06T10:00:00+01:00" to "2035-02-06T12:00:00+01:00"
+    And I should see the presentation "testpres2" scheduled on screen "screen1" from "2035-02-06T12:00:00+01:00" to "2035-02-06T18:00:00+01:00"
 
   Scenario: I can see a starting edge collision is handled
     Given I use the api key "testapikey"
-    When I schedule the presentation "testpres1" on screen "screen1" from "2035-02-06 10:00:00" to "2035-02-06 18:00:00"
-    And I schedule the presentation "testpres2" on screen "screen1" from "2035-02-06 10:00:00" to "2035-02-06 14:00:00"
+    When I schedule the presentation "testpres1" on screen "screen1" from "2035-02-06T10:00:00+01:00" to "2035-02-06T18:00:00+01:00"
+    And I schedule the presentation "testpres2" on screen "screen1" from "2035-02-06T10:00:00+01:00" to "2035-02-06T14:00:00+01:00"
     And I get the schedule
     Then I should see that the schedule contains exactly "2" item
-    And I should see the presentation "testpres1" scheduled on screen "screen1" from "2035-02-06 14:00:00" to "2035-02-06 18:00:00"
-    And I should see the presentation "testpres2" scheduled on screen "screen1" from "2035-02-06 10:00:00" to "2035-02-06 14:00:00"
+    And I should see the presentation "testpres1" scheduled on screen "screen1" from "2035-02-06T14:00:00+01:00" to "2035-02-06T18:00:00+01:00"
+    And I should see the presentation "testpres2" scheduled on screen "screen1" from "2035-02-06T10:00:00+01:00" to "2035-02-06T14:00:00+01:00"

@@ -14,6 +14,8 @@ use App\Entity\Screen;
 use App\Entity\ScreenAssociation;
 use App\Security\LoggedInUserRepository;
 use App\Service\ScheduleCollisionHandlerInterface;
+use DateInvalidTimeZoneException;
+use DateTimeZone;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Query\Expr;
 use JMS\Serializer\DeserializationContext;
@@ -62,6 +64,15 @@ class ScheduleController extends AbstractController
 
         $scheduledPresentations = $queryBuilder->getQuery()->execute();
 
+        /** @var ScheduledPresentation $s */
+        foreach ($scheduledPresentations as $s) {
+            try {
+                $s->getScheduledStart()->setTimezone(new DateTimeZone($s->getScreen()->getTimezone()));
+                $s->getScheduledEnd()->setTimezone(new DateTimeZone($s->getScreen()->getTimezone()));
+            } catch (DateInvalidTimeZoneException) {
+            }
+        }
+
         return new Response(
             $this->serializer->serialize(
                 $scheduledPresentations,
@@ -83,6 +94,16 @@ class ScheduleController extends AbstractController
         }
 
         $this->denyAccessUnlessGranted('get', $scheduledPresentation);
+
+        try {
+            $scheduledPresentation->getScheduledStart()->setTimezone(
+                new DateTimeZone($scheduledPresentation->getScreen()->getTimezone())
+            );
+            $scheduledPresentation->getScheduledEnd()->setTimezone(
+                new DateTimeZone($scheduledPresentation->getScreen()->getTimezone())
+            );
+        } catch (DateInvalidTimeZoneException) {
+        }
 
         return new Response(
             $this->serializer->serialize(
@@ -140,6 +161,17 @@ class ScheduleController extends AbstractController
         // detect and resolve collisions
         $this->collisionHandler->handleCollisions($scheduledPresentation);
         $this->entityManager->flush();
+
+        // for API answer, convert the time into the timezone of the screen
+        try {
+            $scheduledPresentation->getScheduledStart()->setTimezone(
+                new DateTimeZone($scheduledPresentation->getScreen()->getTimezone())
+            );
+            $scheduledPresentation->getScheduledEnd()->setTimezone(
+                new DateTimeZone($scheduledPresentation->getScreen()->getTimezone())
+            );
+        } catch (DateInvalidTimeZoneException) {
+        }
 
         return new Response(
             $this->serializer->serialize(
