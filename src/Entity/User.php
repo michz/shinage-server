@@ -11,24 +11,37 @@ namespace App\Entity;
 use App\UserType;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Doctrine\ORM\Mapping as ORM;
 use FOS\UserBundle\Model\User as BaseUser;
 use Scheb\TwoFactorBundle\Model\BackupCodeInterface;
 use Scheb\TwoFactorBundle\Model\Email\TwoFactorInterface as TwoFactorEmailInterface;
 use Scheb\TwoFactorBundle\Model\Google\TwoFactorInterface as TwoFactorGoogleInterface;
 
+#[ORM\Table(name: 'users')]
+#[ORM\Entity]
 class User extends BaseUser implements TwoFactorEmailInterface, TwoFactorGoogleInterface, BackupCodeInterface
 {
     /** @var int */
+    #[ORM\Column(name: 'id', type: 'integer')]
+    #[ORM\Id]
+    #[ORM\GeneratedValue(strategy: 'IDENTITY')]
     protected $id;
 
+    #[ORM\Column(name: 'user_type', type: 'string', length: 32, unique: false, nullable: false)]
     protected string $userType = UserType::USER_TYPE_USER;
 
+    #[ORM\Column(name: 'name', type: 'string', length: 200, unique: false, nullable: false)]
     protected string $name = '';
 
     /** @var Collection<array-key, User> */
+    #[ORM\JoinTable(name: 'users_orgas')]
+    #[ORM\JoinColumn(name: 'user_id', referencedColumnName: 'id', nullable: true)]
+    #[ORM\InverseJoinColumn(name: 'organization_id', referencedColumnName: 'id', nullable: true)]
+    #[ORM\ManyToMany(targetEntity: self::class, inversedBy: 'users')]
     private Collection $organizations;
 
     /** @var Collection<array-key, User> */
+    #[ORM\ManyToMany(targetEntity: self::class, mappedBy: 'organizations')]
     private Collection $users;
 
     /** @var string */
@@ -37,15 +50,20 @@ class User extends BaseUser implements TwoFactorEmailInterface, TwoFactorGoogleI
     /** @var string */
     protected $plainPassword;
 
+    #[ORM\Column(name: 'email_auth_enabled', type: 'boolean', unique: false, nullable: false)]
     private bool $emailAuthEnabled = false;
 
+    #[ORM\Column(name: 'email_auth_code', type: 'string', length: 6, unique: false, nullable: true)]
     private ?string $emailAuthCode;
 
     /** @var string[]|null */
+    #[ORM\Column(name: 'backup_codes', type: 'json', unique: false, nullable: true)]
     private ?array $backupCodes;
 
+    #[ORM\Column(name: 'totp_secret', type: 'string', length: 200, unique: false, nullable: true)]
     private ?string $totpSecret;
 
+    #[ORM\Column(name: 'auto_assign_by_mailhost', type: 'boolean', unique: false, nullable: false)]
     private bool $orgaAssignAutomaticallyByMailHost = false;
 
     public function __construct()

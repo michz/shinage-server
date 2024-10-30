@@ -8,32 +8,51 @@ declare(strict_types=1);
 
 namespace App\Entity;
 
+use Doctrine\ORM\Mapping as ORM;
+
+#[ORM\Table(name: 'screens')]
+#[ORM\Entity]
 class Screen
 {
+    #[ORM\Column(name: 'guid', type: 'string', length: 36)]
+    #[ORM\Id]
+    #[ORM\GeneratedValue(strategy: 'NONE')]
     protected string $guid;
 
+    #[ORM\Column(name: 'name', type: 'string', length: 200, unique: false, nullable: false)]
     protected string $name = 'unbenannte Anzeige';
 
+    #[ORM\Column(name: 'location', type: 'text', unique: false, nullable: false)]
     protected string $location = '';
 
+    #[ORM\Column(name: 'notes', type: 'text', unique: false, nullable: false)]
     protected string $notes = '';
 
+    #[ORM\Column(name: 'admin_c', type: 'text', unique: false, nullable: false)]
     protected string $admin_c = '';
 
+    #[ORM\Column(name: 'first_connect', type: 'datetime', unique: false, nullable: false)]
     protected \DateTime $first_connect;
 
+    #[ORM\Column(name: 'last_connect', type: 'datetime', unique: false, nullable: false)]
     protected \DateTime $last_connect;
 
+    #[ORM\Column(name: 'connect_code', type: 'string', length: 8, unique: false, nullable: false)]
     protected string $connect_code = '';
 
+    #[ORM\JoinColumn(name: 'presentation_id', referencedColumnName: 'id')]
+    #[ORM\ManyToOne(targetEntity: Presentation::class)]
     protected ?PresentationInterface $default_presentation = null;
 
     protected ?PresentationInterface $current_presentation = null;
 
+    #[ORM\Column(name: 'alarming_enabled', type: 'boolean', unique: false, nullable: false)]
     protected bool $alarming_enabled = false;
 
+    #[ORM\Column(name: 'alarming_mail_targets', type: 'text', unique: false, nullable: false)]
     protected string $alarming_mail_targets = '';
 
+    #[ORM\Column(name: 'alarming_connection_threshold', type: 'integer', unique: false, nullable: false)]
     protected int $alarming_connection_threshold = 30;
 
     public function setGuid(string $guid): self

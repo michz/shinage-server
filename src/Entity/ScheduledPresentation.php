@@ -8,16 +8,29 @@ declare(strict_types=1);
 
 namespace App\Entity;
 
+use Doctrine\ORM\Mapping as ORM;
+
+#[ORM\Table(name: 'schedule')]
+#[ORM\Entity]
 class ScheduledPresentation
 {
+    #[ORM\Column(name: 'id', type: 'integer')]
+    #[ORM\Id]
+    #[ORM\GeneratedValue(strategy: 'IDENTITY')]
     private int $id;
 
+    #[ORM\JoinColumn(name: 'screen_id', referencedColumnName: 'guid', nullable: false)]
+    #[ORM\ManyToOne(targetEntity: Screen::class, fetch: 'EAGER')]
     private Screen $screen;
 
+    #[ORM\JoinColumn(name: 'presentation_id', referencedColumnName: 'id', nullable: false)]
+    #[ORM\ManyToOne(targetEntity: Presentation::class, fetch: 'EAGER')]
     private PresentationInterface $presentation;
 
+    #[ORM\Column(name: 'scheduled_start', type: 'datetime', unique: false, nullable: false)]
     private \DateTime $scheduled_start;
 
+    #[ORM\Column(name: 'scheduled_end', type: 'datetime', unique: false, nullable: false)]
     private \DateTime $scheduled_end;
 
     public function getId(): int

@@ -9,20 +9,32 @@ declare(strict_types=1);
 namespace App\Entity\Api;
 
 use App\Entity\User;
+use Doctrine\ORM\Mapping as ORM;
 
+#[ORM\Table(name: 'api_access_keys')]
+#[ORM\Entity]
 class AccessKey
 {
+    #[ORM\Column(name: 'id', type: 'integer')]
+    #[ORM\Id]
+    #[ORM\GeneratedValue(strategy: 'IDENTITY')]
     protected ?int $id;
 
+    #[ORM\Column(name: 'code', type: 'string', length: 32, unique: true, nullable: false)]
     protected string $code = '';
 
+    #[ORM\Column(name: 'name', type: 'string', length: 255, unique: false, nullable: false)]
     protected string $name = '';
 
+    #[ORM\Column(name: 'last_use', type: 'datetime', unique: false, nullable: true)]
     protected ?\DateTime $last_use;
 
     /** @var string[]|array */
+    #[ORM\Column(name: 'roles', type: 'simple_array', unique: false, nullable: false)]
     protected array $roles = [];
 
+    #[ORM\JoinColumn(name: 'user_id', referencedColumnName: 'id')]
+    #[ORM\ManyToOne(targetEntity: User::class)]
     protected ?User $owner;
 
     /**
@@ -92,7 +104,7 @@ class AccessKey
     }
 
     /**
-     * @param string[]|array $roles
+     * @param string[] $roles
      */
     public function setRoles(array $roles): self
     {
@@ -102,7 +114,7 @@ class AccessKey
     }
 
     /**
-     * @return string[]|array
+     * @return string[]
      */
     public function getRoles(): array
     {

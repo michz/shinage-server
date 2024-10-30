@@ -8,28 +8,41 @@ declare(strict_types=1);
 
 namespace App\Entity;
 
+use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation as JMS;
 
+#[ORM\Table(name: 'presentations')]
+#[ORM\Entity]
 class Presentation implements PresentationInterface
 {
     #[JMS\Type('integer')]
+    #[ORM\Column(name: 'id', type: 'integer')]
+    #[ORM\Id]
+    #[ORM\GeneratedValue(strategy: 'IDENTITY')]
     protected int $id;
 
     #[JMS\Type('string')]
+    #[ORM\Column(name: 'title', type: 'string', length: 200, unique: false, nullable: false)]
     protected string $title = 'Presentation';
 
     #[JMS\Type('string')]
+    #[ORM\Column(name: 'notes', type: 'text', unique: false, nullable: false)]
     protected string $notes = '';
 
     #[JMS\Exclude()]
+    #[ORM\Column(name: 'settings', type: 'text', unique: false, nullable: false)]
     protected string $settings = '';
 
     #[JMS\Type('DateTime')]
+    #[ORM\Column(name: 'last_modified', type: 'datetime', unique: false, nullable: true)]
     protected \DateTime $lastModified;
 
+    #[ORM\JoinColumn(name: 'user_id', referencedColumnName: 'id')]
+    #[ORM\ManyToOne(targetEntity: User::class)]
     protected User $owner;
 
     #[JMS\Type('string')]
+    #[ORM\Column(name: 'type', type: 'string', length: 200, unique: false, nullable: false)]
     protected string $type;
 
     public function __construct()
