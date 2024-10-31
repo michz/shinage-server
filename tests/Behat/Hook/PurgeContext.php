@@ -38,7 +38,6 @@ class PurgeContext implements Context
      */
     public function purgeDatabase(): void
     {
-        $this->entityManager->getConnection()->getConfiguration()->setSQLLogger(null);
         $purger = new ORMPurger($this->entityManager);
         $purger->purge();
         $this->entityManager->clear();
