@@ -13,20 +13,14 @@ use App\Entity\RegistrationCode;
 use App\Entity\User;
 use Behat\Behat\Context\Context;
 use Doctrine\ORM\EntityManagerInterface;
-use FOS\UserBundle\Model\UserManagerInterface;
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
-class UserContext implements Context
+readonly class UserContext implements Context
 {
-    private EntityManagerInterface $entityManager;
-
-    private UserManagerInterface $userManager;
-
     public function __construct(
-        EntityManagerInterface $entityManager,
-        UserManagerInterface $userManager
+        private EntityManagerInterface $entityManager,
+        private UserPasswordHasherInterface $passwordHasher,
     ) {
-        $this->entityManager = $entityManager;
-        $this->userManager = $userManager;
     }
 
     /**
@@ -41,14 +35,14 @@ class UserContext implements Context
         }
 
         $user = new User();
-        $user->setUsername($userName);
         $user->setEmail($userName);
-        $user->setPlainPassword($password);
         $user->setEnabled(true);
 
-        $this->userManager->updatePassword($user);
-        $this->userManager->updateCanonicalFields($user);
-        $this->userManager->updateUser($user);
+        $encodedPassword = $this->passwordHasher->hashPassword($user, $password);
+        $user->setPassword($encodedPassword);
+
+        $this->entityManager->persist($user);
+        $this->entityManager->flush();
     }
 
     /**
@@ -57,15 +51,13 @@ class UserContext implements Context
     public function thereIsAnOrganization(string $organizationName): void
     {
         $user = new User();
-        $user->setUsername($organizationName);
         $user->setEmail($organizationName);
-        $user->setPlainPassword('nopasswordfororganizations');
+        $user->setPassword('nopasswordfororganizations');
         $user->setEnabled(true);
         $user->setUserType('organization');
 
-        $this->userManager->updatePassword($user);
-        $this->userManager->updateCanonicalFields($user);
-        $this->userManager->updateUser($user);
+        $this->entityManager->persist($user);
+        $this->entityManager->flush();
     }
 
     /**
@@ -78,7 +70,7 @@ class UserContext implements Context
             $user->addRole($role);
         }
 
-        $this->userManager->updateUser($user);
+        $this->entityManager->flush();
     }
 
     /**

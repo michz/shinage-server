@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8" />
+        <title>Shinage{% block title %}{% endblock %}</title>
+
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <link rel="stylesheet" type="text/css" href="{{ asset('assets/all.min.css') }}">
+
+        {% block stylesheets %}{% endblock %}
+
+        <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+        <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+        <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+        <link rel="manifest" href="/site.webmanifest">
+        <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+        <meta name="msapplication-TileColor" content="#da532c">
+        <meta name="theme-color" content="#ffffff">
+    </head>
+    <body class="{{ app.request.attributes.get('_route') }}">
+        <div id="mainWrapper">
+            {# main content #}
+            {% block body %}{% endblock %}
+
+            <div id="footer">
+                Shinage Digital Signage
+            </div>
+        </div>
+
+        <script src="{{ asset('assets/lib.min.js') }}"></script>
+
+        <script>
+            $('.ui.dropdown').dropdown();
+            $('.ui.checkbox').checkbox();
+        </script>
+
+        <script>
+            $.notify.defaults({ autoHideDelay: 2000, showDuration: 250 });
+
+            {% set hiddenFlashes = '' %}
+            {% for type, messages in app.session.flashbag.all() %}
+                {% for message in messages %}
+                    $.notify("{{ message|trans([], 'flashes')|escape('js') }}", { className: '{{ type }}', autoHideDelay: 10000 });
+
+                {% set hiddenFlash %}
+                    <div class="hidden flash {{ type }}">{{ message|trans([], 'flashes') }}</div>
+                {% endset %}
+                {% set hiddenFlashes = hiddenFlashes ~ hiddenFlash %}
+            {% endfor %}
+            {% endfor %}
+        </script>
+
+        {{ hiddenFlashes|raw }}
+
+        {% block scripts %}{% endblock %}
+    </body>
+</html>

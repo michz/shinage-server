@@ -12,26 +12,43 @@ use App\UserType;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
-use FOS\UserBundle\Model\User as BaseUser;
 use Scheb\TwoFactorBundle\Model\BackupCodeInterface;
 use Scheb\TwoFactorBundle\Model\Email\TwoFactorInterface as TwoFactorEmailInterface;
 use Scheb\TwoFactorBundle\Model\Google\TwoFactorInterface as TwoFactorGoogleInterface;
+use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
+use Symfony\Component\Security\Core\User\UserInterface;
 
 #[ORM\Table(name: 'users')]
 #[ORM\Entity]
-class User extends BaseUser implements TwoFactorEmailInterface, TwoFactorGoogleInterface, BackupCodeInterface
+class User implements UserInterface, TwoFactorEmailInterface, TwoFactorGoogleInterface, BackupCodeInterface, PasswordAuthenticatedUserInterface
 {
-    /** @var int */
+    public const ROLE_DEFAULT = 'ROLE_USER';
+
     #[ORM\Column(name: 'id', type: 'integer')]
     #[ORM\Id]
     #[ORM\GeneratedValue(strategy: 'IDENTITY')]
-    protected $id;
+    private int $id;
 
-    #[ORM\Column(name: 'user_type', type: 'string', length: 32, unique: false, nullable: false)]
-    protected string $userType = UserType::USER_TYPE_USER;
+    #[ORM\Column(name: 'user_type', type: 'string', length: 32)]
+    private string $userType = UserType::USER_TYPE_USER;
 
-    #[ORM\Column(name: 'name', type: 'string', length: 200, unique: false, nullable: false)]
-    protected string $name = '';
+    #[ORM\Column(name: 'name', type: 'string', length: 200)]
+    private string $name = '';
+
+    #[ORM\Column(name: 'username', type: 'string', length: 180)]
+    private string $username = '';
+
+    #[ORM\Column(name: 'username_canonical', type: 'string', length: 180, unique: true)]
+    private string $usernameCanonical = '';
+
+    #[ORM\Column(name: 'email', type: 'string', length: 180)]
+    private string $email = '';
+
+    #[ORM\Column(name: 'email_canonical', type: 'string', length: 180, unique: true)]
+    private string $emailCanonical = '';
+
+    #[ORM\Column(name: 'enabled', type: 'boolean')]
+    private bool $enabled = true;
 
     /** @var Collection<array-key, User> */
     #[ORM\JoinTable(name: 'users_orgas')]
@@ -44,48 +61,111 @@ class User extends BaseUser implements TwoFactorEmailInterface, TwoFactorGoogleI
     #[ORM\ManyToMany(targetEntity: self::class, mappedBy: 'organizations')]
     private Collection $users;
 
-    /** @var string */
-    protected $password;
+    #[ORM\Column(name: 'password', type: 'string', nullable: true)]
+    private ?string $password = null;
 
-    /** @var string */
-    protected $plainPassword;
+    #[ORM\Column(name: 'last_login', type: 'datetime', nullable: true)]
+    protected ?\DateTime $lastLogin = null;
+
+    #[ORM\Column(name: 'confirmation_token', type: 'string', length: 180, unique: true, nullable: true)]
+    protected ?string $confirmationToken = null;
+
+    #[ORM\Column(name: 'password_requested_at', type: 'datetime', nullable: true)]
+    protected ?\DateTime $passwordRequestedAt = null;
+
+    /**
+     * @var string[]
+     */
+    #[ORM\Column(name: 'roles', type: 'json')]
+    protected array $roles = [];
 
     #[ORM\Column(name: 'email_auth_enabled', type: 'boolean', unique: false, nullable: false)]
     private bool $emailAuthEnabled = false;
 
     #[ORM\Column(name: 'email_auth_code', type: 'string', length: 6, unique: false, nullable: true)]
-    private ?string $emailAuthCode;
+    private ?string $emailAuthCode = null;
 
     /** @var string[]|null */
     #[ORM\Column(name: 'backup_codes', type: 'json', unique: false, nullable: true)]
-    private ?array $backupCodes;
+    private ?array $backupCodes = null;
 
     #[ORM\Column(name: 'totp_secret', type: 'string', length: 200, unique: false, nullable: true)]
-    private ?string $totpSecret;
+    private ?string $totpSecret = null;
 
     #[ORM\Column(name: 'auto_assign_by_mailhost', type: 'boolean', unique: false, nullable: false)]
     private bool $orgaAssignAutomaticallyByMailHost = false;
 
     public function __construct()
     {
-        parent::__construct();
         $this->organizations = new ArrayCollection();
         $this->users = new ArrayCollection();
+    }
+
+    public function getId(): int
+    {
+        return $this->id;
+    }
+
+    public function setId(int $id): self
+    {
+        $this->id = $id;
+
+        return $this;
+    }
+
+    public function getEmail(): string
+    {
+        return $this->email;
     }
 
     /**
      * {@inheritdoc}
      */
-    public function setEmail($email): BaseUser|User|\FOS\UserBundle\Model\UserInterface
+    public function setEmail(string $email): self
     {
-        parent::setUsername($email);
-        parent::setUsernameCanonical($email);
-        return parent::setEmail($email);
+        $this->email = $email;
+        $this->emailCanonical = $email;
+        $this->username = $email;
+        $this->usernameCanonical = $email;
+
+        return $this;
     }
 
-    public function setUserType(string $userType): self
+    public function getEmailCanonical(): string
     {
-        $this->userType = $userType;
+        return $this->emailCanonical;
+    }
+
+    public function getUsername(): string
+    {
+        return $this->username;
+    }
+
+    public function getUsernameCanonical(): string
+    {
+        return $this->usernameCanonical;
+    }
+
+    public function isEnabled(): bool
+    {
+        return $this->enabled;
+    }
+
+    public function setEnabled(bool $enabled): self
+    {
+        $this->enabled = $enabled;
+
+        return $this;
+    }
+
+    public function getPassword(): ?string
+    {
+        return $this->password;
+    }
+
+    public function setPassword(string $password): self
+    {
+        $this->password = $password;
 
         return $this;
     }
@@ -93,6 +173,13 @@ class User extends BaseUser implements TwoFactorEmailInterface, TwoFactorGoogleI
     public function getUserType(): string
     {
         return $this->userType;
+    }
+
+    public function setUserType(string $userType): self
+    {
+        $this->userType = $userType;
+
+        return $this;
     }
 
     public function addOrganization(self $organization): self
@@ -123,6 +210,28 @@ class User extends BaseUser implements TwoFactorEmailInterface, TwoFactorGoogleI
     public function getName(): string
     {
         return $this->name;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getRoles(): array
+    {
+        return $this->roles;
+    }
+
+    public function addRole(string $role): self
+    {
+        $role = \strtoupper($role);
+        if ($role === static::ROLE_DEFAULT) {
+            return $this;
+        }
+
+        if (!\in_array($role, $this->roles, true)) {
+            $this->roles[] = $role;
+        }
+
+        return $this;
     }
 
     /** @return Collection<array-key, User> */
@@ -229,5 +338,61 @@ class User extends BaseUser implements TwoFactorEmailInterface, TwoFactorGoogleI
     public function setOrgaAssignAutomaticallyByMailHost(bool $orgaAssignAutomaticallyByMailHost): void
     {
         $this->orgaAssignAutomaticallyByMailHost = $orgaAssignAutomaticallyByMailHost;
+    }
+
+    public function __toString(): string
+    {
+        return (string) $this->getName();
+    }
+
+    public function eraseCredentials(): void
+    {
+    }
+
+    public function getUserIdentifier(): string
+    {
+        return $this->emailCanonical;
+    }
+
+    public function getConfirmationToken(): ?string
+    {
+        return $this->confirmationToken;
+    }
+
+    public function setConfirmationToken(string $confirmationToken): self
+    {
+        $this->confirmationToken = $confirmationToken;
+
+        return $this;
+    }
+
+    public function getLastLogin(): ?\DateTime
+    {
+        return $this->lastLogin;
+    }
+
+    public function setLastLogin(?\DateTime $lastLogin = null): void
+    {
+        $this->lastLogin = $lastLogin;
+    }
+
+    public function getPasswordRequestedAt(): ?\DateTime
+    {
+        return $this->passwordRequestedAt;
+    }
+
+    public function setPasswordRequestedAt(?\DateTime $passwordRequestedAt = null): void
+    {
+        $this->passwordRequestedAt = $passwordRequestedAt;
+    }
+
+    public function getTotpSecret(): ?string
+    {
+        return $this->totpSecret;
+    }
+
+    public function setTotpSecret(?string $totpSecret): void
+    {
+        $this->totpSecret = $totpSecret;
     }
 }

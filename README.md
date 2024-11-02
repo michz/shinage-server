@@ -120,9 +120,9 @@ To run phpspec, do:
 To run behat, first initialize the testing database:
 
 ```bash
-php bin/console doctrine:database:create --env=test
-php bin/console doctrine:schema:update --force --env=test
-php bin/console doctrine:fixtures:load --env=test
+php bin/console doctrine:database:create --env=test --if-not-exists
+php bin/console doctrine:schema:update --force --env=test --no-interaction
+php bin/console doctrine:fixtures:load --env=test --no-interaction
 ```
 
 Then start the development webserver:

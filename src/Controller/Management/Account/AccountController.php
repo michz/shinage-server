@@ -15,7 +15,6 @@ use App\Security\LoggedInUserRepositoryInterface;
 use App\UserType;
 use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
 use Doctrine\ORM\EntityManagerInterface;
-use FOS\UserBundle\Model\UserManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\Extension\Core\Type\FormType;
@@ -29,19 +28,16 @@ use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\PasswordHasher\Hasher\MigratingPasswordHasher;
-use Symfony\Component\PasswordHasher\Hasher\PasswordHasherFactoryInterface;
-use Symfony\Component\PasswordHasher\Hasher\Pbkdf2PasswordHasher;
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 class AccountController extends AbstractController
 {
     public function __construct(
         private readonly EntityManagerInterface $entityManager,
-        private readonly UserManagerInterface $userManager,
         private readonly TranslatorInterface $translator,
         private readonly FormFactoryInterface $formFactory,
-        private readonly PasswordHasherFactoryInterface $passwordHasherFactory,
+        private readonly UserPasswordHasherInterface $passwordHasher,
         private readonly LoggedInUserRepositoryInterface $loggedInUserRepository,
     ) {
     }
@@ -64,13 +60,14 @@ class AccountController extends AbstractController
 
         $form_pw = $this->formFactory->createNamedBuilder('form2name', FormType::class, $user)
             ->add('old-password', PasswordType::class, ['label' => 'oldPassword', 'mapped' => false])
-            ->add('plainPassword', RepeatedType::class, [
+            ->add('new-password', RepeatedType::class, [
                 'type' => PasswordType::class,
                 'invalid_message' => 'PasswordsMustMatch',
                 'options' => ['attr' => ['class' => 'password-field']],
                 'required' => true,
                 'first_options' => ['label' => 'Password'],
                 'second_options' => ['label' => 'PasswordAgain'],
+                'mapped' => false,
             ])
             ->add('save', SubmitType::class, ['label' => 'Save'])
             ->getForm();
@@ -91,7 +88,6 @@ class AccountController extends AbstractController
                 // @TODO Localize Flash messages
                 if ($form->isSubmitted()) {
                     if ($form->isValid()) {
-                        $this->userManager->updateUser($user);
                         $this->entityManager->flush();
                         $this->addFlash('success', 'Die Änderungen wurden gespeichert.');
                     } else {
@@ -108,13 +104,9 @@ class AccountController extends AbstractController
                 $form_pw->handleRequest($request);
 
                 if ($form_pw->isSubmitted()) {
-                    /** @var MigratingPasswordHasher|Pbkdf2PasswordHasher $passwordHasher */
-                    $passwordHasher = $this->passwordHasherFactory->getPasswordHasher($user);
-
-                    if (!$passwordHasher->verify(
-                        $user->getPassword(),
+                    if (false === $this->passwordHasher->isPasswordValid(
+                        $user,
                         $form_pw->get('old-password')->getData(),
-                        $user->getSalt() // @TODO Remove salt
                     )) {
                         // wrong old password
                         $form_pw->get('old-password')->addError(
@@ -123,14 +115,13 @@ class AccountController extends AbstractController
                     } else {
                         if ($form_pw->isValid()) {
                             // now check if it is empty
-                            $pw = $form_pw->get('plainPassword')->getData();
+                            $pw = $form_pw->get('new-password')->getData();
                             if (empty($pw)) {
                                 $this->addFlash('error', 'Das Passwort darf nicht leer sein.');
                             } else {
-                                // everythin seems ok, now set password and save
-                                $user->setPlainPassword($pw);
-
-                                $this->userManager->updateUser($user);
+                                // everything seems ok, now set password and save
+                                $encodedPassword = $this->passwordHasher->hashPassword($user, $pw);
+                                $user->setPassword($encodedPassword);
                                 $this->entityManager->flush();
                                 $this->addFlash('success', 'Das Passwort wurde erfolgreich geändert.');
                             }
@@ -156,10 +147,10 @@ class AccountController extends AbstractController
     {
         $user = $this->loggedInUserRepository->getLoggedInUserOrDenyAccess();
 
-        $orga_new = new User();
-        $orga_new->setUserType(UserType::USER_TYPE_ORGA);
+        $newOrganization = new User();
+        $newOrganization->setUserType(UserType::USER_TYPE_ORGA);
 
-        $form_create = $this->createFormBuilder($orga_new)
+        $form_create = $this->createFormBuilder($newOrganization)
             ->add('Name', TextType::class, ['trim' => true])
             ->add('email', EmailType::class, ['label' => 'E-Mail'])
             ->add('save', SubmitType::class, ['label' => 'Save'])
@@ -167,16 +158,14 @@ class AccountController extends AbstractController
         $form_create->handleRequest($request);
         if ($form_create->isSubmitted()) {
             if ($form_create->isValid()) {
-                $orga_new->setUsername($orga_new->getName());
-                $orga_new->setPassword('');
-                $orga_new->setPlainPassword('');
                 try {
-                    $this->userManager->updateUser($orga_new);
+                    $this->entityManager->persist($newOrganization);
                     $this->entityManager->flush();
-                    $user->addOrganization($orga_new);
-                    $this->userManager->updateUser($user);
+
+                    $user->addOrganization($newOrganization);
                     $this->entityManager->flush();
-                    $this->entityManager->refresh($orga_new); // needed to notify $user that he is in a new organization
+
+                    $this->entityManager->refresh($newOrganization); // needed to notify $user that he is in a new organization
                     $this->addFlash('success', 'Die neue Organisation wurde gespeichert.');
                 } catch (UniqueConstraintViolationException $ex) {
                     $this->addFlash(

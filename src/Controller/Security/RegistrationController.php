@@ -13,8 +13,6 @@ use App\Entity\User;
 use App\Repository\UserRepositoryInterface;
 use App\Service\ConfirmationTokenGeneratorInterface;
 use Doctrine\ORM\EntityManagerInterface;
-use FOS\UserBundle\Model\UserInterface;
-use FOS\UserBundle\Model\UserManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
@@ -29,6 +27,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Mime\Address;
 use Symfony\Component\Mime\Email;
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 class RegistrationController extends AbstractController
@@ -36,10 +35,10 @@ class RegistrationController extends AbstractController
     public function __construct(
         private readonly EntityManagerInterface $entityManager,
         private readonly ConfirmationTokenGeneratorInterface $confirmationTokenGenerator,
-        private readonly UserManagerInterface $userManager,
         private readonly TranslatorInterface $translator,
         private readonly MailerInterface $mailer,
         private readonly UserRepositoryInterface $userRepository,
+        private readonly UserPasswordHasherInterface $userPasswordHasher,
         private readonly string $mailSenderMail,
         private readonly string $mailSenderName,
     ) {
@@ -71,7 +70,7 @@ class RegistrationController extends AbstractController
 
             if ($form->isValid()) {
                 // check if there is already a user with same email
-                $oldUser = $this->userManager->findUserByEmail($user->getEmail());
+                $oldUser = $this->entityManager->getRepository(User::class)->findOneBy(['emailCanonical' => $user->getEmail()]);
                 if (null !== $oldUser) {
                     $this->addFlash(
                         'error',
@@ -79,7 +78,8 @@ class RegistrationController extends AbstractController
                     );
                 } else {
                     // good news: email is not used yet, register user
-                    $user->setPlainPassword($form->get('password')->getData());
+                    $encodedPassword = $this->userPasswordHasher->hashPassword($user, $form->get('password')->getData());
+                    $user->setPassword($encodedPassword);
                     $user->setConfirmationToken($this->confirmationTokenGenerator->generateConfirmationToken());
 
                     $this->assignUserToOrganizationsByMailHost($user);
@@ -87,8 +87,9 @@ class RegistrationController extends AbstractController
                         $user->addOrganization($registrationCode->getAssignOrganization());
                     }
 
-                    $this->userManager->updateUser($user);
+                    $this->entityManager->persist($user);
                     $this->entityManager->flush();
+
                     $this->invalidateRegistrationCode($registrationCodeField);
 
                     $this->addFlash(
@@ -98,7 +99,7 @@ class RegistrationController extends AbstractController
 
                     $this->sendRegistrationMail($user);
 
-                    return $this->redirectToRoute('fos_user_security_login');
+                    return $this->redirectToRoute('app_manage_login');
                 }
             } else {
                 $this->addFlash(
@@ -115,26 +116,25 @@ class RegistrationController extends AbstractController
 
     public function confirmAction(string $confirmationToken): RedirectResponse
     {
-        $user = $this->userManager->findUserByConfirmationToken($confirmationToken);
+        $user = $this->entityManager->getRepository(User::class)->findOneBy(['confirmationToken' => $confirmationToken]);
 
         if (null === $user) {
             $this->addFlash(
                 'error',
                 'registration.confirmation.code_not_found'
             );
-            return $this->redirectToRoute('fos_user_security_login');
+            return $this->redirectToRoute('app_manage_login');
         }
 
         $user->setEnabled(true);
-        $this->userManager->updateUser($user);
         $this->addFlash(
             'success',
             'success'
         );
-        return $this->redirectToRoute('fos_user_security_login');
+        return $this->redirectToRoute('app_manage_login');
     }
 
-    private function sendRegistrationMail(UserInterface $user): void
+    private function sendRegistrationMail(User $user): void
     {
         $message = new Email();
         $message

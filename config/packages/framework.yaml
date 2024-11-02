@@ -2,8 +2,9 @@ framework:
   secret: '%env(APP_SECRET)%'
   default_locale: de
   csrf_protection: true
-  http_method_override: true
+  http_method_override: false
   serializer: false
+  handle_all_throwables: true
 
   # Enables session support. Note that the session will ONLY be started if you read or write from it.
   # Remove or comment this section to explicitly disable session support.
@@ -12,11 +13,14 @@ framework:
     handler_id: null
     storage_factory_id: session.storage.factory.native
     #handler_id:  session.handler.native_file
+    #save_path: '%kernel.project_dir%/var/sessions/%kernel.environment%'
     #save_path:   "%kernel.root_dir%/../var/sessions/%kernel.environment%"
+    cookie_secure: auto
+    cookie_samesite: lax
 
   #fragments: true
   php_errors:
-    log: false
+    log: true
 
   cache:
     prefix_seed: mztx/shinage-server

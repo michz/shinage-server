@@ -148,9 +148,6 @@
     "friendsofphp/proxy-manager-lts": {
         "version": "v1.0.5"
     },
-    "friendsofsymfony/user-bundle": {
-        "version": "3.x-dev"
-    },
     "guzzlehttp/guzzle": {
         "version": "6.5.5"
     },

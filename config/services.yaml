@@ -228,8 +228,3 @@ services:
     arguments:
       $senderMail: '%env(MAIL_DEFAULT_SENDER_MAIL)%'
       $senderName: '%env(MAIL_DEFAULT_SENDER_NAME)%'
-
-  App\Service\FOSUserMailer:
-    arguments:
-      $senderMail: '%env(MAIL_DEFAULT_SENDER_MAIL)%'
-      $senderName: '%env(MAIL_DEFAULT_SENDER_NAME)%'

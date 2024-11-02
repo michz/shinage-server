@@ -47,6 +47,10 @@ class LoggedInUserRepositorySpec extends ObjectBehavior
             ->getUser()
             ->willReturn($user);
 
+        $user
+            ->isEnabled()
+            ->willReturn(true);
+
         $this
             ->getLoggedInUserOrDenyAccess()
             ->shouldReturn($user);
