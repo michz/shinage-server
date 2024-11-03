@@ -48,7 +48,7 @@ class User implements UserInterface, TwoFactorEmailInterface, TwoFactorGoogleInt
     private string $emailCanonical = '';
 
     #[ORM\Column(name: 'enabled', type: 'boolean')]
-    private bool $enabled = true;
+    private bool $enabled = false;
 
     /** @var Collection<array-key, User> */
     #[ORM\JoinTable(name: 'users_orgas')]
@@ -223,9 +223,6 @@ class User implements UserInterface, TwoFactorEmailInterface, TwoFactorGoogleInt
     public function addRole(string $role): self
     {
         $role = \strtoupper($role);
-        if ($role === static::ROLE_DEFAULT) {
-            return $this;
-        }
 
         if (!\in_array($role, $this->roles, true)) {
             $this->roles[] = $role;
@@ -359,7 +356,7 @@ class User implements UserInterface, TwoFactorEmailInterface, TwoFactorGoogleInt
         return $this->confirmationToken;
     }
 
-    public function setConfirmationToken(string $confirmationToken): self
+    public function setConfirmationToken(?string $confirmationToken): self
     {
         $this->confirmationToken = $confirmationToken;
 

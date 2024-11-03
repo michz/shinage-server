@@ -79,6 +79,7 @@ class RegistrationController extends AbstractController
                 } else {
                     // good news: email is not used yet, register user
                     $encodedPassword = $this->userPasswordHasher->hashPassword($user, $form->get('password')->getData());
+                    $user->addRole(User::ROLE_DEFAULT);
                     $user->setPassword($encodedPassword);
                     $user->setConfirmationToken($this->confirmationTokenGenerator->generateConfirmationToken());
 
@@ -127,9 +128,12 @@ class RegistrationController extends AbstractController
         }
 
         $user->setEnabled(true);
+        $user->setConfirmationToken(null);
+        $this->entityManager->flush();
+
         $this->addFlash(
             'success',
-            'success'
+            'registration.confirmation.success',
         );
         return $this->redirectToRoute('app_manage_login');
     }

@@ -74,6 +74,24 @@ readonly class UserContext implements Context
     }
 
     /**
+     * @Given The user :user is not enabled
+     */
+    public function theUserIsNotEnabled(User $user): void
+    {
+        $user->setEnabled(false);
+        $this->entityManager->flush();
+    }
+
+    /**
+     * @Given The user :user has the confirmation token :token
+     */
+    public function theUserHasTheConfirmationToken(User $user, string $token): void
+    {
+        $user->setConfirmationToken($token);
+        $this->entityManager->flush();
+    }
+
+    /**
      * @Given The user :user has an api key :code with scope :apiScope
      */
     public function theUserHasAnApiKeyWithScope(User $user, string $code, string $apiScope): void

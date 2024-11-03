@@ -28,6 +28,11 @@ class UserChecker implements UserCheckerInterface
             throw new UnsupportedUserException();
         }
 
+        if (false === $user->isEnabled() && null !== $user->getConfirmationToken()) {
+            // User has not confirmed the email address yet
+            throw new CustomUserMessageAccountStatusException('Email address not verified.');
+        }
+
         if (UserType::USER_TYPE_USER !== $user->getUserType()) {
             // Should not happen, but just in case an organization has a password set accidentally.
             throw new CustomUserMessageAccountStatusException('Organizations can not login.');
