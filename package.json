@@ -2,8 +2,8 @@
   "name": "shinage-server",
   "packageManager": "yarn@4.5.1",
   "dependencies": {
-    "@babel/core": "^7.25.9",
-    "@babel/preset-env": "^7.25.9",
+    "@babel/core": "^7.26.0",
+    "@babel/preset-env": "^7.26.0",
     "@babel/register": "^7.25.9",
     "codemirror": "^5.65.18",
     "del": "^7.1.0",
