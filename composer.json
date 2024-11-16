@@ -20,14 +20,13 @@
     }
   },
   "require": {
-    "php": ">=8.2",
+    "php": ">=8.3",
     "ext-gd": "*",
     "ext-intl": "*",
     "ext-json": "*",
 
     "doctrine/orm": "^2.7",
     "doctrine/doctrine-bundle": "^2.1",
-    "friendsofsymfony/user-bundle": "^v4.0.0",
     "studio-42/elfinder": "^2.1",
     "guzzlehttp/guzzle": "^7.4",
     "knplabs/knp-menu-bundle": "^3.0",
@@ -93,7 +92,7 @@
   },
   "config": {
     "platform": {
-      "php": "8.2.15"
+      "php": "8.3.13"
     },
     "allow-plugins": {
       "composer/package-versions-deprecated": true,

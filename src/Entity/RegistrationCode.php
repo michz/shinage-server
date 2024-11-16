@@ -8,16 +8,29 @@ declare(strict_types=1);
 
 namespace App\Entity;
 
+use Doctrine\ORM\Mapping as ORM;
+
+#[ORM\Table(name: 'registration_codes')]
+#[ORM\Entity]
 class RegistrationCode
 {
+    #[ORM\Column(name: 'code', type: 'string', length: 250)]
+    #[ORM\Id]
+    #[ORM\GeneratedValue(strategy: 'NONE')]
     private ?string $code = null;
 
+    #[ORM\JoinColumn(name: 'created_by', referencedColumnName: 'id', nullable: true)]
+    #[ORM\ManyToOne(targetEntity: User::class, fetch: 'EAGER')]
     private ?User $createdBy = null;
 
+    #[ORM\Column(name: 'created_date', type: 'datetime', unique: false, nullable: false)]
     private ?\DateTimeInterface $createdDate = null;
 
+    #[ORM\JoinColumn(name: 'assign_organization', referencedColumnName: 'id', nullable: true)]
+    #[ORM\ManyToOne(targetEntity: User::class, fetch: 'EAGER')]
     private ?User $assignOrganization = null;
 
+    #[ORM\Column(name: 'valid_until', type: 'datetime', unique: false, nullable: false)]
     private ?\DateTimeInterface $validUntil = null;
 
     public function getCode(): ?string

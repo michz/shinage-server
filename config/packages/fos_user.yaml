@@ -1,9 +1,0 @@
-fos_user:
-  from_email:
-    address:        "%env(MAILER_FROM)%"
-    sender_name:    "Shinage Digital Signage"
-  db_driver: orm
-  firewall_name: main
-  user_class: App\Entity\User
-  service:
-    mailer: "App\\Service\\FOSUserMailer"

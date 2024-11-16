@@ -192,6 +192,15 @@ services:
     arguments:
       $basePath: "%path_pool%"
 
+  App\Service\HmacCalculator:
+    arguments:
+      $secret: '%env(APP_SECRET)%'
+
+  App\Service\MailSender:
+    arguments:
+      $mailSenderMail: '%env(MAIL_DEFAULT_SENDER_MAIL)%'
+      $mailSenderName: '%env(MAIL_DEFAULT_SENDER_NAME)%'
+
   App\EventListener\KernelExceptionListener:
     arguments:
       - '%kernel.environment%'
@@ -225,11 +234,6 @@ services:
       $senderName: '%env(MAIL_DEFAULT_SENDER_NAME)%'
 
   App\Command\CheckAndAlarmScreensCommand:
-    arguments:
-      $senderMail: '%env(MAIL_DEFAULT_SENDER_MAIL)%'
-      $senderName: '%env(MAIL_DEFAULT_SENDER_NAME)%'
-
-  App\Service\FOSUserMailer:
     arguments:
       $senderMail: '%env(MAIL_DEFAULT_SENDER_MAIL)%'
       $senderName: '%env(MAIL_DEFAULT_SENDER_NAME)%'

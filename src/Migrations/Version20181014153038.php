@@ -20,8 +20,6 @@ final class Version20181014153038 extends AbstractMigration
 
     public function up(Schema $schema): void
     {
-        $this->abortIf('mysql' !== $this->connection->getDatabasePlatform()->getName(), 'Migration can only be executed safely on \'mysql\'.');
-
         $this->addSql('CREATE TABLE schedule (id INT AUTO_INCREMENT NOT NULL, screen_id VARCHAR(36) NOT NULL, presentation_id INT NOT NULL, scheduled_start DATETIME NOT NULL, scheduled_end DATETIME NOT NULL, INDEX IDX_5A3811FB41A67722 (screen_id), INDEX IDX_5A3811FBAB627E8B (presentation_id), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci ENGINE = InnoDB');
         $this->addSql('CREATE TABLE api_access_keys (id INT AUTO_INCREMENT NOT NULL, user_id INT DEFAULT NULL, code VARCHAR(32) NOT NULL, name VARCHAR(255) NOT NULL, last_use DATETIME DEFAULT NULL, roles LONGTEXT NOT NULL COMMENT \'(DC2Type:simple_array)\', UNIQUE INDEX UNIQ_2820A86477153098 (code), INDEX IDX_2820A864A76ED395 (user_id), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci ENGINE = InnoDB');
         $this->addSql('CREATE TABLE screen_associations (id INT AUTO_INCREMENT NOT NULL, screen_id VARCHAR(36) NOT NULL, user_id INT DEFAULT NULL, role VARCHAR(32) NOT NULL, INDEX IDX_15BC34BC41A67722 (screen_id), INDEX IDX_15BC34BCA76ED395 (user_id), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci ENGINE = InnoDB');
@@ -42,8 +40,6 @@ final class Version20181014153038 extends AbstractMigration
 
     public function down(Schema $schema): void
     {
-        $this->abortIf('mysql' !== $this->connection->getDatabasePlatform()->getName(), 'Migration can only be executed safely on \'mysql\'.');
-
         $this->addSql('ALTER TABLE schedule DROP FOREIGN KEY FK_5A3811FBAB627E8B');
         $this->addSql('ALTER TABLE screens DROP FOREIGN KEY FK_3D08B3C6AB627E8B');
         $this->addSql('ALTER TABLE api_access_keys DROP FOREIGN KEY FK_2820A864A76ED395');

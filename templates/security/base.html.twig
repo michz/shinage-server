@@ -20,38 +20,16 @@
         <meta name="theme-color" content="#ffffff">
     </head>
     <body class="{{ app.request.attributes.get('_route') }}">
-        {% include('navi/navigation.html.twig') %}
-
         <div id="mainWrapper">
             {# main content #}
             {% block body %}{% endblock %}
 
-            <div id="global-dimmer" class="ui dimmer">
-                <div class="ui loader"></div>
-            </div>
-
             <div id="footer">
-                Shinage Digital Signage ({{ version_checker.version }})
-            </div>
-        </div>
-
-        <div class="ui mini modal" id="chooseOwnerDialog" data-get-possible-owners-url="{{ path('management-get-possible-owners') }}">
-            <i class="close icon"></i>
-            <div class="header">
-                {{ 'Choose new owner'|trans }}
-            </div>
-            <div class="content">
-                <select name="newOwner">
-                </select>
-            </div>
-            <div class="actions">
-                <div class="ui cancel button">{{ 'Cancel'|trans }}</div>
-                <div class="ui approve button">{{ 'Save'|trans }}</div>
+                Shinage Digital Signage
             </div>
         </div>
 
         <script src="{{ asset('assets/lib.min.js') }}"></script>
-        <script src="{{ asset('assets/app.min.js') }}"></script>
 
         <script>
             $('.ui.dropdown').dropdown();
@@ -77,12 +55,5 @@
         {{ hiddenFlashes|raw }}
 
         {% block scripts %}{% endblock %}
-
-
-        <script>
-            $(function() {
-                //ajaxLoadHide();
-            });
-        </script>
     </body>
 </html>

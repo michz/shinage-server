@@ -12,19 +12,17 @@ use App\Entity\User;
 use App\UserType;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
-use FOS\UserBundle\Model\UserManagerInterface;
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
 class UserFixtures extends Fixture
 {
     public const USERNAME_ADMIN = 'admin@shinage.test';
     public const PASSWORD_ADMIN = 'admin';
-
-    private UserManagerInterface $userManager;
+    public const PASSWORD_ORGA_USER = 'user1';
 
     public function __construct(
-        UserManagerInterface $userManager
+        private readonly UserPasswordHasherInterface $userPasswordHasher,
     ) {
-        $this->userManager = $userManager;
     }
 
     public function load(ObjectManager $manager): void
@@ -41,12 +39,11 @@ class UserFixtures extends Fixture
         $admin->setUserType(UserType::USER_TYPE_USER);
         $admin->setName(self::USERNAME_ADMIN);
         $admin->setEmail(self::USERNAME_ADMIN);
-        $admin->setPlainPassword(self::PASSWORD_ADMIN);
         $admin->setEnabled(true);
         $admin->addRole('ROLE_SUPER_ADMIN');
 
-        $this->userManager->updateCanonicalFields($admin);
-        $this->userManager->updatePassword($admin);
+        $encodedPassword = $this->userPasswordHasher->hashPassword($admin, self::PASSWORD_ADMIN);
+        $admin->setPassword($encodedPassword);
 
         $manager->persist($admin);
     }
@@ -57,11 +54,7 @@ class UserFixtures extends Fixture
         $orga->setUserType(UserType::USER_TYPE_ORGA);
         $orga->setName('Test-Organization 1');
         $orga->setEmail('orga1@shinage.test');
-        $orga->setPassword('dsfhgkjhdsfkjghdfhgkjdfhgkjdhfjkjghkjdshfgkjhdsfjkghksjdfhgkjdshfkghkjdhkjh');
         $orga->setEnabled(true);
-
-        $this->userManager->updateCanonicalFields($orga);
-        $this->userManager->updatePassword($orga);
 
         $manager->persist($orga);
 
@@ -74,12 +67,11 @@ class UserFixtures extends Fixture
         $admin->setUserType(UserType::USER_TYPE_USER);
         $admin->setName('User 1');
         $admin->setEmail('user1@shinage.test');
-        $admin->setPlainPassword('user1');
         $admin->setEnabled(true);
         $admin->addOrganization($orga);
 
-        $this->userManager->updateCanonicalFields($admin);
-        $this->userManager->updatePassword($admin);
+        $encodedPassword = $this->userPasswordHasher->hashPassword($admin, self::PASSWORD_ORGA_USER);
+        $admin->setPassword($encodedPassword);
 
         $manager->persist($admin);
     }

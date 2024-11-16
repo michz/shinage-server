@@ -27,7 +27,7 @@ Please contact us!
 Prerequisites
 -------------
 
-* A machine with a running PHP installation (8.2 or newer)
+* A machine with a running, up-to-date PHP installation
   with mysql support, libgd and terminal access.
 * MariaDB- or MySQL-Server (local or remote). 
 * At least one database on this MySQL-Server.  
@@ -120,9 +120,9 @@ To run phpspec, do:
 To run behat, first initialize the testing database:
 
 ```bash
-php bin/console doctrine:database:create --env=test
-php bin/console doctrine:schema:update --force --env=test
-php bin/console doctrine:fixtures:load --env=test
+php bin/console doctrine:database:create --env=test --if-not-exists
+php bin/console doctrine:schema:update --force --env=test --no-interaction
+php bin/console doctrine:fixtures:load --env=test --no-interaction
 ```
 
 Then start the development webserver:

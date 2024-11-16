@@ -1,8 +1,6 @@
 security:
-  enable_authenticator_manager: true
-
   password_hashers:
-    FOS\UserBundle\Model\UserInterface: bcrypt
+    App\Entity\User: bcrypt
 
   role_hierarchy:
     ROLE_USER:        ROLE_POOL_USER
@@ -10,8 +8,10 @@ security:
     ROLE_SUPER_ADMIN: ROLE_ADMIN
 
   providers:
-    fos_userbundle:
-      id: fos_user.user_provider.username_email
+    app_user_provider:
+      entity:
+        class: App\Entity\User
+        property: emailCanonical
 
   firewalls:
     apitoken_secured:
@@ -21,20 +21,25 @@ security:
         - App\Security\ApiTokenAuthenticator
     main:
       pattern: ^/
+      user_checker: App\Security\UserChecker
       form_login:
-        provider: fos_userbundle
+        provider: app_user_provider
+        login_path: app_manage_login
+        check_path: app_manage_login_check
         enable_csrf: true
-      logout:       true
+      logout:
+        path: /logout
+        target: /login
       two_factor:
         auth_form_path: 2fa_login
         check_path: 2fa_login_check
-    pool:
-      pattern: ^/pool
-      form_login:
-        provider: fos_userbundle
-        check_path: ~
-        login_path: ~
-      access_denied_handler: App\Component\Event\AccessDeniedHandler
+    #pool:
+    #  pattern: ^/pool
+    #  form_login:
+    #    provider: app_user_provider
+    #    check_path: ~
+    #    login_path: ~
+    #  access_denied_handler: App\Component\Event\AccessDeniedHandler
 
   access_control:
     - { path: ^/login$, role: PUBLIC_ACCESS }

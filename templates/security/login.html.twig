@@ -1,0 +1,38 @@
+{% extends 'security/base.html.twig' %}
+
+{% block body %}
+
+    <div class="ui login fluid container">
+        <div class="top image">
+            <img class="ui centered image" src="{{ asset('android-chrome-192x192.png') }}" alt="Logo" />
+        </div>
+        <form action="{{ path("app_manage_login_check") }}" class="ui large form" method="post">
+            <div class="ui stacked segment">
+                <div class="field">
+                    <div class="ui left icon input">
+                        <i class="user icon"></i>
+                        <input type="text" name="_username" value="{{ last_username }}" placeholder="{{ 'Email'|trans }}" required autofocus>
+                    </div>
+                </div>
+                <div class="field">
+                    <div class="ui left icon input">
+                        <i class="lock icon"></i>
+                        <input type="password" name="_password" placeholder="{{ 'Password'|trans }}">
+                    </div>
+                </div>
+
+                <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
+                <button type="submit" name="_submit" class="ui fluid large primary submit button">{{ 'Login'|trans }}</button>
+            </div>
+
+            <div class="">
+                <a href="{{ path("app_manage_request_reset_password") }}">{{ 'login.reset_password_link'|trans([], 'security') }}</a>
+            </div>
+
+            {% if error %}
+                <div class="ui visible error message">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
+            {% endif %}
+        </form>
+    </div>
+
+{% endblock %}

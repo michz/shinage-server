@@ -18,6 +18,18 @@ registration:
     code_not_found: Zu dem Bestätigungscode konnte leider kein Benutzer gefunden werden.
     success: Vielen Dank! Dein Konto ist nun freigeschaltet und du kannst dich einloggen.
 
+login:
+  reset_password:
+    sent_message: |
+      Falls ein Konto mit der angegebenen E-Mail-Adresse existiert,
+      wurde eine E-Mail mit Anweisungen zum Zurücksetzen des Passwort verschickt.
+    link_not_valid: |
+      Der Link war leider nicht gültig. Bitte probiere es noch einmal.
+    link_not_valid_any_more: |
+      Der Link ist abgelaufen. Bitte probiere es erneut.
+    generic_error: Es ist leider ein Fehler aufgetreten. Bitte probiere es erneut.
+    success: Das neue Passwort wurde gesetzt. Bitte logge dich mit dem neuen Passwort ein.
+
 admin:
   codes:
     saved_code: Code erfolgreich gespeichert

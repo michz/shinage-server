@@ -84,7 +84,7 @@ class LoginContext extends RawMinkContext
      */
     public function iShouldSeeAnErrorMessage(): void
     {
-        $elem = $this->getSession()->getPage()->find('css', '.negative.message');
+        $elem = $this->getSession()->getPage()->find('css', '.error.message,.negative.message');
         if (null === $elem) {
             throw new \Exception('I cannot see error message.');
         }
