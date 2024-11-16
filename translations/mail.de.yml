@@ -31,6 +31,20 @@ registration:
   outro: |
     Shinage
 
+reset_password:
+  intro: |
+    Hallo,
+
+  link:
+    before: |
+      hier ist der angeforderte Link zum Zurücksetzen des Passworts:
+
+    after: |
+      Der Link ist maximal 24 Stunden gültig.
+      Bitte klicke darauf oder kopiere ihn in deinen Browser und vergib ein neues Passwort.
+
+  outro: |
+    Falls du das Zurücksetzen des Passworts nicht angefragt hast, kannst du diese Nachricht ignorieren.
 
 base:
   footer: |

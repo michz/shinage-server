@@ -91,6 +91,7 @@ me: Ich
 CreateNewPresentation: Neue Präsentation anlegen
 
 SubjectRegistrationMail: Deine Registrierung bei Shinage
+SubjectResetPasswordMail: Dein Shinage-Passwort
 
 WrongOldPassword: Das bisherige Passwort ist leider falsch.
 
@@ -114,9 +115,6 @@ Security: Sicherheit
 Two factor authentification: Zweifaktor-Authentifizierung
 Security Code: Code
 
-Forgot password: Ich habe mein Passwort vergessen...
-Reset Password: Passwort zurücksetzen
-
 code_invalid: Der Code war leider nicht gültig. Bitte probiere es noch einmal.
 
 scheb_two_factor:
@@ -128,3 +126,10 @@ Choose new owner: Wähle einen neuen Besitzer
 Plan presentation: Präsentation planen
 
 different: verschiedene
+
+login:
+  reset_password_button: Neues Passwort anfordern
+  set_new_password_button: Neues Passwort setzen
+
+New password: Neues Passwort
+New password repeat: Neues Passwort wiederholen

@@ -2,7 +2,10 @@
 
 {% block body %}
 
-    <div class="ui container" style="margin-top: 10em; max-width: 500px">
+    <div class="ui login fluid container">
+        <div class="top image">
+            <img class="ui centered image" src="{{ asset('android-chrome-192x192.png') }}" alt="Logo" />
+        </div>
         <form action="{{ path("app_manage_login_check") }}" class="ui large form" method="post">
             <div class="ui stacked segment">
                 <div class="field">
@@ -19,8 +22,11 @@
                 </div>
 
                 <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
-                {# <input type="hidden" name="_target_path" value="/manage/dashboard"> #}
                 <button type="submit" name="_submit" class="ui fluid large primary submit button">{{ 'Login'|trans }}</button>
+            </div>
+
+            <div class="">
+                <a href="{{ path("app_manage_request_reset_password") }}">{{ 'login.reset_password_link'|trans([], 'security') }}</a>
             </div>
 
             {% if error %}

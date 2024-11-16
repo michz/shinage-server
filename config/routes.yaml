@@ -32,7 +32,17 @@ app_manage_login_check:
   path: "/login-check"
   controller: App\Controller\Security\LoginController::checkAction
 
-# @TODO Reset Password
+app_manage_request_reset_password:
+  path: "/request-reset-password"
+  controller: App\Controller\Security\LoginController::requestResetPasswordAction
+
+app_manage_reset_password:
+  path: "/reset-password/{mb64}-{ts}-{token}"
+  controller: App\Controller\Security\LoginController::resetPasswordAction
+  requirements:
+    mb64: "[a-zA-Z0-9]*"
+    ts: "[0-9]*"
+    token: "[a-zA-Z0-9]*"
 
 homepage:
   path: "/"

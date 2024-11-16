@@ -192,6 +192,15 @@ services:
     arguments:
       $basePath: "%path_pool%"
 
+  App\Service\HmacCalculator:
+    arguments:
+      $secret: '%env(APP_SECRET)%'
+
+  App\Service\MailSender:
+    arguments:
+      $mailSenderMail: '%env(MAIL_DEFAULT_SENDER_MAIL)%'
+      $mailSenderName: '%env(MAIL_DEFAULT_SENDER_NAME)%'
+
   App\EventListener\KernelExceptionListener:
     arguments:
       - '%kernel.environment%'

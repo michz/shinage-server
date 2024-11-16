@@ -1,0 +1,6 @@
+
+login:
+  reset_password:
+    sent_message: |
+      If there is an account with the given email address,
+      an email has been sent there containing instructions for password reset.

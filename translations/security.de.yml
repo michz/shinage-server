@@ -1,2 +1,5 @@
 Organizations can not login.: Organisationen können sich nicht selbst einloggen.
 Email address not verified.: Die E-Mail-Adresse ist noch nicht bestätigt. Bitte sieh in deinem Postfach nach oder wende dich an den Administrator.
+
+login:
+  reset_password_link: Passwort vergessen? Neues Passwort setzen…
