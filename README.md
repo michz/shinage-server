@@ -27,7 +27,7 @@ Please contact us!
 Prerequisites
 -------------
 
-* A machine with a running PHP installation (8.2 or newer)
+* A machine with a running, up-to-date PHP installation
   with mysql support, libgd and terminal access.
 * MariaDB- or MySQL-Server (local or remote). 
 * At least one database on this MySQL-Server.  

@@ -20,7 +20,7 @@
     }
   },
   "require": {
-    "php": ">=8.2",
+    "php": ">=8.3",
     "ext-gd": "*",
     "ext-intl": "*",
     "ext-json": "*",
@@ -92,7 +92,7 @@
   },
   "config": {
     "platform": {
-      "php": "8.2.15"
+      "php": "8.3.13"
     },
     "allow-plugins": {
       "composer/package-versions-deprecated": true,
