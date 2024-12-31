@@ -152,3 +152,68 @@ jobs:
           draft: false
           prerelease: false
           files: build/shinage-server-release.tar.gz
+
+  docker:
+    #if: github.event_name == 'push' && contains(github.ref, 'refs/tags/v')
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: '.nvmrc'
+
+      - name: Print versions
+        run: |
+          corepack enable
+          node --version
+          corepack -v
+          yarn --version
+
+      - name: Install yarn dependencies
+        run: |
+          corepack enable
+          yarn install --frozen-lockfile
+
+      - name: Build assets
+        run: ./node_modules/.bin/gulp
+        env:
+          NODE_ENV: production
+
+      - name: Write revision file
+        run: echo "${{ github.sha }}" > REVISION
+
+      - name: Get current date
+        id: date
+        run: echo "::set-output name=date::$(date -u -Iseconds)"
+
+      - name: Build Docker image
+        run: |
+          docker buildx build \
+            --build-arg "${{ steps.date.outputs.date }}" \
+            --build-arg "${{ github.sha }}" \
+            --target prod \
+            -t "ghcr.io/michz/shinage-server-app:${{ github.sha }}" \
+            -t "ghcr.io/michz/shinage-server-app:${{ github.ref_name }}" \
+            -f Dockerfile .
+          docker buildx build \
+            --build-arg "${{ steps.date.outputs.date }}" \
+            --build-arg "${{ github.sha }}" \
+            -t "ghcr.io/michz/shinage-server-web:${{ github.sha }}" \
+            -t "ghcr.io/michz/shinage-server-web:${{ github.ref_name }}" \
+            -f Dockerfile.nginx .
+          docker build -t ghcr.io/NAMESPACE/IMAGE_NAME:latest .
+          docker images
+          docker push -q "ghcr.io/michz/shinage-server-web:${{ github.sha }}"
+          docker push -q "ghcr.io/michz/shinage-server-web:${{ github.ref_name }}"
+          docker push -q "ghcr.io/michz/shinage-server-app:${{ github.sha }}"
+          docker push -q "ghcr.io/michz/shinage-server-app:${{ github.ref_name }}"
+#            if [[ "$CI_COMMIT_BRANCH" == "$CI_DEFAULT_BRANCH" ]]; then
+#              docker tag "$DOCKER_IMAGE_NAME_APP_SHA" "$DOCKER_IMAGE_NAME_APP_LATEST"
+#              docker tag "$DOCKER_IMAGE_NAME_WEB_SHA" "$DOCKER_IMAGE_NAME_WEB_LATEST"
+#              docker images
+#              docker push -q "$DOCKER_IMAGE_NAME_APP_LATEST"
+#              docker push -q "$DOCKER_IMAGE_NAME_WEB_LATEST"
+#            fi
