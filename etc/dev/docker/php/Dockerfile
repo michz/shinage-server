@@ -1,6 +1,6 @@
 ARG PHP_VERSION
 
-FROM php:$PHP_VERSION-fpm-alpine3.19
+FROM php:$PHP_VERSION-fpm-alpine3.21
 
 # build time dependencies
 ENV PHPIZE_DEPS \
@@ -19,13 +19,13 @@ ENV PHPIZE_DEPS \
     oniguruma-dev
 
 # Use a more local mirror as the CDN is sometimes terribly slow
-RUN echo http://mirror1.hs-esslingen.de/pub/Mirrors/alpine/v3.19/main > /etc/apk/repositories; \
-    echo http://mirror1.hs-esslingen.de/pub/Mirrors/alpine/v3.19/community >> /etc/apk/repositories
+RUN echo http://mirror1.hs-esslingen.de/pub/Mirrors/alpine/v3.21/main > /etc/apk/repositories; \
+    echo http://mirror1.hs-esslingen.de/pub/Mirrors/alpine/v3.21/community >> /etc/apk/repositories
 
 # persistent dependencies
 # inspired by https://github.com/prooph/docker-files/blob/master/php/7.1-fpm
 RUN set -ex \
-       &&  apk add --no-cache \
+       && apk add --no-cache \
         bash \
         mysql-client \
         gzip \
@@ -73,7 +73,7 @@ RUN set -ex \
     && rm -rf /tmp/pear \
     && docker-php-ext-enable redis \
     && apk del .build-deps \
-    && pecl install xdebug-3.3.0 \
+    && pecl install xdebug-3.4.0 \
     && docker-php-ext-enable xdebug
 
 COPY installComposer.sh /installComposer.sh

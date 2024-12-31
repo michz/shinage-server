@@ -34,7 +34,7 @@ readonly class MailSender implements MailSenderInterface
     {
         $mb64 = \base64_encode($user->getEmailCanonical());
         $ts = (string) \time();
-        $hmac = $this->hmacCalculator->calculate(['uid' => $user->getId(), 'ts' => $ts, 'oldPassword' => $user->getPassword()]);
+        $hmac = $this->hmacCalculator->calculate(['uid' => (string) $user->getId(), 'ts' => $ts, 'oldPassword' => $user->getPassword() ?? '']);
 
         $resetLink = $this->router->generate(
             'app_manage_reset_password',

@@ -12,7 +12,7 @@ use App\Entity\Presentation;
 use App\Entity\ScheduledPresentation;
 use App\Entity\Screen;
 use App\Repository\PresentationsRepository;
-use App\Repository\ScreenRepository;
+use App\Repository\ScreenRepositoryInterface;
 use App\Security\LoggedInUserRepositoryInterface;
 use App\Service\ScheduleCollisionHandlerInterface;
 use Doctrine\ORM\EntityManagerInterface;
@@ -27,7 +27,7 @@ class SchedulerController extends AbstractController
 {
     public function __construct(
         private readonly EntityManagerInterface $entityManager,
-        private readonly ScreenRepository $screenRepository,
+        private readonly ScreenRepositoryInterface $screenRepository,
         private readonly SerializerInterface $serializer,
         private readonly ScheduleCollisionHandlerInterface $collisionHandler,
         private readonly PresentationsRepository $presentationsRepository,
@@ -78,7 +78,7 @@ class SchedulerController extends AbstractController
 
             $query = $this->entityManager->createQuery(
                 'SELECT p
-                    FROM App:ScheduledPresentation p
+                    FROM ' . ScheduledPresentation::class . ' p
                     WHERE
                         ((p.scheduled_start  >= :sf AND p.scheduled_start <= :su) OR 
                         (p.scheduled_end >= :sf AND p.scheduled_end <= :su) OR

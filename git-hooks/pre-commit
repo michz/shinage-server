@@ -3,4 +3,8 @@
 set -e
 
 vendor/bin/ecs check
-vendor/bin/phpstan analyse
+vendor/bin/phpstan analyse --memory-limit=-1
+vendor/bin/composer-dependency-analyser
+bin/console lint:yaml config/ src/ translations/
+bin/console lint:twig config/ src/ templates/
+vendor/bin/phpstan analyse --no-progress --no-interaction

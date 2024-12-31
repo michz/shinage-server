@@ -19,8 +19,6 @@ use Symfony\Component\Security\Core\Authorization\Voter\Voter;
 class PresentationVoter extends Voter
 {
     /**
-     * @param Presentation $subject
-     *
      * {@inheritdoc}
      */
     protected function supports(string $attribute, mixed $subject): bool

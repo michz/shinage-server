@@ -27,8 +27,6 @@ class ScreenVoter extends Voter
     }
 
     /**
-     * @param Screen $subject
-     *
      * {@inheritdoc}
      */
     protected function supports(string $attribute, mixed $subject): bool

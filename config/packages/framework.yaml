@@ -30,3 +30,11 @@ framework:
 
   router:
     utf8: true
+
+when@test:
+  framework:
+    test: true
+    csrf_protection: ~
+    session:
+      storage_factory_id: session.storage.factory.mock_file
+    #    storage_id: session.storage.mock_file

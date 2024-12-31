@@ -5,9 +5,12 @@ on:
     branches:
       - main
 
+env:
+  PHP_VERSION: '8.4'
+
 jobs:
-  build:
-    runs-on: ubuntu-22.04
+  test:
+    runs-on: ubuntu-24.04
 
     services:
       mysql:
@@ -23,7 +26,7 @@ jobs:
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
         with:
-          php-version: '8.3'
+          php-version: ${{ env.PHP_VERSION }}
           tools: symfony
 
       - uses: actions/checkout@v4
@@ -35,13 +38,13 @@ jobs:
       - name: Validate composer files
         run: composer validate --no-check-all --strict
 
-      - name: Install dependencies
+      - name: Install php dependencies
         run: composer install --prefer-dist --no-progress --no-scripts
 
       - name: Install yarn dependencies
         run:  |
           corepack enable
-          yarn install --frozen-lockfile
+          yarn install --immutable
 
       - name: Build assets
         run: ./node_modules/.bin/gulp
@@ -60,8 +63,6 @@ jobs:
       - name: Start test webserver
         run: symfony local:server:start --no-tls --daemon --port=8000
 
-      #- name: Install assets for test environment
-
       - name: Check PHP codestyle
         run: ./vendor/bin/ecs check --no-progress-bar --ansi --no-interaction
 
@@ -76,10 +77,9 @@ jobs:
 
       - name: Check composer dependencies
         run: ./vendor/bin/composer-dependency-analyser
-        continue-on-error: true
 
       - name: Run phpstan
-        run: ./vendor/bin/phpstan analyse --no-progress --no-interaction
+        run: ./vendor/bin/phpstan analyse --no-progress --no-interaction --memory-limit=-1
 
       - name: Run phpspec
         run: ./vendor/bin/phpspec run --format=pretty --no-code-generation
@@ -91,13 +91,13 @@ jobs:
 
   package:
     if: github.event_name == 'push' && contains(github.ref, 'refs/tags/v')
-    needs: build
-    runs-on: ubuntu-22.04
+    needs: test
+    runs-on: ubuntu-24.04
     steps:
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
         with:
-          php-version: '8.3'
+          php-version: ${{ env.PHP_VERSION }}
 
       - name: Checkout code
         uses: actions/checkout@v4
@@ -122,7 +122,7 @@ jobs:
       - name: Install yarn dependencies
         run: |
           corepack enable
-          yarn install --frozen-lockfile
+          yarn install --immutable
 
       - name: Build assets
         run: ./node_modules/.bin/gulp
@@ -152,3 +152,231 @@ jobs:
           draft: false
           prerelease: false
           files: build/shinage-server-release.tar.gz
+
+  docker-prepare:
+    needs: test
+    runs-on: ubuntu-24.04
+    outputs:
+      date: ${{ steps.date.outputs.date }}
+    steps:
+      - name: Get current date
+        id: date
+        run: echo "date=$(date -u -Iseconds)" >> $GITHUB_OUTPUT
+
+  docker-amd64:
+    needs: docker-prepare
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ env.PHP_VERSION }}
+          tools: symfony
+
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: '.nvmrc'
+
+      - name: Print versions
+        run: |
+          corepack enable
+          node --version
+          corepack -v
+          yarn --version
+
+      - name: Install php dependencies
+        run: composer install --prefer-dist --no-progress --no-scripts
+
+      - name: Install yarn dependencies
+        run: |
+          corepack enable
+          yarn install --immutable
+
+      - name: Build assets
+        run: ./node_modules/.bin/gulp
+        env:
+          NODE_ENV: production
+
+      - name: Write revision file
+        run: echo "${{ github.sha }}" > REVISION
+
+      - name: Login to GitHub Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build Docker image (amd64)
+        run: |
+          docker buildx build \
+            --build-arg "APP_BUILDDATE=${{ needs.docker-prepare.outputs.date }}" \
+            --build-arg "APP_REVISION=${{ github.sha }}" \
+            --build-arg "PHP_VERSION=${{ env.PHP_VERSION }}" \
+            --target prod \
+            -t "ghcr.io/michz/shinage-server-app:${{ github.sha }}-amd64" \
+            -t "ghcr.io/michz/shinage-server-app:${{ github.ref_name }}-amd64" \
+            -f Dockerfile .
+          docker buildx build \
+            --build-arg "${{ needs.docker-prepare.outputs.date }}" \
+            --build-arg "${{ github.sha }}" \
+            -t "ghcr.io/michz/shinage-server-web:${{ github.sha }}-amd64" \
+            -t "ghcr.io/michz/shinage-server-web:${{ github.ref_name }}-amd64" \
+            -f Dockerfile.nginx .
+          docker images
+          docker push -q "ghcr.io/michz/shinage-server-web:${{ github.sha }}-amd64"
+          docker push -q "ghcr.io/michz/shinage-server-web:${{ github.ref_name }}-amd64"
+          docker push -q "ghcr.io/michz/shinage-server-app:${{ github.sha }}-amd64"
+          docker push -q "ghcr.io/michz/shinage-server-app:${{ github.ref_name }}-amd64"
+
+  docker-arm64:
+    needs: docker-prepare
+    runs-on: ubuntu-24.04-arm
+    steps:
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ env.PHP_VERSION }}
+          tools: symfony
+
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: '.nvmrc'
+
+      - name: Print versions
+        run: |
+          corepack enable
+          node --version
+          corepack -v
+          yarn --version
+
+      - name: Install php dependencies
+        run: composer install --prefer-dist --no-progress --no-scripts
+
+      - name: Install yarn dependencies
+        run: |
+          corepack enable
+          yarn install --immutable
+
+      - name: Build assets
+        run: ./node_modules/.bin/gulp
+        env:
+          NODE_ENV: production
+
+      - name: Write revision file
+        run: echo "${{ github.sha }}" > REVISION
+
+      - name: Login to GitHub Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build Docker image (amd64)
+        run: |
+          docker buildx build \
+            --build-arg "APP_BUILDDATE=${{ needs.docker-prepare.outputs.date }}" \
+            --build-arg "APP_REVISION=${{ github.sha }}" \
+            --build-arg "PHP_VERSION=${{ env.PHP_VERSION }}" \
+            --target prod \
+            -t "ghcr.io/michz/shinage-server-app:${{ github.sha }}-arm64" \
+            -t "ghcr.io/michz/shinage-server-app:${{ github.ref_name }}-arm64" \
+            -f Dockerfile .
+          docker buildx build \
+            --build-arg "${{ needs.docker-prepare.outputs.date }}" \
+            --build-arg "${{ github.sha }}" \
+            -t "ghcr.io/michz/shinage-server-web:${{ github.sha }}-arm64" \
+            -t "ghcr.io/michz/shinage-server-web:${{ github.ref_name }}-arm64" \
+            -f Dockerfile.nginx .
+          docker images
+          docker push -q "ghcr.io/michz/shinage-server-web:${{ github.sha }}-arm64"
+          docker push -q "ghcr.io/michz/shinage-server-web:${{ github.ref_name }}-arm64"
+          docker push -q "ghcr.io/michz/shinage-server-app:${{ github.sha }}-arm64"
+          docker push -q "ghcr.io/michz/shinage-server-app:${{ github.ref_name }}-arm64"
+
+  docker-manifest:
+    needs:
+      - docker-amd64
+      - docker-arm64
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Login to GitHub Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build docker manifest
+        run: |
+          docker manifest create \
+            "ghcr.io/michz/shinage-server-app:${{ github.sha }}" \
+            --amend "ghcr.io/michz/shinage-server-app:${{ github.sha }}-amd64" \
+            --amend "ghcr.io/michz/shinage-server-app:${{ github.sha }}-arm64"
+          docker manifest create \
+            "ghcr.io/michz/shinage-server-web:${{ github.sha }}" \
+            --amend "ghcr.io/michz/shinage-server-web:${{ github.sha }}-amd64" \
+            --amend "ghcr.io/michz/shinage-server-web:${{ github.sha }}-arm64"
+          docker manifest create \
+            "ghcr.io/michz/shinage-server-app:${{ github.ref_name }}" \
+            --amend "ghcr.io/michz/shinage-server-app:${{ github.ref_name }}-amd64" \
+            --amend "ghcr.io/michz/shinage-server-app:${{ github.ref_name }}-arm64"
+          docker manifest create \
+            "ghcr.io/michz/shinage-server-web:${{ github.ref_name }}" \
+            --amend "ghcr.io/michz/shinage-server-web:${{ github.ref_name }}-amd64" \
+            --amend "ghcr.io/michz/shinage-server-web:${{ github.ref_name }}-arm64"
+          docker manifest push "ghcr.io/michz/shinage-server-app:${{ github.sha }}"
+          docker manifest push "ghcr.io/michz/shinage-server-web:${{ github.sha }}"
+          docker manifest push "ghcr.io/michz/shinage-server-app:${{ github.ref_name }}"
+          docker manifest push "ghcr.io/michz/shinage-server-web:${{ github.ref_name }}"
+
+  docker-manifest-latest:
+    if: github.event_name == 'push' && contains(github.ref, 'refs/tags/v')
+    needs:
+      - docker-amd64
+      - docker-arm64
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Login to GitHub Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build docker manifest
+        run: |
+          docker manifest create \
+            "ghcr.io/michz/shinage-server-app:latest" \
+            --amend "ghcr.io/michz/shinage-server-app:${{ github.sha }}-amd64" \
+            --amend "ghcr.io/michz/shinage-server-app:${{ github.sha }}-arm64"
+          docker manifest create \
+            "ghcr.io/michz/shinage-server-web:latest" \
+            --amend "ghcr.io/michz/shinage-server-web:${{ github.sha }}-amd64" \
+            --amend "ghcr.io/michz/shinage-server-web:${{ github.sha }}-arm64"
+          docker manifest push "ghcr.io/michz/shinage-server-app:latest"
+          docker manifest push "ghcr.io/michz/shinage-server-web:latest"
+
+  trigger-managed-deployment:
+    needs:
+      - docker-manifest
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Trigger managed deployment pipeline
+        run: |
+          curl -X POST \
+            --fail \
+            --silent \
+            -F "token=${{ secrets.MANAGED_DEPLOYMENT_PIPELINE_TRIGGER_TOKEN }}" \
+            -F "ref=main" \
+            -F "variables[SOURCE_REF_NAME]=${{ github.ref_name }}" \
+            -F "variables[IMAGE_URL_APP]=ghcr.io/michz/shinage-server-app:${{ github.sha }}" \
+            -F "variables[IMAGE_URL_WEB]=ghcr.io/michz/shinage-server-web:${{ github.sha }}" \
+            "${{ secrets.MANAGED_DEPLOYMENT_PIPELINE_TRIGGER_URL }}"

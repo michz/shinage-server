@@ -9,7 +9,7 @@ declare(strict_types=1);
 namespace App\Controller\Management;
 
 use App\Entity\Screen;
-use App\Repository\ScreenRepository;
+use App\Repository\ScreenRepositoryInterface;
 use App\Security\LoggedInUserRepositoryInterface;
 use App\Service\UrlBuilderInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -21,7 +21,7 @@ class PreviewController extends AbstractController
     public const PLAYER_URL_BASE = 'https://player.shinage.org/player.html?current_presentation_url=';
 
     public function __construct(
-        private readonly ScreenRepository $screenRepository,
+        private readonly ScreenRepositoryInterface $screenRepository,
         private readonly UrlBuilderInterface $urlBuilder,
         private readonly LoggedInUserRepositoryInterface $loggedInUserRepository,
     ) {

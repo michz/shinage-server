@@ -8,6 +8,7 @@
 namespace spec\App\Service\Pool;
 
 use App\Entity\User;
+use App\Repository\UserRepositoryInterface;
 use App\Service\Pool\VirtualPathResolver;
 use App\Service\Pool\VirtualPathResolverInterface;
 use Doctrine\ORM\EntityManagerInterface;
@@ -18,14 +19,9 @@ use Prophecy\Argument;
 class VirtualPathResolverSpec extends ObjectBehavior
 {
     public function let(
-        EntityManagerInterface $entityManager,
-        EntityRepository $repository
+        UserRepositoryInterface $repository,
     ) {
-        $this->beConstructedWith($entityManager);
-
-        $entityManager
-            ->getRepository(User::class)
-            ->willReturn($repository);
+        $this->beConstructedWith($repository);
     }
 
     public function it_is_initializable()
@@ -39,13 +35,13 @@ class VirtualPathResolverSpec extends ObjectBehavior
     }
 
     public function it_can_replace_user(
-        EntityRepository $repository,
-        User $user
+        UserRepositoryInterface $repository,
+        User $user,
     ) {
         $path = 'test@test.test/file/there.txt';
 
         $repository
-            ->findOneBy(Argument::exact(['email' => 'test@test.test']))
+            ->findOneByEmail(Argument::exact('test@test.test'))
             ->willReturn($user);
 
         $user
@@ -61,13 +57,13 @@ class VirtualPathResolverSpec extends ObjectBehavior
     }
 
     public function it_can_replace_organization(
-        EntityRepository $repository,
-        User $user
+        UserRepositoryInterface $repository,
+        User $user,
     ) {
         $path = 'test2@test.test/file/there.txt';
 
         $repository
-            ->findOneBy(Argument::exact(['email' => 'test2@test.test']))
+            ->findOneByEmail(Argument::exact('test2@test.test'))
             ->willReturn($user);
 
         $user
@@ -83,13 +79,13 @@ class VirtualPathResolverSpec extends ObjectBehavior
     }
 
     public function it_can_leave_untouched(
-        EntityRepository $repository,
-        User $user
+        UserRepositoryInterface $repository,
+        User $user,
     ) {
         $path = 'user-test/file/there.txt';
 
         $repository
-            ->findOneBy(Argument::any())
+            ->findOneByEmail(Argument::any())
             ->shouldNotBeCalled($user);
 
         $user

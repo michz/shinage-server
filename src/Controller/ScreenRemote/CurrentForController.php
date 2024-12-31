@@ -14,6 +14,7 @@ use App\Service\SchedulerService;
 use App\Service\ScreenAssociation;
 use App\Service\UrlBuilderInterface;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Bridge\Doctrine\Attribute\MapEntity;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -30,8 +31,11 @@ class CurrentForController extends AbstractController
     ) {
     }
 
-    public function indexAction(Request $request, ?Screen $screen = null): Response
-    {
+    public function indexAction(
+        Request $request,
+        #[MapEntity(id: 'guid')]
+        ?Screen $screen = null,
+    ): Response {
         if (null === $screen) {
             $guid = $request->get('guid');
             if (null === $guid) {

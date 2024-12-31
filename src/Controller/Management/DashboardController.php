@@ -10,7 +10,7 @@ namespace App\Controller\Management;
 
 use App\Entity\Screen;
 use App\Exceptions\NoScreenGivenException;
-use App\Repository\ScreenRepository;
+use App\Repository\ScreenRepositoryInterface;
 use App\Security\LoggedInUserRepositoryInterface;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -21,7 +21,7 @@ class DashboardController extends AbstractController
 {
     public function __construct(
         private readonly EntityManagerInterface $entityManager,
-        private readonly ScreenRepository $screenRepository,
+        private readonly ScreenRepositoryInterface $screenRepository,
         private readonly LoggedInUserRepositoryInterface $loggedInUserRepository,
     ) {
     }

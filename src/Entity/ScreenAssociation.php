@@ -23,13 +23,13 @@ class ScreenAssociation
     #[ORM\ManyToOne(targetEntity: Screen::class)]
     protected Screen $screen;
 
-    #[ORM\JoinColumn(name: 'user_id', referencedColumnName: 'id')]
+    #[ORM\JoinColumn(name: 'user_id', referencedColumnName: 'id', nullable: true)]
     #[ORM\ManyToOne(targetEntity: User::class)]
-    protected User $user;
+    protected ?User $user;
 
     /** @var string[] */
     #[ORM\Column(name: 'roles', type: 'simple_array', length: 255, unique: false, nullable: false)]
-    protected array $roles;
+    protected array $roles = [];
 
     public function getId(): int
     {
@@ -66,14 +66,14 @@ class ScreenAssociation
         return $this->screen;
     }
 
-    public function setUser(User $userId = null): self
+    public function setUser(?User $userId = null): self
     {
         $this->user = $userId;
 
         return $this;
     }
 
-    public function getUser(): User
+    public function getUser(): ?User
     {
         return $this->user;
     }

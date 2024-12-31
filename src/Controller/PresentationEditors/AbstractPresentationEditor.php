@@ -12,14 +12,13 @@ use App\Entity\Presentation;
 use App\Entity\PresentationInterface;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Contracts\Service\Attribute\Required;
 
 abstract class AbstractPresentationEditor extends AbstractController
 {
     private EntityManagerInterface $entityManager;
 
-    /**
-     * @required
-     */
+    #[Required]
     public function setEntityManager(EntityManagerInterface $entityManager): void
     {
         $this->entityManager = $entityManager;

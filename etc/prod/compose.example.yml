@@ -1,0 +1,70 @@
+volumes:
+  shinage_data: {}
+
+services:
+  nginx:
+    image: ghcr.io/michz/shinage-server-web:build-docker-prod-image
+    environment:
+      VIRTUAL_HOST: shinage.localhost
+      APPSERVER_HOST: app
+    ports:
+      - "127.0.0.1:20080:80"
+      #- "127.0.0.1:20443:443"
+    volumes:
+      - shinage_data:/usr/share/nginx/html/data:readonly
+    links:
+      - app
+      - mariadb
+    depends_on:
+      - app
+
+  app:
+    image: ghcr.io/michz/shinage-server-app:build-docker-prod-image
+    volumes:
+      - shinage_data:/usr/share/nginx/html/data:delegated
+      - ./session-redis.optional.ini:/usr/local/etc/php/conf.d/99-session-redis.ini:readonly
+      #- ./php/php.ini:/usr/local/etc/php/conf.d/zzz-override-php.ini:delegated
+    links:
+      - mariadb
+      #- mailpit
+      - redis
+    depends_on:
+      mariadb:
+        condition: service_healthy
+      redis:
+        condition: service_started
+
+  mariadb:
+    image: mariadb:11.7
+    environment:
+      MYSQL_ROOT_PASSWORD: "CHANGE_ME_TO_a_verysecurerootpassword"
+      MYSQL_ALLOW_EMPTY_PASSWORD: "false"
+      MYSQL_DATABASE: "shinagetest"
+    healthcheck:
+      test: ["CMD", "healthcheck.sh", "--connect", "--innodb_initialized"]
+      start_period: 10s
+      interval: 10s
+      timeout: 5s
+      retries: 3
+
+  redis:
+    image: redis:7-alpine
+
+  #mailpit:
+  #  image: axllent/mailpit:latest
+  #  ports:
+  #    - "127.0.0.1:${MAILPIT_PORT}:8025"
+
+  #phpmyadmin:
+  #  image: phpmyadmin:latest
+  #  environment:
+  #    MYSQL_ROOT_PASSWORD: ${MARIADB_ROOT_PASSWORD}
+  #    PMA_HOST: mariadb
+  #    PMA_USER: root
+  #    PMA_PASSWORD: ${MARIADB_ROOT_PASSWORD}
+  #  ports:
+  #    - "127.0.0.1:${PHPMYADMIN_PORT}:80"
+  #  links:
+  #    - mariadb
+  #  depends_on:
+  #    - mariadb

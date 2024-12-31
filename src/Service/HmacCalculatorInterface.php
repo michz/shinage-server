@@ -8,17 +8,15 @@ declare(strict_types=1);
 
 namespace App\Service;
 
-use Stringable;
-
 interface HmacCalculatorInterface
 {
     /**
-     * @param array<string, string|Stringable> $data
+     * @param array<string, string> $data
      */
     public function calculate(array $data): string;
 
     /**
-     * @param array<string, string|Stringable> $data
+     * @param array<string, string> $data
      */
     public function verify(array $data, string $hmac): bool;
 }

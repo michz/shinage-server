@@ -12,13 +12,18 @@ use App\Entity\Screen;
 use App\Entity\ScreenAssociation;
 use App\Entity\User;
 use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\Query\Expr;
 
-readonly class ScreenRepository
+readonly class ScreenRepository implements ScreenRepositoryInterface
 {
+    /** @var EntityRepository<Screen> */
+    private EntityRepository $screenRepository;
+
     public function __construct(
         private EntityManagerInterface $entityManager,
     ) {
+        $this->screenRepository = $this->entityManager->getRepository(Screen::class);
     }
 
     /**
@@ -41,5 +46,10 @@ readonly class ScreenRepository
             ->setParameter(':users', $users);
 
         return $queryBuilder->getQuery()->execute();
+    }
+
+    public function getScreenByConnectCode(string $connectCode): ?Screen
+    {
+        return $this->screenRepository->findOneBy(['connect_code' => $connectCode]);
     }
 }

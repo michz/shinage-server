@@ -113,7 +113,7 @@ class LoginController extends AbstractController
             return $this->redirectToRoute('app_manage_request_reset_password');
         }
 
-        if (false === $this->hmacCalculator->verify(['uid' => $user->getId(), 'ts' => $ts, 'oldPassword' => $user->getPassword()], $token)) {
+        if (false === $this->hmacCalculator->verify(['uid' => (string) $user->getId(), 'ts' => $ts, 'oldPassword' => $user->getPassword() ?? ''], $token)) {
             $this->addFlash('error', 'login.reset_password.link_not_valid');
             return $this->redirectToRoute('app_manage_request_reset_password');
         }

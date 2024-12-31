@@ -1,13 +1,13 @@
 {
   "name": "shinage-server",
-  "packageManager": "yarn@4.5.1",
+  "packageManager": "yarn@4.9.0",
   "dependencies": {
-    "@babel/core": "^7.26.0",
-    "@babel/preset-env": "^7.26.0",
+    "@babel/core": "^7.26.10",
+    "@babel/preset-env": "^7.26.9",
     "@babel/register": "^7.25.9",
-    "codemirror": "^5.65.18",
+    "codemirror": "^5.65.19",
     "del": "^7.1.0",
-    "fomantic-ui-css": "^2.9.3",
+    "fomantic-ui-css": "^2.9.4",
     "fullcalendar": "^5.11.5",
     "gulp": "^4.0.2",
     "gulp-babel": "^8.0.0",

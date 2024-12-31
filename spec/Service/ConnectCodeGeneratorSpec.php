@@ -2,6 +2,8 @@
 
 namespace spec\App\Service;
 
+use App\Entity\Screen;
+use App\Repository\ScreenRepositoryInterface;
 use App\Service\ConnectCodeGenerator;
 use App\Service\ConnectCodeGeneratorInterface;
 use Doctrine\Persistence\ObjectRepository;
@@ -12,17 +14,12 @@ use Prophecy\Argument;
 class ConnectCodeGeneratorSpec extends ObjectBehavior
 {
     public function let(
-        EntityManagerInterface $entityManager,
-        ObjectRepository $repository
+        ScreenRepositoryInterface $screenRepository,
     ) {
         $this->beConstructedWith(
-            $entityManager,
+            $screenRepository,
             15
         );
-
-        $entityManager
-            ->getRepository(Argument::any())
-            ->willReturn($repository);
     }
 
     public function it_is_initializable()
@@ -36,12 +33,13 @@ class ConnectCodeGeneratorSpec extends ObjectBehavior
     }
 
     public function it_can_generate_unique_connectcode(
-        ObjectRepository $repository
+        ScreenRepositoryInterface $screenRepository,
+        Screen $screen,
     ) {
-        $repository
-            ->findBy(Argument::withKey('connect_code'))
+        $screenRepository
+            ->getScreenByConnectCode(Argument::any())
             ->shouldBeCalledTimes(2)
-            ->willReturn([new \stdClass()], []);
+            ->willReturn($screen, null);
 
         $return = $this->generateUniqueConnectcode()->getWrappedObject();
 

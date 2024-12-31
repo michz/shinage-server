@@ -16,4 +16,6 @@ interface UserRepositoryInterface
      * @return User[]
      */
     public function findOrganizationsByMailHost(string $host): array;
+
+    public function findOneByEmail(string $email): ?User;
 }
