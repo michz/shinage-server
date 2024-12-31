@@ -95,17 +95,17 @@ Development
 To initialize the development database, do:
 
 ```bash
-php bin/console doctrine:database:create
+php bin/console doctrine:database:create --if-not-exists
 php bin/console doctrine:schema:update --force
-php bin/console doctrine:fixtures:load
+php bin/console doctrine:fixtures:load --no-interaction
 ```
 
 Or for docker based setup respectively:
 
 ```bash
-bin/runInDev.sh php bin/console doctrine:database:create
+bin/runInDev.sh php bin/console doctrine:database:create --if-not-exists
 bin/runInDev.sh php bin/console doctrine:schema:update --force
-bin/runInDev.sh php bin/console doctrine:fixtures:load
+bin/runInDev.sh php bin/console doctrine:fixtures:load --no-interaction
 ```
 
 Testing
