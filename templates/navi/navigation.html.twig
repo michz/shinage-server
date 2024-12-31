@@ -1,13 +1,32 @@
 
 {% set route = app.request.attributes.get('_route') %}
 
-<div class="ui fixed inverted menu">
-    <div class="item">Shinage</div>
+{% macro navigation_left_content(route) %}
     {% include 'navi/manage.html.twig' %}
+{% endmacro %}
+
+{% macro navigation_right_content(route) %}
+    {% if is_granted("ROLE_ADMIN") %}
+        {% include 'navi/admin.html.twig' %}
+    {% endif %}
+    {% include 'navi/login.html.twig' %}
+{% endmacro %}
+
+<div class="ui fixed inverted menu mobile only">
+    <div class="ui dropdown icon item">
+        <i class="hamburger icon"></i>
+        <div class="menu">
+            {{ _self.navigation_left_content(route) }}
+            {{ _self.navigation_right_content(route) }}
+        </div>
+    </div>
+    <div class="item">Shinage</div>
+</div>
+
+<div class="ui fixed inverted menu non-mobile only">
+    <div class="item">Shinage</div>
+    {{ _self.navigation_left_content(route) }}
     <div class="right menu">
-        {% if is_granted("ROLE_ADMIN") %}
-            {% include 'navi/admin.html.twig' %}
-        {% endif %}
-        {% include 'navi/login.html.twig' %}
+        {{ _self.navigation_right_content(route) }}
     </div>
 </div>
