@@ -13,7 +13,7 @@ use App\Entity\Screen;
 use App\Entity\ScreenAssociation as ScreenAssociationEntity;
 use App\Entity\User;
 use App\Form\CreateVirtualScreenForm;
-use App\Repository\ScreenRepository;
+use App\Repository\ScreenRepositoryInterface;
 use App\Security\LoggedInUserRepositoryInterface;
 use App\Service\SchedulerService;
 use App\Service\ScreenAssociation;
@@ -31,7 +31,7 @@ class ScreensController extends AbstractController
     public function __construct(
         private readonly EntityManagerInterface $entityManager,
         private readonly SchedulerService $scheduler,
-        private readonly ScreenRepository $screenRepository,
+        private readonly ScreenRepositoryInterface $screenRepository,
         private readonly ScreenAssociation $screenAssociation,
         private readonly RouterInterface $router,
         private readonly LoggedInUserRepositoryInterface $loggedInUserRepository,

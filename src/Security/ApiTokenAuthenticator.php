@@ -48,14 +48,14 @@ class ApiTokenAuthenticator extends AbstractAuthenticator
             throw new CustomUserMessageAuthenticationException('No API token provided');
         }
 
-        /** @var AccessKey|null $apiToken */
-        $apiToken = $this->entityManager->getRepository(AccessKey::class)->findBy(['code' => $request->headers->get('x-api-token')]);
-        if (empty($apiToken)) {
+        /** @var ?AccessKey $apiToken */
+        $apiToken = $this->entityManager->getRepository(AccessKey::class)->findOneBy(['code' => $request->headers->get('x-api-token')]);
+        if (null === $apiToken) {
             throw new AuthenticationException('API token invalid.');
         }
 
-        /** @var User|null $user */
-        $user = $apiToken[0]->getOwner();
+        /** @var ?User $user */
+        $user = $apiToken->getOwner();
         if (null === $user) {
             throw new AuthenticationException('API token invalid.');
         }

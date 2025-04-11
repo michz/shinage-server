@@ -1,0 +1,14 @@
+{
+    "$schema": "/phpactor.schema.json",
+    "language_server_phpstan.enabled": true,
+    "prophecy.enabled": true,
+    "behat.enabled": true,
+    "behat.symfony.di_xml_path": "var/cache/test/App_KernelTestDebugContainer.xml",
+    "symfony.enabled": true,
+    "indexer.exclude_patterns": [
+        "/vendor/**/Tests/**/*",
+        "/vendor/**/tests/**/*",
+        "/var/cache/**/*",
+        "/vendor/composer/**/*"
+    ]
+}

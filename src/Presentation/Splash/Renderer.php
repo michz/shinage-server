@@ -10,15 +10,9 @@ namespace App\Presentation\Splash;
 
 use App\Entity\PresentationInterface;
 use App\Presentation\PresentationRendererInterface;
-use Symfony\Component\Routing\RouterInterface;
 
 readonly class Renderer implements PresentationRendererInterface
 {
-    public function __construct(
-        private RouterInterface $router
-    ) {
-    }
-
     public function render(PresentationInterface $presentation): string
     {
         $splashImageBase64 = \base64_encode(
@@ -30,7 +24,6 @@ readonly class Renderer implements PresentationRendererInterface
             $settings = \json_decode($presentation->getSettings());
             if (isset($settings->connectCode)) {
                 $connectInstructions = '<div id="connect-instructions">Verbindungskennung: <br>' . $settings->connectCode . '</div>';
-                $connectInstructions .= '<br><img id="connect-qrcode" src="' . $this->router->generate('qr-for-screen-registration', ['connectCode' => $settings->connectCode]) . '">';
             }
         } catch (\Throwable $exception) {
             // If no valid settings could be parsed, there should no connect code be displayed
@@ -95,12 +88,6 @@ readonly class Renderer implements PresentationRendererInterface
         #container #connect-instructions.top {
             top: 15vh;
             bottom: unset;
-        }
-        #connect-qrcode {
-            position: absolute;
-            left: 1rem;
-            bottom: 1rem;
-            height: 30vh;
         }
       </style>
     </head>

@@ -24,8 +24,8 @@ No knowledge about servers or programming needed.
 Please contact us!
 
 
-Prerequisites
--------------
+Prerequisites (development)
+---------------------------
 
 * A machine with a running, up-to-date PHP installation
   with mysql support, libgd and terminal access.
@@ -38,8 +38,8 @@ Prerequisites
   on this machine.
 
 
-Installation
-------------
+Installation (manual)
+---------------------
 
 * This guide assumes that `composer` is installed globally.
   (If yours is installed somewhere locally, 
@@ -63,6 +63,43 @@ Installation
   (i.e. installing and configuring a web server)
 * If you *do not know* what to do but still want to use *shinage*,
   please think about using a [hosted](#Hosted) solution.
+
+
+Installation (container)
+------------------------
+
+You can use containers (for example docker) to run Shinage.
+
+Prebuilt images are available at 
+https://github.com/michz/shinage-server/pkgs/container/shinage-server-web and
+https://github.com/michz/shinage-server/pkgs/container/shinage-server-app .
+
+See [./etc/prod/compose.example.yml](./etc/prod/compose.example.yml)
+for an example `docker compose` file to run Shinage.
+
+Please note:
+
+* The database given in `DATABASE_URL` must exist and the given user 
+  must be allowed to read and write into it.
+* When you first run Shinage, there won't be any user in the database.
+  Run `bin/console users:create-admin your-email-address@example.com`
+  to create a first user with `ROLE_SUPER_ADMIN` permissions.
+* Remember to use a centralized session storage (for example Redis, memcached, ...)
+* The `/app/data` directory has to be in sync between all nodes.
+  If running a single app container, use a volume.
+  If running multiple app containers, use a network storage (nfs),
+  another shared storage mechanism or at least sync the files in realtime.
+* The `/app/data/pool` directory must be readable and writable by user `www-data` (uid 33).
+  To initially create the necessary directory, do: `mkdir /app/data/pool ; chown www-data:www-data /app/data/pool` .
+  With the example docker compose file, a sample call could look like:
+  `docker compose exec --user=root app bash -c 'mkdir /app/data/pool ; chown www-data:www-data /app/data/pool'`
+* Configuration is mainly done using environment variables:
+  * `DATABASE_URL`: Database connection URL including username, password, hostname, port, database name and server version
+  * `MAILER_DSN`: Mailer URL to use for sending system emails (most likely a SMTP server address; see [Symfony Mailer Docs](https://symfony.com/doc/current/mailer.html) for details)
+  * `MAILER_FROM`: Sender email address
+  * `APP_SECRET`: a randomly generated secret string
+  * `TRUSTED_PROXIES`: List of IP addresses to trust as reverse proxy servers
+
 
 
 Development
@@ -104,7 +141,7 @@ Or for docker based setup respectively:
 
 ```bash
 bin/runInDev.sh php bin/console doctrine:database:create --if-not-exists
-bin/runInDev.sh php bin/console doctrine:schema:update --force
+bin/runInDev.sh php bin/console doctrine:schema:update --complete --force
 bin/runInDev.sh php bin/console doctrine:fixtures:load --no-interaction
 ```
 
@@ -138,25 +175,10 @@ APP_ENV=test vendor/bin/behat --format=progress --strict -n --tags="~@todo"
 ```
 
 
-Containerize me
----------------
-
-If you are brave you can run this server application in a container based setup (for example using Docker).
-The development environment uses a bunch of docker containers,
-including a redis container for decentralized efficient session storage.
-So if you want to, try your luck.
-
-Some notes:
-
-* Remember to use a centralized session storage (for example Redis, memcached, ...)
-* The `/data` directory has to be in sync between all nodes. Use a network storage (nfs), 
-  another shared storage mechanism or at least sync the files in realtime (discouraged)! 
-
-
 Contributing
 ------------
 
-Feel free to file issues, fork and/or create pull requests.
+Feel free to file issues, fork and create pull requests.
 
 
 License

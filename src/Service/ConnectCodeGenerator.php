@@ -8,28 +8,25 @@ declare(strict_types=1);
 
 namespace App\Service;
 
-use App\Entity\Screen;
-use Doctrine\ORM\EntityManagerInterface;
+use App\Repository\ScreenRepositoryInterface;
 
 readonly class ConnectCodeGenerator implements ConnectCodeGeneratorInterface
 {
     public function __construct(
-        private EntityManagerInterface $entityManager,
+        private ScreenRepositoryInterface $screenRepository,
         private int $length = 8,
     ) {
     }
 
     public function generateUniqueConnectcode(): string
     {
-        $rep = $this->entityManager->getRepository(Screen::class);
-
         $code = '';
         $unique = false;
         while (!$unique) {
             $code = $this->generateConnectcode();
 
-            $screens = $rep->findBy(['connect_code' => $code]);
-            if (0 === \count($screens)) {
+            $screen = $this->screenRepository->getScreenByConnectCode($code);
+            if (null === $screen) {
                 $unique = true;
             }
         }

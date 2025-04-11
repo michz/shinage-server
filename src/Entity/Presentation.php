@@ -37,9 +37,9 @@ class Presentation implements PresentationInterface
     #[ORM\Column(name: 'last_modified', type: 'datetime', unique: false, nullable: true)]
     protected \DateTime $lastModified;
 
-    #[ORM\JoinColumn(name: 'user_id', referencedColumnName: 'id')]
+    #[ORM\JoinColumn(name: 'user_id', referencedColumnName: 'id', nullable: true)]
     #[ORM\ManyToOne(targetEntity: User::class)]
-    protected User $owner;
+    protected ?User $owner;
 
     #[JMS\Type('string')]
     #[ORM\Column(name: 'type', type: 'string', length: 200, unique: false, nullable: false)]
@@ -113,14 +113,14 @@ class Presentation implements PresentationInterface
         return $this->getTitle();
     }
 
-    public function setOwner(User $owner = null): PresentationInterface
+    public function setOwner(?User $owner = null): PresentationInterface
     {
         $this->owner = $owner;
 
         return $this;
     }
 
-    public function getOwner(): User
+    public function getOwner(): ?User
     {
         return $this->owner;
     }

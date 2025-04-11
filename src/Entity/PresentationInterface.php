@@ -28,9 +28,9 @@ interface PresentationInterface
 
     public function setLastModified(\DateTime $lastModified): void;
 
-    public function setOwner(User $owner = null): self;
+    public function setOwner(?User $owner = null): self;
 
-    public function getOwner(): User;
+    public function getOwner(): ?User;
 
     public function getType(): string;
 

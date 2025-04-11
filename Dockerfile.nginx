@@ -1,0 +1,20 @@
+FROM nginx:latest
+
+ARG APP_BUILDDATE
+ARG APP_REVISION
+
+ENV APP_BUILDDATE=${APP_BUILDDATE}
+ENV APP_REVISION=${APP_REVISION}
+
+ENV DEBIAN_FRONTEND=noninteractive
+
+RUN mkdir -p /app/public \
+  && mkdir /etc/nginx/templates \
+  && rm /etc/nginx/conf.d/default.conf
+
+COPY public /app/public
+COPY etc/prod/nginx/default.conf.template /etc/nginx/templates/default.conf.template
+
+WORKDIR /app
+
+EXPOSE 80/tcp

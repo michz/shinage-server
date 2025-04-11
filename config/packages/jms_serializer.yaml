@@ -13,3 +13,24 @@ jms_serializer:
           - "%kernel.project_dir%/src/Presentation"
           - "%kernel.project_dir%/src/Presentation/Slideshow"
           - "%kernel.project_dir%/src/Presentation/Slideshow/Slides"
+
+when@prod:
+  jms_serializer:
+    visitors:
+      json_serialization:
+        options:
+          - JSON_UNESCAPED_SLASHES
+          - JSON_PRESERVE_ZERO_FRACTION
+      json_deserialization:
+        options: [ ]
+
+when@dev:
+  jms_serializer:
+    visitors:
+      json_serialization:
+        options:
+          - JSON_PRETTY_PRINT
+          - JSON_UNESCAPED_SLASHES
+          - JSON_PRESERVE_ZERO_FRACTION
+      json_deserialization:
+        options: [ ]

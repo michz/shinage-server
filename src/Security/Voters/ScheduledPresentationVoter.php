@@ -27,8 +27,6 @@ class ScheduledPresentationVoter extends Voter
     }
 
     /**
-     * @param ScheduledPresentation $subject
-     *
      * {@inheritdoc}
      */
     protected function supports(string $attribute, mixed $subject): bool

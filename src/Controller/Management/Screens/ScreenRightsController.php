@@ -12,6 +12,7 @@ use App\Entity\Screen;
 use App\Entity\ScreenAssociation;
 use App\Entity\User;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Bridge\Doctrine\Attribute\MapEntity;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -23,8 +24,10 @@ class ScreenRightsController extends AbstractController
     ) {
     }
 
-    public function indexAction(Screen $screen): Response
-    {
+    public function indexAction(
+        #[MapEntity(id: 'guid')]
+        Screen $screen,
+    ): Response {
         $repo = $this->entityManager->getRepository(ScreenAssociation::class);
         $associations = $repo->findBy(['screen' => $screen]);
 
@@ -34,8 +37,10 @@ class ScreenRightsController extends AbstractController
         ]);
     }
 
-    public function removeAction(ScreenAssociation $association): Response
-    {
+    public function removeAction(
+        #[MapEntity(id: 'id')]
+        ScreenAssociation $association,
+    ): Response {
         $screenId = $association->getScreen()->getGuid();
         $this->entityManager->remove($association);
         $this->entityManager->flush();
@@ -43,8 +48,11 @@ class ScreenRightsController extends AbstractController
         return $this->redirectToRoute('management-screen-rights', ['guid' => $screenId]);
     }
 
-    public function addAction(Request $request, Screen $screen): Response
-    {
+    public function addAction(
+        Request $request,
+        #[MapEntity(id: 'guid')]
+        Screen $screen,
+    ): Response {
         $user = $this->findUserByMail($request->get('mail'));
         if (null === $user) {
             return new Response('', 400);

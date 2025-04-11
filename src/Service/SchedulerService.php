@@ -24,7 +24,7 @@ readonly class SchedulerService
     {
         $query = $this->entityManager->createQuery(
             'SELECT p
-                    FROM App:ScheduledPresentation p
+                    FROM ' . ScheduledPresentation::class . ' p
                     WHERE
                         (
                         (p.scheduled_start <= :now AND p.scheduled_end >= :now)
@@ -71,11 +71,13 @@ readonly class SchedulerService
      */
     public function deleteAllScheduledPresentationsForPresentation(PresentationInterface $presentation): void
     {
-        $q = $this->entityManager->createQuery(
-            'delete from App:ScheduledPresentation p where p.presentation = :presentation'
-        );
-        $q->setParameter('presentation', $presentation);
-        $q->execute();
+        $this->entityManager->createQueryBuilder()
+            ->delete(ScheduledPresentation::class, 'p')
+            ->where('p.presentation = :presentation')
+            ->setParameter('presentation', $presentation)
+            ->getQuery()
+            ->execute();
+
         $this->entityManager->flush();
     }
 }
