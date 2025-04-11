@@ -157,11 +157,20 @@ jobs:
     needs: test
     runs-on: ubuntu-24.04
     outputs:
-      date: ${{ steps.date.outputs.date }}
+      date: ${{ steps.additional_variables.outputs.date }}
+      ref_slug: ${{ steps.additional_variables.outputs.ref_slug }}
+      image_base_url: ${{ steps.additional_variables.outputs.image_base_url }}
     steps:
-      - name: Get current date
-        id: date
-        run: echo "date=$(date -u -Iseconds)" >> $GITHUB_OUTPUT
+      - name: Inject enhanced GitHub environment variables
+        uses: rlespinasse/github-slug-action@v5
+        with:
+          slug-maxlength: 80
+      - name: Prepare additional variables
+        id: additional_variables
+        run: |
+          echo "date=$(date -u -Iseconds)" >> $GITHUB_OUTPUT
+          echo "ref_slug=$GITHUB_REF_NAME_SLUG" >> $GITHUB_OUTPUT
+          echo "image_base_url=ghcr.io/${{ github.repository }}" >> $GITHUB_OUTPUT
 
   docker-amd64:
     needs: docker-prepare
@@ -217,20 +226,20 @@ jobs:
             --build-arg "APP_REVISION=${{ github.sha }}" \
             --build-arg "PHP_VERSION=${{ env.PHP_VERSION }}" \
             --target prod \
-            -t "ghcr.io/michz/shinage-server-app:${{ github.sha }}-amd64" \
-            -t "ghcr.io/michz/shinage-server-app:${{ github.ref_name }}-amd64" \
+            -t "${{ needs.docker-prepare.outputs.image_base_url }}-app:${{ github.sha }}-amd64" \
+            -t "${{ needs.docker-prepare.outputs.image_base_url }}-app:${{ needs.docker-prepare.outputs.ref_slug }}-amd64" \
             -f Dockerfile .
           docker buildx build \
             --build-arg "${{ needs.docker-prepare.outputs.date }}" \
             --build-arg "${{ github.sha }}" \
-            -t "ghcr.io/michz/shinage-server-web:${{ github.sha }}-amd64" \
-            -t "ghcr.io/michz/shinage-server-web:${{ github.ref_name }}-amd64" \
+            -t "${{ needs.docker-prepare.outputs.image_base_url }}-web:${{ github.sha }}-amd64" \
+            -t "${{ needs.docker-prepare.outputs.image_base_url }}-web:${{ needs.docker-prepare.outputs.ref_slug }}-amd64" \
             -f Dockerfile.nginx .
           docker images
-          docker push -q "ghcr.io/michz/shinage-server-web:${{ github.sha }}-amd64"
-          docker push -q "ghcr.io/michz/shinage-server-web:${{ github.ref_name }}-amd64"
-          docker push -q "ghcr.io/michz/shinage-server-app:${{ github.sha }}-amd64"
-          docker push -q "ghcr.io/michz/shinage-server-app:${{ github.ref_name }}-amd64"
+          docker push -q "${{ needs.docker-prepare.outputs.image_base_url }}-web:${{ github.sha }}-amd64"
+          docker push -q "${{ needs.docker-prepare.outputs.image_base_url }}-web:${{ needs.docker-prepare.outputs.ref_slug }}-amd64"
+          docker push -q "${{ needs.docker-prepare.outputs.image_base_url }}-app:${{ github.sha }}-amd64"
+          docker push -q "${{ needs.docker-prepare.outputs.image_base_url }}-app:${{ needs.docker-prepare.outputs.ref_slug }}-amd64"
 
   docker-arm64:
     needs: docker-prepare
@@ -286,23 +295,24 @@ jobs:
             --build-arg "APP_REVISION=${{ github.sha }}" \
             --build-arg "PHP_VERSION=${{ env.PHP_VERSION }}" \
             --target prod \
-            -t "ghcr.io/michz/shinage-server-app:${{ github.sha }}-arm64" \
-            -t "ghcr.io/michz/shinage-server-app:${{ github.ref_name }}-arm64" \
+            -t "${{ needs.docker-prepare.outputs.image_base_url }}-app:${{ github.sha }}-arm64" \
+            -t "${{ needs.docker-prepare.outputs.image_base_url }}-app:${{ needs.docker-prepare.outputs.ref_slug }}-arm64" \
             -f Dockerfile .
           docker buildx build \
             --build-arg "${{ needs.docker-prepare.outputs.date }}" \
             --build-arg "${{ github.sha }}" \
-            -t "ghcr.io/michz/shinage-server-web:${{ github.sha }}-arm64" \
-            -t "ghcr.io/michz/shinage-server-web:${{ github.ref_name }}-arm64" \
+            -t "${{ needs.docker-prepare.outputs.image_base_url }}-web:${{ github.sha }}-arm64" \
+            -t "${{ needs.docker-prepare.outputs.image_base_url }}-web:${{ needs.docker-prepare.outputs.ref_slug }}-arm64" \
             -f Dockerfile.nginx .
           docker images
-          docker push -q "ghcr.io/michz/shinage-server-web:${{ github.sha }}-arm64"
-          docker push -q "ghcr.io/michz/shinage-server-web:${{ github.ref_name }}-arm64"
-          docker push -q "ghcr.io/michz/shinage-server-app:${{ github.sha }}-arm64"
-          docker push -q "ghcr.io/michz/shinage-server-app:${{ github.ref_name }}-arm64"
+          docker push -q "${{ needs.docker-prepare.outputs.image_base_url }}-web:${{ github.sha }}-arm64"
+          docker push -q "${{ needs.docker-prepare.outputs.image_base_url }}-web:${{ needs.docker-prepare.outputs.ref_slug }}-arm64"
+          docker push -q "${{ needs.docker-prepare.outputs.image_base_url }}-app:${{ github.sha }}-arm64"
+          docker push -q "${{ needs.docker-prepare.outputs.image_base_url }}-app:${{ needs.docker-prepare.outputs.ref_slug }}-arm64"
 
   docker-manifest:
     needs:
+      - docker-prepare
       - docker-amd64
       - docker-arm64
     runs-on: ubuntu-24.04
@@ -317,29 +327,30 @@ jobs:
       - name: Build docker manifest
         run: |
           docker manifest create \
-            "ghcr.io/michz/shinage-server-app:${{ github.sha }}" \
-            --amend "ghcr.io/michz/shinage-server-app:${{ github.sha }}-amd64" \
-            --amend "ghcr.io/michz/shinage-server-app:${{ github.sha }}-arm64"
+            "${{ needs.docker-prepare.outputs.image_base_url }}-app:${{ github.sha }}" \
+            --amend "${{ needs.docker-prepare.outputs.image_base_url }}-app:${{ github.sha }}-amd64" \
+            --amend "${{ needs.docker-prepare.outputs.image_base_url }}-app:${{ github.sha }}-arm64"
           docker manifest create \
-            "ghcr.io/michz/shinage-server-web:${{ github.sha }}" \
-            --amend "ghcr.io/michz/shinage-server-web:${{ github.sha }}-amd64" \
-            --amend "ghcr.io/michz/shinage-server-web:${{ github.sha }}-arm64"
+            "${{ needs.docker-prepare.outputs.image_base_url }}-web:${{ github.sha }}" \
+            --amend "${{ needs.docker-prepare.outputs.image_base_url }}-web:${{ github.sha }}-amd64" \
+            --amend "${{ needs.docker-prepare.outputs.image_base_url }}-web:${{ github.sha }}-arm64"
           docker manifest create \
-            "ghcr.io/michz/shinage-server-app:${{ github.ref_name }}" \
-            --amend "ghcr.io/michz/shinage-server-app:${{ github.ref_name }}-amd64" \
-            --amend "ghcr.io/michz/shinage-server-app:${{ github.ref_name }}-arm64"
+            "${{ needs.docker-prepare.outputs.image_base_url }}-app:${{ needs.docker-prepare.outputs.ref_slug }}" \
+            --amend "${{ needs.docker-prepare.outputs.image_base_url }}-app:${{ needs.docker-prepare.outputs.ref_slug }}-amd64" \
+            --amend "${{ needs.docker-prepare.outputs.image_base_url }}-app:${{ needs.docker-prepare.outputs.ref_slug }}-arm64"
           docker manifest create \
-            "ghcr.io/michz/shinage-server-web:${{ github.ref_name }}" \
-            --amend "ghcr.io/michz/shinage-server-web:${{ github.ref_name }}-amd64" \
-            --amend "ghcr.io/michz/shinage-server-web:${{ github.ref_name }}-arm64"
-          docker manifest push "ghcr.io/michz/shinage-server-app:${{ github.sha }}"
-          docker manifest push "ghcr.io/michz/shinage-server-web:${{ github.sha }}"
-          docker manifest push "ghcr.io/michz/shinage-server-app:${{ github.ref_name }}"
-          docker manifest push "ghcr.io/michz/shinage-server-web:${{ github.ref_name }}"
+            "${{ needs.docker-prepare.outputs.image_base_url }}-web:${{ needs.docker-prepare.outputs.ref_slug }}" \
+            --amend "${{ needs.docker-prepare.outputs.image_base_url }}-web:${{ needs.docker-prepare.outputs.ref_slug }}-amd64" \
+            --amend "${{ needs.docker-prepare.outputs.image_base_url }}-web:${{ needs.docker-prepare.outputs.ref_slug }}-arm64"
+          docker manifest push "${{ needs.docker-prepare.outputs.image_base_url }}-app:${{ github.sha }}"
+          docker manifest push "${{ needs.docker-prepare.outputs.image_base_url }}-web:${{ github.sha }}"
+          docker manifest push "${{ needs.docker-prepare.outputs.image_base_url }}-app:${{ needs.docker-prepare.outputs.ref_slug }}"
+          docker manifest push "${{ needs.docker-prepare.outputs.image_base_url }}-web:${{ needs.docker-prepare.outputs.ref_slug }}"
 
   docker-manifest-latest:
     if: github.event_name == 'push' && contains(github.ref, 'refs/tags/v')
     needs:
+      - docker-prepare
       - docker-amd64
       - docker-arm64
     runs-on: ubuntu-24.04
@@ -354,18 +365,19 @@ jobs:
       - name: Build docker manifest
         run: |
           docker manifest create \
-            "ghcr.io/michz/shinage-server-app:latest" \
-            --amend "ghcr.io/michz/shinage-server-app:${{ github.sha }}-amd64" \
-            --amend "ghcr.io/michz/shinage-server-app:${{ github.sha }}-arm64"
+            "${{ needs.docker-prepare.outputs.image_base_url }}-app:latest" \
+            --amend "${{ needs.docker-prepare.outputs.image_base_url }}-app:${{ github.sha }}-amd64" \
+            --amend "${{ needs.docker-prepare.outputs.image_base_url }}-app:${{ github.sha }}-arm64"
           docker manifest create \
-            "ghcr.io/michz/shinage-server-web:latest" \
-            --amend "ghcr.io/michz/shinage-server-web:${{ github.sha }}-amd64" \
-            --amend "ghcr.io/michz/shinage-server-web:${{ github.sha }}-arm64"
-          docker manifest push "ghcr.io/michz/shinage-server-app:latest"
-          docker manifest push "ghcr.io/michz/shinage-server-web:latest"
+            "${{ needs.docker-prepare.outputs.image_base_url }}-web:latest" \
+            --amend "${{ needs.docker-prepare.outputs.image_base_url }}-web:${{ github.sha }}-amd64" \
+            --amend "${{ needs.docker-prepare.outputs.image_base_url }}-web:${{ github.sha }}-arm64"
+          docker manifest push "${{ needs.docker-prepare.outputs.image_base_url }}-app:latest"
+          docker manifest push "${{ needs.docker-prepare.outputs.image_base_url }}-web:latest"
 
   trigger-managed-deployment:
     needs:
+      - docker-prepare
       - docker-manifest
     runs-on: ubuntu-24.04
     steps:
@@ -376,7 +388,7 @@ jobs:
             --silent \
             -F "token=${{ secrets.MANAGED_DEPLOYMENT_PIPELINE_TRIGGER_TOKEN }}" \
             -F "ref=main" \
-            -F "variables[SOURCE_REF_NAME]=${{ github.ref_name }}" \
-            -F "variables[IMAGE_URL_APP]=ghcr.io/michz/shinage-server-app:${{ github.sha }}" \
-            -F "variables[IMAGE_URL_WEB]=ghcr.io/michz/shinage-server-web:${{ github.sha }}" \
+            -F "variables[SOURCE_REF_NAME]=${{ needs.docker-prepare.outputs.ref_slug }}" \
+            -F "variables[IMAGE_URL_APP]=${{ needs.docker-prepare.outputs.image_base_url }}-app:${{ github.sha }}" \
+            -F "variables[IMAGE_URL_WEB]=${{ needs.docker-prepare.outputs.image_base_url }}-web:${{ github.sha }}" \
             "${{ secrets.MANAGED_DEPLOYMENT_PIPELINE_TRIGGER_URL }}"
