@@ -130,7 +130,7 @@ readonly class UserContext implements Context
      * @Given There is a registration code :code
      * @Given There is a registration code :code that is valid until :until
      */
-    public function thereIsARegistrationCode(string $code, \DateTime $until = null): void
+    public function thereIsARegistrationCode(string $code, ?\DateTime $until = null): void
     {
         if (null === $until) {
             $until = new \DateTime();
