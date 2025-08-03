@@ -226,20 +226,12 @@ jobs:
             --build-arg "APP_REVISION=${{ github.sha }}" \
             --build-arg "PHP_VERSION=${{ env.PHP_VERSION }}" \
             --target prod \
-            -t "${{ needs.docker-prepare.outputs.image_base_url }}-app:${{ github.sha }}-amd64" \
-            -t "${{ needs.docker-prepare.outputs.image_base_url }}-app:${{ needs.docker-prepare.outputs.ref_slug }}-amd64" \
+            -t "${{ needs.docker-prepare.outputs.image_base_url }}:${{ github.sha }}-amd64" \
+            -t "${{ needs.docker-prepare.outputs.image_base_url }}:${{ needs.docker-prepare.outputs.ref_slug }}-amd64" \
             -f Dockerfile .
-          docker buildx build \
-            --build-arg "${{ needs.docker-prepare.outputs.date }}" \
-            --build-arg "${{ github.sha }}" \
-            -t "${{ needs.docker-prepare.outputs.image_base_url }}-web:${{ github.sha }}-amd64" \
-            -t "${{ needs.docker-prepare.outputs.image_base_url }}-web:${{ needs.docker-prepare.outputs.ref_slug }}-amd64" \
-            -f Dockerfile.nginx .
           docker images
-          docker push -q "${{ needs.docker-prepare.outputs.image_base_url }}-web:${{ github.sha }}-amd64"
-          docker push -q "${{ needs.docker-prepare.outputs.image_base_url }}-web:${{ needs.docker-prepare.outputs.ref_slug }}-amd64"
-          docker push -q "${{ needs.docker-prepare.outputs.image_base_url }}-app:${{ github.sha }}-amd64"
-          docker push -q "${{ needs.docker-prepare.outputs.image_base_url }}-app:${{ needs.docker-prepare.outputs.ref_slug }}-amd64"
+          docker push -q "${{ needs.docker-prepare.outputs.image_base_url }}:${{ github.sha }}-amd64"
+          docker push -q "${{ needs.docker-prepare.outputs.image_base_url }}:${{ needs.docker-prepare.outputs.ref_slug }}-amd64"
 
   docker-arm64:
     needs: docker-prepare
@@ -295,20 +287,12 @@ jobs:
             --build-arg "APP_REVISION=${{ github.sha }}" \
             --build-arg "PHP_VERSION=${{ env.PHP_VERSION }}" \
             --target prod \
-            -t "${{ needs.docker-prepare.outputs.image_base_url }}-app:${{ github.sha }}-arm64" \
-            -t "${{ needs.docker-prepare.outputs.image_base_url }}-app:${{ needs.docker-prepare.outputs.ref_slug }}-arm64" \
+            -t "${{ needs.docker-prepare.outputs.image_base_url }}:${{ github.sha }}-arm64" \
+            -t "${{ needs.docker-prepare.outputs.image_base_url }}:${{ needs.docker-prepare.outputs.ref_slug }}-arm64" \
             -f Dockerfile .
-          docker buildx build \
-            --build-arg "${{ needs.docker-prepare.outputs.date }}" \
-            --build-arg "${{ github.sha }}" \
-            -t "${{ needs.docker-prepare.outputs.image_base_url }}-web:${{ github.sha }}-arm64" \
-            -t "${{ needs.docker-prepare.outputs.image_base_url }}-web:${{ needs.docker-prepare.outputs.ref_slug }}-arm64" \
-            -f Dockerfile.nginx .
           docker images
-          docker push -q "${{ needs.docker-prepare.outputs.image_base_url }}-web:${{ github.sha }}-arm64"
-          docker push -q "${{ needs.docker-prepare.outputs.image_base_url }}-web:${{ needs.docker-prepare.outputs.ref_slug }}-arm64"
-          docker push -q "${{ needs.docker-prepare.outputs.image_base_url }}-app:${{ github.sha }}-arm64"
-          docker push -q "${{ needs.docker-prepare.outputs.image_base_url }}-app:${{ needs.docker-prepare.outputs.ref_slug }}-arm64"
+          docker push -q "${{ needs.docker-prepare.outputs.image_base_url }}:${{ github.sha }}-arm64"
+          docker push -q "${{ needs.docker-prepare.outputs.image_base_url }}:${{ needs.docker-prepare.outputs.ref_slug }}-arm64"
 
   docker-manifest:
     needs:
@@ -327,25 +311,15 @@ jobs:
       - name: Build docker manifest
         run: |
           docker manifest create \
-            "${{ needs.docker-prepare.outputs.image_base_url }}-app:${{ github.sha }}" \
-            --amend "${{ needs.docker-prepare.outputs.image_base_url }}-app:${{ github.sha }}-amd64" \
-            --amend "${{ needs.docker-prepare.outputs.image_base_url }}-app:${{ github.sha }}-arm64"
+            "${{ needs.docker-prepare.outputs.image_base_url }}:${{ github.sha }}" \
+            --amend "${{ needs.docker-prepare.outputs.image_base_url }}:${{ github.sha }}-amd64" \
+            --amend "${{ needs.docker-prepare.outputs.image_base_url }}:${{ github.sha }}-arm64"
           docker manifest create \
-            "${{ needs.docker-prepare.outputs.image_base_url }}-web:${{ github.sha }}" \
-            --amend "${{ needs.docker-prepare.outputs.image_base_url }}-web:${{ github.sha }}-amd64" \
-            --amend "${{ needs.docker-prepare.outputs.image_base_url }}-web:${{ github.sha }}-arm64"
-          docker manifest create \
-            "${{ needs.docker-prepare.outputs.image_base_url }}-app:${{ needs.docker-prepare.outputs.ref_slug }}" \
-            --amend "${{ needs.docker-prepare.outputs.image_base_url }}-app:${{ needs.docker-prepare.outputs.ref_slug }}-amd64" \
-            --amend "${{ needs.docker-prepare.outputs.image_base_url }}-app:${{ needs.docker-prepare.outputs.ref_slug }}-arm64"
-          docker manifest create \
-            "${{ needs.docker-prepare.outputs.image_base_url }}-web:${{ needs.docker-prepare.outputs.ref_slug }}" \
-            --amend "${{ needs.docker-prepare.outputs.image_base_url }}-web:${{ needs.docker-prepare.outputs.ref_slug }}-amd64" \
-            --amend "${{ needs.docker-prepare.outputs.image_base_url }}-web:${{ needs.docker-prepare.outputs.ref_slug }}-arm64"
-          docker manifest push "${{ needs.docker-prepare.outputs.image_base_url }}-app:${{ github.sha }}"
-          docker manifest push "${{ needs.docker-prepare.outputs.image_base_url }}-web:${{ github.sha }}"
-          docker manifest push "${{ needs.docker-prepare.outputs.image_base_url }}-app:${{ needs.docker-prepare.outputs.ref_slug }}"
-          docker manifest push "${{ needs.docker-prepare.outputs.image_base_url }}-web:${{ needs.docker-prepare.outputs.ref_slug }}"
+            "${{ needs.docker-prepare.outputs.image_base_url }}:${{ needs.docker-prepare.outputs.ref_slug }}" \
+            --amend "${{ needs.docker-prepare.outputs.image_base_url }}:${{ needs.docker-prepare.outputs.ref_slug }}-amd64" \
+            --amend "${{ needs.docker-prepare.outputs.image_base_url }}:${{ needs.docker-prepare.outputs.ref_slug }}-arm64"
+          docker manifest push "${{ needs.docker-prepare.outputs.image_base_url }}:${{ github.sha }}"
+          docker manifest push "${{ needs.docker-prepare.outputs.image_base_url }}:${{ needs.docker-prepare.outputs.ref_slug }}"
 
   docker-manifest-latest:
     if: github.event_name == 'push' && contains(github.ref, 'refs/tags/v')
