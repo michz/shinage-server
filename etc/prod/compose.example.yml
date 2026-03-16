@@ -2,24 +2,10 @@ volumes:
   shinage_data: {}
 
 services:
-  nginx:
-    image: ghcr.io/michz/shinage-server-web:build-docker-prod-image
-    environment:
-      VIRTUAL_HOST: shinage.localhost
-      APPSERVER_HOST: app
+  app:
+    image: ghcr.io/michz/shinage-server:build-docker-prod-image
     ports:
       - "127.0.0.1:20080:80"
-      #- "127.0.0.1:20443:443"
-    volumes:
-      - shinage_data:/usr/share/nginx/html/data:readonly
-    links:
-      - app
-      - mariadb
-    depends_on:
-      - app
-
-  app:
-    image: ghcr.io/michz/shinage-server-app:build-docker-prod-image
     volumes:
       - shinage_data:/usr/share/nginx/html/data:delegated
       - ./session-redis.optional.ini:/usr/local/etc/php/conf.d/99-session-redis.ini:readonly

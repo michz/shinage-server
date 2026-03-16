@@ -1,0 +1,42 @@
+# The Caddyfile is an easy way to configure FrankenPHP and the Caddy web server.
+#
+# https://frankenphp.dev/docs/config
+# https://caddyserver.com/docs/caddyfile
+
+{
+	skip_install_trust
+	persist_config off
+	admin off
+	storage_clean_interval off
+	storage file_system /tmp/caddy
+
+    auto_https off
+
+	{$CADDY_GLOBAL_OPTIONS}
+
+	frankenphp {
+        num_threads 2
+        max_threads 8
+		#max_wait_time 60s # Sets the maximum time a request may wait for a free PHP thread before timing out. Default: disabled.
+
+		{$FRANKENPHP_CONFIG}
+	}
+}
+
+{$CADDY_EXTRA_CONFIG}
+
+{$SERVER_NAME:localhost} {
+	root {$SERVER_ROOT:public/}
+	encode zstd br gzip
+
+	{$CADDY_SERVER_EXTRA_DIRECTIVES}
+
+	php_server {
+	}
+}
+
+# As an alternative to editing the above site block, you can add your own site
+# block files in the Caddyfile.d directory, and they will be included as long
+# as they use the .caddyfile extension.
+
+import Caddyfile.d/*.caddyfile

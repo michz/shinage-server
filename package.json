@@ -1,6 +1,6 @@
 {
   "name": "shinage-server",
-  "packageManager": "yarn@4.9.0",
+  "packageManager": "yarn@4.9.2",
   "dependencies": {
     "@babel/core": "^7.26.10",
     "@babel/preset-env": "^7.26.9",
